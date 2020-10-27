@@ -1,0 +1,110 @@
+\section{Experiments}
+\label{sec:experiments}
+
+We evaluate CyCADA on several unsupervised adaptation scenarios. We first focus on adaptation for digit classification using the MNIST~\citep{lecun_ieee98}, USPS, and Street View House Numbers (SVHN)~\citep{netzer_nips11} datasets. After which we present results for the task of semantic image segmentation, using the SYNTHIA~\citep{ros_cvpr16}, GTA~\citep{richter_eccv16} and CityScapes~\citep{cordts_cvpr16} datasets. 
+
+\subsection{Digit Adaptation}
+We evaluate our method across the adaptation shifts of USPS to MNIST, MNIST to USPS, and SVHN to MNIST, using the full training sets during learning phases and evaluating on the standard test sets. We report classification accuracy for each shift in Table~\ref{table:digits} and find that our method outperforms competing approaches on average. 
+The classifier for our method for all digit shifts uses a variant of the LeNet architecture (see \ref{sec:digit-details} for full implementation details). 
+Note that the recent pixel-da method by \citet{bousmalis_cvpr17} presents results for only the MNIST to USPS shift and reports 95.9\% accuracy, while our method achieves 95.6\% accuracy. However, the pixel-da approach cross validates with some labeled data which is not an equivalent evaluation setting. 
+
+\textbf{Ablation: Pixel vs Feature Level Transfer.} We begin by evaluating the contribution of the pixel space and feature space transfer. 
+We find that in the case of the small domain shifts between USPS and MNIST, the pixel space adaptation by which we train a classifier using images translated using CycleGAN~\citep{zhu_arxiv17}, performs very well, outperforming or comparable to prior adaptation approaches. 
+Feature level adaptation offers a small benefit in this case of a small pixel shift. 
+However, for the more difficult shift of SVHN to MNIST, we find that feature level adaptation outperforms the pixel level adaptation, and importantly, both may be combined to produce an overall model which outperforms all competing methods. 
+
+\input{tables/digits.tex}
+\begin{figure}
+	\centering
+	\begin{tabular}{cc}
+	\includegraphics[height=.1\linewidth]{figs/svhn2mnist_cyclegan_bad_cycle3.jpeg} &
+	\includegraphics[height=.1\linewidth]{figs/digit-ablation/no-cycle/1_00000_real_B.png}
+	\includegraphics[height=.1\linewidth]{figs/digit-ablation/no-cycle/1_00000_fake_A.png}
+	\includegraphics[height=.1\linewidth]{figs/digit-ablation/no-cycle/1_00000_rec_B.png}
+	\\
+	\includegraphics[height=.1\linewidth]{figs/svhn2mnist_cyclegan_bad_cycle4.jpeg} &
+	\includegraphics[height=.1\linewidth]{figs/digit-ablation/no-cycle/4_00026_real_B.png}
+	\includegraphics[height=.1\linewidth]{figs/digit-ablation/no-cycle/4_00026_fake_A.png}
+	\includegraphics[height=.1\linewidth]{figs/digit-ablation/no-cycle/4_00026_rec_B.png}\\
+	(a) Without Semantic Loss & (b) Without Cycle Loss
+	\end{tabular}
+	\caption{\textbf{Ablation: Effect of Semantic or Cycle Consistency} Examples of translation failures without the semantic consistency loss. Each triple contains the original SVHN image (\textit{left}), the image translated into MNIST style (\textit{middle}), and the image reconstructed back into SVHN (\textit{right}). (a) Without semantic loss, both the GAN and cycle constraints are satisfied (translated image matches MNIST style and reconstructed image matches original), but the image translated to the target domain lacks the proper semantics. (b) Without cycle loss, the reconstruction is not satisfied and though the semantic consistency leads to some successful semantic translations (\textit{top}) there are still cases of label flipping (\textit{bottom}).}
+	\label{fig:cyclegan_fail}
+\end{figure}
+
+\textbf{Ablation: No Semantic Consistency.} We experiment without the addition of our semantic consistency loss and find that the standard unsupervised CycleGAN approach diverged when training SVHN to MNIST often suffering from random label flipping.
+ Figure~\ref{fig:cyclegan_fail}(a) demonstrates two examples where cycle constraints alone fail to have the desired behavior for our end task. An SVHN image is mapped to a convincing MNIST type image and back to a SVHN image with correct semantics. However, the MNIST-like image has mismatched semantics. Our modified version, which uses the source labels to train a weak classification model which can be used to enforce semantic consistency before and after translation, resolves this issue and produces strong performance.
+ 
+ \textbf{Ablation: No Cycle Consistency.} We study the result when learning without the cycle consistency loss. First note that there is no reconstruction guarantee in this case, thus in Figure~\ref{fig:cyclegan_fail}(b) we see that the translation back to SVHN fails. In addition, we find that while the semantic loss does encourage correct semantics it relies on the weak source labeler and thus label flipping still occurs (see right image triple).
+
+
+
+\subsection{Semantic Segmentation Adaptation}
+The task is to assign a semantic label to each pixel in the input image, e.g. $road$, $building$, etc.
+We limit our evaluation to the unsupervised adaptation setting, where labels are only available in the source domain, but we are evaluated solely on our performance in the target domain.
+
+For each experiment, we use three metrics to evaluate performance.
+Let $n_{ij}$ be the number of pixels of class $i$ predicted as class $j$, let $t_i = \sum_j n_{ij}$ be the total number of pixels of class $i$, and let $N$ be the number of classes.
+Our three evaluation metrics are, mean intersection-over-union (mIoU), frequency weighted intersection-over-union (fwIoU), and pixel accuracy, which are defined as follows: \\
+mIoU $=\frac{1}{N} \cdot \frac{\sum_i n_{ii}}{t_i + \sum_j n_{ji} - n_{ii}}$, fwIoU $=\frac{1}{\sum_k t_k} \cdot \frac{\sum_i n_{ii}}{t_i + \sum_j n_{ji} - n_{ii}}$, pixel acc. $=\frac{\sum_i n_{ii}}{\sum_i t_i}$.
+
+Cycle-consistent adversarial adaptation is general and can be applied at any layer of a network. 
+Since optimizing the full CyCADA objective in Equation~\ref{eq:cycada} end-to-end is memory-intensive in practice, we train our model in stages.
+First, we perform image-space adaptation and map our source data into the target domain.
+Next, using the adapted source data with the original source labels, we learn a task model that is suited to operating on target data.
+Finally, we perform another round of adaptation between the adapted source data and the target data in feature-space, using one of the intermediate layers of the task model. Additionally, we do not use the semantic loss for the segmentation experiments as it would require loading generators, discriminators, and an additional semantic segmenter into memory all at once for two images. We did not have the required memory for this at the time of submission, but leave it to future work to deploy model parallelism or experiment with larger GPU memory. 
+
+
+For our first evaluation, 
+we consider the SYNTHIA dataset~\citep{ros_cvpr16}, which contains synthetic renderings of urban scenes.
+We use the SYNTHIA video sequences, which are rendered across a variety of environments, weather conditions, and lighting conditions.
+This provides a synthetic testbed for evaluating adaptation techniques.
+For comparison with previous work, in this work we focus on adaptation between seasons.
+We use only the front-facing views in the sequences so as to mimic dashcam imagery, and adapt from fall to winter.
+The subset of the dataset we use contains 13 classes and consists of 10,852 fall images and 7,654 winter images.
+
+To further demonstrate our method's applicability to real-world adaptation scenarios, we also evaluate our model in a challenging synthetic-to-real adaptation setting.
+For our synthetic source domain, we use the GTA5 dataset~\citep{richter_eccv16} extracted from the game Grand Theft Auto V, which contains 24966 images. 
+We consider adaptation from GTA5 to the real-world Cityscapes dataset~\citep{cordts_cvpr16}, from which we used 19998 images without annotation for training and 500 images for validation. 
+Both of these datasets are evaluated on the same set of 19 classes, allowing for straightforward adaptation between the two domains.
+
+Image-space adaptation also affords us the ability to visually inspect the results of the adaptation method.
+This is a distinct advantage over opaque feature-space adaptation methods, especially in truly unsupervised settings---without labels, there is no way to empirically evaluate the adapted model, and thus no way to verify that adaptation is improving task performance.
+Visually confirming that the conversions between source and target images are reasonable, while not a \emph{guarantee} of improved task performance, can serve as a sanity check to ensure that adaptation is not completely diverging. This process is diagrammed in Figure~\ref{fig:implementation}. For implementation details please see Appendix \ref{sec:ss-details}.
+
+
+
+
+
+\newcommand{\myw}{3.5cm}
+\newcommand{\myh}{1.8cm}
+\subsubsection{Cross-season adaptation}
+
+We start by exploring the abilities of pixel space adaptation alone (using FCN8s architecture) for the setting of adapting across seasons in synthetic data. For this we use the SYNTHIA dataset and adapt from fall to winter weather conditions. 
+Typically in unsupervised adaptation settings it is difficult to interpret what causes the performance improvement after adaptation.
+Therefore, we use this setting as an example where we may directly visualize the shift from fall to winter and inspect the intermediate pixel level adaptation result from our algorithm.
+In Figure~\ref{fig:synthia} we show the result of pixel only adaptation as we generate a winter domain image (b) from a fall domain image (a), and visa versa (c-d). We may clearly see the changes of adding or removing snow. This visually interpretable result matches our expectation of the true shift between these domains and indeed results in favorable final semantic segmentation performance from fall to winter as shown in Table~\ref{table:synthia}. We find that CyCADA achieves state-of-the-art performance on this task with image space adaptation alone, however does not recover full supervised learning performance (train on target). Some example errors includes adding snow to the sidewalks, but not to the road, while in the true winter domain snow appears in both locations. However, even this mistake is interesting as it implies that the model is learning to distinguish road from sidewalk during pixel adaptation, despite the lack of pixel annotations.
+
+\input{figs/synthia.tex}
+\input{tables/synthia}
+Cycle-consistent adversarial adaptation achieves state-of-the-art adaptation performance.
+We see that under the fwIoU and pixel accuracy metrics, CyCADA approaches oracle performance, falling short by only a few points, despite being entirely unsupervised.
+This indicates that CyCADA is extremely effective at correcting the most common classes in the dataset.
+This conclusion is supported by inspection of the individual classes in Table~\ref{table:synthia}, where we see the largest improvement on common classes such as \emph{road} and \emph{sidewalk}.
+
+\input{figs/gta-cityscapes-seg.tex}
+\input{tables/gta-cityscapes.tex}
+\input{figs/gta-cityscapes.tex}
+\subsubsection{Synthetic to real adaptation}
+
+To evaluate our method's applicability to real-world adaptation settings, we investigate adaptation from synthetic to real-world imagery.
+The results of this evaluation are presented in Table~\ref{table:gta-cityscapes} with qualitative results shown in Figure~\ref{fig:gta-cityscapes-seg}.
+Once again, CyCADA achieves state-of-the-art results, recovering approximately 40\% of the performance lost to domain shift.
+CyCADA also improves or maintains performance on all 19 classes.
+Examination of fwIoU and pixel accuracy as well as individual class IoUs reveals that our method performs well on most of the common classes.
+Although some classes such as \emph{train} and \emph{bicycle} see little or no improvement, we note that those classes are poorly represented in the GTA5 data, making recognition very difficult. We compare our model against \citet{shrivastava_cvpr17} for this setting, but found this approach did not converge and resulted in worse performance than the source only model (see Appendix for full details).
+
+We visualize the results of image-space adaptation between GTA5 and Cityscapes in Figure~\ref{fig:gta-cityscapes}.
+The most obvious difference between the original images and the adapted images is the saturation levels---the GTA5 imagery is much more vivid than the Cityscapes imagery, so adaptation adjusts the colors to compensate.
+We also observe texture changes, which are perhaps most apparent in the road: in-game, the roads appear rough with many blemishes, but Cityscapes roads tend to be fairly uniform in appearance, so in converting from GTA5 to Cityscapes, our model removes most of the texture.
+Somewhat amusingly, our model has a tendency to add a hood ornament to the bottom of the image, which, while likely irrelevant to the segmentation task, serves as a further indication that image-space adaptation is producing reasonable results.

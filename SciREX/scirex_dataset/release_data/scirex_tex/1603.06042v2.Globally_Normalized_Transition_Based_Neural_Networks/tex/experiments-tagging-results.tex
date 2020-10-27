@@ -1,0 +1,31 @@
+\begin{table*}[t]
+  \centering%
+  \scalebox{1.0}{%
+    \small%
+    \setlength{\tabcolsep}{4pt}%
+    \centering%
+    \begin{tabular}{lcccccccccccccccc}
+      \toprule
+      &\hspace*{0.1cm}& En &\hspace*{0.1cm}& \multicolumn{3}{c}{En-Union} &\hspace*{0.1cm}& \multicolumn{7}{c}{CoNLL '09}&\hspace*{0.1cm}& Avg\\
+      Method       && WSJ      &&   News  &   Web   &   QTB   &&    Ca    &   Ch    &   Cz    &   En    &   Ge    &   Ja    &   Sp    &&-  \\
+      \midrule
+      Linear CRF   &&    97.17 &&   97.60 &   94.58 &   96.04  &&   98.81 &   94.45 &   98.90 &   97.50 &   97.14 &   97.90 &   98.79 &&   97.17\\
+      \newcite{ling-EtAl:2015:EMNLP}&& \bf97.78 &&   97.44 &   94.03 &   96.18  &&   98.77 &   94.38 &   99.00 &   97.60 &\bf97.84 &   97.06 &   98.71 &&   97.16\\
+      \midrule
+      Our Local (B=1) && 97.44 &&   97.66 &   94.46 &   96.59  &&   98.91 &   94.56 &   98.96 &   97.36 &   97.35 &   98.02 &   98.88 &&   97.29\\
+      Our Local (B=8) && 97.45 &&   97.69 &   94.46 &   96.64  &&   98.88 &   94.56 &   98.96 &   97.40 &   97.35 &   98.02 &   98.89 &&   97.30\\
+      Our Global (B=8)&& 97.44 &&\bf97.77 &\bf94.80 &\bf96.86  &&\bf99.03 &\bf94.72 &\bf99.02 &\bf97.65 &   97.52 &\bf98.37 &\bf98.97 &&\bf97.47\\
+            \midrule
+      Parsey McParseface\hspace*{-.3cm} && - && 97.52 & 94.24 & 96.45 & - & - & - & - & - & - & - & - && - \\
+      \bottomrule
+    \end{tabular}
+  }%\vspace*{-0.1cm}
+  \caption{\label{tab:pos}
+    Final POS tagging test set results on English WSJ and Treebank Union as well as CoNLL'09. We also show the performance of our pre-trained open source model, ``Parsey McParseface.''
+}
+\end{table*}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% End:

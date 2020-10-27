@@ -1,0 +1,161 @@
+\section{Datasets}
+\label{sec:datasets}
+\newcommand{\mmiColWidth}{0.15\columnwidth}
+\newcommand{\hspacing}{15mm}
+\subsection{MMI Dataset}
+\label{sec:mmi}
+The MMI dataset has been introduced by Pantic et al.~\cite{Pantic2005wdffe} contains over 2900 videos and images of 75 persons.
+The annotations contain action units and emotions. The database contains a web-interface with an integrated search to scan the database. The videos/images are colored. The people are of mixed age, different gender and have different ethnical background.
+The emotions investigated are the six basic emotions: \textit{Anger}, \textit{Disgust}, \textit{Fear}, \textit{Happiness}, \textit{Sadness}, \textit{Surprise}.
+
+
+\begin{figure}
+\centering
+
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig2.1}.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig2.2}.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig2.3}.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig2.4}.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig2.5}.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig2.6}.jpeg}
+    \end{subfigure}
+    
+    
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig2.7}.jpeg}
+      \caption*{Anger}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig2.8}.jpeg}
+      \caption*{Disgust}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig2.9}.jpeg}
+      \caption*{Fear}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig2.10}.jpeg}
+      \caption*{Happy}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig2.11}.jpeg}
+      \caption*{Sadness}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig2.12}.jpeg}
+      \caption*{Surprise}
+    \end{subfigure}
+
+\caption{This Figure shows the differences within the MMI dataset. The six used emotions are listed.}
+\label{fig:mmi_images_dataset}
+\end{figure}
+
+\subsection{CKP Dataset}
+\label{sec:ckp}
+
+This dataset has been introduced by Lucey et al.~\cite{5543262}. 210 persons, aged 18 to 50, have been recorded depicting emotions.
+This dataset presented by  contains recordings of emotions of 210 persons at the ages of 18 to 50 years. Both female and male persons are present and from different background. 81\% are Euro-Americans and 13\% are Afro-Americans. The images are of size 640$\times$490 px as well 640$\times$480 px. They are both grayscale and colored. In total this set has 593 emotion-labeled sequences. The emotions consist of \textit{Anger}, \textit{Disgust}, \textit{Fear}, \textit{Happiness}, \textit{Sadness}, \textit{Surprise}, and \textit{Contempt}.
+
+
+
+\subsection{Comparison}
+\label{sec:comparison}
+In the MMI Dataset (Fig. \ref{fig:mmi_images_dataset}) the emotion \textit{Anger} is displayed in different ways, as can be seen by the eyebrows, forehead and mouth. The mouth in the lower image is tightly closed while in the upper image the mouth is open. For \textit{Disgust} the differences are also visible, as the woman in the upper picture has a much stronger reaction. The man depicting \textit{Fear} has contracted eyebrows which slightly cover the eyes. On the other hand the eyes of the woman are wide open. As for \textit{Happy} both persons are smiling strongly. In the lower image the woman depicting \textit{Sadness} has a stronger lip and chin reaction. The last emotion \textit{Surprise} also has differences like the openness of the mouth.\\
+
+Such differences also appear in the CKP set (Fig. \ref{fig:ckp_images_dataset}). 
+For \textit{Anger} the eyebrows and cheeks differ.
+For \textit{Disgust} larger differences can be seen. In the upper picture not only the curvature of the mouth is stronger, but the nose is also more involved. While both women displaying \textit{Fear} show the same reaction around the eyes the mouth differs. In the lower image the mouth is nearly closed while teeth are visible in the upper one. \textit{Happiness} is displayed similar. For the emotion \textit{Sadness} the curvature of the mouth is visible in both images, but it is stronger in the upper one. The regions around the eyes differ as the eyebrows of the woman are straight. The last emotion \textit{Surprise} has strong similarities like the open mouth an wide open eyes. Teeth are only displayed by the woman in the upper image.\\
+Thus for a better evaluation it is helpful to investigate multiple datasets. This aims at investigating whether the proposed approach works on different ways emotions are shown and whether it works on different emotions. For example \textit{Contempt} which is only included in the CKP set.
+
+
+
+
+
+\begin{figure}
+\centering
+
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig3.1}.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig3.2}.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig3.3}.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig3.4}.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig3.5}.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig3.6}.jpeg}
+    \end{subfigure}
+    
+    
+    
+    
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig3.7}.jpeg}
+      \caption*{\textit{Anger}}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig3.8}.jpeg}
+      \caption*{\textit{Disgust}}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig3.9}.jpeg}
+      \caption*{\textit{Fear}}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig3.10}.jpeg}
+      \caption*{\textit{Happy}}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig3.11}.jpeg}
+      \caption*{\textit{Sadness}}
+    \end{subfigure}
+    \begin{subfigure}[b]{\mmiColWidth}
+      \includegraphics[width=\textwidth]{{Fig3.12}.jpeg}
+      \caption*{\textit{Surprise}}
+    \end{subfigure}
+   
+   
+   
+\caption{This Figure shows the differences within the Cohn-Kanade Plus (CKP) dataset. The emotion \textit{Contempt} is not shown since there is no annotated image with the emotion being depicted, which is allowed to be displayed.}
+\label{fig:ckp_images_dataset}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

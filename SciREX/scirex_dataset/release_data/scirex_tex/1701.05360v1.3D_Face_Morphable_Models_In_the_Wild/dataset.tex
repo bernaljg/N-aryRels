@@ -1,0 +1,10 @@
+%
+\section{KF-ITW Dataset}
+\label{sec:dataset}
+
+For the evaluation of the 3DMM, we have constructed KF-ITW, the first dataset of 3D faces captured under relatively unconstrained conditions. The dataset consists of $17$ different subjects recorded under various illumination conditions performing a range of expressions (\emph{neutral}, \emph{happy}, \emph{surprise}).
+We employed the KinectFusion~\cite{izadi2011kinectfusion,newcombe2011kinectfusion} framework to acquire a 3D representation of the subjects with a Kinect v1 sensor.
+
+The fused mesh for each subject serves as a 3D face ground-truth in which we can evaluate our algorithm and compare it to other methods.
+A voxel grid of size $608^3$ was utilized to get the detailed 3D scans of the faces.
+In order to accurately reconstruct the entire surface of the faces, a circular motion scanning pattern was carried out. Each subject was instructed to stay still in a fixed pose during the entire scanning process. The frame rate for every subject was constant to $8$ frames per second. After getting the 3D scans from the KinectFusion framework we fit our shape model in a non-rigid manner to get a clear mesh with a distinct number of vertexes for the evaluation process. Finally, each mesh was manually annotated with the iBUG 49 sparse landmark set.

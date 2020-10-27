@@ -1,0 +1,610 @@
+\documentclass{article}
+
+\usepackage[numbers]{natbib}
+% if you need to pass options to natbib, use, e.g.:
+% \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading nips_2017
+%
+% to avoid loading the natbib package, add option nonatbib:
+% \usepackage[nonatbib]{nips_2017}
+
+% \usepackage{nips_2017}
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+\usepackage[final]{nips_2017}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+
+
+%% ------
+%% add customized lines here:
+
+\usepackage{graphicx} % more modern
+
+% \usepackage{slantsc}
+\usepackage{makecell}
+\usepackage{multirow}
+\usepackage{pbox}
+\usepackage{multicol}
+
+\usepackage{amsfonts}
+\usepackage{amsmath, amssymb}
+
+\usepackage[toc,page]{appendix}
+
+\graphicspath{ {figs/} }
+
+\usepackage{color}
+\newcommand{\YP}[1]{{\color{red}  [#1] }}
+
+
+\title{Dual Path Networks}
+
+% The \author macro works with any number of authors. There are two
+% commands used to separate the names and addresses of multiple
+% authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to
+% break the lines. Using \AND forces a line break at that point. So,
+% if LaTeX puts 3 of 4 authors names on the first line, and the last
+% on the second line, try using \AND instead of \And before the third
+% author name.
+
+\author{
+  Yunpeng Chen$^{1}$, Jianan Li$^{1,2}$, Huaxin Xiao$^{1,3}$, Xiaojie Jin$^{1}$, Shuicheng Yan$^{4,1}$, Jiashi Feng$^{1}$  \\
+  $^{1}$National University of Singapore \\
+  $^{2}$Beijing Institute of Technology \\
+  $^{3}$National University of Defense Technology \\
+  $^{4}$Qihoo 360 AI Institute\\
+}
+
+\begin{document}
+% \nipsfinalcopy is no longer used
+
+\maketitle
+\begin{abstract}
+In this work, we present a simple, highly efficient and modularized Dual Path Network (DPN) for image classification which presents a new topology of connection paths internally. By revealing the equivalence of the state-of-the-art Residual Network (ResNet) and Densely Convolutional Network (DenseNet) within the HORNN framework, we find that ResNet enables feature re-usage while DenseNet enables new features exploration which are both important for learning good representations. To enjoy the benefits from both path topologies, our proposed Dual Path Network shares common features while maintaining the flexibility to explore new features through dual path architectures. Extensive experiments on three benchmark datasets, ImagNet-1k, Places365 and PASCAL VOC, clearly demonstrate superior performance of the proposed DPN over state-of-the-arts. In particular, on the ImagNet-1k dataset, a shallow DPN surpasses the best ResNeXt-101($64\times4$d) with 26\% smaller model size, 25\% less computational cost and 8\% lower memory consumption, and a deeper DPN (DPN-131) further pushes the state-of-the-art single model performance with about 2 times faster training speed. Experiments on the Places365 large-scale scene dataset, PASCAL VOC detection dataset, and PASCAL VOC segmentation dataset also demonstrate its consistently better performance than DenseNet, ResNet and the latest ResNeXt model over various applications. 
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+%  Introduction
+%
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Introduction}
+
+``Network engineering'' is increasingly more important for visual recognition research. In this paper, we aim to develop new path topology of deep architectures to further push the frontier of representation learning. In particular, we focus on analyzing and reforming the skip connection, which has been widely used in designing modern deep neural networks and offers remarkable success in many applications~\citep{ren2015faster,he2017mask,szegedy2016inception,newell2016stacked,he2016deep}. Skip connection creates a path propagating information from a lower layer directly to a higher layer. During the forward propagation, skip connection enables a very top layer to access information from a distant bottom layer; while for the backward propagation, it facilitates gradient back-propagation to the bottom layer without diminishing magnitude, which effectively alleviates the gradient vanishing problem and eases the optimization. 
+
+Deep Residual Network (ResNet)~\citep{he2016deep} is one of the first works that successfully adopt skip connections, where each mirco-block, \emph{a.k.a.} residual function, is associated with a skip connection, called \emph{residual path}. The residual path element-wisely adds the input features to the output of the same mirco-block, making it a residual unit. Depending on the inner structure design of the mirco-block, the residual network has developed into a family of various architectures, including WRN~\citep{zagoruyko2016wide}, Inception-resnet~\cite{szegedy2016inception}, and ResNeXt~\citep{xie2016aggregated}. 
+
+More recently, \citet{huang2016densely} proposed a different network architecture that achieves comparable accuracy with deep ResNet~\citep{he2016deep}, named Dense Convolutional Network (DenseNet). Different from residual networks which add the input features to the output features through the residual path, the DenseNet uses a \emph{densely connected path} to concatenate the input features with the output features, enabling each micro-block to receive raw information from all previous micro-blocks. Similar with residual network family, DenseNet can be categorized to the densely connected network family. Although the width of the densely connected path increases linearly as it goes deeper, causing the number of parameters to grow quadratically, DenseNet provides higher parameter efficiency compared with the ResNet~\citep{he2016deep}.
+
+In this work, we aim to study the advantages and limitations of both topologies and further enrich the path design by proposing a dual path architecture. In particular, we first provide a new understanding of the densely connected networks from the lens of a higher order recurrent neural network (HORNN)~\citep{soltani2016higher}, and explore the relations between densely connected networks and residual networks. More specifically, we bridge the densely connected networks with the HORNNs, showing that the densely connected networks are HORNNs when the weights are shared across steps. Inspired by~\cite{liao2016bridging} which demonstrates the relations between the residual networks and RNNs, we prove that the residual networks are densely connected networks when connections are shared across layers. With this unified view on the state-of-the-art deep architecture, we find that the deep residual networks implicitly reuse the features through the residual path, while densely connected networks keep exploring new features through the densely connected path. 
+
+Based on this new view, we propose a novel dual path architecture, called the Dual Path Network (DPN). This new architecture inherits both advantages of residual and densely connected paths, enabling effective feature re-usage and re-exploitation. The proposed DPN also enjoys higher parameter efficiency, lower computational cost and lower memory consumption, and being friendly for optimization compared with the state-of-the-art classification networks. Experimental results validate the outstanding high accuracy of DPN compared with other well-established baselines for image classification on both ImageNet-1k dataset and Places365-Standard dataset. Additional experiments on object detection task and semantic segmentation task also demonstrate that the proposed dual path architecture can be broadly applied for various tasks and consistently achieve the best performance. 
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+%  Related Work
+%
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\vskip -0.05in	
+\section{Related work}
+\vskip -0.05in	
+
+Designing an advanced neural network architecture is one of the most challenging but effective ways for improving the image classification performance, which can also directly benefit a variety of other tasks. AlexNet~\citep{krizhevsky2012imagenet} and VGG~\citep{simonyan2014very} are two most important works that show the power of deep convolutional neural networks. They demonstrate that building deeper networks with tiny convolutional kernels is a promising way to increase the learning capacity of the neural network. Residual Network was first proposed by~\citet{he2016deep}, which greatly alleviates the optimization difficulty and further pushes the depth of deep neural networks to hundreds of layers by using skipping connections. Since then, different kinds of residual networks arose, concentrating on either building a more efficient micro-block inner structure~\citep{ypChen2017,xie2016aggregated} or exploring how to use residual connections~\citep{kim2016accurate}. Recently,~\citet{huang2016densely} proposed a different network, called Dense Convolutional Networks, where skip connections are used to concatenate the input to the output instead of adding. However, the width of the densely connected path linearly increases as the depth rises, causing the number of parameters to grow quadratically and costing a large amount of GPU memory compared with the residual networks if the implementation is not specifically optimized. This limits the building of a deeper and wider densenet that may further improve the accuracy.
+
+
+Besides designing new architectures, researchers also try to re-explore the existing state-of-the-art architectures. In~\citep{he2016identity}, the authors showed the importance of the residual path on alleviating the optimization difficulty. In~\citep{liao2016bridging}, the residual networks are bridged with recurrent neural networks (RNNs), which helps people better understand the deep residual network from the perspective of RNNs. In~\citep{ypChen2017}, several different residual functions are unified, trying to provide a better understanding of designing a better mirco structure with higher learning capacity. But still, for the densely connected networks, in addition to several intuitive explanations on better feature reusage and efficient gradient flow introduced, there have been few works that are able to provide a really deeper understanding.
+
+
+In this work, we aim to provide a deeper understanding of the densely connected network, from the lens of Higher Order RNN, and explain how the residual networks are in indeed a special case of densely connected network. Based on these analysis, we then propose a novel Dual Path Network architecture that not only achieves higher accuracy, but also enjoys high parameter and computational efficiency.
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+%  Analysis
+%
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Revisiting ResNet, DenseNet and Higher Order RNN}
+
+In this section, we first bridge the densely connected network~\citep{huang2016densely} with higher order recurrent neural networks~\citep{soltani2016higher} to provide a new understanding of the densely connected network. We prove that residual networks~\citep{he2016deep,he2016identity,zagoruyko2016wide,xie2016aggregated,ypChen2017}, essentially belong to the family of densely connected networks except their connections are shared across steps. Then, we present analysis on strengths and weaknesses of each topology architecture, which motivates us to develop the dual path network architecture.
+
+
+For exploring the above relation, we provide a new view on the densely connected networks from the lens of Higher Order RNN, explain their relations and then specialize the analysis to residual networks. Throughout the paper, we formulate the HORNN in a more generalized form. We use $h^t$ to denote the hidden state of the recurrent neural network at the $t$-th step and use $k$ as the index of the current step. Let $x^t$ denotes the input at $t$-th step, $h^0=x^0$. For each step, $f_t^k(\cdot)$ refers to the feature extracting function which takes the hidden state as input and outputs the extracted information. The $g^k(\cdot)$ denotes a transformation function that transforms the gathered information to current hidden state: 
+\begin{equation} 
+\label{eqn_hornn}
+\begin{aligned}
+h^k = g^k\left[\sum\limits_{t=0}^{k-1} f_t^k(h^{t})\right]
+\text{.}
+\end{aligned}
+\end{equation}
+
+
+Eqn.~\eqref{eqn_hornn} encapsulates the update rule of various network architectures in a generalized way. For HORNNs, weights are shared across steps, \emph{i.e.} $\forall t,k, f_{k-t}^k(\cdot) \equiv f_{t}(\cdot)$ and $\forall k, g^k(\cdot) \equiv g(\cdot)$. For the densely connected networks, each step (micro-block) has its own parameter, which means $f_t^k(\cdot)$ and $g^k(\cdot)$ are not shared. Such observation shows that the densely connected path of DenseNet is essentially a higher order path which is able to extract new information from previous states. Figure~\ref{fig_rnn}(c)(d) graphically shows the relations of densely connected networks and higher order recurrent networks.
+
+
+\begin{figure}[t]	
+	\center
+	\resizebox{1.0\textwidth}{!}{	
+		\includegraphics{fig_rnn.pdf}
+	}
+  	\vskip -0.08in	
+	\caption{The topological relations of different types of neural networks. (a) and (b) show relations between residual networks and RNN, as stated in~\citep{liao2016bridging}; (c) and (d) show relations between densely connected networks and higher order recurrent neural network (HORNN), which is explained in this paper. The symbol ``$z^{-1}$'' denotes a time-delay unit; ``$\oplus$'' denotes the element-wise summation; ``$I(\cdot)$'' denotes an identity mapping function.}
+	\label{fig_rnn}
+	\vskip -0.1in
+\end{figure}
+
+
+We then explain that the residual networks are special cases of densely connected networks if taking $\forall t,k, f_t^k(\cdot) \equiv f_t(\cdot)$. Here, for succinctness we introduce $r^{k}$ to denote the intermediate results and let $r^{0}=0$. Then Eqn.~\eqref{eqn_hornn} can be rewritten as
+\begin{align} 
+\label{eqn_rnn_a1}
+& r^{k} \triangleq \sum\limits_{t=1}^{k-1} f_t(h^t) = r^{k-1} + f_{k-1}(h^{k-1}) \text{,} \\
+\label{eqn_rnn_a2}
+& h^k = g^k \left( r^{k} \right)  \text{.}
+\end{align} 
+\vskip -0.05in
+
+
+Thus, by substituting Eqn.~\eqref{eqn_rnn_a2} into Eqn.~\eqref{eqn_rnn_a1}, Eqn.~\eqref{eqn_rnn_a1} can be simplified as
+\vskip -0.1in
+\begin{equation} 
+\label{eqn_rnn_b}
+\begin{aligned}
+r^{k} = r^{k-1} + f_{k-1}(h^{k-1}) = r^{k-1} + f_{k-1}(g^{k-1} \left( r^{k-1} \right)) = r^{k-1} + \phi^{k-1}(r^{k-1})
+\text{,}
+\end{aligned}
+\end{equation}
+where $\phi^{k}(\cdot)=f_{k}(g^{k}(\cdot))$. Obviously, Eqn.~\eqref{eqn_rnn_b} has the same form as the residual network and the recurrent neural network. Specifically, when $\forall k, \phi^{k}(\cdot) \equiv \phi(\cdot)$, Eqn.~\eqref{eqn_rnn_b} degenerates to an RNN; when none of $\phi^{k}(\cdot)$ is shared and $x^k=0, k>1$, Eqn.~\eqref{eqn_rnn_b} produces a residual network. Figure~\ref{fig_rnn}(a)(b) graphically shows the relation. Besides, recall that Eqn.~\eqref{eqn_rnn_b} is derived under the condition when $\forall t,k, f_t^k(\cdot) \equiv f_t(\cdot)$ from Eqn.~\eqref{eqn_hornn} and the densely connected networks are in forms of Eqn.~\eqref{eqn_hornn}, meaning that the residual network family essentially belongs to the densely connected network family. Figure~\ref{fig_arch}(a--c) give an example and demonstrate such equivalence, where $f_t(\cdot)$ corresponds to the first $1\times1$ convolutional layer and the $g^k(\cdot)$ corresponds to the other layers within a micro-block in Figure~\ref{fig_arch}(b).
+
+
+\vskip -0.03in
+\label{sec_discussion}
+From the above analysis, we observe: 1) both residual networks and densely connected networks can be seen as a HORNN when $f_t^k(\cdot)$ and $g^k(\cdot)$ are shared for all $k$; 2) a residual network is a densely connected network if $\forall t,k, f_t^k(\cdot) \equiv f_t(\cdot)$. By sharing the $f_t^k(\cdot)$ across all steps, $g^k(\cdot)$ receives the same feature from a given output state, which encourages the feature reusage and thus reduces the feature redundancy. However, such an information sharing strategy makes it difficult for residual networks to explore new features. Comparatively, the densely connected networks are able to explore new information from previous outputs since the $f_t^k(\cdot)$  is not shared across steps. However, different $f_t^k(\cdot)$ may extract the same type of features multiple times, leading to high redundancy.
+
+\vskip -0.03in
+In the following section, we present the dual path networks which can overcome both inherent limitations of these two state-of-the-art network architectures. Their relations with HORNN also imply that our proposed architecture can be used for improving HORNN, which we leave for future works.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+%  Proposed Network
+%
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\vskip -0.03in
+\section{Dual Path Networks}
+
+\vskip -0.03in
+Above we explain the relations between residual networks and densely connected networks, showing that the residual path implicitly reuses features, but it is not good at exploring new features. In contrast the densely connected network keeps exploring new features but suffers from higher redundancy. 
+
+In this section, we describe the details of our proposed novel dual path architecture, \emph{i.e.} the Dual Path Network (DPN). In the following, we first introduce and formulate the dual path architecture, and then present the network structure in details with complexity analysis.
+
+
+\subsection{Dual Path Architecture}
+
+Sec.~\ref{sec_discussion} discusses the advantage and limitations of both residual networks and densely connected networks. Based on the analysis, we propose a simple dual path architecture which shares the $f_t^k(\cdot)$ across all blocks to enjoy the benefits of reusing common features with low redundancy, while still remaining a densely connected path to give the network more flexibility in learning new features. We formulate such a dual path architecture as follows:
+\vskip -0.15in
+\begin{align} 
+\label{eqn_dense_path}
+x^{k} &\triangleq \sum\limits_{t=1}^{k-1} f_t^{k}(h^t) \text{,} \\
+\label{eqn_residual_path}
+y^{k} & \triangleq \sum\limits_{t=1}^{k-1} v_t(h^t) = y^{k-1} + \phi^{k-1}(y^{k-1}) \text{,} \\
+\label{eqn_dual_path}
+r^{k} &\triangleq x^{k} + y^{k} \text{,} \\
+\label{eqn_transfer_func}
+h^k &= g^k \left( r^{k} \right) \text{,}
+\end{align} 
+where $x^{k}$ and $y^{k}$ denote the extracted information at $k$-th step from individual path, $v_t(\cdot)$ is a feature learning function as $f_t^k(\cdot)$. Eqn.~\eqref{eqn_dense_path} refers to the densely connected path that enables exploring new features, Eqn.~\eqref{eqn_residual_path} refers to the residual path that enables common features re-usage, and Eqn.~\eqref{eqn_dual_path} defines the dual path that integrates them and feeds them to the last transformation function in Eqn.~\eqref{eqn_transfer_func}. The final transformation function $g^k(\cdot)$ generates current state, which is used for making next mapping or prediction. Figure~\ref{fig_arch}(d)(e) show an example of the dual path architecture that is being used in our experiments.
+
+
+\begin{figure}[t]	
+	\vskip -0.1in
+	\resizebox{1.0\textwidth}{!}{	
+		\includegraphics{fig_arch.pdf}
+	}
+	\vskip -0.1in
+	\caption{Architecture comparison of different networks. (a) The residual network. (b) The densely connected network, where each layer can access the outputs of all previous micro-blocks. Here, a $1\times1$ convolutional layer (underlined) is added for consistency with the micro-block design in (a). (c) By sharing the first $1\times1$ connection of the same output across micro-blocks in (b), the densely connected network degenerates to a residual network. The dotted rectangular in (c) highlights the residual unit. (d) The proposed dual path architecture, DPN. (e) An equivalent form of (d) from the perspective of implementation, where the symbol ``$\wr$'' denotes a split operation, and ``$+$'' denotes element-wise addition.}
+	\label{fig_arch}
+  \vskip -0.1in	
+\end{figure}
+
+More generally, the proposed DPN is a family of convolutional neural networks which contains a residual alike path and a densely connected alike path, as explained later. Similar to these networks, one can customize the micro-block function of DPN for task-specific usage or for further overall performance boosting.
+
+
+
+\subsection{Dual Path Networks}
+
+% Our designing critira 
+The proposed network is built by stacking multiple modualized mirco-blocks as shown in Figure~\ref{fig_arch}. In this work, the structure of each micro-block is designed with a bottleneck style~\cite{he2016deep} which starts with a $1\times1$ convolutional layer followed by a $3\times3$ convolutional layer, and ends with a $1\times1$ convolutional layer. The output of the last $1\times1$ convolutional layer is split into two parts: the first part is element-wisely added to the residual path, and the second part is concatenated with the densly connected path. To enhance the leaning capacity of each micro-block, we use the grouped convolution layer in the second layer as the ResNeXt~\citep{xie2016aggregated}.
+
+% The detailed Specifications 
+Considering that the residual networks are more wildly used than the densely connected networks in practice, we choose the residual network as the backbone and add a thin densely connected path to build the dual path network. Such design also helps slow the width increment of the densely connected path and the cost of GPU memory. Table~\ref{tab_detail_settings} shows the detailed architecture settings. In the table, $G$ refers to the number of groups, and $k$ refers to the channels increment for the densely connected path. For the new proposed DPNs, we use $(+k)$ to indicate the width increment of the densely connected path. The overall design of DPN inherits backbone architecture of the vanilla ResNet / ResNeXt, making it very easy to implement and apply to other tasks. One can simply implement a DPN by adding one more ``slice layer'' and ``concat layer'' upon existing residual networks. Under a well optimized deep learning platform, none of these newly added operations requires extra computational cost or extra memory consumption, making the DPNs highly efficient.
+
+In order to demonstrate the appealing effectiveness of the dual path architecture, we intentionally design a set of DPNs with a considerably smaller model size and less FLOPs compared with the sate-of-the-art ResNeXts~\citep{xie2016aggregated}, as shown in Table~\ref{tab_detail_settings}. Due to limited computational resources, we set these hyper-parameters based on our previous experience instead of grid search experiments. 
+
+\vskip -0.4in
+\paragraph{Model complexity} We measure the model complexity by counting the total number of learnable parameters within each neural network. Table~\ref{tab_detail_settings} shows the results for different models. The DPN-92 costs about $15\%$ fewer parameters than ResNeXt-101 ($32\times4$d), while the DPN-98 costs about $26\%$ fewer parameters than ResNeXt-101 ($64\times4$d).
+
+\vskip -0.4in
+\paragraph{Computational complexity} We measure the computational cost of each deep neural network using the floating-point operations (FLOPs) with input size of $224\times224$, in the number of multiply-adds following~\citep{xie2016aggregated}. Table~\ref{tab_detail_settings} shows the theoretical computational cost. Though the actual time cost might be influenced by other factors, \emph{e.g.} GPU bandwidth and coding quality, the computational cost shows the speed upper bound. As can be see from the results, DPN-92 consumes about $19\%$ less FLOPs than ResNeXt-101($32\times4$d), and the DPN-98 consumes about $25\%$ less FLOPs than ResNeXt-101($64\times4$d).
+\vskip -0.2in
+
+\begin{table*}[t]
+\vskip -0.1in
+  \tiny
+  \centering
+  \setlength\tabcolsep{3pt}
+  \caption{Architecture and complexity comparison of our proposed Dual Path Networks (DPNs) and other state-of-the-art networks. We compare DPNs with two baseline methods: DenseNet~\citep{he2016deep} and ResNeXt~\citep{xie2016aggregated}. The symbol $(+k)$ denotes the width increment on the densely connected path.}
+  \resizebox{1\textwidth}{!}{
+    \begin{tabular}{c|c|c|c|c|c|c}
+    \toprule
+    stage & output 
+    & DenseNet-161 (k=48)
+    & ResNeXt-101 (32$\times$4d)
+    & ResNeXt-101 (64$\times$4d)
+    & DPN-92 (32$\times$3d)
+    & DPN-98 (40$\times$4d)  \\
+    \midrule
+    conv1 & 112x112
+    & $7 \times 7$, 96, stride 2 
+    & $7 \times 7$, 64, stride 2 
+    & $7 \times 7$, 64, stride 2 
+    & $7 \times 7$, 64, stride 2 
+    & $7 \times 7$, 96, stride 2 \\
+    \midrule
+    \multirow{2}[4]{*}{conv2} & \multirow{2}[4]{*}{56x56} 
+    & $3 \times 3$ max pool, stride 2 
+    & $3 \times 3$ max pool, stride 2 
+    & $3 \times 3$ max pool, stride 2 
+    & $3 \times 3$ max pool, stride 2 
+    & $3 \times 3$ max pool, stride 2 \\
+	\cmidrule{3-7}          &      
+	&  $\left[\begin{array}{l} \textsc{1$\times$1, 192} \\ \textsc{3$\times$3,  48}  \end{array} \right] \times ~~6 $
+	&  $\left[\begin{array}{l} \textsc{1$\times$1, 128} \\ \textsc{3$\times$3, 128, G=32} \\ \textsc{1$\times$1,       256} \end{array} \right] \times 3 $
+	&  $\left[\begin{array}{l} \textsc{1$\times$1, 256} \\ \textsc{3$\times$3, 256, G=64} \\ \textsc{1$\times$1,       256} \end{array} \right] \times 3 $
+	&  $\left[\begin{array}{l} \textsc{1$\times$1,  96} \\ \textsc{3$\times$3,  96, G=32} \\ \textsc{1$\times$1, 256 (+16)} \end{array} \right] \times 3 $
+	&  $\left[\begin{array}{l} \textsc{1$\times$1, 160} \\ \textsc{3$\times$3, 160, G=40} \\ \textsc{1$\times$1, 256 (+16)} \end{array} \right] \times 3 $ \\
+    \midrule
+    conv3 & 28$\times$28
+	&  $\left[\begin{array}{l} \textsc{1$\times$1, 192} \\ \textsc{3$\times$3,  48}  \end{array} \right] \times 12 $
+	&  $\left[\begin{array}{l} \textsc{1$\times$1, 256} \\ \textsc{3$\times$3, 256, G=32} \\ \textsc{1$\times$1, 512      } \end{array} \right] \times 4 $
+	&  $\left[\begin{array}{l} \textsc{1$\times$1, 512} \\ \textsc{3$\times$3, 512, G=64} \\ \textsc{1$\times$1, 512      } \end{array} \right] \times 4 $
+	&  $\left[\begin{array}{l} \textsc{1$\times$1, 192} \\ \textsc{3$\times$3, 192, G=32} \\ \textsc{1$\times$1, 512 (+32)} \end{array} \right] \times 4 $
+	&  $\left[\begin{array}{l} \textsc{1$\times$1, 320} \\ \textsc{3$\times$3, 320, G=40} \\ \textsc{1$\times$1, 512 (+32)} \end{array} \right] \times 6 $ \\
+    \midrule
+    conv4 & 14$\times$14
+	&  $\left[\begin{array}{l} \textsc{1$\times$1,  192} \\ \textsc{3$\times$3,   48}  \end{array} \right] \times 36 $
+	&  $\left[\begin{array}{l} \textsc{1$\times$1,  512} \\ \textsc{3$\times$3,  512, G=32} \\ \textsc{1$\times$1, 1024      } \end{array} \right] \times 23 $
+	&  $\left[\begin{array}{l} \textsc{1$\times$1, 1024} \\ \textsc{3$\times$3, 1024, G=64} \\ \textsc{1$\times$1, 1024      } \end{array} \right] \times 23 $
+	&  $\left[\begin{array}{l} \textsc{1$\times$1,  384} \\ \textsc{3$\times$3,  384, G=32} \\ \textsc{1$\times$1, 1024 (+24)} \end{array} \right] \times 20 $
+	&  $\left[\begin{array}{l} \textsc{1$\times$1,  640} \\ \textsc{3$\times$3,  640, G=40} \\ \textsc{1$\times$1, 1024 (+32)} \end{array} \right] \times 20 $ \\
+    \midrule
+    conv5 & 7$\times$7
+	&  $\left[\begin{array}{l} \textsc{1$\times$1,  192} \\ \textsc{3$\times$3,  48}  \end{array} \right] \times 24 $
+	&  $\left[\begin{array}{l} \textsc{1$\times$1, 1024} \\ \textsc{3$\times$3, 1024, G=32} \\ \textsc{1$\times$1, 2048       } \end{array} \right] \times 3 $
+	&  $\left[\begin{array}{l} \textsc{1$\times$1, 2048} \\ \textsc{3$\times$3, 2048, G=64} \\ \textsc{1$\times$1, 2048       } \end{array} \right] \times 3 $
+	&  $\left[\begin{array}{l} \textsc{1$\times$1,  768} \\ \textsc{3$\times$3,  768, G=32} \\ \textsc{1$\times$1, 2048 (+128)} \end{array} \right] \times 3 $
+	&  $\left[\begin{array}{l} \textsc{1$\times$1, 1280} \\ \textsc{3$\times$3, 1280, G=40} \\ \textsc{1$\times$1, 2048 (+128)} \end{array} \right] \times 3 $ \\
+    \midrule
+          & 1$\times$1
+    & \pbox{20cm}{global average pool \\ 1000-d fc, softmax} 
+    & \pbox{20cm}{global average pool \\ 1000-d fc, softmax} 
+    & \pbox{20cm}{global average pool \\ 1000-d fc, softmax} 
+    & \pbox{20cm}{global average pool \\ 1000-d fc, softmax} 
+    & \pbox{20cm}{global average pool \\ 1000-d fc, softmax} \\
+    \midrule
+    \multicolumn{2}{c|}{\# params} 
+    & $\mathbf{28.9} \times 10^6$    % ours > checked [ May-18-18:53 ]
+    & $\mathbf{44.3} \times 10^6$    % ours > checked [ May-18-18:52 ]
+    & $\mathbf{83.7} \times 10^6$    % ours > checked [ May-18-18:51 ]
+    & $\mathbf{37.8} \times 10^6$    % ours > checked [ May-18-18:50 ]
+    & $\mathbf{61.7} \times 10^6$ \\ % ours > checked [ May-18-18:49 ]
+    \midrule
+    \multicolumn{2}{c|}{FLOPs} 
+    & $\mathbf{7.7}  \times 10^9$    % ours > checked [ May-18-18:53 ]
+    & $\mathbf{8.0}  \times 10^9$    % ours > checked [ May-18-18:51 ]
+    & $\mathbf{15.5} \times 10^9$    % ours > checked [ May-18-18:51 ]
+    & $\mathbf{6.5}  \times 10^9$    % ours > checked [ May-18-18:50 ]
+    & $\mathbf{11.7} \times 10^9$ \\ % ours > checked [ May-18-18:49 ]
+    \bottomrule
+    \end{tabular}
+  }
+  \label{tab_detail_settings}
+\end{table*}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+%  Experiments
+%
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Experiments}
+
+Extensive experiments are conducted for evaluating the proposed Dual Path Networks. Specifically, we evaluate the proposed architecture on three tasks: image classification, object detection and semantic segmentation, using three standard benchmark datasets: the ImageNet-1k dataset, Places365-Standard dataset and the PASCAL VOC datasets.
+
+Key properties of the proposed DPNs are studied on the ImageNet-1k object classification dataset~\citep{ILSVRC15} and further verified on the Places365-Standard scene understanding dataset~\citep{zhou2016places}. To verify whether the proposed DPNs can benefit other tasks besides image classification, we further conduct experiments on the PASCAL VOC dataset~\citep{pascal2010} to evaluate its performance in object detection and semantic segmentation.
+
+\subsection{Experiments on image classification task}
+
+% Implementations
+We implement the DPNs using MXNet~\citep{chen2015mxnet} on a cluster with 40 K80 graphic cards. Following~\citep{ypChen2017}, we adopt standard data augmentation methods and train the networks using SGD with a mini-batch size of 32 for each GPU. For the deepest network, \emph{i.e.} DPN-131\footnote{The DPN-131 has 128 channels at {\ttfamily{conv1}}, 4 blocks at {\ttfamily{conv2}}, 8 blocks at {\ttfamily{conv3}}, 28 blocks at {\ttfamily{conv4}} and 3 blocks at {\ttfamily{conv5}}, which has \#params=$79.5\times10^6$ and FLOPs=$16.0\times10^9$.}, the mini-batch size is limited to 24 because of the 12GB GPU memory constraint. The learning rate starts from $\sqrt{0.1}$ for DPN-92 and DPN-131, and from $0.4$ for DPN-98. It drops in a ``steps'' manner by a factor of $0.1$. Following~\cite{he2016deep}, batch normalization layers are refined after training.
+
+\subsubsection{ImageNet-1k dataset}
+
+% explain the results on table
+Firstly, we compare the image classification performance of DPNs with current state-of-the-art models. As can be seen from the first block in Table~\ref{tab_imnet}, a shallow DPN with only the depth of 92 reduces the top-1 error rate by an absolute value of $0.5\%$ compared with the ResNeXt-101($32\times4d$) and an absolute value of $1.5\%$ compared with the DenseNet-161 yet provides with considerably less FLOPs. In the second block of Table~\ref{tab_imnet}, a deeper DPN (DPN-98) surpasses the best residual network -- ResNeXt-101 ($64\times4$d), and still enjoys $25\%$ less FLOPs and a much smaller model size (236 MB v.s. 320 MB). In order to further push the state-of-the-art accuracy, we slightly increase the depth of the DPN to 131 (DPN-131). The results are shown in the last block in Table~\ref{tab_imnet}. Again, the DPN shows superior accuracy over the best single model -- Very Deep PolyNet~\citep{zhang2016polynet}, with a much smaller model size (304 MB v.s. 365 MB). Note that the Very Deep PolyNet adopts numerous tricks, \emph{e.g.} initialization by insertion, residual scaling, stochastic paths, to assist the training process. In contrast, our proposed DPN-131 is simple and does not involve these tricks, DPN-131 can be trained using a standard training strategy as shallow DPNs. More importantly, the actual training speed of DPN-131 is about 2 times faster than the Very Deep PolyNet, as discussed in the following paragraph.
+
+
+\begin{table}[t]
+\parbox{.58\linewidth}{
+\centering
+  \caption{Comparison with state-of-the-art CNNs on ImageNet-1k dataset. Single crop validation error rate ($\%$) on validation set. *: Performance reported by~\cite{xie2016aggregated}, \textdagger:~With Mean-Max Pooling (see Appendix~\ref{appendix:mean_max_pooling}).}
+  \vskip -0.08in	
+  \scriptsize
+  \setlength\tabcolsep{2pt}
+  \label{tab_imnet}
+  \begin{tabular}{lccccccc}
+	\hline
+	\multirow{2}{*}{Method} &\multirow{2}{*}{\makecell[c]{Model\\Size}}  & \multirow{2}{*}{GFLOPs}  
+	&  \multicolumn{2}{c}{x224} &  \multicolumn{2}{c}{x320 / x299} \\
+	  					    &                                            & 
+    & top-1 & top-5  & top-1 & top-5  \\
+	\hline
+	DenseNet-161(k=48)~\cite{huang2016densely}     	&  111 MB	  &  7.7 	& 22.2    &   --    &  --     &   --   \\
+	ResNet-101*~\cite{he2016deep}	    			        &  170 MB	  &  7.8 	& 22.0    &   6.0   &  --     &   --   \\
+	ResNeXt-101 ($32\times4$d)~\cite{xie2016aggregated} &  170 MB	  &  8.0	    & 21.2    &   5.6   &  --     &   --   \\
+	DPN-92 ($32\times3$d)	                    & \textbf{145 MB} & \textbf{6.5} & \textbf{20.7} & \textbf{5.4} & \textbf{19.3} & \textbf{4.7} \\
+	\hline
+	ResNet-200~\cite{he2016identity}				    	&  247 MB	  &  15.0 	& 21.7    &   5.8	& 20.1    &  4.8 \\
+	Inception-resnet-v2~\citep{szegedy2016inception} &  227 MB	  &  --	    & --      &   --    & 19.9    &   4.9 \\
+	ResNeXt-101 ($64\times4$d)~\cite{xie2016aggregated} 	&  320 MB  &  15.5	& 20.4    &   5.3   & 19.1    & 4.4 \\	
+	DPN-98 ($40\times4$d)	                & \textbf{236 MB}   & \textbf{11.7}  & \textbf{20.2}  & \textbf{5.2} & \textbf{18.9} & \textbf{4.4} \\
+	\hline
+	Very deep Inception-resnet-v2~\citep{zhang2016polynet} & 531 MB  &  --     &   --    &   --    & 19.10   & 4.48  \\
+	Very Deep PolyNet~\citep{zhang2016polynet}      	& 365 MB      &  --      &   --    &   --    & 18.71   & 4.25 \\
+	DPN-131 ($40\times4$d)                           & 304 MB      & 16.0 & 19.93 & 5.12 & 18.62 & 4.23 \\
+	DPN-131 ($40\times4$d)~\textdagger    & \textbf{304 MB}      & \textbf{16.0} & \textbf{19.93} & \textbf{5.12} & \textbf{18.55} & \textbf{4.16} \\
+	\hline
+  \end{tabular}
+}
+\hskip 0.1in
+\parbox{.40\linewidth}{
+\centering
+  \caption{Comparison with state-of-the-art CNNs on Places365-Standard dataset. 10 crops validation accuracy rate ($\%$) on validation set.}
+  \vskip -0.08in	
+  \scriptsize
+  \label{tab_places}
+  \begin{tabular}{lccccc}
+	\hline
+	Method    							& \makecell[c]{ Model\\Size} & \makecell[c]{top-1 \\ acc.} & \makecell[c]{top-5 \\ acc.} \\
+	\hline
+	AlexNet~\citep{zhou2016places}	 	&  223 MB	  & 53.17    &   82.89    \\
+	GoogleLeNet~\citep{zhou2016places} 	&   44 MB	  & 53.63    &   83.88    \\
+	VGG-16~\citep{zhou2016places}		&  518 MB	  & 55.24    &   84.91    \\
+	ResNet-152~\citep{zhou2016places}	&  226 MB	  & 54.74    &   85.08    \\
+	\hline
+	ResNeXt-101~\citep{ypChen2017}		&  165 MB	  & 56.21    &   86.25    \\
+	CRU-Net-116~\citep{ypChen2017}		&  163 MB 	  & 56.60    &   86.55    \\
+	DPN-92  ($32\times3$d)		   & \textbf{138 MB}  & \textbf{56.84}  & \textbf{86.69}    \\
+	\hline
+  \end{tabular}
+}
+\vskip -0.1in
+\end{table}
+
+\begin{figure}[t]	
+	\center
+	\resizebox{0.94\textwidth}{!}{	
+		\includegraphics{fig_dot.pdf}
+	}
+	\vskip -0.1in
+	\caption{Comparison of total actual cost between different models during training. Evaluations are conducted on a single Node with 4 K80 graphic card with all training samples cached into memory. (For the comparison of \emph{Training Speed}, we push the mini-batch size to its maximum value given a 12GB GPU memory to test the fastest possible training speed of each model.)}
+	\label{fig_dot}
+	\vskip -0.15in
+\end{figure}
+
+\vskip -0.06in
+% explain the results on graphic
+Secondly, we compare the training cost between the best performing models. Here, we focus on evaluating two key properties -- the actual GPU memory cost and the actual training speed. Figure~\ref{fig_dot} shows the results. As can be seen from Figure~\ref{fig_dot}(a)(b), the DPN-98 is $15\%$ faster and uses $9\%$ less memory than the best performing ResNeXt with a considerably lower testing error rate. Note that theoretically the computational cost of DPN-98 shown in Table~\ref{tab_imnet} is $25\%$ less than the best performing ResNeXt, indicating there is still room for code optimization. Figure~\ref{fig_dot}(c) presents the same result in a more clear way. The deeper DPN-131 only costs about $19\%$ more training time compared with the best performing ResNeXt, but achieves the state-of-the-art single model performance. The training speed of the previous state-of-the-art single model, \emph{i.e.} Very Deep PolyNet (537 layers)~\citep{zhang2016polynet}, is about 31 samples per second based on our implementation using MXNet, showing that DPN-131 runs about 2 times faster than the Very Deep PolyNet during training.
+
+
+\subsubsection{Place365-Standard dataset}
+
+\vskip -0.04in
+In this experiment, we further evaluate the accuracy of the proposed DPN on the scene classification task using the Places365-Standard dataset. The Places365-Standard dataset is a high-resolution scene understanding dataset with more than 1.8 million images of 365 scene categories. Different from object images, scene images do not have very clear discriminative patterns and require a higher level context reasoning ability.
+
+\vskip -0.04in
+% explain the resutls
+Table~\ref{tab_places} shows the results of different models on this dataset. To make a fair comparison, we perform the DPN-92 on this dataset instead of using deeper DPNs. As can be seen from the results, DPN achieves the best validation accuracy compared with other methods. The DPN-92 requires much less parameters (138 MB v.s. 163 MB), which again demonstrates its high parameter efficiency and high generalization ability.
+
+
+\subsection{Experiments on the object detection task}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% VOC Detection Results:
+\renewcommand{\arraystretch}{1.5}
+\begin{table}[t]
+	\centering
+	\caption{Object detection results on PASCAL VOC 2007 \emph{test} set. The performance is measured 
+			 by mean of Average Precision (mAP, in \%).
+			 }
+	\vskip -0.03in			 
+	\label{VOC-Detection}
+	\resizebox{\textwidth}{!}{
+    \setlength\tabcolsep{2.5pt}
+	\begin{tabular}{c|c|cccccccccccccccccccc}		
+		\hline % ----------------------------------------------------------------
+		\textbf{Method}   
+		& \textbf{mAP}
+		& areo   & bike   & bird   & boat   & bottle & bus    & car    & cat    & chair  & cow
+		& table  & dog    & horse  & mbk    & prsn   & plant  & sheep  & sofa   & train  & tv   \\
+		\hline % ----------------------------------------------------------------------
+		DenseNet-161 (k=48)
+		& 79.9
+		& 80.4   & 85.9   & 81.2   & 72.8   & 68.0   & 87.1   & 88.0   & 88.8   & 64.0   & 83.3
+		& 75.4   & 87.5   & 87.6   & 81.3   & 84.2   & 54.6   & 83.2   & 80.2   & 87.4   & 77.2 \\
+		ResNet-101~\cite{ren2015faster}
+		& 76.4   
+		& 79.8   & 80.7   & 76.2   & 68.3   & 55.9   & 85.1   & 85.3   & \textbf{89.8} & 56.7   & \textbf{87.8}
+		& 69.4   & 88.3   & \textbf{88.9}   & 80.9   & 78.4   & 41.7   & 78.6   & 79.8   & 85.3   & 72.0 \\
+		ResNeXt-101 ($32\times4$d)
+		& 80.1  
+		& 80.2   & 86.5   & 79.4   & 72.5   & 67.3   & 86.9   & 88.6   & 88.9   & 64.9   & 85.0 
+		& 76.2   & 87.3   & 87.8   & 81.8   & 84.1   & 55.5   & 84.0   & 79.7   & 87.9   & 77.0 \\
+		\hline % ----------------------------------------------------------------------
+		DPN-92 ($32\times3$d)
+		& \textbf{82.5}   
+		& \textbf{84.4} & \textbf{88.5} & \textbf{84.6} & \textbf{76.5} & \textbf{70.7} & \textbf{87.9} & \textbf{88.8} & 89.4 & \textbf{69.7} & 87.0
+		& \textbf{76.7} & \textbf{89.5} & 88.7 & \textbf{86.0} & \textbf{86.1} & \textbf{58.4} & \textbf{85.0} & \textbf{80.4} & \textbf{88.2} & \textbf{83.1} \\
+		\hline % ----------------------------------------------------------------------		
+	\end{tabular}
+    }
+\end{table}
+\renewcommand{\arraystretch}{1.2}
+
+% VOC Results END
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+We further evaluate the proposed Dual Path Network on the object detection task. Experiments are performed on the PASCAL VOC 2007 datasets~\cite{pascal2010}. We train the models on the union set of VOC 2007 \emph{trainval} and VOC 2012 \emph{trainval} following~\cite{ren2015faster}, and evaluate them on VOC 2007 \emph{test} set. We use standard evaluation metrics Average Precision (AP) and mean of AP (mAP) following the PASCAL challenge protocols for evaluation.
+
+We perform all experiments based on the ResNet-based Faster R-CNN framework, following~\cite{he2016deep} and make comparisons by replacing the residual network, while keeping other parts unchanged. Since our goal is to evaluate DPN, rather than further push the state-of-the-art accuracy on this dataset, we adopt the shallowest DPN-92 and baseline networks at roughly the same complexity level. Table~\ref{VOC-Detection} provides the detection performance comparisons of the proposed DPN with several current state-of-the-art models. It can be observed that the DPN obtains the mAP of $82.5\%$, which makes large improvements, \emph{i.e.} $6.1\%$ compared with ResNet-101~\cite{ren2015faster} and $2.4\%$ compared with ResNeXt-101~($32\times4$d). The better results shown in this experiment demonstrate that the Dual Path Network is also capable of learning better feature representations for detecting objects and benefiting the object detection task.
+
+
+\subsection{Experiments on the semantic segmentation task}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% VOC Segmentation Results:
+\renewcommand{\arraystretch}{1.5}
+\begin{table}[t]
+	\centering
+	\caption{Semantic segmentation results on PASCAL VOC 2012 \emph{test} set. The performance is measured 
+			 by mean Intersection over Union (mIoU, in \%).
+			 }	 
+	\vskip -0.03in	
+	\label{VOC-Segmentation}
+	\resizebox{\textwidth}{!}{
+    \setlength\tabcolsep{2.5pt}
+	\begin{tabular}{c|c|ccccccccccccccccccccc}		
+		\hline % ----------------------------------------------------------------
+		Method 
+		& \textbf{mIoU}   & bkg
+		& areo   & bike   & bird   & boat   & bottle & bus    & car    & cat    & chair  & cow
+		& table  & dog    & horse  & mbk    & prsn   & plant  & sheep  & sofa   & train  & tv   \\
+		\hline % ----------------------------------------------------------------------
+		DenseNet-161 (k=48)
+		& 68.7   & 92.1 
+		& 77.3   & 37.1   & 83.6   & 54.9   & 70.0   & 85.8   & 82.5   & 85.9   & 26.1   & 73.0 
+		& 55.1   & 80.2   & 74.0   & 79.1   & 78.2   & 51.5   & 80.0   & 42.2   & 75.1   & 58.6 \\
+		ResNet-101
+		& 73.1   & 93.1 
+		& 86.9   & 39.9   & \textbf{87.6} & 59.6 & 74.4 & 90.1 & 84.7  & 87.7   & 30.0   & 81.8 
+		& 56.2   & 82.7   & 82.7   & 80.1   & 81.1   & 52.4   & 86.2   & 52.5   & 81.3   & 63.6 \\
+		ResNeXt-101 ($32\times4$d)
+		& 73.6   & 93.1 
+		& 84.9   & 36.2   & 80.3   & \textbf{65.0} & \textbf{74.7} & 90.6 & 83.9 & 88.7 & \textbf{31.1} & 86.3 
+		& \textbf{62.4} & \textbf{84.7} & 86.1 & 81.2 & 80.1 & 54.0 & \textbf{87.4} & 54.0 & 76.3 & 64.2 \\
+		\hline % ----------------------------------------------------------------------
+		DPN-92 ($32\times3$d)
+        & \textbf{74.8} & \textbf{93.7} 
+        & \textbf{88.3} &\textbf{40.3} & 82.7 & 64.5 & 72.0 & \textbf{90.9} & \textbf{85.0} & \textbf{88.8} & \textbf{31.1} & \textbf{87.7} 
+        & 59.8 & 83.9 & \textbf{86.8} & \textbf{85.1} & \textbf{82.8} & \textbf{60.8} & 85.3 & \textbf{54.1} & \textbf{82.6} & \textbf{64.6} \\		
+		\hline % ----------------------------------------------------------------------		
+	\end{tabular}
+    }
+	\vskip -0.1in
+\end{table}
+\renewcommand{\arraystretch}{1.2}
+
+% VOC Results END
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+In this experiment, we evaluate the performance of the Dual Path Network for dense prediction, \emph{i.e.} semantic segmentation, where the training target is to predict the semantic label for each pixel in the input image. We conduct experiments on the PASCAL VOC 2012 segmentation benchmark dataset~\citep{pascal2010} and use the DeepLab-ASPP-L~\cite{chen2016deeplab} as the segmentation framework. For each compared method in Table~\ref{VOC-Segmentation}, we replace the $3\times3$ convolutional layers in {\ttfamily{conv4}} and {\ttfamily{conv5}} of Table \ref{tab_detail_settings} with atrous convolution~\cite{chen2016deeplab} and plug in a head of Atrous Spatial Pyramid Pooling (ASPP)~\citep{chen2016deeplab} in the final feature maps of {\ttfamily{conv5}}. We adopt the same training strategy for all networks following \cite{chen2016deeplab} for fair comparison.
+
+
+% explain the results
+Table \ref{VOC-Segmentation} shows the results of different convolutional neural networks. It can be observed that the proposed DPN-92 has the highest overall mIoU accuracy. Compared with the ResNet-101 which has a larger model size and higher computational cost, the proposed DPN-92 further improves the IoU for most categories and improves the overall mIoU by an absolute value $1.7\%$. Considering the ResNeXt-101 ($32\times4$d) only improves the overall mIoU by an absolute value $0.5\%$ compared with the ResNet-101, the proposed DPN-92 gains more than $3$ times improvement compared with the ResNeXt-101 ($32\times4$d). The better results once again demonstrate the proposed Dual Path Network is capable of learning better feature representation for dense prediction.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+%  Conclusion
+%
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion}
+
+\vskip -0.05in
+In this paper, we revisited the densely connected networks, bridged the densely connected networks with Higher Order RNNs and proved the residual networks are essentially densely connected networks with shared connections. Based on this new explanation, we proposed a dual path architecture that enjoys benefits from both sides. The novel network, DPN, is then developed based on this dual path architecture. Experiments on the image classification task demonstrate that the DPN enjoys high accuracy, small model size, low computational cost and low GPU memory consumption, thus is extremely useful for not only research but also real-word application. Experiments on the object detection task and semantic segmentation tasks show that the proposed DPN can also benefit other tasks by simply replacing the base network.
+
+
+
+{\small
+\bibliography{references}
+}
+%\bibliographystyle{unsrt}
+\bibliographystyle{plainnat}
+
+\newpage
+
+\appendix
+\section{Testing with Mean-Max Pooling}
+\label{appendix:mean_max_pooling}
+Here, we introduce a new testing technique by using Mean-Max Pooling which can further improve the performance of a well trained CNN in the testing phase without any noticeable computational overhead. This testing technique is very effective for testing images with size larger than training crops. The idea is to first convert a trained CNN model into a convolutional network~\citep{long2015fully} and then insert the following Mean-Max Pooling layer (\emph{a.k.a.} Max-Avg Pooling~\citep{lee2016generalizing}), \emph{i.e.} 0.5 * (global average pooling + global max pooling), just before the final softmax layer.
+
+Comparisons between the models with and without Mean-Max Pooling are shown in Table~\ref{tab_mean_max}. As can be seen from the results, the simple Mean-Max Pooling testing strategy successfully improves the testing accuracy for all models.
+
+\begin{table}[t]
+\centering
+  \caption{Comparison with different testing techniques on ImageNet-1k dataset. Single crop validation error rate ($\%$) on validation set.}
+  \label{tab_mean_max}
+  \small
+  \begin{tabular}{lccccccc}
+	\hline
+	\multirow{2}{*}{Method} &\multirow{2}{*}{\makecell[c]{Model\\Size}}  & \multirow{2}{*}{GFLOPs}  
+	&  \multicolumn{2}{c}{w/o Mean-Max Pooling} &  \multicolumn{2}{c}{w/ Mean-Max Pooling} \\
+	  					    &                                            & 
+    & top-1 & top-5  & top-1 & top-5  \\
+	\hline
+	DPN-92 ($32\times3$d)	& 145 MB 	& 6.5 	& 19.34 	& 4.66 	& \textbf{19.04} 	& \textbf{4.53} \\
+	\hline
+	DPN-98 ($40\times4$d)	& 236 MB 	& 11.7 	& 18.94	& 4.44 	& \textbf{18.72} 	& \textbf{4.40} \\
+	\hline
+	DPN-131 ($40\times4$d)	& 304 MB 	& 16.0 	& 18.62 	& 4.23 	& \textbf{18.55} 	& \textbf{4.16} \\
+	\hline
+  \end{tabular}
+\end{table}
+
+\end{document}

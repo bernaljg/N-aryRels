@@ -1,0 +1,109 @@
+ %
+% File naacl2019.tex
+%
+%% Based on the style files for ACL 2018 and NAACL 2018, which were
+%% Based on the style files for ACL-2015, with some improvements
+%%  taken from the NAACL-2016 style
+%% Based on the style files for ACL-2014, which were, in turn,
+%% based on ACL-2013, ACL-2012, ACL-2011, ACL-2010, ACL-IJCNLP-2009,
+%% EACL-2009, IJCNLP-2008...
+%% Based on the style files for EACL 2006 by 
+%%e.agirre@ehu.es or Sergi.Balari@uab.es
+%% and that of ACL 08 by Joakim Nivre and Noah Smith
+
+\documentclass[11pt,a4paper]{article}
+\usepackage[hyperref]{acl2019}
+\usepackage{acl2019}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage{adjustbox}
+\usepackage[ruled]{algorithm2e} %alog
+\usepackage{amssymb}% http://ctan.org/pkg/amssymb
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+
+\usepackage{url}
+
+\usepackage{mwe}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{wasysym}
+\usepackage{bbm}
+\usepackage{todonotes} % insert [disable] to disable all notes
+%% figure
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage[caption=false]{subfig}
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+\newcommand{\xiaodl}[2][]{\todo[color=yellow,size=\scriptsize,fancyline,caption={},#1]{Xiaodong:#2}} 
+
+
+\aclfinalcopy % Uncomment this line for the final submission
+\def\aclpaperid{1963} %  Enter the acl Paper ID here
+
+%\setlength\titlebox{5cm}
+% You can expand the titlebox if you need extra space
+% to show all the authors. Please do not make the titlebox
+% smaller than 5cm (the original size); we will check this
+% in the camera-ready version and ask you to change it back.
+
+
+\newcommand\BibTeX{B{\sc ib}\TeX}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\newcommand\MNAME{MT-DNN}
+
+% For our own commenting purposes
+\newcommand{\JG}[1]{{\color{blue}{[{\bf JG}: #1]}}}
+
+\newcommand{\WZ}[1]{{\color{red}{[{\bf WZ}: #1]}}}
+
+% \title{Large-scale Multi-task Learning for Natural Language Understanding}
+\title{Multi-Task Deep Neural Networks for Natural Language Understanding}
+
+\author{Xiaodong Liu\thanks{~~Equal Contribution.}~$^1$, Pengcheng He$^\bold{\ast}$$^2$, Weizhu Chen$^2$, Jianfeng Gao$^1$ \\
+  $^1$ Microsoft Research~~~~~~~~
+  $^2$ Microsoft Dynamics 365 AI \\
+  {\tt \{xiaodl,penhe,wzchen,jfgao\}@microsoft.com}
+}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+%In this paper, we propose a multi-task learning framework to handle with multiple Natural Language Processing (NLP) tasks based on the pre-trained BERT models. The unique property of our framework is that we train the model jointly. Experiments on the GLUE benchmark show that our proposed approach beat the current state-of-the-art large BERT and set a new state-of-the-art results with a smaller parameter size.
+In this paper, we present a Multi-Task Deep Neural Network (MT-DNN) for learning representations across multiple natural language understanding (NLU) tasks. MT-DNN not only leverages large amounts of cross-task data, but also benefits from a regularization effect that leads to more general representations to help adapt to new tasks and domains. MT-DNN extends the model proposed in \citet{liu2015mtl} by incorporating a pre-trained bidirectional transformer language model, known as BERT \citep{bert2018}. 
+%MT-DNN in this study combines tasks of multi-label single-sentence classification, pairwise text classification, text similarity scoring and relevance ranking, and is easy to extend to incorporate new tasks.
+MT-DNN obtains new state-of-the-art results on ten NLU tasks, including SNLI, SciTail, and eight out of nine GLUE tasks, pushing the GLUE benchmark to 82.7\% (2.2\% absolute improvement) \footnote{As of February 25, 2019 on the latest GLUE test set.}. 
+We also demonstrate using the SNLI and SciTail datasets that the representations learned by MT-DNN allow domain adaptation with substantially fewer in-domain labels than the pre-trained BERT representations.
+%outperforms BERT in a set of domain adaptation experiments on ,    
+The code and pre-trained models are publicly available at https://github.com/namisan/mt-dnn.
+\end{abstract}
+
+\input{intro}
+
+\input{tasks}
+
+\input{mt-dnn}
+
+\input{experiments}
+
+\input{summary}
+
+\input{related}
+
+%\section*{Acknowledgments}
+
+% include your own bib file like this:
+%\bibliographystyle{acl}
+%\bibliography{acl2018}
+\bibliography{acl_snli}
+\bibliographystyle{acl_natbib}
+%\appendix
+%
+%\section{Supplemental Material}
+%\label{sec:supplemental}
+
+\end{document}

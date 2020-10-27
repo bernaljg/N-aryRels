@@ -1,0 +1,45 @@
+Many real life problems require relational reasoning in order to be solved. Consider understanding the simple sentence, e.g. "The police officer shot the burglar with the gun", which require reasoning about the people and items involved to infer the most likely meaning and resolve the ambiguity.
+\emph{UP: a more politically neutral sentence?}
+Or consider playing chess in which each piece affects each other piece and estimating the value of a move requires understanding how the pieces will likely affect each other over several turns ahead.
+\emph{UP: If chess is not an example in the results, one should pick an example that fits the theme of the results. Call the opening example PROBLEM A}
+
+Symbolic approaches to solving such problems are considered the traditional approach. This approach generally require defining each symbol and how it relates to each other symbol by hand.
+\emph{UP: here, we don't yet know what symbols are...}
+Given these definitions powerful algorithms such as search or constrained optimization can be employed and are in general very efficient.
+\emph{UP: it's important that the story here ties in with your opening example. The reader can only think of one thing at a time, and you have to keep the telling of the story around that "one thing"}
+However defining and recognizing symbols in the messy world of raw sensor inputs is often very hard.
+\emph{UP: above, we have discrete alphabet of symbols. Is that different from what you propose below?}
+For instance how do you define a car in pixel space? or the meaning of the word "shot"? As such the traditional approach has mostly been limited to more abstract cases where you can clearly and easily define the symbols \emph{UP like in which concrete example?}.
+
+\emph{UP: I think the opening story line will be much more impactful if you contrast only two worlds, a traditional one (with one example) and one example where RRNs would help.}
+
+Machine learning in general and deep learning in particular excel at messy real world sensor data
+\emph{example of sensor data. should be the same as your opening "problem statement" example.}
+however and have had great success at learning to recognize symbols in a wide range of raw inputs and domains.
+\emph{UP it might help to be specific. what symbol? which raw input?}
+But, whereas the traditional approach is weak at recognizing symbols but powerful at reasoning about them, for deep learning it is the other way around and many state-of-the-art deep learning approaches struggle with even simple relational reasoning \cite{santoro2017simple} TODO more cites.
+
+\emph{UP. Here, you might want to make it clear that santoro's work and data sets are a step towards PROBLEM A, but is not sufficient.}
+Recently \citet{santoro2017simple} took a step towards combining the best of both worlds using a simple and general approach. They propose to couple a deep learning perceptual front-end with a neural network relational reasoning module and train the joint model end-to-end. It is a compelling approach and they obtain super-human performance on the visual
+question answering (QA)
+dataset CLEVR, as well as good results on a BaBi, a set of textual reasoning tasks.
+
+However, the complexity of the relational reasoning required in the datasets they use for evaluation is limited. The visual QA dataset CLEVR consists of images of 3D rendered objects with accompanying questions, e.g. "What is the color of the box left of the big cylinder" \cite{johnson2016clevr}. The number of reasoning steps required to produce an answer is never more than three. BaBi is a textual QA dataset by Facebook widely used in the deep learning literature \cite{weston2015towards}. It consists of 20 question-answering tasks that are designed to test various minimum requirements of reasoning. Again, the number of steps of relational reasoning required is never more than three.
+
+\emph{This (above) is your selling point. I would put this paragraph much earlier, to ensure that the reader understands that the state of the art is 3 steps.}
+
+Since we have plenty of evidence that deep learning models are powerful perceptual front-ends,
+\emph{UP: what is a perceptual front-end? you haven't told me as a reader yet.}
+and we now have an interface for combining that with relational reasoning modules we can develop and evaluate neural modules for complex relational reasoning in isolation.
+As such, we propose to evaluate relational reasoning modules on a host of known problems requiring complex relational reasoning. Predicting long-range consequences of moves in all kinds of games; chess, backgammon, Go, card games, etc. Solving cross-word puzzles, murder mysteries, Sudoku's, 8 queens, graph coloring problems, satisfiability problems, assignment and routing problems, constraint satisfaction problems etc.
+
+\emph{UP. here, you have to enumerate things that are close you your results. if you mention chess and spread the net too wide, you give reviewers ammunition to criticize your approach.}
+
+In this paper we consider the problem of solving 9x9 Sudokus with as little as 17 givens, which requires an order of magnitude more reasoning steps than BaBi or CLEVR. To solve this challenging task we propose the Recurrent Relational Network (RRN), a graph neural network for solving problems that require complex relational reasoning. It can be added to any deep model that requires complex relational reasoning.
+
+\emph{UP. This task doesn't seem to use messy, noisy censors...?}
+
+We evaluate the RRN on the 9x9 Sudoku problem where it solves 96.6\% of puzzles with the minimum of 17 givens. For more givens the accuracy quickly approaches 100\%. The RRN learns a convergent message passing inference algorithm that outperforms the traditional sum product message passing algorithm.
+The non-recurrent relational network cannot solve even simple Sudoku's with 34 givens, as multiple steps of relational inference is required. To compare our model to others we also evaluate the RRN on the more traditional BaBi dataset solving 19/20 tasks, which is competitive with state-of-the-art Sparse Differential Neural Computers.
+
+\emph{UP. this (above) is a key part of your sales pitch, and the example should be folded in earlier, even as PROBLEM A.}

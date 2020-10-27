@@ -1,0 +1,30 @@
+\begin{tabular}[t]{@{}c@{\hspace{4mm}}r@{}}
+\begin{minipage}{0.67\textwidth}
+%\vspace{-9mm}
+\begin{tabular}{@{}c@{}c@{}}
+\includegraphics[width=\textwidth]{radar_full_new}
+\end{tabular}
+%\vspace{-5mm}
+\captionof{figure}{Radar charts of percentage error per attribute on CelebA \citep{celeba}. Lower is better. We divide attributes into two sets for legibility: easy on the left, hard on the right. Zoom in for details.}
+\label{fig:multi_label_radar}
+\vspace{5mm}
+\end{minipage}&
+\begin{minipage}{0.3\textwidth}
+\vspace{-5mm}
+\captionof{table}{Mean error of MTL algorithms in multi-label classification on CelebA \citep{celeba}. Percentage error of each attribute is computed separately and then averaged. Lower is better.}
+\begin{tabular}{r@{\hspace{2mm}}c@{}}
+\toprule
+& Average  \\
+&  error \\
+\midrule
+Single task & $8.77$ \\
+Uniform scaling & $9.62$ \\
+\citealt{Kendall2018} & $9.53$ \\
+GradNorm & $8.44$ \\
+Ours & $\mathbf{8.25}$  \\
+\bottomrule
+\end{tabular}
+\label{table:multi_label_bar}
+\end{minipage}
+\vspace{-5mm}
+\end{tabular}

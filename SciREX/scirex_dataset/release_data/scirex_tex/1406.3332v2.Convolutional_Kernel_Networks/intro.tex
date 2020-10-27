@@ -1,0 +1,41 @@
+We have recently seen a revival of attention given to convolutional neural
+networks (CNNs)~\cite{lecun1998} due to their high performance for large-scale
+visual recognition tasks~\cite{donahue2013,krizhevsky2012,wan2013}. The
+architecture of CNNs is relatively simple and consists of successive layers
+organized in a hierarchical fashion; each layer involves convolutions with
+learned filters followed by a pointwise non-linearity and a downsampling
+operation called ``feature pooling''. The resulting image representation 
+has been empirically observed to be invariant to image perturbations and to
+encode complex visual patterns~\cite{zeiler}, which are useful properties for
+visual recognition. Training CNNs remains however difficult since high-capacity
+networks may involve billions of parameters to learn, which requires both high
+computational power, \eg, GPUs, and appropriate regularization
+techniques~\cite{goodfellow2013,krizhevsky2012,wan2013}.
+
+The exact nature of invariance that CNNs exhibit is also not precisely understood.
+Only recently, the invariance of related architectures has been
+characterized; this is the case for the wavelet scattering
+transform~\cite{bruna2013} or the hierarchical models of~\cite{bou2009}.  Our
+work revisits convolutional neural networks, but we adopt a significantly
+different approach than the traditional one. Indeed, we use 
+kernels~\cite{shawe2004}, which are natural tools to model invariance~\cite{decoste2002}.
+Inspired by the hierarchical kernel descriptors of~\cite{bo2011}, we propose a
+reproducing kernel that produces multi-layer~image~representations. 
+
+Our main contribution is an approximation scheme called \emph{convolutional
+kernel network} (CKN) to make the kernel approach computationally feasible. Our
+approach is a new type of unsupervised convolutional neural network that is trained to approximate the
+kernel map. Interestingly, our network uses non-linear functions that resemble
+rectified linear units~\cite{bengio2009,wan2013}, even though they were not handcrafted
+and naturally emerge from an approximation scheme of the Gaussian kernel map.
+
+By bridging a gap between kernel methods and neural networks, we believe that
+we are opening a fruitful research direction for the future. Our network is
+learned without supervision since the label information is only used
+subsequently in a support vector machine (SVM).  Yet, we achieve competitive
+results on several datasets such as MNIST~\cite{lecun1998},
+CIFAR-10~\cite{krizhevsky2009} and STL-10~\cite{coates2011} with simple
+architectures, few parameters to learn, and no data augmentation.  Open-source
+code for learning our convolutional kernel networks is available on the first
+author's webpage.
+

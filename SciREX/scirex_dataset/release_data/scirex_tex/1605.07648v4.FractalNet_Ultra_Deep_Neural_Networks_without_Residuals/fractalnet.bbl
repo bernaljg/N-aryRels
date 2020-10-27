@@ -1,0 +1,242 @@
+\begin{thebibliography}{40}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Ba \& Caruana(2014)Ba and Caruana]{ba2014dodeep}
+Jimmy Ba and Rich Caruana.
+\newblock Do deep nets really need to be deep?
+\newblock \emph{NIPS}, 2014.
+
+\bibitem[Clevert et~al.(2016)Clevert, Unterthiner, and Hochreiter]{elu}
+Djork-Arn{\'e} Clevert, Thomas Unterthiner, and Sepp Hochreiter.
+\newblock Fast and accurate deep network learning by exponential linear units
+  ({ELU}s).
+\newblock \emph{ICLR}, 2016.
+
+\bibitem[Deng et~al.(2009)Deng, Dong, Socher, Li, Li, and
+  Fei-Fei]{deng2009imagenet}
+Jia Deng, Wei Dong, Richard Socher, Li-Jia Li, Kai Li, and Li~Fei-Fei.
+\newblock {ImageNet}: A large-scale hierarchical image database.
+\newblock \emph{CVPR}, 2009.
+
+\bibitem[Glorot \& Bengio(2010)Glorot and Bengio]{glorot2010understanding}
+Xavier Glorot and Yoshua Bengio.
+\newblock Understanding the difficulty of training deep feedforward neural
+  networks.
+\newblock \emph{AISTATS}, 2010.
+
+\bibitem[Graham(2014)]{graham2014fractional}
+Benjamin Graham.
+\newblock Fractional max-pooling.
+\newblock \emph{arXiv:1412.6071}, 2014.
+
+\bibitem[Greff et~al.(2017)Greff, Srivastava, and Schmidhuber]{unrolled}
+Klaus Greff, Rupesh~Kumar Srivastava, and J{\"{u}}rgen Schmidhuber.
+\newblock Highway and residual networks learn unrolled iterative estimation.
+\newblock \emph{ICLR}, 2017.
+
+\bibitem[Hariharan et~al.(2015)Hariharan, Arbelaez, Girshick, and
+  Malik]{HAGM:CVPR:2015}
+Bharath Hariharan, Pablo Arbelaez, Ross Girshick, and Jitendra Malik.
+\newblock Hypercolumns for object segmentation and fine-grained localization.
+\newblock \emph{CVPR}, 2015.
+
+\bibitem[He et~al.(2015)He, Zhang, Ren, and Sun]{he2015prelu}
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+\newblock Delving deep into rectifiers: Surpassing human-level performance on
+  {ImageNet} classification.
+\newblock \emph{ICCV}, 2015.
+
+\bibitem[He et~al.(2016{\natexlab{a}})He, Zhang, Ren, and Sun]{he2015deep}
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+\newblock Deep residual learning for image recognition.
+\newblock \emph{CVPR}, 2016{\natexlab{a}}.
+
+\bibitem[He et~al.(2016{\natexlab{b}})He, Zhang, Ren, and Sun]{he2016identity}
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+\newblock Identity mappings in deep residual networks.
+\newblock \emph{ECCV}, 2016{\natexlab{b}}.
+
+\bibitem[Hinton et~al.(2012)Hinton, Srivastava, Krizhevsky, Sutskever, and
+  Salakhutdinov]{dropout}
+Geoffrey~E. Hinton, Nitish Srivastava, Alex Krizhevsky, Ilya Sutskever, and
+  Ruslan Salakhutdinov.
+\newblock Improving neural networks by preventing co-adaptation of feature
+  detectors.
+\newblock \emph{arXiv:1207.0580}, 2012.
+
+\bibitem[Huang et~al.(2016{\natexlab{a}})Huang, Liu, and Weinberger]{densenet}
+Gao Huang, Zhuang Liu, and Kilian~Q. Weinberger.
+\newblock Densely connected convolutional networks.
+\newblock \emph{arXiv:1608.06993}, 2016{\natexlab{a}}.
+
+\bibitem[Huang et~al.(2016{\natexlab{b}})Huang, Sun, Liu, Sedra, and
+  Weinberger]{huang2016stochasticdepth}
+Gao Huang, Yu~Sun, Zhuang Liu, Daniel Sedra, and Kilian Weinberger.
+\newblock Deep networks with stochastic depth.
+\newblock \emph{ECCV}, 2016{\natexlab{b}}.
+
+\bibitem[Iandola et~al.(2016)Iandola, Moskewicz, Ashraf, Han, Dally, and
+  Keutzer]{SqueezeNet}
+Forrest~N. Iandola, Matthew~W. Moskewicz, Khalid Ashraf, Song Han, William~J.
+  Dally, and Kurt Keutzer.
+\newblock {SqueezeNet}: {AlexNet}-level accuracy with 50x fewer parameters and
+  $<${1MB} model size.
+\newblock \emph{arXiv:1602.07360}, 2016.
+
+\bibitem[Ioffe \& Szegedy(2015)Ioffe and Szegedy]{batchnorm}
+Sergey Ioffe and Christian Szegedy.
+\newblock Batch normalization: Accelerating deep network training by reducing
+  internal covariate shift.
+\newblock \emph{ICML}, 2015.
+
+\bibitem[Jia et~al.(2014)Jia, Shelhamer, Donahue, Karayev, Long, Girshick,
+  Guadarrama, and Darrell]{caffe14}
+Yangqing Jia, Evan Shelhamer, Jeff Donahue, Sergey Karayev, Jonathan Long, Ross
+  Girshick, Sergio Guadarrama, and Trevor Darrell.
+\newblock Caffe: Convolutional architecture for fast feature embedding.
+\newblock \emph{arXiv:1408.5093}, 2014.
+
+\bibitem[Krizhevsky(2009)]{CIFAR}
+Alex Krizhevsky.
+\newblock Learning multiple layers of features from tiny images.
+\newblock Technical report, 2009.
+
+\bibitem[Krizhevsky et~al.(2012)Krizhevsky, Sutskever, and Hinton]{alexNet12}
+Alex Krizhevsky, Ilya Sutskever, and Geoffrey~E. Hinton.
+\newblock {ImageNet} classification with deep convolutional neural networks.
+\newblock \emph{NIPS}, 2012.
+
+\bibitem[Le et~al.(2015)Le, Jaitly, and Hinton]{le2015simple}
+Quoc~V Le, Navdeep Jaitly, and Geoffrey~E Hinton.
+\newblock A simple way to initialize recurrent networks of rectified linear
+  units.
+\newblock \emph{arXiv:1504.00941}, 2015.
+
+\bibitem[Lee et~al.(2014)Lee, Xie, Gallagher, Zhang, and Tu]{lee2014deeply}
+Chen-Yu Lee, Saining Xie, Patrick Gallagher, Zhengyou Zhang, and Zhuowen Tu.
+\newblock Deeply-supervised nets.
+\newblock \emph{NIPS Workshop on Deep Learning and Representation Learning},
+  2014.
+
+\bibitem[Lee et~al.(2016)Lee, Gallagher, and Tu]{lee2016generalizing}
+Chen-Yu Lee, Patrick~W Gallagher, and Zhuowen Tu.
+\newblock Generalizing pooling functions in convolutional neural networks:
+  Mixed, gated, and tree.
+\newblock \emph{AISTATS}, 2016.
+
+\bibitem[Liang \& Hu(2015)Liang and Hu]{liang2015recurrent}
+Ming Liang and Xiaolin Hu.
+\newblock Recurrent convolutional neural network for object recognition.
+\newblock \emph{CVPR}, 2015.
+
+\bibitem[Liao \& Carneiro(2015)Liao and Carneiro]{liao2015competitive}
+Zhibin Liao and Gustavo Carneiro.
+\newblock Competitive multi-scale convolution.
+\newblock \emph{arXiv:1511.05635}, 2015.
+
+\bibitem[Lin et~al.(2013)Lin, Chen, and Yan]{nin}
+Min Lin, Qiang Chen, and Shuicheng Yan.
+\newblock Network in network.
+\newblock \emph{ICLR}, 2013.
+
+\bibitem[Maire et~al.(2014)Maire, Yu, and Perona]{MYP:ACCV:2014}
+Michael Maire, Stella~X. Yu, and Pietro Perona.
+\newblock Reconstructive sparse code transfer for contour detection and
+  semantic labeling.
+\newblock \emph{ACCV}, 2014.
+
+\bibitem[Mishkin \& Matas(2016)Mishkin and Matas]{mishkin2015all}
+Dmytro Mishkin and Jiri Matas.
+\newblock All you need is a good init.
+\newblock \emph{ICLR}, 2016.
+
+\bibitem[Nair \& Hinton(2010)Nair and Hinton]{nair2010rectified}
+Vinod Nair and Geoffrey~E Hinton.
+\newblock Rectified linear units improve restricted boltzmann machines.
+\newblock \emph{ICML}, 2010.
+
+\bibitem[Netzer et~al.(2011)Netzer, Wang, Coates, Bissacco, Wu, and Ng]{SVHN}
+Yuval Netzer, Tao Wang, Adam Coates, Alessandro Bissacco, Bo~Wu, and Andrew~Y.
+  Ng.
+\newblock Reading digits in natural images with unsupervised feature learning.
+\newblock \emph{NIPS Workshop on Deep Learning and Unsupervised Feature
+  Learning}, 2011.
+
+\bibitem[Neyshabur et~al.(2015)Neyshabur, Salakhutdinov, and Srebro]{pathsgd}
+Behnam Neyshabur, Ruslan Salakhutdinov, and Nathan Srebro.
+\newblock Path-{SGD}: Path-normalized optimization in deep neural networks.
+\newblock \emph{NIPS}, 2015.
+
+\bibitem[Romero et~al.(2015)Romero, Ballas, Kahou, Chassang, Gatta, and
+  Bengio]{romero2014fitnets}
+Adriana Romero, Nicolas Ballas, Samira~Ebrahimi Kahou, Antoine Chassang, Carlo
+  Gatta, and Yoshua Bengio.
+\newblock Fitnets: Hints for thin deep nets.
+\newblock \emph{ICLR}, 2015.
+
+\bibitem[Simonyan \& Zisserman(2015)Simonyan and Zisserman]{vgg16}
+Karen Simonyan and Andrew Zisserman.
+\newblock Very deep convolutional networks for large-scale image recognition.
+\newblock \emph{ICLR}, 2015.
+
+\bibitem[Snoek et~al.(2015)Snoek, Rippel, Swersky, Kiros, Satish, Sundaram,
+  Patwary, Ali, Adams, et~al.]{snoek2015scalable}
+Jasper Snoek, Oren Rippel, Kevin Swersky, Ryan Kiros, Nadathur Satish,
+  Narayanan Sundaram, Md~Patwary, Mostofa Ali, Ryan~P Adams, et~al.
+\newblock Scalable bayesian optimization using deep neural networks.
+\newblock \emph{ICML}, 2015.
+
+\bibitem[Springenberg et~al.(2014)Springenberg, Dosovitskiy, Brox, and
+  Riedmiller]{springenberg2014striving}
+Jost~Tobias Springenberg, Alexey Dosovitskiy, Thomas Brox, and Martin
+  Riedmiller.
+\newblock Striving for simplicity: The all convolutional net.
+\newblock \emph{ICLR (workshop track)}, 2014.
+
+\bibitem[Srivastava et~al.(2015)Srivastava, Greff, and
+  Schmidhuber]{srivastava2015highway}
+Rupesh~Kumar Srivastava, Klaus Greff, and J{\"u}rgen Schmidhuber.
+\newblock Highway networks.
+\newblock \emph{ICML}, 2015.
+
+\bibitem[Szegedy et~al.(2015)Szegedy, Liu, Jia, Sermanet, Reed, Anguelov,
+  Erhan, Vanhoucke, and Rabinovich]{szegedy2015inception}
+Christian Szegedy, Wei Liu, Yangqing Jia, Pierre Sermanet, Scott Reed, Dragomir
+  Anguelov, Dumitru Erhan, Vincent Vanhoucke, and Andrew Rabinovich.
+\newblock Going deeper with convolutions.
+\newblock \emph{CVPR}, 2015.
+
+\bibitem[Targ et~al.(2016)Targ, Almeida, and Lyman]{rir}
+Sasha Targ, Diogo Almeida, and Kevin Lyman.
+\newblock Resnet in resnet: Generalizing residual architectures.
+\newblock \emph{arXiv:1603.08029}, 2016.
+
+\bibitem[Urban et~al.(2017)Urban, Geras, Kahou, Aslan, Wang, Mohamed,
+  Philipose, Richardson, and Caruana]{urban2016dodeepsfollowup}
+Gregor Urban, Krzysztof~J. Geras, Samira~Ebrahimi Kahou, Ozlem Aslan, Shengjie
+  Wang, Abdelrahman Mohamed, Matthai Philipose, Matt Richardson, and Rich
+  Caruana.
+\newblock Do deep convolutional nets really need to be deep and convolutional?
+\newblock \emph{ICLR}, 2017.
+
+\bibitem[Veit et~al.(2016)Veit, Wilber, and Belongie]{veit16residual}
+Andreas Veit, Michael Wilber, and Serge Belongie.
+\newblock Residual networks behave like ensembles of relatively shallow
+  networks.
+\newblock \emph{NIPS}, 2016.
+
+\bibitem[Wan et~al.(2013)Wan, Zeiler, Zhang, Cun, and Fergus]{dropconnect}
+Li~Wan, Matthew Zeiler, Sixin Zhang, Yann~L Cun, and Rob Fergus.
+\newblock Regularization of neural networks using dropconnect.
+\newblock \emph{ICML}, 2013.
+
+\bibitem[Zagoruyko \& Komodakis(2016)Zagoruyko and Komodakis]{wideresnet}
+Sergey Zagoruyko and Nikos Komodakis.
+\newblock Wide residual networks.
+\newblock \emph{BMVC}, 2016.
+
+\end{thebibliography}

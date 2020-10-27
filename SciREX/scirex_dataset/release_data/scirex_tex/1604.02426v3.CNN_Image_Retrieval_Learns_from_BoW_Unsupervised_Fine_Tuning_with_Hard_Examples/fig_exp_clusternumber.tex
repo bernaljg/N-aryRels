@@ -1,0 +1,74 @@
+\begin{figure}[t]
+\vspace{10pt}
+\centering
+\extdata{fig/data/sample}
+\begin{tabular}{cc}
+\extfig{clustnumoxf}{ 
+\begin{tikzpicture}
+\begin{axis}[%
+	width=0.5\linewidth,
+	height=0.45\linewidth,
+	xlabel={Epoch},
+	ylabel={mAP},
+	title={Oxford105k},
+	legend pos=south east,
+    legend style={cells={anchor=east}, font =\tiny, fill opacity=0.8, row sep=-2.5pt},	
+    ymax = 56,
+    ymin = 38,
+    xmin = 0,
+    xmax = 30,
+    grid=both,
+    xtick={0,5,...,30},    
+    xticklabels={0,5,...,30},
+    ytick={40,45,...,55},
+ 	 y label style={at={(axis description cs:.1,.5)}},
+ 	 x label style={at={(axis description cs:.5,.05)}} 	    
+]
+	\addplot[color=red,     solid, mark=*,  mark size=1.5, line width=1.0] table[x=epoch, y expr={100*\thisrow{clustall}}]  \clustnumoxf;\leg{551 clusters};
+	\addplot[color=blue,    solid, mark=*,  mark size=1.5, line width=1.0] table[x=epoch, y expr={100*\thisrow{clust100}}]  \clustnumoxf;\leg{100 clusters};
+	\addplot[color=green,   solid, mark=*,  mark size=1.5, line width=1.0] table[x=epoch, y expr={100*\thisrow{clust10}}]   \clustnumoxf;\leg{10 clusters};
+	\addplot[color=black, only marks, mark=star, mark size = 2.5, line width = 1] coordinates {(30,54.16)}; \leg{best validated};
+	\addplot[color=black, only marks, mark=star, mark size = 2.5, line width = 1] coordinates {(19,53.63)};
+	\addplot[color=black, only marks, mark=star, mark size = 2.5, line width = 1] coordinates {(29,49.60)};
+	
+\end{axis}
+\end{tikzpicture}
+}
+&
+\extfig{clustnumpar}{ 
+\begin{tikzpicture}
+\begin{axis}[%
+	width=0.5\linewidth,
+	height=0.45\linewidth,
+	xlabel={Epoch},
+	ylabel={mAP},
+	title={Paris106k},
+	legend pos=south east,
+    legend style={cells={anchor=east}, font =\tiny, fill opacity=0.8, row sep=-2.5pt},	
+    ymax = 56,
+    ymin = 38,
+    xmin = 0,
+    xmax = 30,
+    grid=both,
+    xtick={0,5,...,30},    
+    xticklabels={0,5,...,30},
+    ytick={40,45,...,55},
+ 	 y label style={at={(axis description cs:.1,.5)}},
+ 	 x label style={at={(axis description cs:.5,.05)}} 	    
+]
+	\addplot[color=red,     solid, mark=*,  mark size=1.5, line width=1.0] table[x=epoch, y expr={100*\thisrow{clustall}}]  \clustnumpar;\leg{551 clusters};
+	\addplot[color=blue,    solid, mark=*,  mark size=1.5, line width=1.0] table[x=epoch, y expr={100*\thisrow{clust100}}]  \clustnumpar;\leg{100 clusters};
+	\addplot[color=green,   solid, mark=*,  mark size=1.5, line width=1.0] table[x=epoch, y expr={100*\thisrow{clust10}}]   \clustnumpar;\leg{10 clusters};
+	\addplot[color=black, mark=star, only marks, mark size = 2.5, line width = 1] coordinates {(30,54.92)}; \leg{best validated};
+	\addplot[color=black, mark=star, only marks, mark size = 2.5, line width = 1] coordinates {(19,53.37)};
+	\addplot[color=black, mark=star, only marks, mark size = 2.5, line width = 1] coordinates {(29,50.56)};
+	
+\end{axis}
+\end{tikzpicture}
+}
+\end{tabular}
+\vspace{0pt}
+\caption{Influence of the number of 3D models used for CNN fine-tuning. Performance is evaluated on AlexNet MAC on Oxford105k and Paris106k datasets using 10, 100 and 551 (all available) 3D models. The network with the best performance on the validation set is marked with $\star$.
+\label{fig:clusternumber}
+\vspace{10pt}}
+\end{figure}

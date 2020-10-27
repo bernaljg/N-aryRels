@@ -1,0 +1,241 @@
+\begin{figure}
+   \input{include/table_all}
+   \captionof{table}{
+      \textbf{CIFAR-100/CIFAR-10/SVHN.}
+      We compare test error (\%) with other leading methods, trained with
+      either no data augmentation, translation/mirroring (+), or more
+      substantial augmentation (++).  Our main point of comparison is
+      {\resnet}.  We closely match its benchmark results using data
+      augmentation, and outperform it by large margins without data
+      augmentation.  Training with {\droppath}, we can extract from
+      {\fracnet} single-column (plain) networks that are highly competitive.
+      %Note: Fractional Pooling is filed under non-standard data augmentation
+      %      as argued by~\cite{mishkin2015all}.  It also uses multiple passes
+      %      at test time.
+   }
+\label{tab:all}
+\end{figure}
+
+\addtocounter{footnote}{-1}
+\footnotetext{%
+   Densely connected networks (DenseNets) are concurrent work, appearing
+   subsequent to our original arXiv paper on FractalNet.  A variant of residual
+   networks, they swap addition for concatenation in the residual functional
+   form.  We report performance of their $250$-layer DenseNet-BC network with
+   growth rate $k=24$.
+}
+
+\stepcounter{footnote}
+\footnotetext{%
+   This deeper (4 column) {\fracnet} has fewer parameters.  We vary column
+   width: $(128, 64, 32, 16)$ channels across columns initially, doubling each
+   block except the last.  A linear projection temporarily widens thinner
+   columns before joins.  As in~\cite{SqueezeNet}, we switch to a mix of
+   $1 \times 1$ and $3 \times 3$ convolutional filters.
+}
+
+The CIFAR, SVHN, and ImageNet datasets serve as testbeds for comparison to
+prior work and analysis of {\fracnet}'s internal behavior.  We evaluate
+performance on the standard classification task associated with each
+dataset.  For CIFAR and SVHN, which consist of $32 \times 32$ images, we set
+our fractal network to have $5$ blocks ($B=5$) with $2 \times 2$
+non-overlapping max-pooling and subsampling applied after each.  This reduces
+the input $32 \times 32$ spatial resolution to $1 \times 1$ over the course of
+the entire network.  A softmax prediction layer attaches at the end of the
+network.  Unless otherwise noted, we set the number of filter channels within
+blocks $1$ through $5$ as $(64, 128, 256, 512, 512)$, mostly matching the
+convention of doubling the number of channels after halving spatial resolution.
+
+For ImageNet, we choose a fractal architecture to facilitate direct comparison
+with the $34$-layer {\resnet} of~\cite{he2015deep}.  We use the same first and
+last layer as {\resnet}-34, but change the middle of the network to consist of
+$4$ blocks ($B=4$), each of $8$ layers ($C=4$ columns).  We use a filter
+channel progression of $(128, 256, 512, 1024)$ in blocks $1$ through $4$.
+
+\subsection{Training}
+\label{sec:training}
+
+For experiments using {\dropout}, we fix drop rate per block at
+$(0\%, 10\%, 20\%, 30\%, 40\%)$, similar to~\cite{elu}.  Local {\droppath}
+uses $15\%$ drop rate across the entire network.
+
+We run for $400$ epochs on CIFAR, $20$ epochs on SVHN, and $70$ epochs on
+ImageNet.  Our learning rate starts at $0.02$ (for ImageNet, $0.001$) and we
+train using stochastic gradient descent with batch size $100$ (for ImageNet,
+$32$) and momentum $0.9$.  For CIFAR/SVHN, we drop the learning rate by a
+factor of $10$ whenever the number of remaining epochs halves.  For ImageNet,
+we drop by a factor of $10$ at epochs $50$ and $65$.  We use Xavier
+initialization~\citep{glorot2010understanding}.
+
+A widely employed~\citep{nin,elu,srivastava2015highway,he2015deep,
+he2016identity,huang2016stochasticdepth,rir} scheme for data augmentation on
+CIFAR consists of only horizontal mirroring and translation (uniform offsets
+in $[-4,4]$), with images zero-padded where needed after mean subtraction.
+We denote results achieved using no more than this degree of augmentation by
+appending a ``+'' to the dataset name (\eg~CIFAR-100+).  A ``++'' marks
+results reliant on more data augmentation; here exact schemes may vary.  Our
+entry in this category is modest and simply changes the zero-padding to
+reflect-padding.
+
+\begin{figure}
+   \begin{minipage}[b]{0.45\linewidth}
+      \vspace{0pt}
+      % ImageNet
+      \begin{center}
+      \input{include/table_imagenet}
+      \end{center}
+      \vspace{-0.04\linewidth}
+      \captionof{table}{
+         \textbf{ImageNet}~(validation set, 10-crop).
+      }
+      \label{tab:imagenet}
+      \vspace{0.03\linewidth}
+      % Ultra-deep
+      \begin{center}
+      \input{include/table_columns}
+      \end{center}
+      \vspace{-0.04\linewidth}
+      \captionof{table}{
+         \textbf{Ultra-deep fractal networks} (CIFAR-100++).
+         Increasing depth greatly improves accuracy until eventual diminishing
+         returns.  Contrast with plain networks, which are not trainable if
+         made too deep (Table~\ref{tab:individual}).
+      }
+      \label{tab:columns}
+   \end{minipage}
+   \hfill
+   \begin{minipage}[b]{0.51\linewidth}
+      \vspace{0pt}
+      \begin{center}
+      \input{include/table_individual}
+      \end{center}
+      \vspace{-0.02\linewidth}
+      \captionof{table}{
+         \textbf{Fractal structure as a training apparatus} (CIFAR-100++).
+         Plain networks perform well if moderately deep, but exhibit worse
+         convergence during training if instantiated with great depth.
+         However, as a column trained within, and then extracted from, a
+         fractal network with mixed {\droppath}, we recover a plain network
+         that overcomes such depth limitation (possibly due to a
+         student-teacher effect).
+      }
+      \label{tab:individual}
+   \end{minipage}
+\end{figure}
+
+\subsection{Results}
+\label{sec:evaluation}
+
+Table~\ref{tab:all} compares performance of {\fracnet} on CIFAR and SVHN with
+competing methods.  {\Fracnet} (depth $20$) outperforms the original {\resnet}
+across the board.  With data augmentation, our CIFAR-100 accuracy is close to
+that of the best {\resnet} variants.  With neither augmentation nor
+regularization, {\fracnet}'s performance on CIFAR is superior to both {\resnet}
+and {\resnet} with stochastic depth, suggesting that {\fracnet} may be less
+prone to overfitting.  Most methods perform similarly on SVHN.  Increasing
+depth to $40$, while borrowing some parameter reduction tricks~\citep{
+SqueezeNet}, reveals {\fracnet}'s performance to be consistent across a range
+of configuration choices.
+
+Experiments without data augmentation highlight the power of {\droppath}
+regularization.  On CIFAR-100, {\droppath} reduces {\fracnet}'s error rate
+from $35.34\%$ to $28.20\%$.  Unregularized {\resnet} is far behind ($44.76\%$)
+and {\resnet} with stochastic depth ($37.80\%$) does not catch up to our
+unregularized starting point of $35.34\%$.  CIFAR-10 mirrors this story.  With
+data augmentation, {\droppath} provides a boost (CIFAR-10), or does not
+significantly influence {\fracnet}'s performance (CIFAR-100).
+
+Note that the performance of the deepest column of the fractal network is
+close to that of the full network (statistically equivalent on CIFAR-10).
+This suggests that the fractal structure may be more important as a
+learning framework than as a final model architecture.
+
+Table~\ref{tab:imagenet} shows that {\fracnet} scales to ImageNet,
+matching {\resnet}~\citep{he2015deep} at equal depth.  Note that, concurrent
+with our work, refinements to the residual network paradigm further improve
+the state-of-the-art on ImageNet.  Wide residual networks~\citep{wideresnet}
+of $34$-layers reduce single-crop Top-1 and Top-5 validation error by
+approximately $2\%$ and $1\%$, respectively, over ResNet-$34$ by doubling
+feature channels in each layer.  DenseNets~\citep{densenet} substantially
+improve performance by building residual blocks that concatenate rather than
+add feature channels.
+
+Table~\ref{tab:columns} demonstrates that {\fracnet} resists performance
+degradation as we increase $C$ to obtain extremely deep networks ($160$ layers
+for $C=6$).  Scores in this table are not comparable to those in
+Table~\ref{tab:all}.  For time and memory efficiency, we reduced block-wise
+feature channels to $(16, 32, 64, 128, 128)$ and the batch size to $50$ for the
+supporting experiments in Tables~\ref{tab:columns} and~\ref{tab:individual}.
+
+Table~\ref{tab:individual} provides a baseline showing that training of plain
+deep networks begins to degrade by the time their depth reaches $40$ layers.
+In our experience, a plain $160$-layer completely fails to converge. This
+table also highlights the ability to use {\fracnet} and {\droppath} as an
+engine for extracting trained networks (columns) with the same topology as
+plain networks, but much higher test performance.
+
+\begin{figure}
+   \begin{center}
+      \includegraphics[width=1.0\linewidth]{figures/fractalnet-loss.pdf}
+   \end{center}
+   \vspace{-0.4cm}
+   \caption{
+      \textbf{Implicit deep supervision.}
+      \emph{Left:}
+         Evolution of loss for plain networks of depth $5$, $10$, $20$ and
+         $40$ trained on CIFAR-100.  Training becomes increasingly difficult
+         for deeper networks.  At $40$ layers, we are unable to train the
+         network satisfactorily.
+      \emph{Right:}
+         We train a $4$ column fractal network with mixed \droppath{},
+         monitoring its loss as well as the losses of its four subnetworks
+         corresponding to individual columns of the same depth as the plain
+         networks.  As the $20$-layer subnetwork starts to stabilize,
+         \droppath{} puts pressure on the $40$-layer column to adapt, with the
+         rest of the network as its teacher.  This explains the elbow-shaped
+         learning curve for Col \#4 that occurs around $25$ epochs.
+   }
+\label{fig:fractalnet-loss}
+\end{figure}
+
+\subsection{Introspection}
+\label{sec:introspection}
+
+With Figure~\ref{fig:fractalnet-loss}, we examine the evolution of a $40$-layer
+{\fracnet} during training.  Tracking columns individually (recording their
+losses when run as stand-alone networks), we observe that the $40$-layer column
+initially improves slowly, but picks up once the loss of the rest of the
+network begins to stabilize.  Contrast with a plain $40$-layer network trained
+alone (dashed blue line), which never makes fast progress.  The column has the
+same initial plateau, but subsequently improves after $25$ epochs, producing a
+loss curve uncharacteristic of plain networks.
+
+We hypothesize that the fractal structure triggers effects akin to deep
+supervision and lateral student-teacher information flow.  Column \#4 joins
+with column \#3 every other layer, and in every fourth layer this join
+involves no other columns.  Once the fractal network partially relies on the
+signal going through column \#3, {\droppath} puts pressure on column \#4 to
+produce a replacement signal when column \#3 is dropped.  This task has
+constrained scope.  A particular drop only requires two consecutive layers in
+column \#4 to substitute for one in column \#3 (a mini student-teacher
+problem).
+
+This explanation of FractalNet dynamics parallels what, in concurrent
+work, \cite{unrolled} claim for ResNet.  Specifically, \cite{unrolled} suggest
+residual networks learn unrolled iterative estimation, with each layer
+performing a gradual refinement on its input representation.  The deepest
+FractalNet column could behave in the same manner, with the remainder of the
+network acting as a scaffold for building smaller refinement steps by doubling
+layers from one column to the next.
+
+These interpretations appear not to mesh with the conclusions of~\cite{
+veit16residual}, who claim that ensemble-like behavior underlies the success of
+ResNet.  This is certainly untrue of some very deep networks, as FractalNet
+provides a counterexample: we can extract a single column (plain network
+topology) and it alone (no ensembling) performs nearly as well as the entire
+network.  Moreover, the gradual refinement view may offer an alternative
+explanation for the experiments of~\cite{veit16residual}.  If each layer makes
+only a small modification, removing one may look, to the subsequent portion of
+the network, like injecting a small amount of input noise.  Perhaps noise
+tolerance explains the gradual performance degradation that \cite{
+veit16residual} observe when removing ResNet layers.

@@ -1,0 +1,102 @@
+%
+% File acl2016.tex
+%
+%% Based on the style files for ACL-2015, with some improvements
+%%  taken from the NAACL-2016 style
+%% Based on the style files for ACL-2014, which were, in turn,
+%% Based on the style files for ACL-2013, which were, in turn,
+%% Based on the style files for ACL-2012, which were, in turn,
+%% based on the style files for ACL-2011, which were, in turn, 
+%% based on the style files for ACL-2010, which were, in turn, 
+%% based on the style files for ACL-IJCNLP-2009, which were, in turn,
+%% based on the style files for EACL-2009 and IJCNLP-2008...
+
+%% Based on the style files for EACL 2006 by 
+%%e.agirre@ehu.es or Sergi.Balari@uab.es
+%% and that of ACL 08 by Joakim Nivre and Noah Smith
+
+\documentclass[11pt]{article}
+\usepackage{acl2016}
+\usepackage{times}
+\usepackage{url}
+\usepackage{latexsym}
+\usepackage{graphicx} 
+\usepackage{color}
+\usepackage[T1]{fontenc}
+
+\newcommand{\ramesh}[1]{\textcolor{red}{#1}}
+\newcommand{\bing}[1]{\textcolor{green}{#1}}
+\newcommand{\cicero}[1]{\textcolor{blue}{#1}}
+\newcommand{\bowen}[1]{\textcolor{cyan}{#1}}
+
+\aclfinalcopy % Uncomment this line for the final submission
+%\def\aclpaperid{***} %  Enter the acl Paper ID here
+
+%\setlength\titlebox{5cm}
+% You can expand the titlebox if you need extra space
+% to show all the authors. Please do not make the titlebox
+% smaller than 5cm (the original size); we will check this
+% in the camera-ready version and ask you to change it back.
+
+\newcommand\BibTeX{B{\sc ib}\TeX}
+
+\title{Abstractive Text Summarization using Sequence-to-sequence RNNs and Beyond}
+
+ \author{Ramesh Nallapati \\
+   IBM Watson \\
+   {\tt nallapati@us.ibm.com} \\\And
+   Bowen Zhou \\
+   IBM Watson \\
+   {\tt zhou@us.ibm.com} \\\And
+   Cicero  dos Santos \\
+   IBM Watson \\
+   {\tt cicerons@us.ibm.com} \\\AND
+   \c{C}a\u{g}lar G\.{u}l\c{c}ehre \\
+   Universit\'e de Montr\'eal \\
+   {\tt gulcehrc@iro.umontreal.ca} \\\And
+   Bing Xiang \\
+   IBM Watson \\
+   {\tt bingxia@us.ibm.com} \\
+  }
+   
+
+% \author{First Author \\
+%   Affiliation / Address line 1 \\
+%   Affiliation / Address line 2 \\
+%   Affiliation / Address line 3 \\
+%   {\tt email@domain} \\\And
+%   Second Author \\
+%   Affiliation / Address line 1 \\
+%   Affiliation / Address line 2 \\
+%   Affiliation / Address line 3 \\
+%   {\tt email@domain} \\}
+
+\date{}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+In this work, we model abstractive text summarization using Attentional Encoder-Decoder Recurrent Neural Networks, and show that they achieve state-of-the-art performance on two different corpora. We propose several novel models that address critical problems in summarization that are not adequately modeled by the basic architecture, such as modeling key-words, capturing the hierarchy of sentence-to-word structure, and emitting words that are rare or unseen at training time. Our work shows that many of our proposed models contribute to further improvement in performance. We also propose a new dataset consisting of multi-sentence summaries, and establish performance benchmarks for further research.
+\end{abstract}
+  %such as (i) using features such as parts-of-speech and named-entity tags as additional input, (ii) using a hierarchical architecture to model sentences in the source document, and (iii) using the {\it large vocabulary trick} (\cite{lvt}) to speed up the computation.
+\input{introduction}
+\input{models}
+\input{related_work}
+\input{experiments}
+\input{analysis}
+
+\input{conclusion}
+
+%\section*{Acknowledgments}
+%Suppressed for review.
+%{\small 
+%We thank Kyunghyun Cho for his easy-to-understand neural machine translation code and Alexander Rush for providing us %with the test data and for helping us make as fair a comparison as possible with their system.
+%}
+%\pagebreak
+% include your own bib file like this:
+%\bibliographystyle{acl}
+%\bibliography{acl2016}
+\bibliography{summarization}
+\bibliographystyle{acl2016}
+
+\end{document}

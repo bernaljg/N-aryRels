@@ -1,0 +1,15 @@
+%!TEX root = CVPR_2017_Face_Frontalization.tex
+\Section{Conclusions}
+\label{sec:con}
+
+Since its debut in 1999, 3DMM has became a cornerstone of facial analysis research % in the vision community,
+with applications to many problems.
+Despite its impact, it has drawbacks in requiring training data of 3D scans, learning from controlled 2D images, and limited representation power due to linear bases. % for both shape and texture.
+These drawbacks could be formidable when fitting 3DMM to unconstrained faces, or learning 3DMM for generic objects such as shoes.
+This paper demonstrates that there exists an alternative approach to 3DMM learning, where a nonlinear 3DMM can be learned from a large set of unconstrained face images without collecting 3D face scans.
+Further, the model fitting algorithm can be learnt jointly with 3DMM, in an end-to-end fashion.
+
+Our experiments cover a diverse aspects of our learnt model, some of which might need the subjective judgment of the readers.
+We hope that both the judgment and quantitative results could be viewed under the context that, unlike linear 3DMM, no genuine 3D scans are used in our learning.
+Finally, we believe that unsupervisedly learning 3D models from large-scale in-the-wild 2D images is one promising research direction. 
+This work is one step along this direction.

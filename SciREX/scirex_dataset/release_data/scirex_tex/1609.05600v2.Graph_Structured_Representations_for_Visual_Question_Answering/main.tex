@@ -1,0 +1,46 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{gensymb} % For the \degree symbol
+\usepackage{color}
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+\usepackage{amsmath,amsfonts,amssymb,mathrsfs}
+
+\input{teneyCustom}
+
+\cvprfinalcopy
+\def\cvprPaperID{123}
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\ifcvprfinal\pagestyle{empty}\fi
+%\setcounter{page}{4321}
+
+\newcommand{\anton}[1]{{\color{blue}{#1} :Anton}}
+
+\begin{document}
+
+\title{Graph-Structured Representations for Visual Question Answering}
+
+%\author{Damien Teney, Lingqiao Liu, Anton van den Hengel}
+\author{Damien Teney~~~~~~Lingqiao Liu~~~~~~Anton van den Hengel\\
+Australian Centre for Visual Technologies\\
+The University of Adelaide\\
+%Adelaide, Australia\\
+{\tt\small \{damien.teney,lingqiao.liu,anton.vandenhengel\}@adelaide.edu.au}
+}
+
+\maketitle
+
+\input{1}
+%\clearpage
+%\vspace{130pt}
+\newpage
+
+{\small\bibliographystyle{ieee}\bibliography{Bibliography}}
+\clearpage
+%\newpage
+
+\input{2}
+
+\end{document}

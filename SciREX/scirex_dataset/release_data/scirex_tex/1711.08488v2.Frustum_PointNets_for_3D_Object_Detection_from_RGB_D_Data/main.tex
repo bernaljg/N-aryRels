@@ -1,0 +1,113 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\pdfoutput=1
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{multirow}
+
+\newcommand{\cmt}[2]{[#1: #2]}
+\newcommand{\todo}[1]{\cmt{{\bf TODO}}{{\bf \color{red} #1}}}
+\newcommand{\rqi}[1]{\cmt{{\bf Charles}}{{\bf \color{blue} #1}}}
+\newcommand{\w}[1]{\cmt{{\bf Wei}}{{\bf \color{green} #1}}}
+\newcommand{\leo}[1]{\cmt{{\bf Leo}}{{\bf \color{cyan} #1}}}
+\newcommand{\hao}[1]{\cmt{{\bf Hao}}{{\bf \color{yellow} #1}}}
+
+\newcommand{\mypara}{\vspace*{-10pt}\paragraph}
+\newcommand{\denselist}{\itemsep 0pt\parsep=0pt\partopsep0pt\vspace{-\topsep}}
+\newcommand\blfootnote[1]{%
+	\begingroup
+	\renewcommand\thefootnote{}\footnote{#1}%
+	\addtocounter{footnote}{-1}%
+	\endgroup
+}
+\newtheorem{theorem}{Theorem}
+
+\newcommand{\myvec}[1]{\mathbf #1}
+
+\newcommand{\shape}{S}
+\newcommand{\image}{I}
+\newcommand{\network}{\mathbb{G}}
+\newcommand{\prob}{\mathcal{P}}
+
+\newcommand{\para}[1]{\noindent{\bf #1}}
+
+\newcommand{\softpara}{\paragraph}
+
+\newcommand{\bitem}{\begin{itemize}\denselist}
+	\newcommand{\eitem}{\end{itemize}}
+\newcommand{\benum}{\begin{enumerate}\denselist}
+	\newcommand{\eenum}{\end{enumerate}}
+\newcommand{\bdescr}{\begin{description}\denselist}
+	\newcommand{\edescr}{\end{description}}
+
+% Include other packages here, before hyperref.
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+\cvprfinalcopy % *** Uncomment this line for the final submission
+
+\def\cvprPaperID{19} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+\ifcvprfinal\pagestyle{empty}\fi
+\begin{document}
+
+%%%%%%%%% TITLE
+%\title{Real-Time 3D Object Detection with Camera View Attention and PointNet}
+%\title{Real-Time 3D Object Detection with Image Region Proposals and PointNet}
+% \title{3D Object Detection with Image Region Proposals and \Point Cloud Segmentation in Frustums}
+%\title{Frustum-based PointNets for 3D Object Detection from RGB-D Data}
+\title{Frustum PointNets for 3D Object Detection from RGB-D Data}
+
+\author{Charles R. Qi$^1$\thanks{Majority of the work done as an intern at Nuro, Inc.}\qquad Wei Liu$^2$\qquad Chenxia Wu$^2$\qquad Hao Su$^3$\qquad Leonidas J. Guibas$^1$\\
+$^1$Stanford University\qquad $^2$Nuro, Inc.\qquad $^3$UC San Diego}
+
+\maketitle
+%\thispagestyle{empty}
+
+%%%%%%%%% ABSTRACT
+\begin{abstract}
+  \input{./tex/abstract}
+\end{abstract}
+
+%%%%%%%%% BODY TEXT
+\section{Introduction}
+\input{./tex/intro}
+
+\section{Related Work}
+\input{./tex/related}
+
+\section{Problem Definition}
+\input{./tex/problem}
+
+\section{3D Detection with Frustum PointNets}
+\input{./tex/approach}
+
+\section{Experiments}
+\input{./tex/exp}
+
+\vspace{-.11in}
+\paragraph{Acknowledgement}
+The authors wish to thank the support of Nuro Inc., ONR MURI grant N00014-13-1-0341, NSF grants DMS-1546206 and  IIS-1528025, a Samsung GRO award, and gifts from Adobe, Amazon, and Apple.
+
+% \section{Conclusion}
+% \input{./tex/conclusion}
+
+\newpage
+{\small
+\bibliographystyle{ieee}
+\bibliography{pcl}
+}
+
+\newpage
+\input{./tex/supp}
+
+
+\end{document}

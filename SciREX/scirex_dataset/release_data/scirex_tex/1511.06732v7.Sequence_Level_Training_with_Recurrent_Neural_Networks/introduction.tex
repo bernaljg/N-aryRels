@@ -1,0 +1,62 @@
+\section{Introduction}
+Natural language is the most natural form of communication for humans. It is therefore essential that interactive AI systems are capable of generating text~\citep{textgen}.
+A wide variety of applications rely on text generation, including machine translation, video/text summarization, question answering, among others. 
+From a machine learning perspective, text generation is the problem of predicting a syntactically and semantically correct sequence of consecutive words given some context. For instance, given an image,  generate an appropriate caption or given a sentence in English language, translate it into French. 
+
+Popular choices for text generation models are language models based on n-grams~\citep{kneser+ney1995}, feed-forward neural networks~\citep{nlm}, and recurrent neural networks (RNNs; Mikolov et al., 2010)\nocite{mikolov-2010}. These models when used as is to generate text suffer from two major drawbacks. First, they are trained to predict the next word given the previous ground truth words as input. 
+However, at test time, the resulting models are used to generate an entire sequence by predicting one word at a time, and by feeding the generated word back as input at the next time step.
+This process is very brittle because the model was trained on a different distribution of inputs, namely, words drawn from the data distribution, as opposed to words drawn from the model distribution. As a result the errors made along the way will quickly accumulate.
+We refer to this discrepancy as \textit{exposure bias} which occurs when a model is only exposed to the training data distribution, instead of its own predictions. 
+Second, the loss function used to train these models is at the word level. A popular choice is the cross-entropy loss used to maximize the probability of the next correct word. However, the performance of these models is typically evaluated using discrete metrics. One such metric is called BLEU~\citep{bleu} for instance, which measures the n-gram overlap between the model generation and the reference text. Training these models to directly optimize metrics like BLEU is hard because a) these are not differentiable \citep{rosti2011}, and b) combinatorial optimization is required to determine which sub-string maximizes them given some context. Prior attempts~\citep{mcallister2010,he12} at optimizing test metrics were restricted to linear models, or required a large number of samples to work well~\citep{auli2014}.
+
+This paper proposes a novel training algorithm which results in improved text generation compared to standard models. The algorithm addresses the two issues discussed above as follows. First, while training the generative model we avoid the exposure bias by using model predictions at training time. Second, we directly optimize for our final evaluation metric. Our proposed methodology borrows ideas from the reinforcement learning literature~\citep{sutton-rl}. In particular, we build on the REINFORCE algorithm proposed by~\citet{reinforce}, to achieve the above two objectives. While sampling from the model during training is quite a natural step for the REINFORCE algorithm, optimizing directly for any test metric can also be achieved by it. REINFORCE side steps the issues associated with the discrete nature of the optimization by not requiring rewards (or losses) to be differentiable. 
+While REINFORCE appears to be well suited to tackle the text generation problem, it suffers from a significant issue. 
+The problem setting of text generation has a very large action space which makes it extremely difficult to learn with an initial random policy.
+Specifically, the search space for text generation is of size $\mathcal{O}(\mathcal{W}^T)$, where  $\mathcal{W}$ is the number of words in the vocabulary (typically around $10^4$ or more) and $T$ is the length of the sentence (typically around $10$ to $30$). 
+
+Towards that end, we introduce Mixed Incremental Cross-Entropy Reinforce (MIXER), which is our first major contribution of this work. MIXER is an easy-to-implement recipe to make REINFORCE work well for text generation applications. It is based on two key ideas: 
+incremental learning and the use of a hybrid loss function which
+combines both REINFORCE and cross-entropy (see Sec.~\ref{model-mixer} for details). Both ingredients are essential to training with large action spaces.
+In MIXER, the model starts from the optimal policy given by cross-entropy training (as opposed to a random one), from which it then slowly deviates, 
+in order to make use of its own predictions, as is done at test time.
+
+Our second contribution is a thorough empirical evaluation on three 
+different tasks, namely, Text Summarization, Machine Translation and Image Captioning.
+We compare against several strong baselines, including, RNNs trained with cross-entropy and Data as Demonstrator (DAD) \citep{sbengio-nips2015, dad}. 
+We also compare MIXER with another simple yet novel model that we propose in this paper. We call it the End-to-End BackProp model (see Sec.~\ref{model-e2e} for details). 
+Our results show that MIXER with a simple greedy search achieves much better accuracy compared to the baselines on all the three tasks. In addition we show that MIXER with greedy search is even more accurate than the cross entropy model augmented with beam search at inference time as a post-processing step. This is particularly remarkable because MIXER with greedy search is at least $10$ times faster than the cross entropy model with a beam of size $10$. Lastly, we  note that MIXER and beam search are complementary to each other and can be combined to further improve performance, although the extent of the improvement is task dependent.~\footnote{Code available at: \url{https://github.com/facebookresearch/MIXER}}
+
+\section{Related Work}
+Sequence models are typically trained to predict the next
+word using the cross-entropy loss. At test time, it is common to use beam search to 
+explore  multiple alternative paths~\citep{sutskever2014,bahdanau-iclr2015,rush-2015}.
+While this improves generation by typically one or two BLEU points~\citep{bleu}, 
+it makes the generation at least $k$ times slower, where $k$ is the number of active 
+paths in the beam (see Sec.~\ref{model-xent} for more details).
+
+The idea of improving generation by letting the model use its own predictions at training 
+time (the key proposal of this work) was first advocated by~\citet{searn}. In their seminal 
+work, the authors first noticed that structured prediction problems
+can be cast as a particular instance of reinforcement learning. They then
+proposed SEARN, an algorithm to learn such structured
+prediction tasks. The basic idea is to let the model use its own
+predictions at training time to produce a sequence of actions (e.g.,
+the choice of the next word). Then, a search algorithm is
+run to determine the optimal action at each time step, and a
+classifier (\aka policy) is trained to predict that action. A similar idea was later
+proposed by~\citet{dagger} in an imitation learning framework. 
+Unfortunately, for text generation it is generally intractable to compute
+an oracle of the optimal target word given the words predicted so far.
+The oracle issue was later addressed by an algorithm called 
+Data As Demonstrator (DAD)~\citep{dad} and applied for text generation by 
+\cite{sbengio-nips2015}, whereby the target action at step $k$ is the
+$k$-th action taken by the optimal policy (ground truth sequence) regardless of which
+input is fed to the system, whether it is ground truth, or the model's
+prediction. While DAD usually improves generation, it seems unsatisfactory to force 
+the model to predict a certain word regardless of the preceding words 
+(see sec.~\ref{model-dad} for more details). 
+
+Finally, REINFORCE has already been used for other applications, such as in 
+computer vision~\citep{vmnih-nips2014,xu-icml2015,ba_iclr15}, and for speech recognition~\cite{graves_icml14}. 
+%proposed a similar algorithm but for speech recognition, and with a different estimator of the average reward (based on samples drawn from the model as opposed to linear regression). 
+While they simply pre-trained with cross-entropy loss, we found that the use of a mixed loss and a more gentle incremental learning scheduling to be important for all the tasks we considered.

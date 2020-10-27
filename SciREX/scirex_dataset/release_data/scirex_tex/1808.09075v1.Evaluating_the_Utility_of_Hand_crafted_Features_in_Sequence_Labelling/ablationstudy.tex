@@ -1,0 +1,48 @@
+\paragraph{Ablation Study}
+\label{ssec:ablation}
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lcc}
+\toprule
+Model                                            & Dev $F_1$ & Test $F_1$ \\
+\midrule
+Neural-CRF+AE & \textbf{94.87} ($\pm$ 0.21)   & \textbf{91.89} ($\pm$ 0.23)    \\
+$-$ POS tagging$*$                                 & 94.78 ($\pm$ 0.17)   & 91.30 ($\pm$ 0.28)    \\
+$-$ word shape$*$                                  & 94.83 ($\pm$ 0.31)   & 91.36 ($\pm$ 0.30)    \\
+$-$ gazetteer                                    & 94.85 ($\pm$ 0.20)   & 91.80 ($\pm$ 0.19)    \\ 
+$+$ dependencies                        & 94.74 ($\pm$ 0.16)   & 91.66 ($\pm$ 0.18)    \\
+\bottomrule
+\end{tabular}
+\caption{Ablation study. Average performance over 5 runs with standard deviation. $+$ and $-$ denote adding and removing a particular feature (to/from Neural-CRF+AE trained on the training set only with POS tagging, word shape and gazetteer features). $*$ indicates statistical significance on the test set against Neural-CRF+AE by two-sample Student's t-test at level $\alpha=0.05$. Note that in this table, $*$ measures the drop in performance.}
+\label{table4}
+\end{table}
+
+To gain a better understanding of the impacts of each feature, we perform an ablation study and present the results in \tabref{table4}.
+We observe performance degradation when eliminating POS, word shape and gazetteer features, showing that each feature contributes to NER performance beyond what is learned through deep learning alone.
+Interestingly, the contribution of gazetteers is much less than that of the other features, which is likely due to the noise introduced in the matching process, with many incorrectly identified false positives.
+
+Including features based on dependency tags into our model decreases the performance slightly.
+This might be a result of our simple implementation (as illustrated in Table~\ref{feature}), which does not include dependency direction, nor parent-child relationships.
+
+\begin{table}
+\centering
+\small
+\begin{tabular}{lcc}
+\toprule
+Model                                            & Dev $F_1$ & Test $F_1$ \\
+\midrule
+Neural-CRF & 94.53 ($\pm$ 0.21)   & 91.06 ($\pm$ 0.18)    \\
+$+$ input                                  & 94.63 ($\pm$ 0.23)   & 91.17 ($\pm$ 0.25)    \\
+$+$ output                               & 94.69 ($\pm$ 0.22)   & 91.23 ($\pm$ 0.19)    \\
+$+$ input \& output$*$                                    & \textbf{94.87} ($\pm$ 0.21)   & \textbf{91.89} ($\pm$ 0.23)    \\ 
+\bottomrule
+\end{tabular}
+\caption{Average performance of Neural-CRF with different features configurations over 5 runs with standard deviation. Note that $+$ input \& output = Neural-CRF+AE. $*$ indicates statistical significance on the test set against Neural-CRF by two-sample Student's t-test at level $\alpha=0.05$.}
+\label{table5}
+\end{table}
+
+Next, we investigate the impact of different means of incorporating manually-engineered features into the model. 
+To this end, we experiment with three configurations with features as: (1) input only; (2) output only (equivalent to multi-task learning); and (3) both input and output (Neural-CRF+AE) and present the results in \tabref{table5}.
+Simply using features as either input or output only improves model performance slightly, but insignificantly so. 
+It is only when features are incorporated with the proposed auto-encoder loss do we observe a significant performance boost.

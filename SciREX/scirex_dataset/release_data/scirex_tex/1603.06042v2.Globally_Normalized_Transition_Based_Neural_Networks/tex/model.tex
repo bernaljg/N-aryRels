@@ -1,0 +1,182 @@
+\section{Model}
+\label{sec:model}
+\newcommand{\score}{\rho}
+\newcommand{\starts}{s^{\dagger}}
+%\newcommand{\xt}{{, x; \theta}}
+%\newcommand{\xtt}{{x; \theta}}
+\newcommand{\xt}{{; \theta}}
+\newcommand{\xtt}{{\theta}}
+\newcommand{\cx}{{}}
+
+At its core, our model is an incremental transition-based parser \cite{Nivre:2006}.
+%These algorithms have been gaining in popularity because of their efficiency
+%and psycholinguistic plausibility \cite{marslen1973linguistic}.
+To apply it to different tasks we only need to adjust
+the transition system and the input features.
+
+\subsection{Transition System}
+
+Given an input $x$, most often a sentence, we define:
+\bitem
+\item A set of states $\mathcal S(x)$.
+\item A special start state $\starts \in\mathcal S(x)$.
+\item A set of allowed decisions ${\cal A}(s, x)$ for all $s\in\mathcal S(x)$.
+\item A transition function $t(s, d, x)$ returning a new state $s'$ for
+  any decision $d\in {\cal A}(s, x)$.
+\eitem 
+%We drop the dependence on $x$ for brevity.  
+We will use a function
+$\score(s, d, x; \theta)$ to compute the score of decision $d$ in state
+$s$ for input $x$. The vector $\theta$ contains the model parameters and we assume
+that $\score(s, d, x; \theta)$ is differentiable with respect to
+$\theta$.
+
+In this section, for brevity, we will drop the dependence of $x$
+in the functions given above, simply writing $\mathcal S$, ${\cal
+  A}(s)$, $t(s, d)$, and $\score(s, d; \theta)$.
+
+Throughout this work we will use transition systems in which all
+complete structures for the same input $x$ have the same number of
+decisions $n(x)$ (or $n$ for brevity).  In dependency parsing for
+example, this is true for both the {\em arc-standard} and {\em
+  arc-eager} transition systems \cite{Nivre:2006}, where for a
+sentence $x$ of length $m$, the number of decisions for any complete
+parse is $n(x) = 2 \times m$.\footnote{Note that this is not true for
+  the {\em swap} transition system defined in
+  \newcite{nivre:2009:ACL}.}  
+A complete structure is then a sequence of decision/state pairs $(s_1,
+d_1) \ldots (s_n,d_n)$ such that $s_1 = \starts$, $d_i \in {\cal S}(s_i)$ for
+$i = 1 \ldots n$, and $s_{i+1} = t(s_i, d_i)$.
+We use the notation $d_{1:j}$ to refer to a decision
+sequence $d_1 \ldots d_j$.
+
+We assume that there is a
+one-to-one mapping between decision sequences $d_{1:j-1}$ and
+states $s_j$: that is, we essentially assume that a state
+encodes the entire history of decisions.
+Thus, each state can be reached by a unique decision
+sequence from $\starts$.\footnote{It is straightforward to extend the
+  approach to make use of dynamic programming in the case where the
+  same state can be reached by multiple decision sequences.}
+We will use decision sequences $d_{1:j-1}$ and states
+interchangeably: in a slight abuse of notation, we define
+$\score(d_{1:j-1}, d; \theta)$ to be equal to $\score(s, d; \theta)$ where $s$ is the
+state reached by the decision sequence $d_{1:j-1}$.
+
+The scoring function $\score(s, d; \theta)$ can be defined in a number
+of ways. 
+In this work, following \newcite{chen-manning:2014:EMNLP}, \newcite{weiss-etAl:2015:ACL},
+and \newcite{zhou-etAl:2015:ACL},
+we define it via a feed-forward neural network as
+\[
+\score(s, d; \theta) = \phi(s; \theta^{(l)}) \cdot \theta^{(d)} .
+\]
+Here $\theta^{(l)}$ are the parameters of the neural network,
+excluding the parameters at the final layer. $\theta^{(d)}$ are the
+final layer parameters for decision $d$.
+$\phi(s; \theta^{(l)})$ is the
+representation for state $s$ computed by the neural network under
+parameters $\theta^{(l)}$. Note that the score is linear in the
+parameters $\theta^{(d)}$. We next describe how
+softmax-style normalization can be performed at the local or global level.
+
+\subsection{Global vs.~Local Normalization}
+
+In the \newcite{chen-manning:2014:EMNLP} style of greedy neural
+network parsing, the conditional probability distribution over
+decisions $d_j$ given context $d_{1:j-1}$ is defined as
+\begin{multline}
+  \label{eq:local-p}
+  p(d_j|d_{1:j-1} \xt) = \frac{\exp \score(d_{1:j-1},d_j \xt) }{Z_L(d_{1:j-1} \xt)} ,
+\end{multline}
+where
+$$
+Z_L(d_{1:j-1} \xt) = \sum_{d'\in {\cal A}(d_{1:j-1})} \exp \score(d_{1:j-1},d' \xt)  .
+$$
+Each $Z_L(d_{1:j-1}; \theta)$ is a {\em local} normalization term.
+The probability of a sequence of decisions $d_{1:n}$ is
+\begin{align}
+  \nonumber
+  p_L(d_{1:n} \cx) &= \prod_{j=1}^n p(d_j|d_{1:j-1} \xt) \nonumber \\
+  \label{eq:local-beam-p}
+  &= \frac{\exp \sum_{j=1}^n \score(d_{1:j-1},d_j \xt)}{
+    \prod_{j=1}^n Z_L(d_{1:j-1} \xt)} .
+\end{align}
+Beam search can be used to attempt to find the maximum of
+Eq.~\eqref{eq:local-beam-p} with respect to $d_{1:n}$. The additive scores
+used in beam search are the log-softmax of each decision, $\ln
+p(d_j|d_{1:j-1} \xt)$, not the raw scores $\score(d_{1:j-1},d_j \xt)$.
+
+In contrast, a Conditional Random Field (CRF) defines a distribution
+$p_G(d_{1:n})$ as follows:
+\begin{align}
+  \label{eq:global-p}
+  p_G(d_{1:n} \cx) &= \frac{\exp \sum_{j=1}^n \score(d_{1:j-1},d_j \xt) }{Z_G(\xtt)},
+\end{align}
+where
+\begin{align*}
+  Z_G(\xtt) &= \sum_{d'_{1:n}\in {\cal D}_n} \exp \sum_{j=1}^n \score(d'_{1:j-1},d'_j \xt)
+\end{align*}
+and ${\cal D}_n$ is the set of all valid sequences of decisions of length $n$. 
+$Z_G(\xtt)$ is a {\em global} normalization term.
+The inference problem is now to find
+\begin{align*}
+  \argmax_{d_{1:n}\in {\cal D}_n} p_G(d_{1:n} \cx) = 
+  \argmax_{d_{1:n}\in {\cal D}_n} \sum_{j=1}^n \score(d_{1:j-1},d_j \xt).
+\end{align*}
+Beam search can again be used to approximately find the $\argmax$.
+
+\subsection{Training}
+
+Training data consists of inputs $x$ paired with gold decision
+sequences $d_{1:n}^*$. We use stochastic gradient descent on the
+negative log-likelihood of the data under the model. Under a locally normalized
+model, the negative log-likelihood is
+\begin{equation}
+  \label{eq:local-beam-cost}
+\hspace*{-1.4cm}  L_\mathrm{local}(d_{1:n}^*\cx;\theta) = 
+  -\ln p_L(d_{1:n}^* \xt) = \end{equation} \\[-1cm]
+\[  - \sum_{j=1}^n \score(d_{1:j-1}^*,d_j^* \xt) 
+  + \sum_{j=1}^n \ln Z_L(d^*_{1:j-1} \xt) , 
+\] %end{multline}
+whereas under a globally normalized model it is
+\begin{multline}
+  \label{eq:global-cost}
+  L_\mathrm{global}(d_{1:n}^*\cx \xt) =
+  -\ln p_G(d_{1:n}^* \xt) = \\
+  - \sum_{j=1}^n \score(d_{1:j-1}^*,d_j^* \xt) 
+  + \ln Z_G(\xtt). \hspace*{1.3cm}
+\end{multline}
+A significant practical advantange of the locally normalized cost
+Eq.~\eqref{eq:local-beam-cost} is that the local partition function $Z_L$ 
+and its derivative can usually be computed efficiently.
+In contrast, the $Z_G$ term in Eq.~\eqref{eq:global-cost} 
+contains a sum over $d'_{1:n}\in {\cal D}_n$ that is in many cases
+intractable.
+
+To make learning tractable with the globally normalized model, 
+we use beam search and early updates
+\cite{collins-roark:2004:ACL,zhou-etAl:2015:ACL}.
+As the training sequence is being decoded, we keep track of
+the location of the gold path in the beam. If the gold path
+falls out of the beam at step $j$, a stochastic gradient
+step is taken on the following objective:
+\[
+\hspace*{-3.0cm}  L_\mathrm{global-beam}(d_{1:j}^*;\theta) = \\
+  \]\\[-1cm]
+%  -\ln p_G(d_{1:j}^*) = \\
+\begin{equation}
+%\scriptsize
+\small
+\hspace*{-0.2cm}  - \sum_{i=1}^j \score(d_{1:i-1}^*,d_i^* \xt) 
+  + \ln \sum_{\mathclap{d'_{1:j}\in {\cal B}_j}}
+  \exp \sum_{i=1}^j \score(d_{1:i-1}',d'_i \xt) . \hspace*{-0.2cm}
+\label{eq:global-beam}
+\end{equation}
+Here the set ${\cal B}_j$ contains all paths in the beam at
+step $j$, together with the gold path prefix $d^*_{1:j}$.
+It is straightforward to derive gradients of the loss 
+in Eq.~\eqref{eq:global-beam} and to back-propagate gradients to all
+levels of a neural network defining the score $\score(s, d; \theta)$.
+If the gold path remains in the beam throughout decoding, a gradient
+step is performed using ${\cal B}_n$, the beam at the end of decoding.

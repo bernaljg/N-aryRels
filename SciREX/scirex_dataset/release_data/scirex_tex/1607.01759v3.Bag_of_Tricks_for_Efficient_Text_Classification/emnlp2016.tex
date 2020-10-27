@@ -1,0 +1,198 @@
+%
+% File emnlp2016.tex
+%
+
+\documentclass[11pt,letterpaper]{article}
+\usepackage{emnlp2016}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage{epstopdf}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{url}
+
+\usepackage{tikz}
+
+% Uncomment this line for the final submission:
+\emnlpfinalcopy
+
+%  Enter the EMNLP Paper ID here:
+\def\emnlppaperid{1103}
+
+% To expand the titlebox for more authors, uncomment
+% below and set accordingly.
+% \addtolength\titlebox{.5in}    
+
+\newcommand\BibTeX{B{\sc ib}\TeX}
+
+
+\title{Bag of Tricks for Efficient Text Classification} % tmikolov Alternative title: Computationally Efficient Text Classification
+
+\author{
+Armand Joulin~~~~~ 
+Edouard Grave~~~~~
+Piotr Bojanowski~~~~~
+Tomas Mikolov \\
+Facebook AI Research\\
+\texttt{\{ajoulin,egrave,bojanowski,tmikolov\}@fb.com}
+}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This paper explores a simple and efficient baseline for text classification.
+Our experiments show that our fast text classifier~\texttt{fastText} is often
+on par with deep learning classifiers in terms of accuracy, and many orders of
+magnitude faster for training and evaluation.  We can train~\texttt{fastText}
+on more than one billion words in less than ten minutes using a standard
+multicore~CPU, and classify half a million sentences among~312K classes in less
+than a minute.  
+\end{abstract}
+
+\section{Introduction}
+
+Text classification is an important task in Natural Language Processing with many
+applications, such as web search, information retrieval, ranking and
+document classification~\cite{deerwester1990indexing,pang2008opinion}.
+Recently, models based on neural networks have become increasingly
+popular~\cite{kim2014convolutional,zhang2015text,conneau2016}.
+While these models achieve very good performance in practice, they tend to be
+relatively slow both at train and test time, limiting their use on very large
+datasets.
+
+Meanwhile, linear classifiers are often considered as strong baselines for text
+classification
+problems~\cite{joachims1998text,mccallum1998comparison,fan2008liblinear}.
+Despite their simplicity, they often obtain state-of-the-art performances if
+the right features are used~\cite{wang2012baselines}.  They also have the
+potential to scale to very large corpus~\cite{agarwal2014reliable}.
+
+In this work, we explore ways to scale these baselines to very large corpus
+with a large output space, in the context of text classification. Inspired by
+the recent work in efficient word representation
+learning~\cite{mikolov2013efficient,levy2014neural}, we show that
+linear models with a rank constraint and a fast loss approximation can train on a billion
+words within ten minutes, while achieving performance on par with the state-of-the-art.
+We evaluate the quality of our approach \texttt{fastText}\footnote{\url{https://github.com/facebookresearch/fastText}} on two
+different tasks, namely tag prediction and sentiment analysis.
+
+%In this work, we explore how to make these baseline work 
+%Recently,~\newcite{mikolov2013efficient} have proposed an efficient method to
+%learn word representation on large vocabularies. They are able to scale their
+%linear models thanks to a rank constraint and an loss
+%approximation~\cite{levy2014neural}. 
+%In this work, we follow the same tricks
+%to scale up linear text classifiers.  
+%As opposed to~\newcite{le2014distributed}, our approach does not require
+%sophisticated inference at test time, making its learned representations easily
+%reusable on different problems.  
+
+%In this work, we show that on relatively large dataset, the difference between these approaches
+%and learning sentence representation from scratch, is relatively small.
+
+\section{Model architecture}
+
+A simple and efficient baseline for sentence classification is to represent
+sentences as bag of words~(BoW) and train a linear classifier,~e.g., a logistic
+regression or an~SVM~\cite{joachims1998text,fan2008liblinear}.
+However, linear classifiers do not share parameters among features and classes.
+This possibly limits their generalization in the context of large output space
+where some classes have very few examples.
+Common solutions to this problem are to factorize the linear classifier into low rank
+matrices~\cite{schutze1992dimensions,mikolov2013efficient} or to use multilayer neural
+networks~\cite{collobert2008unified,zhang2015character}. 
+
+Figure~\ref{fig:model} shows a simple linear model with rank constraint. The first
+weight matrix~$A$ is a look-up table over the words. The
+word representations are then averaged into a text representation, 
+which is in turn fed to a linear classifier. The text representation
+is an hidden variable which can be potentially be reused. This
+architecture is similar to the cbow model of~\newcite{mikolov2013efficient},
+where the middle word is replaced by a label.
+We use the softmax function~$f$ to compute the probability distribution over
+the predefined classes. For a set of~$N$ documents, this leads to minimizing
+the negative log-likelihood over the classes: 
+\begin{eqnarray*}
+-\frac{1}{N} \sum_{n=1}^N y_n \log( f (BAx_n)),
+\end{eqnarray*}
+where~$x_n$ is the normalized bag of features of the~$n$-th document,~$y_n$ the label,~$A$ and~$B$ the weight matrices.
+This model is trained asynchronously on multiple CPUs using stochastic gradient descent and a linearly decaying
+learning rate.
+
+\subsection{Hierarchical softmax}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[
+  xblock/.style = {align=center, anchor=west, text width=.9cm},
+  layer/.style  = {draw, align=center, anchor=west, text width=6.9cm},
+  arrow/.style  = {draw, -latex}
+]
+\node[draw, xblock] (x1)   at (0,0) {$x_1$};
+\node[draw, xblock] (x2)   at (1.5,0) {$x_2$};
+\node[xblock]       (dots) at (3,0) {$\dots$};
+\node[draw, xblock] (xn1)  at (4.5,0) {$x_{N-1}$};
+\node[draw, xblock] (xn)   at (6,0) {$x_N$};
+\node[layer]        (h)    at (0,1.5) {hidden};
+\node[layer]        (o)    at (0,3) {output};
+\draw[arrow] (x1.north)  -- (x1|-h.south);
+\draw[arrow] (x2.north)  -- (x2|-h.south);
+\draw[arrow] (xn1.north) -- (xn1|-h.south);
+\draw[arrow] (xn.north)  -- (xn|-h.south);
+\draw[arrow] (h.north)   -- (o.south);
+\end{tikzpicture}
+\caption{Model architecture of \texttt{fastText} for a sentence with $N$ ngram features $x_1,\dots,x_N$. The features
+are embedded and averaged to form the hidden variable.}
+\label{fig:model}
+\end{figure}
+
+When the number of classes is large, computing the linear classifier
+is computationally expensive. More precisely, the computational complexity
+is~$O(kh)$ where~$k$ is the number of classes and~$h$ the dimension of the text
+representation.
+In order to improve our running time, we use a hierarchical
+softmax~\cite{goodman2001classes} based on the Huffman coding tree~\cite{mikolov2013efficient}.
+%In this tree, the classes are the leaves.
+During training, the computational complexity drops to~$O(h\log_2(k))$. 
+
+The hierarchical softmax is also advantageous at test time when searching for
+the most likely class. Each node is associated with a probability that is the
+probability of the path from the root to that node.
+If the node is at depth~$l+1$ with parents~$n_1,\dots,n_{l}$, its probability is
+$$P(n_{l+1}) = \prod_{i=1}^l P(n_i). $$
+This means that the probability of a node is always lower than the one of its parent.
+Exploring the tree with a depth first search and tracking
+the maximum probability among the leaves allows us to discard any branch
+associated with a small probability. In practice, we observe a reduction of the
+complexity to~$O(h\log_2(k))$ at test time. This approach is further
+extended to compute the~$T$-top targets at the cost of~$O(\log(T))$, using a binary heap.
+
+\subsection{N-gram features}
+
+Bag of words is invariant to word order but taking explicitly this order into
+account is often computationally very expensive. Instead, we use a bag of n-grams
+as additional features to capture some partial information about
+the local word order. This is very efficient in practice while
+achieving comparable results to methods that explicitly use the
+order~\cite{wang2012baselines}.
+
+We maintain a fast and memory efficient mapping of the n-grams by using
+the~\emph{hashing trick}~\cite{weinberger2009feature} with the same hashing
+function as in~\newcite{mikolov2011strategies} and~10M bins if we only used
+bigrams, and~100M otherwise. 
+
+\input{experiments.tex}
+
+\input{discussion.tex}
+
+
+\bibliography{emnlp2016}
+\bibliographystyle{emnlp2016}
+
+\end{document}

@@ -1,0 +1,1770 @@
+\documentclass{article} % For LaTeX2e
+\usepackage{iclr2019_conference,times}
+
+% Optional math commands from https://github.com/goodfeli/dlbook_notation.
+% \input{math_commands.tex}
+
+\usepackage{hyperref}
+\usepackage{url}
+
+% add colorful text
+\usepackage{color} % text color
+\DeclareRobustCommand{\ctext}[1]{% purple text
+	\textcolor{purple}{#1}}
+
+% math
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage[mathscr]{eucal}
+\theoremstyle{plain}
+\newtheorem*{assumption*}{Assumption}  % unnumbered assumption
+\newtheorem{assumption}{Assumption}
+\newtheorem{assumption_s}{Assumption}  % assumption with section numbering
+\newtheorem{theorem}{Theorem}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem*{proposition*}{Proposition}  % unnumbered proposition
+\newtheorem{proposition}{Proposition}
+\newtheorem{proposition_s}{Proposition}[section]  % proposition with section numbering
+\newtheorem*{proposition 1*}{Proposition 1}
+\newtheorem*{lemma*}{Lemma}  % unnumbered proposition
+\newtheorem{lemma_s}{Lemma}[section]  % lemma with section numbering
+\usepackage{bm}
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\gau}{\mathcal{N}}
+\DeclareMathOperator{\wishart}{\mathcal{W}}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\dr}{d}  % derivative
+\DeclareMathOperator{\nul}{null}
+\DeclareMathOperator{\rank}{rank}
+\newcommand{\rvect}[1]{\begin{bmatrix} #1 \end{bmatrix}}
+\newcommand\norm[1]{\left\lVert#1\right\rVert}
+\newcommand{\ds}[1]{\mathcal{#1}}  % graph or data space
+\newcommand{\set}[1]{\mathbb{#1}}  % set
+\newcommand{\rdv}[1]{\mathbf{#1}}  % random variable
+\usepackage{accents}
+\newcommand*{\dt}[1]{%
+	\accentset{\mbox{\large\bfseries .}}{#1}}
+
+% tables
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[para, flushleft]{threeparttable}  % para sets inline tablenotes
+\makeatletter  % change tablenote size of threeparttable
+\g@addto@macro\TPT@defaults{\footnotesize} 
+\makeatother
+% define column type to allow fixed width column
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+% define lines in table
+\usepackage{booktabs}
+\def\toprule{\noalign{\smallskip\hrule height 1.2pt\smallskip}}
+\def\midrule{\noalign{\smallskip\hrule\smallskip}}
+\let\bottomrule=\toprule
+% line break in table cell
+\usepackage{makecell}
+
+% list
+\usepackage[inline,shortlabels]{enumitem}
+
+% subfigures
+\usepackage{graphicx}
+\usepackage{subcaption}
+% plot in latex
+\usepackage{pgfplots}
+\usepgfplotslibrary{statistics}
+\definecolor{pyblue}{rgb}{0.12156863, 0.46666667, 0.70588235}
+\definecolor{pyorange}{rgb}{1, 0.49803922, 0.05490196}
+\definecolor{grey0}{rgb}{0.6, 0.6, 0.6}
+\definecolor{grey1}{rgb}{0.7, 0.7, 0.7}
+\definecolor{grey2}{rgb}{0.75, 0.75, 0.75}
+\definecolor{grey3}{rgb}{0.8, 0.8, 0.8}
+\definecolor{grey4}{rgb}{0.85, 0.85, 0.85}
+\definecolor{grey5}{rgb}{0.9, 0.9, 0.9}
+\definecolor{matlab1}{rgb}{0, 0.447, 0.741}
+\definecolor{matlab2}{rgb}{0.85 0.325 0.098}
+\definecolor{matlab3}{rgb}{0.929 0.694 0.125}
+\definecolor{matlab4}{rgb}{0.494 0.184 0.556}
+\definecolor{matlab5}{rgb}{0.466 0.674 0.188}
+\definecolor{matlab6}{rgb}{0.301 0.745 0.933}
+\definecolor{matlab7}{rgb}{0.635 0.078 0.184}
+\usepgfplotslibrary{colorbrewer}
+\pgfplotsset{
+	compat=1.13,
+	legend image code/.code={
+		\draw[mark repeat=2,mark phase=2]
+		plot coordinates {
+			(0cm,0cm)
+			(0.1cm,0cm)        %% default is (0.3cm,0cm)
+			(0.2cm,0cm)         %% default is (0.6cm,0cm)
+		};%
+	}
+}
+% The following code defines a new mod function (fpumod) that will be used in group boxplot. This is because the default mod function may return wrong values, causing the box to shift sometimes.
+\pgfmathdeclarefunction{fpumod}{2}{%
+	\pgfmathfloatdivide{#1}{#2}%
+	\pgfmathfloatint{\pgfmathresult}%
+	\pgfmathfloatmultiply{\pgfmathresult}{#2}%
+	\pgfmathfloatsubtract{#1}{\pgfmathresult}%
+	\pgfmathfloatifapproxequalrel{\pgfmathresult}{#2}{\def\pgfmathresult{6}}{}%
+}
+% font size options: \tiny \scriptsize \footnotesize \small \normalsize \large \Large \LARGE \huge \Huge
+%\usepgfplotslibrary{external}  % for extreme complex plots, export it to pdf
+%\tikzexternalize
+
+% appendix
+\usepackage[titletoc,page]{appendix}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{Improving MMD-GAN Training with Repulsive Loss Function}
+
+% Authors must not appear in the submitted version. They should be hidden
+% as long as the \iclrfinalcopy macro remains commented out below.
+% Non-anonymous submissions will be rejected without review.
+
+\author{Wei Wang\thanks{Corresponding author: weiw8@student.unimelb.edu.au} 
+\\
+%Department of Mechanical Engineering\\
+University of Melbourne
+%Melbourne, VIC 3053, Australia \\
+%\texttt{\{hippo,brain,jen\}@cs.cranberry-lemon.edu} \\
+%\texttt{\{weiw8\}@student.unimelb.edu.au}
+\And
+Yuan Sun \\
+%School of Science \\
+RMIT University
+%Melbourne, VIC 3000, Australia \\
+%\texttt{yuan.sun@rmit.edu.au} \\
+\And
+Saman Halgamuge \\
+%Department of Mechanical Engineering\\
+University of Melbourne
+%Melbourne, VIC 3053, Australia \\
+%\texttt{saman@unimelb.edu.au}
+}
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to \LaTeX{} to determine where to break
+% the lines. Using \AND forces a linebreak at that point. So, if \LaTeX{}
+% puts 3 of 4 authors names on the first line, and the last on the second
+% line, try using \AND instead of \And before the third author name.
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+
+\iclrfinalcopy % Uncomment for camera-ready version, but NOT for submission.
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Generative adversarial nets (GANs) are widely used to learn the data sampling process and their performance may heavily depend on the loss functions, given a limited computational budget. This study revisits MMD-GAN that uses the maximum mean discrepancy (MMD) as the loss function for GAN and makes two contributions. First, we argue that the existing MMD loss function may discourage the learning of fine details in data as it attempts to contract the discriminator outputs of real data. To address this issue, we propose a repulsive loss function to actively learn the difference among the real data by simply rearranging the terms in MMD. Second, inspired by the hinge loss, we propose a bounded Gaussian kernel to stabilize the training of MMD-GAN with the repulsive loss function. The proposed methods are applied to the unsupervised image generation tasks on CIFAR-10, STL-10, CelebA, and LSUN bedroom datasets. Results show that the repulsive loss function significantly improves over the MMD loss at no additional computational cost and outperforms other representative loss functions. The proposed methods achieve an FID score of 16.21 on the CIFAR-10 dataset using a single DCGAN network and spectral normalization. \footnote{The code is available at: \url{https://github.com/richardwth/MMD-GAN}}
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+Generative adversarial nets (GANs) (\cite{gan}) are a branch of generative models that learns to mimic the real data generating process. GANs have been intensively studied in recent years, with a variety of successful applications (\cite{pggan,nlpgan,semigan,cyclegan,reinforce_gan}). The idea of GANs is to jointly train a generator network that attempts to produce artificial samples, and a discriminator network or critic that distinguishes the generated samples from the real ones. Compared to maximum likelihood based methods, GANs tend to produce samples with sharper and more vivid details but require more efforts to train. 
+
+Recent studies on improving GAN training have mainly focused on designing loss functions, network architectures and training procedures. The loss function, or simply loss, defines quantitatively the difference of discriminator outputs between real and generated samples. The gradients of loss functions are used to train the generator and discriminator. This study focuses on a loss function called maximum mean discrepancy (MMD), which is well known as the distance metric between two probability distributions and widely applied in kernel two-sample test (\cite{mmdtest}). Theoretically, MMD reaches its global minimum zero if and only if the two distributions are equal. Thus, MMD has been applied to compare the generated samples to real ones directly (\cite{gmmn,gmmn2}) and extended as the loss function to the GAN framework recently (\cite{coulomb,mmd_gan_g,mmd_gan_t}).
+
+In this paper, we interpret the optimization of MMD loss by the discriminator as a combination of attraction and repulsion processes, similar to that of linear discriminant analysis. We argue that the existing MMD loss may discourage the learning of fine details in data, as the discriminator attempts to minimize the within-group variance of its outputs for the real data. To address this issue, we propose a repulsive loss for the discriminator that explicitly explores the differences among real data. The proposed loss achieved significant improvements over the MMD loss on image generation tasks of four benchmark datasets, without incurring any additional computational cost. Furthermore, a bounded Gaussian kernel is proposed to stabilize the training of discriminator. As such, using a single kernel in MMD-GAN is sufficient, in contrast to a linear combination of kernels used in \cite{mmd_gan_g} and \cite{mmd_gan_t}. By using a single kernel, the computational cost of the MMD loss can potentially be reduced in a variety of applications. 
+
+The paper is organized as follows. Section 2 reviews the GANs trained using the MMD loss (MMD-GAN). We propose the repulsive loss for discriminator in Section 3, introduce two practical techniques to stabilize the training process in Section 4, and present the results of extensive experiments in Section 5. In the last section, we discuss the connections between our model and existing work.
+
+\section{MMD-GAN}
+\label{sec:all_the_gans}
+
+In this section, we introduce the GAN model and MMD loss. Consider a random variable \(\rdv{X}\in\ds{X}\) with an empirical data distribution \(P_{\rdv{X}}\) to be learned. A typical GAN model consists of two neural networks: a generator \(G\) and a discriminator \(D\). The generator \(G\) maps a latent code \(\bm{z}\) with a fixed distribution \(P_{\rdv{Z}}\) (e.g., Gaussian) to the data space \(\ds{X}\): \(\bm{y}=G(\bm{z})\in\ds{X}\), where \(\bm{y}\) represents the generated samples with distribution \(P_{G}\). The discriminator \(D\) evaluates the scores \(D(\bm{a})\in\set{R}^d\) of a real or generated sample \(\bm{a}\). This study focuses on image generation tasks using convolutional neural networks (CNN) for both \(G\) and \(D\).
+
+Several loss functions have been proposed to quantify the difference of the scores between real and generated samples: \(\{D(\bm{x})\}\) and \(\{D(\bm{y})\}\), including the minimax loss and non-saturating loss~(\cite{gan}), hinge loss~(\cite{implicit}), Wasserstein loss~(\cite{wgan,wgan_gp}) and maximum mean discrepancy (MMD) (\cite{mmd_gan_g,mmd_gan_t}) (see Appendix~\ref{sec:loss_literature} for more details). Among them, MMD uses kernel embedding \(\bm{\phi}(\bm{a})=k(\cdot,\bm{a})\) associated with a characteristic kernel \(k\) such that \(\bm{\phi}\) is infinite-dimensional and \(\langle\bm{\phi}(\bm{a}),\bm{\phi}(\bm{b})\rangle_{\ds{H}}=k(\bm{a},\bm{b})\). The squared MMD distance between two distributions \(P\) and \(Q\) is
+\begin{equation}\label{Eq:mmd}
+M_k^2(P,Q)=\norm{\bm{\mu}_{P}-\bm{\mu}_{Q}}_{\ds{H}}^2=\set{E}_{\bm{a},\bm{a}'\sim P}[k(\bm{a},\bm{a}')]+\set{E}_{\bm{b},\bm{b}'\sim Q}[k(\bm{b},\bm{b}')]-2\set{E}_{\bm{a}\sim P,\bm{b}\sim Q}[k(\bm{a},\bm{b})]
+\end{equation}
+The kernel \(k(\bm{a},\bm{b})\) measures the similarity between two samples \(\bm{a}\) and \(\bm{b}\). \cite{mmdtest} proved that, using a characteristic kernel \(k\), \(M_k^2(P,Q)\ge0\) with equality applies if and only if \(P=Q\). 
+
+In MMD-GAN, the discriminator \(D\) can be interpreted as forming a new kernel with \(k\): \(k\circ D(\bm{a},\bm{b})=k(D(\bm{a}), D(\bm{b}))=k_D(\bm{a},\bm{b})\). If \(D\) is injective, \(k\circ D\) is characteristic and \(M_{k\circ D}^2(P_{\rdv{X}},P_{G})\) reaches its minimum if and only if \(P_{\rdv{X}}=P_{G}\) (\cite{mmd_gan_g}). Thus, the objective functions for \(G\) and \(D\) could be (\cite{mmd_gan_g,mmd_gan_t}):
+\begin{gather}
+\min_{G}L_{G}^{\text{mmd}}=M_{k\circ D}^2(P_{\rdv{X}},P_{G})=\set{E}_{P_G}[k_D(\bm{y},\bm{y}')]-2\set{E}_{P_{\rdv{X}},P_{G}}[k_D(\bm{x},\bm{y})]+\set{E}_{P_{\rdv{X}}}[k_D(\bm{x},\bm{x}')] \label{eq:L_G} \\
+\min_{D}L_D^{\text{att}}=-M_{k\circ D}^2(P_{\rdv{X}},P_{G})=2\set{E}_{P_{\rdv{X}},P_{G}}[k_D(\bm{x},\bm{y})]-\set{E}_{P_{\rdv{X}}}[k_D(\bm{x},\bm{x}')]-\set{E}_{P_G}[k_D(\bm{y},\bm{y}')] \label{eq:L_D}
+\end{gather}
+MMD-GAN has been shown to be more effective than the model that directly uses MMD as the loss function for the generator \(G\)~(\cite{mmd_gan_g}). 
+
+\cite{gan_convergence} showed that MMD and Wasserstein metric are weaker objective functions for GAN than the Jensen–Shannon (JS) divergence (related to minimax loss) and total variation (TV) distance (related to hinge loss). The reason is that convergence of \(P_G\) to \(P_{\rdv{X}}\) in JS-divergence and TV distance also implies convergence in MMD and Wasserstein metric. Weak metrics are desirable as they provide more information on adjusting the model to fit the data distribution (\cite{gan_convergence}). \cite{gan_stable} proved that the GAN trained using the minimax loss and gradient updates on model parameters is locally exponentially stable near equilibrium, while the GAN using Wasserstein loss is not. In Appendix~\ref{sec:gan_stable}, we demonstrate that the MMD-GAN trained by gradient descent is locally exponentially stable near equilibrium.
+
+\section{Repulsive Loss Function}
+\label{sec:repulsive_loss}
+
+\begin{figure}[tb]
+	\centering
+	\begin{subfigure}[t]{0.26\linewidth}
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[%
+		width=1.4\textwidth,height=1.4\textwidth,
+		axis line style={draw=none},
+		xmin=-3.0, xmax=6.5, ymin=-3.0, ymax=6.5, 
+		tick style={draw=none}, yticklabels={,,}, xticklabels={,,},
+		%legend pos=north west, legend style={font=\footnotesize, draw=none, row sep=-2.0pt}
+		]
+		% g
+		\node [circle, draw=grey1, inner sep=0.6pt] (g1) at (axis cs:1.0, 0.0){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g2) at (axis cs:0.5, 0.866){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g3) at (axis cs:-0.5, 0.866){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g4) at (axis cs:-1.0, 0.0){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g5) at (axis cs:-0.5, -0.866){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g6) at (axis cs:0.5, -0.866){g};
+		% r
+		\node [circle, draw=grey1, inner sep=0.8pt] (r1) at (axis cs:4.5, 3.5){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r2) at (axis cs:4, 4.366){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r3) at (axis cs:3.0, 4.366){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r4) at (axis cs:2.5, 3.5){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r5) at (axis cs:3.0, 2.634){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r6) at (axis cs:4.0, 2.634){r};
+		% arrows for G
+		\node (a1) at (axis cs:2.2, 1.6){}; \draw[->, color=pyorange, line width=1pt](a1)--(g1);
+		\node (a2) at (axis cs:1.8342, 2.156){}; \draw[->, color=pyorange, line width=1pt](a2)--(g2);
+		\node (a3) at (axis cs:1.1412,2.009){}; \draw[->, color=pyorange, line width=1pt](a3)--(g3);
+		\node (a4) at (axis cs:-2.5617,-1.2494){}; \draw[->, color=pyorange, line width=1pt](g4)--(a4);
+		\node (a5) at (axis cs:-1.8579,-2.3344){}; \draw[->, color=pyorange, line width=1pt](g5)--(a5);
+		\node (a6) at (axis cs:-0.6678,-2.4896){}; \draw[->, color=pyorange, line width=1pt](g6)--(a6);
+		
+		\node (re1) at (axis cs:3.0, 0.0){}; \draw[->, color=pyblue, line width=1pt](re1)--(g1);
+		\node (re2) at (axis cs:1.5, 2.598){}; \draw[->, color=pyblue, line width=1pt](re2)--(g2);
+		\node (re3) at (axis cs:-1.5,2.598){}; \draw[->, color=pyblue, line width=1pt](re3)--(g3);
+		\node (re4) at (axis cs:-3.0,0.0){}; \draw[->, color=pyblue, line width=1pt](re4)--(g4);
+		\node (re5) at (axis cs:-1.5,-2.598){}; \draw[->, color=pyblue, line width=1pt](re5)--(g5);
+		\node (re6) at (axis cs:1.5,-2.598){}; \draw[->, color=pyblue, line width=1pt](re6)--(g6);
+		
+		% arrows for D
+		\node (da1) at (axis cs:6.0787, 4.7279){}; \draw[->, color=pyorange, line width=1pt](r1)--(da1);
+		\node (da2) at (axis cs:5.3511, 5.8407){}; \draw[->, color=pyorange, line width=1pt](r2)--(da2);
+		\node (da3) at (axis cs:4.1326,6.0144){}; \draw[->, color=pyorange, line width=1pt](r3)--(da3);
+		%\node (da4) at (axis cs:3.6625,5.1275){}; \draw[->, color=pyorange, line width=1pt](r4)--(da4);
+		%\node (da5) at (axis cs:4.5029,3.9536){}; \draw[->, color=pyorange, line width=1pt](r5)--(da5);
+		%\node (da6) at (axis cs:5.6704,3.7339){}; \draw[->, color=pyorange, line width=1pt](r6)--(da6);
+		\node (da4) at (axis cs:1.3375,1.8725){}; \draw[->, color=pyorange, line width=1pt](da4)--(r4);
+		\node (da5) at (axis cs:1.4971,1.3144){}; \draw[->, color=pyorange, line width=1pt](da5)--(r5);
+		\node (da6) at (axis cs:2.3296,1.5341){}; \draw[->, color=pyorange, line width=1pt](da6)--(r6);
+		
+		\node (dre1) at (axis cs:6.5, 3.5){}; \draw[->, color=pyblue, line width=1pt](dre1)--(r1);
+		\node (dre2) at (axis cs:5.0, 6.098){}; \draw[->, color=pyblue, line width=1pt](dre2)--(r2);
+		\node (dre3) at (axis cs:2.0,6.098){}; \draw[->, color=pyblue, line width=1pt](dre3)--(r3);
+		\node (dre4) at (axis cs:0.5,3.5){}; \draw[->, color=pyblue, line width=1pt](dre4)--(r4);
+		\node (dre5) at (axis cs:2.0,0.902){}; \draw[->, color=pyblue, line width=1pt](dre5)--(r5);
+		\node (dre6) at (axis cs:5.0,0.902){}; \draw[->, color=pyblue, line width=1pt](dre6)--(r6);
+		\end{axis}
+		\end{tikzpicture}
+		\caption{\(L_D^{\text{att}}\) (Eq.~\ref{eq:L_D})\label{fig:attractive_D}}
+	\end{subfigure}
+	~
+	\iffalse
+	\begin{subfigure}[t]{0.26\linewidth}
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[%
+		width=1.4\textwidth,height=1.4\textwidth,
+		axis line style={draw=none},
+		xmin=-3.0, xmax=5.0, ymin=-3.0, ymax=5.0, 
+		tick style={draw=none}, yticklabels={,,}, xticklabels={,,},
+		%legend pos=north west, legend style={font=\footnotesize, draw=none, row sep=-2.0pt}
+		]
+		% g
+		\node [circle, draw=grey1, inner sep=0.6pt] (g1) at (axis cs:1.0, 0.0){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g2) at (axis cs:0.5, 0.866){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g3) at (axis cs:-0.5, 0.866){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g4) at (axis cs:-1.0, 0.0){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g5) at (axis cs:-0.5, -0.866){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g6) at (axis cs:0.5, -0.866){g};
+		% r
+		\node [circle, draw=grey1, inner sep=0.8pt] (r1) at (axis cs:4.5, 3.5){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r2) at (axis cs:4, 4.366){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r3) at (axis cs:3.0, 4.366){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r4) at (axis cs:2.5, 3.5){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r5) at (axis cs:3.0, 2.634){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r6) at (axis cs:4.0, 2.634){r};
+		% arrows 
+		\node (a1) at (axis cs:2.2, 1.6){}; \draw[->, color=pyblue, line width=1pt](g1)--(a1);
+		\node (a2) at (axis cs:1.8342, 2.356){}; \draw[->, color=pyblue, line width=1pt](g2)--(a2);
+		\node (a3) at (axis cs:1.1412,2.0){}; \draw[->, color=pyblue, line width=1pt](g3)--(a3);
+		\node (a4) at (axis cs:-2.5617,-1.2494){}; \draw[->, color=pyblue, line width=1pt](a4)--(g4);
+		\node (a5) at (axis cs:-1.8579,-2.3344){}; \draw[->, color=pyblue, line width=1pt](a5)--(g5);
+		\node (a6) at (axis cs:-0.6678,-2.4896){}; \draw[->, color=pyblue, line width=1pt](a6)--(g6);
+		
+		\node (re1) at (axis cs:3.0, 0.0){}; \draw[->, color=pyorange, line width=1pt](g1)--(re1);
+		\node (re2) at (axis cs:1.5, 2.598){}; \draw[->, color=pyorange, line width=1pt](g2)--(re2);
+		\node (re3) at (axis cs:-1.5,2.598){}; \draw[->, color=pyorange, line width=1pt](g3)--(re3);
+		\node (re4) at (axis cs:-3.0,0.0){}; \draw[->, color=pyorange, line width=1pt](g4)--(re4);
+		\node (re5) at (axis cs:-1.5,-2.598){}; \draw[->, color=pyorange, line width=1pt](g5)--(re5);
+		\node (re6) at (axis cs:1.5,-2.598){}; \draw[->, color=pyorange, line width=1pt](g6)--(re6);
+		\end{axis}
+		\end{tikzpicture}
+		\caption{\(L_{G}^{\text{mmd}}\) paired with \(L_D^{\text{att}}\). \label{fig:attractive_G}}
+	\end{subfigure}
+	\fi
+	~
+	\begin{subfigure}[t]{0.26\linewidth}
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[%
+		width=1.4\textwidth,height=1.4\textwidth,
+		axis line style={draw=none},
+		xmin=-3.5, xmax=3.5, ymin=-3.5, ymax=3.5, 
+		tick style={draw=none}, yticklabels={,,}, xticklabels={,,},
+		%legend pos=north west, legend style={font=\footnotesize, draw=none, row sep=-2.0pt}
+		]
+		% g
+		\node [circle, draw=grey1, inner sep=0.6pt] (g1) at (axis cs:1.0, 0.0){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g2) at (axis cs:0.5, 0.866){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g3) at (axis cs:-0.5, 0.866){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g4) at (axis cs:-1.0, 0.0){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g5) at (axis cs:-0.5, -0.866){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g6) at (axis cs:0.5, -0.866){g};
+		% r
+		\node [circle, draw=grey1, inner sep=0.8pt] (r1) at (axis cs:3.0, 0.0){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r2) at (axis cs:1.5, 2.598){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r3) at (axis cs:-1.5,2.598){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r4) at (axis cs:-3.0,0.0){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r5) at (axis cs:-1.5,-2.598){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r6) at (axis cs:1.5,-2.598){r};
+		% arrows 
+		\node [inner sep=0pt] (a1) at (axis cs:2.0, 0.0){}; 
+		\node [inner sep=0pt] (a2) at (axis cs:1.0, 1.732){}; 
+		\node [inner sep=0pt] (a3) at (axis cs:-1.0,1.732){}; 
+		\node [inner sep=0pt] (a4) at (axis cs:-2.0,0.0){}; 
+		\node [inner sep=0pt] (a5) at (axis cs:-1.0,-1.732){}; 
+		\node [inner sep=0pt] (a6) at (axis cs:1.0,-1.732){}; 
+		\draw[->, color=pyorange, line width=1pt](a1)--(r1);
+		\draw[->, color=pyorange, line width=1pt](a2)--(r2);
+		\draw[->, color=pyorange, line width=1pt](a3)--(r3);
+		\draw[->, color=pyorange, line width=1pt](a4)--(r4);
+		\draw[->, color=pyorange, line width=1pt](a5)--(r5);
+		\draw[->, color=pyorange, line width=1pt](a6)--(r6);
+		
+		\node [inner sep=0pt] (c1) at (axis cs:0.2, 0.0){}; 
+		\node [inner sep=0pt] (c2) at (axis cs:0.1, 0.1732){}; 
+		\node [inner sep=0pt] (c3) at (axis cs:-0.1,0.1732){}; 
+		\node [inner sep=0pt] (c4) at (axis cs:-0.2,0.0){}; 
+		\node [inner sep=0pt] (c5) at (axis cs:-0.1,-0.1732){}; 
+		\node [inner sep=0pt] (c6) at (axis cs:0.1,-0.1732){};
+		\draw[->, color=pyblue, line width=0.8pt](g1)--(c1);
+		\draw[->, color=pyblue, line width=0.8pt](g2)--(c2);
+		\draw[->, color=pyblue, line width=0.8pt](g3)--(c3);
+		\draw[->, color=pyblue, line width=0.8pt](g4)--(c4);
+		\draw[->, color=pyblue, line width=0.8pt](g5)--(c5);
+		\draw[->, color=pyblue, line width=0.8pt](g6)--(c6);
+		\end{axis}
+		\end{tikzpicture}
+		\caption{\(L_{D}^{\text{rep}}\) (Eq.~\ref{eq:rep_loss})\label{fig:repulsive_D}}
+	\end{subfigure}
+	~
+	\begin{subfigure}[t]{0.26\linewidth}
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[%
+		width=1.4\textwidth,height=1.4\textwidth,
+		axis line style={draw=none},
+		xmin=-3.5, xmax=3.5, ymin=-3.5, ymax=3.5, 
+		tick style={draw=none}, yticklabels={,,}, xticklabels={,,},
+		%legend pos=north west, legend style={font=\footnotesize, draw=none, row sep=-2.0pt}
+		]
+		% g
+		\node [circle, draw=grey1, inner sep=0.6pt] (g1) at (axis cs:1.0, 0.0){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g2) at (axis cs:0.5, 0.866){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g3) at (axis cs:-0.5, 0.866){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g4) at (axis cs:-1.0, 0.0){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g5) at (axis cs:-0.5, -0.866){g};
+		\node [circle, draw=grey1, inner sep=0.6pt] (g6) at (axis cs:0.5, -0.866){g};
+		% r
+		\node [circle, draw=grey1, inner sep=0.8pt] (r1) at (axis cs:3.0, 0.0){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r2) at (axis cs:1.5, 2.598){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r3) at (axis cs:-1.5,2.598){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r4) at (axis cs:-3.0,0.0){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r5) at (axis cs:-1.5,-2.598){r};
+		\node [circle, draw=grey1, inner sep=0.8pt] (r6) at (axis cs:1.5,-2.598){r};
+		% arrows 
+		\node [inner sep=0pt] (a1) at (axis cs:2.0, 0.0){}; \draw[->, color=pyblue, line width=1pt](g1)--(a1);
+		\node [inner sep=0pt] (a2) at (axis cs:1.0, 1.732){}; \draw[->, color=pyblue, line width=1pt](g2)--(a2);
+		\node [inner sep=0pt] (a3) at (axis cs:-1.0,1.732){}; \draw[->, color=pyblue, line width=1pt](g3)--(a3);
+		\node [inner sep=0pt] (a4) at (axis cs:-2.0,0.0){}; \draw[->, color=pyblue, line width=1pt](g4)--(a4);
+		\node [inner sep=0pt] (a5) at (axis cs:-1.0,-1.732){}; \draw[->, color=pyblue, line width=1pt](g5)--(a5);
+		\node [inner sep=0pt] (a6) at (axis cs:1.0,-1.732){}; \draw[->, color=pyblue, line width=1pt](g6)--(a6);
+		\node [inner sep=0pt] (c) at (axis cs:0.0,0.0){};
+		\draw[->, color=pyorange, line width=0.8pt](c)--(g1);
+		\draw[->, color=pyorange, line width=0.8pt](c)--(g2);
+		\draw[->, color=pyorange, line width=0.8pt](c)--(g3);
+		\draw[->, color=pyorange, line width=0.8pt](c)--(g4);
+		\draw[->, color=pyorange, line width=0.8pt](c)--(g5);
+		\draw[->, color=pyorange, line width=0.8pt](c)--(g6);
+		\end{axis}
+		\end{tikzpicture}
+		\caption{\(L_{G}^{\text{mmd}}\) paired with \(L_{D}^{\text{rep}}\)\label{fig:repulsive_G}}
+	\end{subfigure}
+	\caption{Illustration of the gradient directions of each loss on the real sample scores \(\{D(\bm{x})\}\) (``r" nodes) and generated sample scores \(\{D(\bm{y})\}\) (``g" nodes). The blue arrows stand for attraction and the orange arrows for repulsion. When \(L_{G}^{\text{mmd}}\) is paired with \(L_D^{\text{att}}\), the gradient directions of \(L_{G}^{\text{mmd}}\) on \(\{D(\bm{y})\}\) can be obtained by reversing the arrows in (a), thus are omitted.}  
+	\label{fig:att_vs_rep}
+\end{figure}
+
+In this section, we interpret the training of MMD-GAN (using \(L_D^{\text{att}}\) and \(L_{G}^{\text{mmd}}\)) as a combination of attraction and repulsion processes, and propose a novel repulsive loss function for the discriminator by rearranging the components in \(L_D^{\text{att}}\).
+
+First, consider a linear discriminant analysis (LDA) model as the discriminator. The task is to find a projection \(\bm{w}\) to maximize the between-group variance \(\norm{\bm{w}^T\bm{\mu}_x-\bm{w}^T\bm{\mu}_y}\) and minimize the within-group variance \(\bm{w}^T(\bm{\Sigma}_x+\bm{\Sigma}_y)\bm{w}\), where \(\bm{\mu}\) and \(\bm{\Sigma}\) are group mean and covariance. 
+
+In MMD-GAN, the neural-network discriminator works in a similar way as LDA. By minimizing \(L_D^{\text{att}}\), the discriminator \(D\) tackles two tasks:
+\begin{enumerate*}[label=\arabic*)]
+	\item \(D\) reduces \(\set{E}_{P_{\rdv{X}},P_{G}}[k_D(\bm{x},\bm{y})]\), i.e., causes the two groups \(\{D(\bm{x})\}\) and \(\{D(\bm{y})\}\) to repel each other (see Fig.~\ref{fig:attractive_D} orange arrows), or maximize between-group variance; and
+	\item \(D\) increases \(\set{E}_{P_{\rdv{X}}}[k_D(\bm{x},\bm{x}')]\) and \(\set{E}_{P_G}[k(\bm{y},\bm{y}')]\), i.e. contracts \(\{D(\bm{x})\}\) and \(\{D(\bm{y})\}\) within each group (see Fig.~\ref{fig:attractive_D} blue arrows), or minimize the within-group variance.
+\end{enumerate*}
+We refer to loss functions that contract real data scores as attractive losses.  
+
+We argue that the attractive loss \(L_D^{\text{att}}\) (Eq.~\ref{eq:L_D}) has two issues that may slow down the GAN training:
+\begin{enumerate}[leftmargin=*]
+	\item The discriminator \(D\) may focus more on the similarities among real samples (in order to contract \(\{D(\bm{x})\}\)) than the fine details that separate them. Initially, \(G\) produces low-quality samples and it may be adequate for \(D\) to learn the common features of \(\{\bm{x}\}\) in order to distinguish between \(\{\bm{x}\}\) and \(\{\bm{y}\}\). Only when \(\{D(\bm{y})\}\) is sufficiently close to \(\{D(\bm{x})\}\) will \(D\) learn the fine details of \(\{\bm{x}\}\) to be able to separate \(\{D(\bm{x})\}\) from \(\{D(\bm{y})\}\). Consequently, \(D\) may leave out some fine details in real samples, thus \(G\) has no access to them during training.
+	\item As shown in Fig.~\ref{fig:attractive_D}, the gradients on \(D(\bm{y})\) from the attraction (blue arrows) and repulsion (orange arrows) terms in \(L_D^{\text{att}}\) (and thus \(L_{G}^{\text{mmd}}\)) may have opposite directions during training. Their summation may be small in magnitude even when \(D(\bm{y})\) is far away from \(D(\bm{x})\), which may cause \(G\) to stagnate locally.
+\end{enumerate}
+
+Therefore, we propose a repulsive loss for \(D\) to encourage repulsion of the real data scores \(\{D(\bm{x})\}\):
+\begin{equation}\label{eq:rep_loss}
+L_{D}^{\text{rep}}=\set{E}_{P_{\rdv{X}}}[k_D(\bm{x},\bm{x}')]-\set{E}_{P_G}[k_D(\bm{y},\bm{y}')]
+\end{equation}
+The generator \(G\) uses the same MMD loss \(L_{G}^{\text{mmd}}\) as before (see Eq.~\ref{eq:L_G}). Thus, the adversary lies in the fact that \(D\) contracts \(\{D(\bm{y})\}\) via maximizing \(\set{E}_{P_G}[k_D(\bm{y},\bm{y}')]\) (see Fig.~\ref{fig:repulsive_D}) while \(G\) expands \(\{D(\bm{y})\}\) (see Fig.~\ref{fig:repulsive_G}). Additionally, \(D\) also learns to separate the real data by minimizing \(\set{E}_{P_{\rdv{X}}}[k_D(\bm{x},\bm{x}')]\), which actively explores the fine details in real samples and may result in more meaningful gradients for \(G\). Note that in Eq.~\ref{eq:rep_loss}, \(D\) does not explicitly push the average score of \(\{D(\bm{y})\}\) away from that of \(\{D(\bm{x})\}\) because it may have no effect on the pair-wise sample distances. But \(G\) aims to match the average scores of both groups. Thus, we believe, compared to the model using \(L_{G}^{\text{mmd}}\) and \(L_D^{\text{att}}\), our model of \(L_{G}^{\text{mmd}}\) and \(L_{D}^{\text{rep}}\) is less likely to yield opposite gradients when \(\{D(\bm{y})\}\) and \(\{D(\bm{x})\}\) are distinct (see Fig.~\ref{fig:repulsive_G}). In Appendix~\ref{sec:gan_stable}, we demonstrate that GAN trained using gradient descent and the repulsive MMD loss \((L_{D}^{\text{rep}},L_{G}^{\text{mmd}})\) is locally exponentially stable near equilibrium.
+
+At last, we identify a general form of loss function for the discriminator \(D\):
+\begin{equation}\label{eq:L_D_general}
+L_{D,\lambda}=\lambda\set{E}_{P_{\rdv{X}}}[k_D(\bm{x},\bm{x}')] -(\lambda-1)\set{E}_{P_{\rdv{X}},P_{G}}[k_D(\bm{x},\bm{y})]-\set{E}_{P_G}[k_D(\bm{y},\bm{y}')]
+\end{equation}
+where \(\lambda\) is a hyper-parameter\footnote{The weights for the three terms in \(L_{D,\lambda}\) sum up to zero. This is to make sure the \(\partial L_{D,\lambda}/\partial \bm{\theta}_{D}\) is zero at equilibrium \(P_{\rdv{X}}=P_{G}\), where \(\bm{\theta}_{D}\) is the parameters of \(D\).}. When \(\lambda<0\), the discriminator loss \(L_{D,\lambda}\) is attractive, with \(\lambda=-1\) corresponding to the original MMD loss \(L_D^{\text{att}}\) in Eq.~\ref{eq:L_D}; when \(\lambda>0\), \(L_{D,\lambda}\) is repulsive and \(\lambda=1\) corresponds to \(L_D^{\text{rep}}\) in Eq.~\ref{eq:rep_loss}. It is interesting that when \(\lambda>1\), the discriminator explicitly contracts \(\{D(\bm{x})\}\) and \(\{D(\bm{y})\}\) via maximizing \(\set{E}_{P_{\rdv{X}},P_{G}}[k_D(\bm{x},\bm{y})]\), which may work as a penalty that prevents the pairwise distances of \(\{D(\bm{x})\}\) from increasing too fast. Note that \(L_{D,\lambda}\) has the same computational cost as \(L_{D}^{\text{att}}\) (Eq.~\ref{eq:L_D}) as we only rearranged the terms in \(L_{D}^{\text{att}}\).
+
+\section{Regularization on MMD and Discriminator}
+\label{sec:regularizations}
+In this section, we propose two approaches to stabilize the training of MMD-GAN: 
+\begin{enumerate*}[label=\arabic*)]
+\item a bounded kernel to avoid the saturation issue caused by an over-confident discriminator; and 
+\item a generalized power iteration method to estimate the spectral norm of a convolutional kernel, which was used in spectral normalization on the discriminator in all experiments in this study unless specified otherwise.
+\end{enumerate*}
+
+\subsection{Kernel in MMD}
+\label{sec:boundrbf}
+\begin{figure}[tb]
+	\centering
+	\begin{subfigure}[t]{0.23\linewidth}
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[%
+		no markers,
+		width=1.28\textwidth,
+		xmin=0.0, xmax=10, ymin=0.0, ymax=1.0, tick label style={font=\tiny},
+		legend style={at={(1,1)},anchor=north east, font=\tiny, draw=none, row sep=-4.0pt, inner sep=0pt}]
+		\addplot[color=grey1,line width=2pt]table[x=x, y=y1] {mix_g.dat};
+		\addplot[color=grey2,line width=2pt]table[x=x, y=y2] {mix_g.dat};
+		\addplot[color=grey3,line width=2pt]table[x=x, y=y3] {mix_g.dat};
+		\addplot[color=grey4,line width=2pt]table[x=x, y=y4] {mix_g.dat};
+		\addplot[color=grey5,line width=2pt]table[x=x, y=y5] {mix_g.dat};
+		\addplot[color=pyblue,line width=2pt]table[x=x, y=y] {mix_g.dat};
+		\legend{\(1\),\(\sqrt{2}\),\(2\),\(2\sqrt{2}\),\(4\),Mean};
+		\end{axis}
+		\end{tikzpicture}
+		\caption{\label{fig:rbf}}
+	\end{subfigure}
+	~
+	\begin{subfigure}[t]{0.23\linewidth}
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[%
+		no markers,
+		width=1.28\textwidth,
+		xmin=0.0, xmax=10, ymin=-0.6, ymax=0.0, tick label style={font=\tiny},
+		legend style={at={(1,0)},anchor=south east, font=\tiny, draw=none, row sep=-4.0pt, inner sep=0pt}]
+		\addplot[color=grey1,line width=2pt]table[x=x, y=dy1] {mix_g.dat};
+		\addplot[color=grey2,line width=2pt]table[x=x, y=dy2] {mix_g.dat};
+		\addplot[color=grey3,line width=2pt]table[x=x, y=dy3] {mix_g.dat};
+		\addplot[color=grey4,line width=2pt]table[x=x, y=dy4] {mix_g.dat};
+		\addplot[color=grey5,line width=2pt]table[x=x, y=dy5] {mix_g.dat};
+		\addplot[color=pyblue,line width=2pt]table[x=x, y=dy] {mix_g.dat};
+		\legend{\(1\),\(\sqrt{2}\),\(2\),\(2\sqrt{2}\),\(4\),Mean};
+		\end{axis}
+		\end{tikzpicture}
+		\caption{\label{fig:d_rbf}}
+	\end{subfigure}
+	~
+	\begin{subfigure}[t]{0.23\linewidth}
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[%
+		no markers,
+		width=1.28\textwidth,
+		xmin=0.0, xmax=10, ymin=0.0, ymax=1.0, tick label style={font=\tiny},
+		legend pos=north east, legend style={font=\tiny, draw=none, row sep=-4.0pt, inner sep=0pt}, legend columns=2]
+		\addplot[color=grey1,line width=2pt]table[x=x, y=y1] {mix_t.dat};
+		\addplot[color=grey2,line width=2pt]table[x=x, y=y2] {mix_t.dat};
+		\addplot[color=grey3,line width=2pt]table[x=x, y=y3] {mix_t.dat};
+		\addplot[color=grey4,line width=2pt]table[x=x, y=y4] {mix_t.dat};
+		\addplot[color=grey5,line width=2pt]table[x=x, y=y5] {mix_t.dat};
+		\addplot[color=pyblue,line width=2pt]table[x=x, y=y] {mix_t.dat};
+		\legend{\(0.2\),\(0.5\),\(1\),\(2\),\(5\),Mean};
+		\end{axis}
+		\end{tikzpicture}
+		\caption{\label{fig:rq}}
+	\end{subfigure}
+	~
+	\begin{subfigure}[t]{0.23\linewidth}
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[%
+		no markers,
+		width=1.28\textwidth,
+		xmin=0.0, xmax=10, ymin=-0.6, ymax=0.0, tick label style={font=\tiny},
+		legend style={at={(1,0)},anchor=south east, font=\tiny, draw=none, row sep=-4.0pt, inner sep=0pt}]
+		\addplot[color=grey1,line width=2pt]table[x=x, y=dy1] {mix_t.dat};
+		\addplot[color=grey2,line width=2pt]table[x=x, y=dy2] {mix_t.dat};
+		\addplot[color=grey3,line width=2pt]table[x=x, y=dy3] {mix_t.dat};
+		\addplot[color=grey4,line width=2pt]table[x=x, y=dy4] {mix_t.dat};
+		\addplot[color=grey5,line width=2pt]table[x=x, y=dy5] {mix_t.dat};
+		\addplot[color=pyblue,line width=2pt]table[x=x, y=dy] {mix_t.dat};
+		\legend{\(0.2\),\(0.5\),\(1\),\(2\),\(5\),Mean};
+		\end{axis}
+		\end{tikzpicture}
+		\caption{\label{fig:d_rq}}
+	\end{subfigure}
+	%\includegraphics[width=0.5\textwidth]{D5_200_6m}
+	\caption{(a) Gaussian kernels \(\{k_{\sigma_i}^{\text{rbf}}(\bm{a},\bm{b})\}\) and their mean as a function of \(e=\norm{\bm{a}-\bm{b}}\), where \(\sigma_{i}\in\{1,\sqrt{2},2,2\sqrt{2},4\}\) were used in our experiments; (b) derivatives of \(\{k_{\sigma_i}^{\text{rbf}}(\bm{a},\bm{b})\}\) in (a); (c) rational quadratic kernel \(\{k_{\alpha_{i}}^{\text{rq}}(\bm{a},\bm{b})\}\) and their mean, where \(\alpha_{i}\in\{0.2,0.5,1,2,5\}\); (d) derivatives of \(\{k_{\alpha_{i}}^{\text{rq}}(\bm{a},\bm{b})\}\) in (c).}  
+	\label{fig:fixed_kernel}
+\end{figure}
+
+For MMD-GAN, the following two kernels have been used:
+\begin{itemize}[leftmargin=*]
+	\item Gaussian radial basis function (RBF), or Gaussian kernel~(\cite{mmd_gan_g}), \(k_{\sigma}^{\text{rbf}}(\bm{a},\bm{b})=\exp(-\frac{1}{2\sigma^2}\norm{\bm{a}-\bm{b}}^2)\) where \(\sigma>0\) is the kernel scale or bandwidth. 
+	\item Rational quadratic kernel~(\cite{mmd_gan_t}), \(k_{\alpha}^{\text{rq}}(\bm{a},\bm{b})=(1+\frac{1}{2\alpha}\norm{\bm{a}-\bm{b}}^2)^{-\alpha}\), where the kernel scale \(\alpha>0\) corresponds to a mixture of Gaussian kernels with a \(\text{Gamma}(\alpha,1)\) prior on the inverse kernel scales \(\sigma^{-1}\).
+\end{itemize}
+It is interesting that both studies used a linear combination of kernels with five different kernel scales, i.e., \(k_{\text{rbf}}=\sum_{i=1}^5k_{\sigma_{i}}^{\text{rbf}}\) and \(k_{\text{rq}}=\sum_{i=1}^5k_{\alpha_{i}}^{\text{rq}}\), where \(\sigma_{i}\in\{1,2,4,8,16\}\), \(\alpha_{i}\in\{0.2,0.5,1,2,5\}\) (see Fig.~\ref{fig:rbf} and \ref{fig:rq} for illustration). We suspect the reason is that a single kernel \(k(\bm{a},\bm{b})\) is saturated when the distance \(\norm{\bm{a}-\bm{b}}\) is either too large or too small compared to the kernel scale (see Fig.~\ref{fig:d_rbf} and \ref{fig:d_rq}), which may cause diminishing gradients during training. Both \cite{mmd_gan_g} and \cite{mmd_gan_t} applied penalties on the discriminator parameters but not to the MMD loss itself. Thus the saturation issue may still exist. Using a linear combination of kernels with different kernel scales may alleviate this issue but not eradicate it.
+
+Inspired by the hinge loss (see Appendix~\ref{sec:loss_literature}), we propose a bounded RBF (RBF-B) kernel for the discriminator. The idea is to prevent \(D\) from pushing \(\{D(\bm{x})\}\) too far away from \(\{D(\bm{y})\}\) and causing saturation. For \(L_D^{\text{att}}\) in Eq.~\ref{eq:L_D}, the RBF-B kernel is:
+\begin{equation}\label{eq:rbf_b1}
+k_{\sigma}^{\text{rbf-b}}(\bm{a},\bm{b}) =
+\begin{cases}
+\exp(-\frac{1}{2\sigma^2}\max(\norm{\bm{a}-\bm{b}}^2, b_l)) & \text{if $\bm{a},\bm{b}\in\{D(\bm{x})\}$ or $\bm{a},\bm{b}\in\{D(\bm{y})\}$} \\
+\exp(-\frac{1}{2\sigma^2}\min(\norm{\bm{a}-\bm{b}}^2, b_u)) & \text{if $\bm{a}\in\{D(\bm{x})\}$ and $\bm{b}\in\{D(\bm{y})\}$}
+\end{cases}
+\end{equation}
+For \(L_{D}^{\text{rep}}\) in Eq.~\ref{eq:rep_loss}, the RBF-B kernel is:
+\begin{equation}\label{eq:rbf_b2}
+k_{\sigma}^{\text{rbf-b}}(\bm{a},\bm{b}) =
+\begin{cases}
+\exp(-\frac{1}{2\sigma^2}\max(\norm{\bm{a}-\bm{b}}^2, b_l)) & \text{if $\bm{a},\bm{b}\in\{D(\bm{y})\}$} \\
+\exp(-\frac{1}{2\sigma^2}\min(\norm{\bm{a}-\bm{b}}^2, b_u)) & \text{if $\bm{a},\bm{b}\in\{D(\bm{x})\}$}
+\end{cases}
+\end{equation}
+where \(b_l\) and \(b_u\) are the lower and upper bounds. As such, a single kernel is sufficient and we set \(\sigma=1\), \(b_l=0.25\) and \(b_u=4\) in all experiments for simplicity and leave their tuning for future work. It should be noted that, like the case of hinge loss, the RBF-B kernel is used only for the discriminator to prevent it from being over-confident. The generator is always trained using the original RBF kernel, thus we retain the interpretation of MMD loss \(L_{G}^{\text{mmd}}\) as a metric.
+
+RBF-B kernel is among many methods to address the saturation issue and stabilize MMD-GAN training. We found random sampling kernel scale, instance noise~(\cite{instance_noise}) and label smoothing~(\cite{label_smooth1,label_smooth2}) may also improve the model performance and stability. However, the computational cost of RBF-B kernel is relatively low. 
+
+\subsection{Spectral Normalization in Discriminator}
+\label{sec:sn}
+
+Without any Lipschitz constraints, the discriminator \(D\) may simply increase the magnitude of its outputs to minimize the discriminator loss, causing unstable training\footnote{Note that training stability is different from the local stability considered in Appendix~\ref{sec:gan_stable}. Training stability often refers to the ability of model converging to a desired state measured by some criterion. Local stability means that if a model is initialized sufficiently close to an equilibrium, it will converge to the equilibrium.}. Spectral normalization divides the weight matrix of each layer by its spectral norm, which imposes an upper bound on the magnitudes of outputs and gradients at each layer of \(D\) (\cite{spectral}). However, to estimate the spectral norm of a convolution kernel, \cite{spectral} reshaped the kernel into a matrix. We propose a generalized power iteration method to directly estimate the spectral norm of a convolution kernel (see Appendix~\ref{sec:pico} for details) and applied spectral normalization to the discriminator in all experiments. In Appendix~\ref{sec:exp:gp}, we explore using gradient penalty to impose the Lipschitz constraint (\cite{wgan_gp, mmd_gan_t,mmd_gp}) for the proposed repulsive loss.  
+
+\section{Experiments}
+\label{sec:experiments}
+
+In this section, we empirically evaluate the proposed 
+\begin{enumerate*}[label=\arabic*)]
+	\item repulsive loss \(L_{D}^{\text{rep}}\) (Eq.~\ref{eq:rep_loss}) on unsupervised training of GAN for image generation tasks; and
+	\item RBF-B kernel to stabilize MMD-GAN training. 
+\end{enumerate*}
+The generalized power iteration method is evaluated in Appendix~\ref{sec:exp:pico_pim}. To show the efficacy of \(L_{D}^{\text{rep}}\), we compared the loss functions \((L_{D}^{\text{rep}}, L_{G}^{\text{mmd}})\) using Gaussian kernel (MMD-rep) with \((L_{D}^{\text{att}}, L_{G}^{\text{mmd}})\) using Gaussian kernel (MMD-rbf) (\cite{mmd_gan_g}) and rational quadratic kernel (MMD-rq) (\cite{mmd_gan_t}), as well as non-saturating loss (\cite{gan}) and hinge loss (\cite{implicit}). To show the efficacy of RBF-B kernel, we applied it to both \(L_{D}^{\text{att}}\) and \(L_{D}^{\text{rep}}\), resulting in two methods MMD-rbf-b and MMD-rep-b. The Wasserstein loss was excluded for comparison because it cannot be directly used with spectral normalization (~\cite{spectral}). 
+
+\subsection{Experiment Setup}
+\label{sec:exp:setup}
+
+\textbf{Dataset:} The loss functions were evaluated on four datasets: 
+\begin{enumerate*}[label=\arabic*)]
+	\item CIFAR-10 (\(50K\) images, \(32\times32\) pixels) (\cite{cifar10});
+	\item STL-10 (\(100K\) images, \(48\times48\) pixels) (\cite{stl10});
+	\item CelebA (about \(203K\) images, \(64\times64\) pixels) (\cite{celeba}); and
+	\item LSUN bedrooms (around \(3\) million images, \(64\times64\) pixels) (\cite{lsun}).
+\end{enumerate*}
+The images were scaled to range \([-1,1]\) to avoid numeric issues.
+
+\textbf{Network architecture:} The DCGAN (\cite{dcgan}) architecture was used with hyper-parameters from \cite{spectral} (see Appendix~\ref{sec:architecture} for details). In all experiments, batch normalization (BN) (\cite{batchnorm}) was used in the generator, and spectral normalization with the generalized power iteration (see Appendix~\ref{sec:pico}) in the discriminator. For MMD related losses, the dimension of discriminator output layer was set to \(16\); for non-saturating loss and hinge loss, it was \(1\). In Appendix~\ref{sec:exp:D_out}, we investigate the impact of discriminator output dimension on the performance of repulsive loss.
+
+\textbf{Hyper-parameters:} We used Adam optimizer (\cite{adam}) with momentum parameters \(\beta_1=0.5\), \(\beta_2=0.999\); two-timescale update rule (TTUR) (\cite{ttur}) with two learning rates \((\rho_D,\rho_G)\) chosen from \(\{1e\text{-}4, 2e\text{-}4, 5e\text{-}4, 1e\text{-}3\}\) (16 combinations in total); and batch size \(64\). Fine-tuning on learning rates may improve the model performance, but constant learning rates were used for simplicity. All models were trained for \(100K\) iterations on CIFAR-10, STL-10, CelebA and LSUN bedroom datasets, with \(n_{dis}=1\), i.e., one discriminator update per generator update\footnote{Increasing or decreasing \(n_{dis}\) may improve the model performance in some cases, but it has significant impact on the computation cost. For simple and fair comparison, we set \(n_{dis}=1\) in all cases.}. For MMD-rbf, the kernel scales \(\sigma_{i}\in\{1,\sqrt{2},2,2\sqrt{2},4\}\) were used due to a better performance than the original values used in \cite{mmd_gan_g}. For MMD-rq, \(\alpha_{i}\in\{0.2,0.5,1,2,5\}\). For MMD-rbf-b, MMD-rep, MMD-rep-b, a single Gaussian kernel with \(\sigma=1\) was used.
+
+\textbf{Evaluation metrics:} Inception score (IS) (\cite{label_smooth2}), Fr\'echet Inception distance (FID) (\cite{ttur}) and multi-scale structural similarity (MS-SSIM) (\cite{ssim}) were used for quantitative evaluation. Both IS and FID are calculated using a pre-trained Inception model (\cite{label_smooth1}). Higher IS and lower FID scores indicate better image quality. MS-SSIM calculates the pair-wise image similarity and is used to detect mode collapses among images of the same class (\cite{acgan}). Lower MS-SSIM values indicate perceptually more diverse images. For each model, \(50K\) randomly generated samples and \(50K\) real samples were used to calculate IS, FID and MS-SSIM. 
+
+\subsection{Quantitative Analysis}
+\label{sec:exp:unsupervised_quantitative}
+
+\begin{table}[t]
+	\caption{Inception score (IS), Fr\'echet Inception distance (FID) and multi-scale structural similarity (MS-SSIM) on image generation tasks using different loss functions}
+	\centering
+	\label{Tab:fid_scores}
+	%\setlength\extrarowheight{2pt}
+	\begin{threeparttable}
+		\begin{tabular}{L{2.4cm} c c c c c c c c}
+			\toprule
+			\multirow{2}{*}{Methods\tnote{1}} & \multicolumn{2}{c}{CIFAR-10} & \multicolumn{2}{c}{STL-10} & \multicolumn{2}{c}{CelebA\tnote{2}} & \multicolumn{2}{c}{LSUN-bedrom\tnote{2}} \\
+			\cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
+			& IS & FID & IS & FID & FID & \footnotesize{MS-SSIM} & FID & \footnotesize{MS-SSIM}\\
+			\midrule
+			Real data & 11.31 & 2.09 & 26.37 & 2.10 & 1.09 & 0.2678 & 1.24 & 0.0915 \\
+			\midrule
+			Non-saturating & 7.39 & 23.23 & 8.25 & 48.53 & 10.64 & 0.2895 & 23.66 & 0.1027 \\
+			Hinge & 7.33 & 23.46 & 8.24 & 49.44 & 8.60 & 0.2894 & 16.73 & 0.0946 \\
+			MMD-rbf\tnote{3} & 7.05 & 28.38 & 8.13 & 57.52 & 13.03 & 0.2937 & &\\
+			MMD-rq\tnote{3} & 7.22 & 27.00 & 8.11 & 54.05 & 12.74 & 0.2935 & & \\
+			\midrule
+			MMD-rbf-b & 7.18 & 25.25 & 8.07 & 51.86 & 10.09 & 0.3090 & 32.29 & 0.1001 \\
+			MMD-rep & 7.99 & \textbf{16.65} & \textbf{9.36} & \textbf{36.67} & \textbf{7.20} & 0.2761 & 16.91 & \textbf{0.0901}\\
+			MMD-rep-b & \textbf{8.29} & \textbf{16.21} & \textbf{9.34} & 37.63 & \textbf{6.79} & \textbf{0.2659} & \textbf{12.52} & \textbf{0.0908} \\
+			\bottomrule
+		\end{tabular}
+		\begin{tablenotes}
+			\item[1] The models here differ only by the loss functions and dimension of discriminator outputs. See Section~\ref{sec:exp:setup}. \item[2] For CelebA and LSUN-bedroom, IS is not meaningful (\cite{mmd_gan_t}) and thus omitted. \item[3] On LSUN-bedroom, MMD-rbf and MMD-rq did not achieve reasonable results and thus are omitted.
+		\end{tablenotes}
+	\end{threeparttable}
+\end{table}
+
+\begin{figure}[th]
+	\centering
+	\begin{subfigure}[t]{\linewidth}
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[
+		width=\textwidth, height=0.3\textwidth,
+		ybar=1.6pt, symbolic x coords={-1, -0.5, 0, 0.5, 1, 2}, xtick=data, bar width=1.6pt,
+		ymin=15, ymax=30, y tick label style={font=\scriptsize}, ylabel={FID}, 
+		ytick = {16, 18, 20, 22, 24, 26, 30}, yticklabels={{16}, {18}, {20}, {22}, {24}, {26}, {$>30$}}, xticklabels={{\(\lambda=-1\)}, {\(\lambda=-0.5\)}, {\(\lambda=0\)}, {\(\lambda=0.5\)}, {\(\lambda=1\)}, {\(\lambda=2\)}},
+		cycle list/Paired, every axis plot/.append style={fill}, % color map from colorbrewer
+		ymajorgrids=true, grid style=dashed
+		]
+		\addplot table[x=lambda,y=11]{fid_rep.dat};
+		\addplot table[x=lambda,y=12]{fid_rep.dat};
+		\addplot table[x=lambda,y=15]{fid_rep.dat};
+		\addplot table[x=lambda,y=110]{fid_rep.dat};
+		\addplot table[x=lambda,y=21]{fid_rep.dat};
+		\addplot table[x=lambda,y=22]{fid_rep.dat};
+		\addplot table[x=lambda,y=25]{fid_rep.dat};
+		\addplot table[x=lambda,y=210]{fid_rep.dat};
+		\addplot table[x=lambda,y=51]{fid_rep.dat};
+		\addplot table[x=lambda,y=52]{fid_rep.dat};
+		\addplot table[x=lambda,y=55]{fid_rep.dat};
+		\addplot table[x=lambda,y=510]{fid_rep.dat};
+		\addplot table[x=lambda,y=101]{fid_rep.dat};
+		\addplot table[x=lambda,y=102]{fid_rep.dat};
+		\addplot table[x=lambda,y=105]{fid_rep.dat};
+		\addplot table[x=lambda,y=1010]{fid_rep.dat};
+		
+		\end{axis}
+		\end{tikzpicture}
+		\caption{MMD-GAN trained using a single RBF kernel in \(L_{D,\lambda}\) \label{fig:fid_rep}}
+	\end{subfigure}
+	
+	\begin{subfigure}[t]{\linewidth}
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[
+		width=\textwidth, height=0.3\textwidth,
+		ybar=1.6pt, symbolic x coords={-1, -0.5, 0, 0.5, 1, 2}, xtick=data, bar width=1.6pt,
+		ymin=15, ymax=30, y tick label style={font=\scriptsize}, ylabel={FID}, 
+		ytick = {16, 18, 20, 22, 24, 26, 30}, yticklabels={{16}, {18}, {20}, {22}, {24}, {26}, {$>30$}}, xticklabels={{\(\lambda=-1\)}, {\(\lambda=-0.5\)}, {\(\lambda=0\)}, {\(\lambda=0.5\)}, {\(\lambda=1\)}, {\(\lambda=2\)}},
+		cycle list/Paired, every axis plot/.append style={fill}, % color map from colorbrewer
+		ymajorgrids=true, grid style=dashed
+		]
+		\addplot table[x=lambda,y=11]{fid_rmb.dat};
+		\addplot table[x=lambda,y=12]{fid_rmb.dat};
+		\addplot table[x=lambda,y=15]{fid_rmb.dat};
+		\addplot table[x=lambda,y=110]{fid_rmb.dat};
+		\addplot table[x=lambda,y=21]{fid_rmb.dat};
+		\addplot table[x=lambda,y=22]{fid_rmb.dat};
+		\addplot table[x=lambda,y=25]{fid_rmb.dat};
+		\addplot table[x=lambda,y=210]{fid_rmb.dat};
+		\addplot table[x=lambda,y=51]{fid_rmb.dat};
+		\addplot table[x=lambda,y=52]{fid_rmb.dat};
+		\addplot table[x=lambda,y=55]{fid_rmb.dat};
+		\addplot table[x=lambda,y=510]{fid_rmb.dat};
+		\addplot table[x=lambda,y=101]{fid_rmb.dat};
+		\addplot table[x=lambda,y=102]{fid_rmb.dat};
+		\addplot table[x=lambda,y=105]{fid_rmb.dat};
+		\addplot table[x=lambda,y=1010]{fid_rmb.dat};
+		
+		\end{axis}
+		\end{tikzpicture}
+		\caption{MMD-GAN trained using and a single RBF-B kernel in \(L_{D,\lambda}\) \label{fig:fid_rmb}}
+	\end{subfigure}
+\caption{FID scores of MMD-GAN using (a) RBF kernel and (b) RBF-B kernel in \(L_{D,\lambda}\) on CIFAR-10 dataset for 16 learning rate combinations. Each color bar represents the FID score using a learning rate combination \((\rho_D,\rho_G)\), in the order of \((1e\text{-}4,1e\text{-}4)\), \((1e\text{-}4,2e\text{-}4)\),...,\((1e\text{-}3,1e\text{-}3)\). The discriminator was trained using \(L_{D,\lambda}\) (Eq.~\ref{eq:L_D_general}) with \(\lambda\in\{\text{-}1,\text{-}0.5,0,0.5,1,2\}\), and generator using \(L_{G}^{\text{mmd}}\) (Eq.~\ref{eq:L_G}). We use the FID\(>30\) to indicate that the model diverged or produced poor results.\label{fig:fid_rep_rmb}}
+\end{figure}
+
+Table~\ref{Tab:fid_scores} shows the Inception score, FID and MS-SSIM of applying different loss functions on the benchmark datasets with the optimal learning rate combinations tested experimentally. Note that the same training setup (i.e., DCGAN + BN + SN + TTUR) was applied for each loss function. We observed that: 
+\begin{enumerate*}[label=\arabic*)]
+	\item MMD-rep and MMD-rep-b performed significantly better than MMD-rbf and MMD-rbf-b respectively, showing the proposed repulsive loss \(L_{D}^{\text{rep}}\) (Eq.~\ref{eq:rep_loss})
+	greatly improved over the attractive loss \(L_{D}^{\text{att}}\) (Eq.~\ref{eq:L_D}); 
+	\item Using a single kernel, MMD-rbf-b performed better than MMD-rbf and MMD-rq which used a linear combination of five kernels, indicating that the kernel saturation may be an issue that slows down MMD-GAN training;
+	\item MMD-rep-b performed comparable or better than MMD-rep on benchmark datasets where we found the RBF-B kernel managed to stabilize MMD-GAN training using repulsive loss. 
+	\item MMD-rep and MMD-rep-b performed significantly better than the non-saturating and hinge losses, showing the efficacy of the proposed repulsive loss.
+\end{enumerate*} 
+
+Additionally, we trained MMD-GAN using the general loss \(L_{D,\lambda}\) (Eq.~\ref{eq:L_D_general}) for discriminator and \(L_{G}^{\text{mmd}}\) (Eq.~\ref{eq:L_G}) for generator on the CIFAR-10 dataset. Fig.~\ref{fig:fid_rep_rmb} shows the influence of \(\lambda\) on the performance of MMD-GAN with RBF and RBF-B kernel\footnote{For \(\lambda<0\), the RBF-B kernel in Eq.~\ref{eq:rbf_b1} was used in \(L_{D,\lambda}\).}. Note that when \(\lambda=-1\), the models are essentially MMD-rbf (with a single Gaussian kernel) and MMD-rbf-b when RBF and RBF-B kernel are used respectively. We observed that:
+\begin{enumerate*}[label=\arabic*)]
+	\item the model performed well using repulsive loss (i.e., \(\lambda\ge0\)), with \(\lambda=0.5,1\) slightly better than \(\lambda=-0.5,0,2\);
+	\item the MMD-rbf model can be significantly improved by simply increasing \(\lambda\) from \(-1\) to \(-0.5\), which reduces the attraction of discriminator on real sample scores;
+	\item larger \(\lambda\) may lead to more diverged models, possibly because the discriminator focuses more on expanding the real sample scores over adversarial learning; note when \(\lambda\gg1\), the model would simply learn to expand all real sample scores and pull the generated sample scores to real samples', which is a divergent process; 
+	\item the RBF-B kernel managed to stabilize MMD-rep for most diverged cases but may occasionally cause the FID score to rise up.
+\end{enumerate*}
+
+The proposed methods were further evaluated in Appendix \ref{sec:gan_stable}, \ref{sec:pico} and \ref{sec:supp_exp}. In Appendix~\ref{sec:exp:stability}, we used a simulation study to show the local stability of MMD-rep trained by gradient descent, while its global stability is not guaranteed as bad initialization may lead to trivial solutions. The problem may be alleviated by adjusting the learning rate for generator. In Appendix~\ref{sec:exp:pico_pim}, we showed the proposed generalized power iteration (Section~\ref{sec:sn}) imposes a stronger Lipschitz constraint than the method in \cite{spectral}, and benefited MMD-GAN training using the repulsive loss. Moreover, the RBF-B kernel managed to stabilize the MMD-GAN training for various configurations of the spectral normalization method. In Appendix~\ref{sec:exp:gp}, we showed the gradient penalty can also be used with the repulsive loss. In Appendix~\ref{sec:exp:D_out}, we showed that it was better to use more than one neuron at the discriminator output layer for the repulsive loss.
+
+\subsection{Qualitative Analysis}
+\label{sec:exp:unsupervised_qualitative}
+
+\begin{figure}[tb]
+	\centering
+	\begin{minipage}{0.45\linewidth}
+		\begin{subfigure}[t]{1\linewidth}
+			\centering
+			\begin{tikzpicture}
+			\begin{axis}[%
+			width=\textwidth,
+			scatter/classes={
+				0={mark=*, mark size=1.2, draw=pyblue, fill=pyblue},
+				1={mark=*, mark size=1.2, draw=pyorange, fill=pyorange},
+				2={mark=*, mark size=1.2, draw=matlab1, fill=matlab1},
+				3={mark=*, mark size=1.2, draw=matlab2, fill=matlab2},
+				4={mark=*, mark size=1.2, draw=matlab3, fill=matlab3},
+				5={mark=*, mark size=1.2, draw=matlab4, fill=matlab4},
+				6={mark=*, mark size=1.2, draw=matlab5, fill=matlab5},
+				7={mark=*, mark size=1.2, draw=matlab6, fill=matlab6},
+				8={mark=*, mark size=1.2, draw=matlab7, fill=matlab7},
+				9={mark=*, mark size=1.2, draw=grey0, fill=grey0}
+			},
+			xmin=0.0, xmax=0.8, ymin=0.0, ymax=1.0, tick label style={font=\footnotesize},
+			axis line style={draw=none},
+			xmin=-25.0, xmax=25.0, ymin=-45.0, ymax=50.0, 
+			tick style={draw=none}, yticklabels={,,}, xticklabels={,,}
+			]
+			\addplot[scatter,only marks, scatter src=explicit symbolic]%
+			table[x=x1, y=x2, meta=label] {z_mmd.dat};
+			\end{axis}
+			\end{tikzpicture}
+			\caption{MMD-rbf\label{fig:tsne_mmd}}
+		\end{subfigure}
+		~
+		\iffalse
+		\begin{subfigure}[t]{\linewidth}
+			\centering
+			\begin{tikzpicture}
+			\begin{axis}[%
+			width=1.1\textwidth,
+			scatter/classes={
+				0={mark=*, mark size=1.2, draw=pyblue, fill=pyblue},
+				1={mark=*, mark size=1.2, draw=pyorange, fill=pyorange},
+				2={mark=*, mark size=1.2, draw=matlab1, fill=matlab1},
+				3={mark=*, mark size=1.2, draw=matlab2, fill=matlab2},
+				4={mark=*, mark size=1.2, draw=matlab3, fill=matlab3},
+				5={mark=*, mark size=1.2, draw=matlab4, fill=matlab4},
+				6={mark=*, mark size=1.2, draw=matlab5, fill=matlab5},
+				7={mark=*, mark size=1.2, draw=matlab6, fill=matlab6},
+				8={mark=*, mark size=1.2, draw=matlab7, fill=matlab7},
+				9={mark=*, mark size=1.2, draw=grey0, fill=grey0}
+			},
+			xmin=0.0, xmax=0.8, ymin=0.0, ymax=1.0, tick label style={font=\footnotesize},
+			axis line style={draw=none},
+			xmin=-25.0, xmax=20.0, ymin=-40.0, ymax=35.0, 
+			tick style={draw=none}, yticklabels={,,}, xticklabels={,,}
+			]
+			\addplot[scatter,only marks, scatter src=explicit symbolic]%
+			table[x=x1, y=x2, meta=label] {z_mgb.dat};
+			\end{axis}
+			\end{tikzpicture}
+			\caption{MMD-rbf-b\label{fig:tsne_mgb}}
+		\end{subfigure}
+		\fi
+	\end{minipage}
+	%\hfil
+	\begin{minipage}{0.45\linewidth}
+		\begin{subfigure}[t]{1\linewidth}
+			\centering
+			\begin{tikzpicture}
+			\begin{axis}[%
+			width=\textwidth,
+			scatter/classes={
+				0={mark=*, mark size=1.2, draw=pyblue, fill=pyblue},
+				1={mark=*, mark size=1.2, draw=pyorange, fill=pyorange},
+				2={mark=*, mark size=1.2, draw=matlab1, fill=matlab1},
+				3={mark=*, mark size=1.2, draw=matlab2, fill=matlab2},
+				4={mark=*, mark size=1.2, draw=matlab3, fill=matlab3},
+				5={mark=*, mark size=1.2, draw=matlab4, fill=matlab4},
+				6={mark=*, mark size=1.2, draw=matlab5, fill=matlab5},
+				7={mark=*, mark size=1.2, draw=matlab6, fill=matlab6},
+				8={mark=*, mark size=1.2, draw=matlab7, fill=matlab7},
+				9={mark=*, mark size=1.2, draw=grey0, fill=grey0}
+			},
+			xmin=0.0, xmax=0.8, ymin=0.0, ymax=1.0, tick label style={font=\footnotesize},
+			axis line style={draw=none},
+			xmin=-20.0, xmax=25.0, ymin=-35.0, ymax=30.0, 
+			tick style={draw=none}, yticklabels={,,}, xticklabels={,,}
+			]
+			\addplot[scatter,only marks, scatter src=explicit symbolic]%
+			table[x=x1, y=x2, meta=label] {z_rep.dat};
+			\end{axis}
+			\end{tikzpicture}
+			\caption{MMD-rep\label{fig:tsne_rep}}
+		\end{subfigure}
+	\end{minipage}
+	\caption{t-SNE visualization of discriminator outputs \(\{D(\bm{x})\}\) learned by (a) MMD-rbf and (b) MMD-rep for 2560 real samples from the CIFAR-10 dataset, colored by their class labels.\label{fig:tsne}}
+\end{figure}
+
+The discriminator outputs may be interpreted as a learned representation of the input samples. Fig.~\ref{fig:tsne} visualizes the discriminator outputs learned by the MMD-rbf and proposed MMD-rep methods on CIFAR-10 dataset using t-SNE (\cite{tsne}). MMD-rbf ignored the class structure in data (see Fig.~\ref{fig:tsne_mmd}) while MMD-rep learned to concentrate the data from the same class and separate different classes to some extent (Fig.~\ref{fig:tsne_rep}). This is because the discriminator \(D\) has to actively learn the data structure in order to expands the real sample scores \(\{D(\bm{x})\}\). Thus, we speculate that techniques reinforcing the learning of cluster structures in data may further improve the training of MMD-GAN. 
+
+In addition, the performance gain of proposed repulsive loss (Eq.~\ref{eq:rep_loss}) over the attractive loss (Eq.~\ref{eq:L_D}) comes at no additional computational cost. In fact, by using a single kernel rather than a linear combination of kernels, MMD-rep and MMD-rep-b are simpler than MMD-rbf and MMD-rq. Besides, given a typically small batch size and a small number of discriminator output neurons (\(64\) and \(16\) in our experiments), the cost of MMD over the non-saturating and hinge loss is marginal compared to the convolution operations. 
+
+In Appendix~\ref{sec:uns_samples}, we provide some random samples generated by the methods in our study.
+
+\section{Discussion}
+\label{sec:discussion}
+
+This study extends the previous work on MMD-GAN (\cite{mmd_gan_g}) with two contributions. First, we interpreted the optimization of MMD loss as a combination of attraction and repulsion processes, and proposed a repulsive loss for the discriminator that actively learns the difference among real data. Second, we proposed a bounded Gaussian RBF (RBF-B) kernel to address the saturation issue. Empirically, we observed that the repulsive loss may result in unstable training, due to factors including initialization (Appendix~\ref{sec:exp:stability}), learning rate (Fig.~\ref{fig:fid_rmb}) and Lipschitz constraints on the discriminator (Appendix~\ref{sec:exp:pico_pim}). The RBF-B kernel managed to stabilize the MMD-GAN training in many cases. Tuning the hyper-parameters in RBF-B kernel or using other regularization methods may further improve our results. 
+
+The theoretical advantages of MMD-GAN require the discriminator to be injective. The proposed repulsive loss (Eq.~\ref{eq:rep_loss}) attempts to realize this by explicitly maximizing the pair-wise distances among the real samples. \cite{mmd_gan_g} achieved the injection property by using the discriminator as the encoder and an auxiliary network as the decoder to reconstruct the real and generated samples, which is more computationally extensive than our proposed approach. On the other hand, \cite{mmd_gan_t,mmd_gp} imposed a Lipschitz constraint on the discriminator in MMD-GAN via gradient penalty, which may not necessarily promote an injective discriminator. 
+
+The idea of repulsion on real sample scores is in line with existing studies. It has been widely accepted that the quality of generated samples can be significantly improved by integrating labels (\cite{acgan,cgan,class_aware}) or even pseudo-labels generated by k-means method (\cite{split}) in the training of discriminator. The reason may be that the labels help concentrate the data from the same class and separate those from different classes. Using a pre-trained classifier may also help produce vivid image samples (\cite{stack}) as the learned representations of the real samples in the hidden layers of the classifier tend to be well separated/organized and may produce more meaningful gradients to the generator.
+
+At last, we note that the proposed repulsive loss is orthogonal to the GAN studies on designing network structures and training procedures, and thus may be combined with a variety of novel techniques. For example, the ResNet architecture (\cite{resnet}) has been reported to outperform the plain DCGAN used in our experiments on image generation tasks (\cite{spectral,wgan_gp}) and self-attention module may further improve the results (\cite{attention}). On the other hand, \cite{pggan} proposed to progressively grows the size of both discriminator and generator and achieved the state-of-the-art performance on unsupervised training of GANs on the CIFAR-10 dataset. Future work may explore these directions. 
+
+\subsubsection*{Acknowledgments}
+
+Wei Wang is fully supported by the Ph.D. scholarships of The University of Melbourne. This work is partially funded by Australian Research Council grant DP150103512 and undertaken using the LIEF HPC-GPGPU Facility hosted at the University of Melbourne. The Facility was established with the assistance of LIEF Grant LE170100200. 
+
+\bibliographystyle{iclr2019_conference}
+\bibliography{Wang}
+
+\clearpage
+\begin{appendices}
+
+\setcounter{equation}{0}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+\renewcommand{\theequation}{S\arabic{equation}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\thetable}{S\arabic{table}}
+
+\section{Stability analysis of MMD-GAN}
+\label{sec:gan_stable}
+
+This section demonstrates that, under mild assumptions, MMD-GAN trained by gradient descent is locally exponentially stable at equilibrium. It is organized as follows. The main assumption and proposition are presented in Section~\ref{sec:theory:stability}, followed by simulation study in Section~\ref{sec:exp:stability} and proof in Section~\ref{sec:proof_prop1}. We discuss the indications of assumptions on the discriminator of GAN in Section~\ref{Sec:discuss_assumption1}.
+
+\subsection{Main Proposition}
+\label{sec:theory:stability}
+We consider GAN trained using the MMD loss \(L_{G}^{\text{mmd}}\) for generator \(G\) and either the attractive loss \(L_{D}^{\text{att}}\) or repulsive loss \(L_{D}^{\text{rep}}\) for discriminator \(D\), listed below: 
+\begin{subequations}
+	\label{eq:appendix_L}
+	\begin{align}
+		&L_{G}^{\text{mmd}}=M_{k\circ D}^2(P_{\rdv{X}},P_{G})=\set{E}_{P_{\rdv{X}}}[k_D(\bm{x},\bm{x}')]-2\set{E}_{P_{\rdv{X}},P_{G}}[k_D(\bm{x},\bm{y})]+\set{E}_{P_G}[k_D(\bm{y},\bm{y}')] \label{eq:appendix_L_G}\\
+		&L_D^{\text{att}}=-L_{G}^{\text{mmd}} \label{eq:appendix_L_att}\\
+		&L_{D}^{\text{rep}}=\set{E}_{P_{\rdv{X}}}[k_D(\bm{x},\bm{x}')]-\set{E}_{P_G}[k_D(\bm{y},\bm{y}')] \label{eq:appendix_L_rep}
+	\end{align}
+\end{subequations}
+where \(k_D(\bm{a},\bm{b})=k(D(\bm{a}), D(\bm{b}))\). Let \(\ds{S}(P)\) be the support of distribution \(P\); let \(\bm{\theta}_{G}\in\Theta_G\), \(\bm{\theta}_{D}\in\Theta_D\) be the parameters of the generator \(G\) and discriminator \(D\) respectively. To prove that GANs trained using the minimax loss and gradient updates is locally stable at the equilibrium point \((\bm{\theta}_D^*,\bm{\theta}_G^*)\), \cite{gan_stable} made the following assumption:
+\begin{assumption}[\cite{gan_stable}]\label{Assum:zero}
+	\(P_{\bm{\theta}_G^*}=P_{\rdv{X}}\) and \(\forall \bm{x}\in\ds{S}(P_{\rdv{X}}), D_{\bm{\theta}_D^*}(\bm{x})=0\).
+\end{assumption}
+For loss functions like minimax and Wasserstein, \(D_{\bm{\theta}_D}(\bm{x})\) may be interpreted as how plausible a sample is real. Thus at equilibrium, it may be reasonable to assume all real and generated samples are equally plausible. However, \(D_{\bm{\theta}_D^*}(\bm{x})=0\) also indicates that \(D_{\bm{\theta}_D^*}\) may have no discrimination power (see Appendix~\ref{Sec:discuss_assumption1} for discussion). For MMD loss in Eq.~\ref{eq:appendix_L}, \(D_{\bm{\theta}_D}(\bm{x})|_{\bm{x}\sim P}\) may be interpreted as a learned representation of the distribution \(P\). As long as two distributions \(P\) and \(Q\) match, \(M_{k\circ D_{\bm{\theta}_D}}^2(P,Q)=0\). On the other hand, \(D_{\bm{\theta}_D}(\bm{x})=0\) is a minima solution for \(D\) but \(D\) is trained to find local maxima. Thus in contrast to Assumption~\ref{Assum:zero}, we assume
+\begin{assumption}\label{Assum:nonzero}
+	For GANs using MMD loss in Eq.~\ref{eq:appendix_L}, and random initialization on parameters, at equilibrium, \(D_{\bm{\theta}_D^*}(\bm{x})\) is injective on \(\ds{S}(P_{\rdv{X}})\bigcup\ds{S}(P_{\bm{\theta}_G^*})\).
+\end{assumption}
+Assumption~\ref{Assum:nonzero} indicates that \(D_{\bm{\theta}_D^*}(\bm{x})\) is not constant almost everywhere. We use a simulation study in Section~\ref{sec:exp:stability} to show that \(D_{\bm{\theta}_D^*}(\bm{x})=0\) does not hold in general for MMD loss. Based on Assumption~\ref{Assum:nonzero}, we propose the following proposition and prove it in Appendix~\ref{sec:proof_prop1}:
+\begin{proposition}\label{Prop:equilibria_and_stable}
+	If there exists \(\bm{\theta}_G^*\in\Theta_G\) such that \(P_{\bm{\theta}_G^*}=P_{\rdv{X}}\), then GANs with MMD loss in Eq.~\ref{eq:appendix_L} has equilibria \((\bm{\theta}_G^*, \bm{\theta}_D)\) for any \(\bm{\theta}_D\in\Theta_D\). Moreover, the model trained using gradient descent methods is locally exponentially stable at \((\bm{\theta}_G^*,\bm{\theta}_D)\) for any \(\bm{\theta}_D\in\Theta_D\).
+\end{proposition}
+There may exist non-realizable cases where the mapping between \(P_{\bm{Z}}\) and \(P_{\rdv{X}}\) cannot be represented by any generator \(G_{\bm{\theta}_G}\) with \(\bm{\theta}_G\in\Theta_G\). In Section~\ref{sec:exp:stability}, we use a simulation study to show that both the attractive MMD loss \(L_D^{\text{att}}\) (Eq.~\ref{eq:appendix_L_att}) and the proposed repulsive loss \(L_D^{\text{rep}}\) (Eq.~\ref{eq:appendix_L_rep}) may be locally stable and leave the proof for future work. 
+
+\subsection{Simulation Study}
+\label{sec:exp:stability}
+
+\begin{figure}[tb]
+	\centering
+	\begin{subfigure}[t]{0.4\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{mmd_stream_uvu.png}
+		\caption{MMD-rbf, \(P_X=\ds{U}(-1,1)\)\label{fig:u_vs_u}}
+	\end{subfigure}
+	~
+	\begin{subfigure}[t]{0.4\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{rep_stream_uvu.png}
+		\caption{MMD-rep, \(P_X=\ds{U}(-1,1)\)\label{fig:u_vs_u_rep}}
+	\end{subfigure}
+	
+	\begin{subfigure}[t]{0.4\linewidth}
+		\centering
+		\includegraphics[width=1\textwidth]{mmd_stream_uvn.png}
+		\caption{MMD-rbf, \(P_X=\ds{N}(0,1)\)\label{fig:u_vs_n}}
+	\end{subfigure}
+	~
+	\begin{subfigure}[t]{0.4\linewidth}
+		\centering
+		\includegraphics[width=1\textwidth]{rep_stream_uvn.png}
+		\caption{MMD-rep, \(P_X=\ds{N}(0,1)\)\label{fig:u_vs_n_rep}}
+	\end{subfigure}
+	%\includegraphics[width=0.5\textwidth]{D5_200_6m}
+	\caption{Streamline plots of MMD-GAN using the MMD-rbf and the MMD-rep model on distributions: \(P_Z=\ds{U}(-1,1)\), \(P_X=\ds{U}(-1,1)\) or \(P_X=\ds{N}(0,1)\). In (a) and (b), the equilibria satisfying \(P_G=P_X\) lie on the line \(w_1=1\). In (c), the equilibrium lies around point \((1.55, 0.74)\); in (d), it is around \((1.55, 0.32)\).}  
+	\label{fig:streamplot}
+\end{figure}
+
+In this section, we reused the example from \cite{gan_stable} to show that GAN trained using the MMD loss in Eq.~\ref{eq:appendix_L} is locally stable. Consider a two-parameter MMD-GAN with uniform latent distribution \(P_Z\) over \([-1,1]\), generator \(G(z)=w_1z\), discriminator \(D(x)=w_2x^2\), and Gaussian kernel \(k_{0.5}^{\text{rbf}}\). The MMD-rbf model (\(L_G^{\text{mmd}}\) and \(L_D^{\text{att}}\) from Eq.~\ref{eq:appendix_L_att}) and the MMD-rep model (\(L_G^{\text{mmd}}\) and \(L_{D}^{\text{rep}}\) from Eq.~\ref{eq:appendix_L_rep}) were tested. Each model was applied to two cases:
+\begin{enumerate}[label=(\alph*),leftmargin=*]
+	\item the data distribution \(P_X\) is the same as \(P_Z\), i.e., uniform over \([-1,1]\), thus \(P_X\) is realizable;
+	\item \(P_X\) is standard Gaussian, thus non-realizable for any \(w_1\in\set{R}\). 
+\end{enumerate}
+Fig.~\ref{fig:streamplot} shows that MMD-GAN are locally stable in both cases and \(D_{\bm{\theta}_D^*}(\bm{x})=0\) does not hold in general for MMD loss. However, MMD-rep may not be globally stable for the tested cases: initialization of \((w_1,w_2)\) in some regions may lead to the trivial solution \(w_2=0\) (see Fig.~\ref{fig:u_vs_u_rep} and \ref{fig:u_vs_n_rep}). We note that by decreasing the learning rate for \(G\), the area of such regions decreased. At last, it is interesting to note that both MMD-rbf and MMD-rep had the same nontrivial solution \(w_1\approx1.55\) for generator in the non-realizable cases (see Fig.~\ref{fig:u_vs_n} and \ref{fig:u_vs_n_rep}). 
+
+\subsection{Proof of Proposition \ref{Prop:equilibria_and_stable}}
+\label{sec:proof_prop1}
+
+This section divides the proof for Proposition~\ref{Prop:equilibria_and_stable} into two parts. First, we show that GAN with the MMD loss in Eq.~\ref{eq:appendix_L} has equilibria for any parameter configuration of discriminator \(D\); second, we prove the model is locally exponentially stable. For convenience, we consider the general form of discriminator loss in Eq.~\ref{eq:L_D_general}:
+\begin{equation}\label{eq:appendix_L_D_general}
+L_{D,\lambda}=\lambda\set{E}_{P_{\rdv{X}}}[k_D(\bm{x},\bm{x}')] -(\lambda-1)\set{E}_{P_{\rdv{X}},P_{G}}[k_D(\bm{x},\bm{y})]-\set{E}_{P_G}[k_D(\bm{y},\bm{y}')]
+\end{equation}
+which has \(L_D^{\text{att}}\) and \(L_D^{\text{rep}}\) as the special cases when \(\lambda\) equals \(-1\) and \(1\) respectively. Consider real data \(\rdv{X}_r\sim P_{\rdv{X}}\), latent variable \(\rdv{Z}\sim P_{\rdv{Z}}\) and generated variable \(\rdv{Y}_g=G_{\bm{\theta}_G}(\rdv{Z})\). Let \(\bm{x}_r\), \(\bm{z}\), \(\bm{y}_g\) be their samples. Denote \(\nabla_{\bm{b}}^{\bm{a}}=\frac{\partial\bm{a}}{\partial\bm{b}}\); \(\dt{\bm{\theta}}_D=-\nabla_{\bm{\theta}_D}^{L_D}\), \(\dt{\bm{\theta}}_G=-\nabla_{\bm{\theta}_G}^{L_G}\); \(\bm{d}_g=D(G(\bm{z}))\), \(\bm{d}_r=D(\bm{x}_r)\) where \(L_D\) and \(L_G\) are the losses for \(D\) and \(G\) respectively. Assume an isotropic stationary kernel \(k(\bm{a},\bm{b})=k_I(\norm{\bm{a}-\bm{b}})\)~(\cite{class_kernel}) is used in MMD. We first show:
+\begin{proposition 1*}[Part 1]\label{Prop:equilibria}
+	If there exists \(\bm{\theta}_G^*\in\Theta_G\) such that \(P_{\bm{\theta}_G^*}=P_{\rdv{X}}\), the GAN with the MMD loss in Eq.~\ref{eq:appendix_L_G} and Eq.~\ref{eq:appendix_L_D_general} has equilibria \((\bm{\theta}_G^*, \bm{\theta}_D)\) for any \(\bm{\theta}_D\in\Theta_D\).
+\end{proposition 1*}
+\begin{proof}
+	Denote \(\bm{e}_{i,j}=\bm{a}_i-\bm{b_j}\) and \(\nabla_{\bm{e}_{i,j}}^k=\frac{\partial k(\bm{a_i},\bm{b_j})}{\partial\bm{e}}\) where \(k\) is the kernel of MMD. The gradients of MMD loss are
+	\begin{subequations}\label{Eq:dot_theta}
+		\begin{align}
+			\dt{\bm{\theta}}_D &= (\lambda-1)\set{E}_{P_{\rdv{X}},P_{\bm{\theta}_G}}[\nabla_{\bm{e}_{r,g}}^k\nabla_{\bm{\theta}_D}^{\bm{e}_{r,g}}] -\lambda\set{E}_{P_{\rdv{X}}}[\nabla_{\bm{e}_{r1,r2}}^k\nabla_{\bm{\theta}_D}^{\bm{e}_{r1,r2}}] + 
+			\set{E}_{P_{\bm{\theta}_G}}[\nabla_{\bm{e}_{g1,g2}}^k\nabla_{\bm{\theta}_D}^{\bm{e}_{g1,g2}}] \label{Eq:dot_theta_D}\\
+			\dt{\bm{\theta}}_G &=
+			2\set{E}_{P_{\bm{\theta}_G},P_{\rdv{X}}}[\nabla_{\bm{e}_{g,r}}^k\nabla_{\bm{x}_{g}}^{\bm{d}_{g}}\nabla_{\bm{\theta}_{G}}^{\bm{x}_{g}}] \label{Eq:dot_theta_G} -\set{E}_{P_{\bm{\theta}_G}}[\nabla_{\bm{e}_{g1,g2}}^k(\nabla_{\bm{x}_{g1}}^{\bm{d}_{g1}}\nabla_{\bm{\theta}_{G}}^{\bm{x}_{g1}}-\nabla_{\bm{x}_{g2}}^{\bm{d}_{g2}}\nabla_{\bm{\theta}_{G}}^{\bm{x}_{g2}})]
+		\end{align}
+	\end{subequations}
+
+	Note that, given i.i.d. drawn samples \(\bm{X}=\{\bm{x}_i\}_{i=1}^n\sim P_{\rdv{X}}\) and \(\bm{Y}=\{\bm{y}_i\}_{i=1}^n\sim P_{G}\), an unbiased estimator of the squared MMD is~(\cite{mmdtest})
+	\begin{equation}\label{Eq:mmd_unbiased}
+	\hat{M}_k^2(P_{\rdv{X}},P_{G})=\frac{1}{n(n-1)}\sum_{i\ne j}^{n}k(\bm{x}_i,\bm{x}_j)+\frac{1}{n(n-1)}\sum_{i\ne j}^{n}k(\bm{y}_i,\bm{y}_j)-\frac{2}{n(n-1)}\sum_{i\ne j}^{n}k(\bm{x}_i,\bm{y}_j)
+	\end{equation}
+	At equilibrium, consider a sequence of \(N\) samples \(\bm{d}_{ri}=\bm{d}_{gi}=\bm{d}_{i}\) with \(N\to\infty\), we have
+	\begin{align*}
+	\dt{\bm{\theta}}_D &\propto (\lambda-1)\sum_{i\ne j}\nabla_{\bm{e}_{i,j}}^k\nabla_{\bm{\theta}_D}^{\bm{e}_{i,j}} - 
+	\lambda\sum_{i\ne j}\nabla_{\bm{e}_{i,j}}^k\nabla_{\bm{\theta}_D}^{\bm{e}_{i,j}} +
+	\sum_{i\ne j}\nabla_{\bm{e}_{i,j}}^k\nabla_{\bm{\theta}_D}^{\bm{e}_{i,j}}=\bm{0} \\
+	\dt{\bm{\theta}}_G^* &\propto
+	-\sum_{i\ne j}\nabla_{\bm{e}_{i,j}}^k(\nabla_{\bm{x}_{i}}^{\bm{d}_{i}}\nabla_{\bm{\theta}_{G}}^{\bm{x}_{i}}-\nabla_{\bm{x}_{j}}^{\bm{d}_{j}}\nabla_{\bm{\theta}_{G}}^{\bm{x}_{j}}) +
+	2\sum_{i\ne j}\nabla_{\bm{e}_{i,j}}^k\nabla_{\bm{x}_{i}}^{\bm{d}_{i}}\nabla_{\bm{\theta}_{G}}^{\bm{x}_{i}} \\
+	& =
+	\sum_{i\ne j}\nabla_{\bm{e}_{i,j}}^k(\nabla_{\bm{x}_{i}}^{\bm{d}_{i}}\nabla_{\bm{\theta}_{G}}^{\bm{x}_{i}}+\nabla_{\bm{x}_{j}}^{\bm{d}_{j}}\nabla_{\bm{\theta}_{G}}^{\bm{x}_{j}}) = \bm{0}
+	\end{align*}
+	where for \(\dt{\bm{\theta}}_G^*\) we have used the fact that for each term in the summation, there exists an term with \(i,j\) reversed and \(\nabla_{\bm{e}_{i,j}}^k=-\nabla_{\bm{e}_{j,i}}^k\) thus the summation is zero. Since we have not assumed the status of \(\bm{\theta}_D\), \(\dt{\bm{\theta}}_D=\bm{0}\) for any \(\bm{\theta}_D\in\Theta_D\).
+\end{proof}
+
+We proceed to prove the model stability. First, following Theorem 5 in \cite{mmdtest} and Theorem 4 in \cite{mmd_gan_g}, it is straightforward to see:
+\begin{lemma_s}\label{lemma:non_negative}
+	Under Assumption~\ref{Assum:nonzero}, \(M_{k\circ D_{\bm{\theta}_D}}^2(P_{\rdv{X}},P_{\bm{\theta}_G})\ge0\) with the equality if and only if \(P_{\rdv{X}}=P_{\bm{\theta}_G}\).
+\end{lemma_s}
+Lemma~\ref{lemma:non_negative} and Proposition 1 (Part 1) state that at equilibrium \(P_{\bm{\theta}_G^*}=P_{\rdv{X}}\), every discriminator \(D_{\bm{\theta}_D}\) and kernel \(k\) will give \(M_{k\circ D_{\bm{\theta}_D}}^2(P_{\bm{\theta}_G^*},P_{\rdv{X}})=0\), thus no discriminator can distinguish the two distributions. On the other hand, we cite Theorem A.4 from \cite{gan_stable}:
+\begin{lemma_s}[\cite{gan_stable}]\label{lemma:exp_stable}
+	Consider a non-linear system of parameters \((\bm{\theta}, \bm{\gamma})\): \(\dot{\bm{\theta}}=h_1(\bm{\theta}, \bm{\gamma})\), \(\dot{\bm{\gamma}}=h_2(\bm{\theta}, \bm{\gamma})\) with an equilibrium point at \((\bm{0},\bm{0})\). Let there exist \(\epsilon\) such that \(\forall\gamma\in\set{B}_\epsilon(\bm{0})\), \((\bm{0},\bm{\gamma})\) is an equilibrium. If \(\bm{J}=\frac{\partial h_1(\bm{\theta}, \bm{\gamma})}{\partial\bm{\theta}}\big\rvert_{(\bm{0},\bm{0})}\) is a Hurwitz matrix, the non-linear system is exponentially stable.
+\end{lemma_s}
+
+Now we can prove:
+\begin{proposition 1*}[Part 2]
+	At equilibrium \(P_{\bm{\theta}_G^*}=P_{\rdv{X}}\), the GAN trained using MMD loss and gradient descent methods is locally exponentially stable at \((\bm{\theta}_G^*,\bm{\theta}_D)\) for any \(\bm{\theta}_D\in\Theta_D\).
+\end{proposition 1*}
+\begin{proof}
+	Inspired by \cite{gan_stable}, we first derive the Jacobian of the system
+	\[\bm{J}=
+	\begin{bmatrix}
+	\bm{J}_{DD} & \bm{J}_{DG} \\ \bm{J}_{GD} & \bm{J}_{GG}
+	\end{bmatrix}\triangleq
+	\begin{bmatrix}
+	\partial\dt{\bm{\theta}}_D^T/\partial\bm{\theta}_D & \partial\dt{\bm{\theta}}_D^T/\partial\bm{\theta}_G \\ \partial\dt{\bm{\theta}}_G^T/\partial\bm{\theta}_D & \partial\dt{\bm{\theta}}_G^T/\partial\bm{\theta}_G
+	\end{bmatrix}\]
+	Denote \(\Delta_{\bm{b}}^{\bm{a}}=\frac{\partial^2\bm{a}}{\partial\bm{b}^2}\) and \(\Delta_{\bm{b}\bm{c}}^{\bm{a}}=\frac{\partial^2\bm{a}}{\partial\bm{b}\partial\bm{c}}\). Based on Eq.~\ref{Eq:dot_theta}, we have
+	\begin{subequations}\label{Eq:Jacobian}
+		\begin{align}
+		%---------eq1
+		\bm{J}_{DD} = 
+		&(\lambda-1)\set{E}_{P_{\rdv{X}},P_{\bm{\theta}_G}}[(\Delta_{\bm{\theta}_D}^{\bm{e}_{r,g}})^T\otimes(\nabla_{\bm{e}_{r,g}}^k)^T+(\nabla_{\bm{\theta}_D}^{\bm{e}_{r,g}})^T\Delta_{\bm{e}_{r,g}}^k\nabla_{\bm{\theta}_D}^{\bm{e}_{r,g}}] \\
+		&-\lambda\set{E}_{P_{\rdv{X}}}[(\Delta_{\bm{\theta}_D}^{\bm{e}_{r1,r2}})^T\otimes(\nabla_{\bm{e}_{r1,r2}}^k)^T+(\nabla_{\bm{\theta}_D}^{\bm{e}_{r1,r2}})^T\Delta_{\bm{e}_{r1,r2}}^k\nabla_{\bm{\theta}_D}^{\bm{e}_{r1,r2}}] \nonumber\\
+		&+\set{E}_{P_{\bm{\theta}_G}}[(\Delta_{\bm{\theta}_D}^{\bm{e}_{g1,g2}})^T\otimes(\nabla_{\bm{e}_{g1,g2}}^k)^T+(\nabla_{\bm{\theta}_D}^{\bm{e}_{g1,g2}})^T\Delta_{\bm{e}_{g1,g2}}^k\nabla_{\bm{\theta}_D}^{\bm{e}_{g1,g2}}] \nonumber\\
+		%---------eq2
+		\bm{J}_{DG} = 
+		&(\lambda-1)\set{E}_{P_{\rdv{X}},P_{\bm{\theta}_G}}[(\Delta_{\bm{\theta}_D\bm{\theta}_G}^{\bm{e}_{r,g}})^T\otimes(\nabla_{\bm{e}_{r,g}}^k)^T-(\nabla_{\bm{\theta}_D}^{\bm{e}_{r,g}})^T\Delta_{\bm{e}_{r,g}}^k\nabla_{\bm{\theta}_G}^{\bm{d}_{g}}] \nonumber\\ &+\set{E}_{P_{\bm{\theta}_G}}[(\Delta_{\bm{\theta}_D\bm{\theta}_G}^{\bm{e}_{g1,g2}})^T\otimes(\nabla_{\bm{e}_{g1,g2}}^k)^T+(\nabla_{\bm{\theta}_D}^{\bm{e}_{g1,g2}})^T\Delta_{\bm{e}_{g1,g2}}^k\nabla_{\bm{\theta}_G}^{\bm{e}_{g1,g2}}] \\
+		%---------eq3
+		\bm{J}_{GD} = 
+		&2\set{E}_{P_{\rdv{X}},P_{\bm{\theta}_G}}[(\Delta_{\bm{\theta}_G\bm{\theta}_D}^{\bm{e}_{g,r}})^T\otimes(\nabla_{\bm{e}_{g,r}}^k)^T+(\nabla_{\bm{\theta}_G}^{\bm{e}_{g,r}})^T\Delta_{\bm{e}_{g,r}}^k\nabla_{\bm{\theta}_D}^{\bm{d}_{g}}] \nonumber\\ &-\set{E}_{P_{\bm{\theta}_G}}[(\Delta_{\bm{\theta}_G\bm{\theta}_D}^{\bm{e}_{g1,g2}})^T\otimes(\nabla_{\bm{e}_{g1,g2}}^k)^T+(\nabla_{\bm{\theta}_G}^{\bm{e}_{g1,g2}})^T\Delta_{\bm{e}_{g1,g2}}^k\nabla_{\bm{\theta}_D}^{\bm{e}_{g1,g2}}] \\
+		%---------eq4
+		\bm{J}_{GG} =  &-\set{E}_{P_{\bm{\theta}_G}}[(\Delta_{\bm{\theta}_G}^{\bm{e}_{g1,g2}})^T\otimes(\nabla_{\bm{e}_{g1,g2}}^k)^T+(\nabla_{\bm{\theta}_G}^{\bm{e}_{g1,g2}})^T\Delta_{\bm{e}_{g1,g2}}^k\nabla_{\bm{\theta}_G}^{\bm{e}_{g1,g2}}] \nonumber\\
+		&+2\set{E}_{P_{\rdv{X}},P_{\bm{\theta}_G}}[(\Delta_{\bm{\theta}_G}^{\bm{d}_{g}})^T\otimes(\nabla_{\bm{e}_{r,g}}^k)^T+(\nabla_{\bm{\theta}_G}^{\bm{d}_{g}})^T\Delta_{\bm{e}_{r,g}}^k\nabla_{\bm{\theta}_G}^{\bm{d}_{g}}]
+		\end{align}
+	\end{subequations}
+	where \(\otimes\) is the kronecker product. At equilibrium, consider a sequence of \(N\) samples \(\bm{d}_{ri}=\bm{d}_{gi}=\bm{d}_{i}\) with \(N\to\infty\), we have \(\bm{J}_{DD}=\bm{0}\), \(\bm{J}_{GD}=\bm{0}\) and 
+	\begin{align*}
+		%---------eq1
+		\bm{J}_{DG}&\propto 
+		(\lambda+1)\sum_{i<j}[(\Delta_{\bm{\theta}_D\bm{\theta}_G}^{\bm{e}_{i,j}})^T\otimes(\nabla_{\bm{e}_{i,j}}^k)^T+(\nabla_{\bm{\theta}_D}^{\bm{e}_{i,j}})^T\Delta_{\bm{e}_{i,j}}^k\nabla_{\bm{\theta}_G}^{\bm{e}_{i,j}}] \\
+		%---------eq2
+		\bm{J}_{GG}&=\set{E}_{P_{\bm{\theta}_G}}[(\nabla_{\bm{\theta}_G}^{\bm{d}_{g1}})^T\Delta_{\bm{e}_{g1,g2}}^k\nabla_{\bm{\theta}_G}^{\bm{d}_{g1}}+(\nabla_{\bm{\theta}_G}^{\bm{d}_{g2}})^T\Delta_{\bm{e}_{g1,g2}}^k\nabla_{\bm{\theta}_G}^{\bm{d}_{g2}}-(\nabla_{\bm{\theta}_G}^{\bm{e}_{g1,g2}})^T\Delta_{\bm{e}_{g1,g2}}^k\nabla_{\bm{\theta}_G}^{\bm{e}_{g1,g2}}] \\
+		&=\set{E}_{P_{\bm{\theta}_G}}[(\nabla_{\bm{\theta}_G}^{\bm{d}_{g1}})^T\Delta_{\bm{e}_{g1,g2}}^k\nabla_{\bm{\theta}_G}^{\bm{d}_{g2}}+(\nabla_{\bm{\theta}_G}^{\bm{d}_{g2}})^T\Delta_{\bm{e}_{g1,g2}}^k\nabla_{\bm{\theta}_G}^{\bm{d}_{g1}}]
+	\end{align*}
+	Given Lemma~\ref{lemma:non_negative} and fact that \(\bm{J}_{GG}\) is the Hessian matrix of \(M_{k\circ D_{\bm{\theta}_D}}^2(P_{\rdv{X}},P_{\bm{\theta}_G})\), \(\bm{J}_{GG}\) is negative semidefinite. The eigenvectors of \(\bm{J}_{GG}\) corresponding to zero eigenvalues form \(\nul(\bm{J}_{GG})\). There may exist small distortion \(\delta\bm{\theta}_G\in\nul(\bm{J}_{GG})\) such that \(P_{\bm{\theta}_G^*+\delta\bm{\theta}_G}=P_{\bm{\theta}_G^*}\). That is, \(P_{\bm{\theta}_G^*}\) is locally constant along some directions in the parameter space of \(G\). As a result, \(\nul(\bm{J}_{GG})\subseteq\nul(\bm{J}_{DG})\) because varying \(\bm{\theta}_G^*\) along these directions has no effect on \(D\). 
+	
+	Following Lemma C.3 of \cite{gan_stable}, we consider eigenvalue decomposition \(\bm{J}_{GG}=\bm{U}_G\bm{\Lambda}_G\bm{U}_G^T\) and \(\bm{J}_{DG}\bm{J}_{DG}^T=\bm{U}_D\bm{\Lambda}_D\bm{U}_D^T\). Let \(\bm{U}_G=[\bm{T}_G'^T, \bm{T}_G^T]\), \(\bm{U}_D=[\bm{T}_D'^T, \bm{T}_D^T]\) such that \(\text{Col}(\bm{T}_G'^T)=\nul(\bm{J}_{GG})\), \(\text{Col}(\bm{T}_D'^T)=\nul(\bm{J}_{DG}^T)\). Thus, the projections \(\bm{\gamma}_G=\bm{T}_G\bm{\theta}_G\) are orthogonal to \(\nul(\bm{J}_{GG})\). Then, the Jacobian corresponding to the projected system has the form \(\bm{J}'=[\bm{0}, \bm{J}_{DG}'; \bm{0}, \bm{J}_{GG}']\) with block \(\bm{J}_{DG}'=\bm{T}_D\bm{J}_{DG}\bm{T}_G^T\) and  \(\bm{J}_{GG}'=\bm{T}_G\bm{J}_{GG}\bm{T}_G^T\), where \(\bm{J}_{GG}'\) is negative definite. Moreover, on all directions exclude those described by \(\bm{J}_{GG}'\), the system is surrounded by a neighborhood of equilibia at least locally. According to Lemma~\ref{lemma:exp_stable}, the system is exponentially stable.
+\end{proof}
+
+\subsection{Discussion on Assumption \ref{Assum:zero}}
+\label{Sec:discuss_assumption1}
+
+This section shows that constant discriminator output \(D_{\bm{\theta}_D^*}(\bm{x})=\bm{c}\) for \(\bm{x}\in\ds{S}(P_{\rdv{X}})\bigcup\ds{S}(P_{\bm{\theta}_G^*})\) indicates that \(D_{\bm{\theta}_D^*}\) may have no discrimination power. First, we make the following assumptions:
+\begin{assumption}\label{Assum:DaP}
+	\begin{enumerate*}
+		\item \(D\) is a multilayer perceptron where each layer \(l\) can be factorized into an affine transform and an element-wise activation function \(f_l\).
+		\item Each activation function \(f_l\in C^0\); furthermore, \(f_l'\) has a finite number of discontinuities and \(f_l''\in C^0\)\footnote{This include many commonly used activations like linear, sigmoid, tanh, ReLU and ELU.}. 
+		\item Input data to \(D\) is continuous and its support \(\ds{S}\) is compact in \(\set{R}^{d}\) with non-zero measure in each dimension and \(d>1\)\footnote{For distributions with semi-infinite or infinite support, we consider the effective or truncated support \(\ds{S}_{\epsilon}(P)=\{x\in\ds{X}|P(x)\ge\epsilon\}\), where \(\epsilon>0\) is a small scalar. This is practical, e.g., univariate Gaussian has support in \((-\infty,+\infty)\) yet a sample five standard deviations away from the mean is unlikely to be valid.}. 
+	\end{enumerate*}
+\end{assumption}
+Based on Assumption~\ref{Assum:DaP}, we have the following proposition:
+\begin{proposition}\label{Prop:D_constant}
+	If~\(\forall\bm{x}\in\ds{S}\), \(D(\bm{x})=\bm{c}\), where \(\bm{c}\) is constant, then there always exists distortion \(\delta\bm{x}\) such that \(\bm{x}+\delta\bm{x}\not\in\ds{S}\) and \(D(\bm{x}+\delta\bm{x})=\bm{c}\).
+\end{proposition}
+
+\begin{proof}
+	Without loss of generality, we consider \(D(\bm{x})=\bm{W}_2h(\bm{x})+\bm{b}_2\) and \(h(\bm{x})=f(\bm{W}_1\bm{x}+\bm{b}_1)\), where \(\bm{W}_1\in{\mathbb{R}^{d_h\times{d}}}\), \(\bm{W}_2\), \(\bm{b}_1\), \(\bm{b}_2\) are model weights and biases, \(f\) is an activation function satisfying Assumption~\ref{Assum:DaP}. For \(\bm{x}\in\ds{S}\), since \(D(\bm{x})=c\), we have \(h(\bm{x})\in\nul(\bm{W}_2)\). Furthermore:
+	\begin{enumerate}[(a),leftmargin=*]
+		\item If \(\rank(\bm{W}_1)<d\), for any \(\delta\bm{x}\in\nul(\bm{W}_1)\), \(h(\bm{x}+\delta\bm{x})\in\nul(\bm{W}_2)\).
+		\item If \(\rank(\bm{W}_1)=d=d_h\), the problem \(h(\bm{x}+\delta\bm{x})=k\cdot h(\bm{x})\) has unique solution for any \(k\in\set{R}\) as long as \(k\cdot h(\bm{x})\) is within the output range of \(f\).
+		\item If \(\rank(\bm{W}_1)=d<d_h\), let \(\bm{U}\) and \(\bm{V}\) be two basis matrices of \(R^{d_h}\) such that \(\bm{W}_1\bm{x}=\bm{U}\rvect{\hat{\bm{x}}^T&\bm{0}^T}^T\) and any vector in \(\nul(\bm{W}_2)\) can be represented as \(\bm{V}\rvect{\bm{z}^T&\bm{0}^T}^T\), where \(\hat{\bm{x}}\in{\mathbb{R}^{d_h\times{d}}}\), \(\bm{z}\in{\mathbb{R}^{d_h\times{n}}}\) and \(n\) is the nullity of \(\bm{W}_2\). Let the projected support be \(\hat{\ds{S}}\). Thus, \(\forall\hat{\bm{x}}\in\hat{\ds{S}}\), there exists \(\bm{z}\) such that \(f(\bm{U}\rvect{\hat{\bm{x}}^T&\bm{0}^T}^T+\bm{b}_1)=\bm{V}\rvect{\bm{z}^T&\bm{z}_c^T}^T\) with \(\bm{z}_c=\bm{0}\). Consider the Jacobian:
+		\begin{equation}
+		\bm{J}=\frac{\partial\rvect{\bm{z}^T&\bm{z}_c^T}^T}{\partial\rvect{\hat{\bm{x}}^T&\bm{0}^T}^T}=\bm{V}^{-1}\nabla{\bm{\Sigma}}\bm{U}
+		\end{equation}
+		where \(\nabla{\bm{\Sigma}}=\diag(\frac{\dr f}{\dr a_i})\) and \(\bm{a}=[a_i]_{i=1}^{d_h}\) is the input to activation, or pre-activations. Since \(\hat{\ds{S}}\) is continuous and compact, it has infinite number of boundary points \(\{\hat{\bm{x}}_b\}\) for \(d>1\). Consider one boundary point \(\hat{\bm{x}}_b\) and its normal line \(\delta\hat{\bm{x}}_b\). Let \(\epsilon>0\) be a small scalar such that \(\hat{\bm{x}}_b-\epsilon\delta\hat{\bm{x}}_b\in\hat{\ds{S}}\) and \(\hat{\bm{x}}_b+\epsilon\delta\hat{\bm{x}}_b\not\in\hat{\ds{S}}\). 
+		\begin{itemize}[leftmargin=*]
+			\item For linear activation, \(\nabla\bm{\Sigma}=\bm{I}\) and \(\bm{J}\) is constant. Then \(\bm{z}_c\) remains \(\bm{0}\) for \(\hat{\bm{x}}_b+\epsilon\delta\hat{\bm{x}}_b\), i.e., there exists \(\bm{z}\) such that \(h(\hat{\bm{x}}+\epsilon\delta\hat{\bm{x}})\in\nul(\bm{W}_2)\).
+			\item For nonlinear activations, assume \(f'\) has \(N\) discontinuities. Since \(\bm{U}\rvect{\hat{\bm{x}}^T&\bm{0}^T}^T+\bm{b}_1=\bm{c}\) has unique solution for any vector \(\bm{c}\), the boundary points \(\{\hat{\bm{x}}_b\}\) cannot yield pre-activations \(\{\bm{a}_b\}\) that all lie on the discontinuities in any of the \(d_h\) directions. Though we might need to sample \(d_h^{N+1}\) points in the worst case to find an exception, there are infinite number of exceptions. Let \(\hat{\bm{x}}_b\) be a sample where \(\{\bm{a}_b\}\) does not lie on the discontinuities in any direction. Because \(f''\) is continuous, \(\bm{z}_c\) remains \(\bm{0}\) for \(\hat{\bm{x}}_b+\epsilon\delta\hat{\bm{x}}_b\), i.e., there exists \(\bm{z}\) such that \(h(\hat{\bm{x}}+\epsilon\delta\hat{\bm{x}})\in\nul(\bm{W}_2)\).
+		\end{itemize}
+	\end{enumerate}
+	In conclusion, we can always find \(\delta\bm{x}\) such that \(\bm{x}+\delta\bm{x}\notin\ds{S}\) and \(D(\bm{x}+\delta\bm{x})=\bm{c}\).
+\end{proof}
+
+Proposition~\ref{Prop:D_constant} indicates that if \(D_{\bm{\theta}_D^*}(\bm{x})=\bm{0}\) for \(\bm{x}\in\ds{S}(P_{\rdv{X}})\bigcup\ds{S}(P_{\bm{\theta}_G^*})\), \(D_{\bm{\theta}_D^*}\) cannot discriminate against fake samples with distortions to the original data. In contrast, Assumption~\ref{Assum:nonzero} and Lemma~\ref{lemma:non_negative} guarantee that, at equilibrium, the discriminator trained using MMD loss function is effective against such fake samples given a large number of i.i.d. test samples (\cite{mmdtest}).
+
+\section{Supplementary Methodology}
+\label{sec:supp_method}
+\subsection{Representative loss functions in literature}
+\label{sec:loss_literature}
+
+Several loss functions have been proposed to quantify the difference between real and generated sample scores, including: (assume linear activation is used at the last layer of \(D\))
+\begin{itemize}[leftmargin=*]
+	\item The Minimax loss~(\cite{gan}): \(L_D=\set{E}_{P_{\rdv{X}}}[\text{Softplus}(-D(\bm{x}))]+\E_{P_{\rdv{Z}}}[\text{Softplus}(D(G(\bm{z})))]\) and  \(L_G=-L_D\), which can be derived from the Jensen–Shannon (JS) divergence between \(P_{\rdv{X}}\) and the model distribution \(P_{G}\).
+	\item The non-saturating loss~(\cite{gan}), which is a variant of the minimax loss with the same \(L_D\) and \(L_G=\E_{P_{\rdv{Z}}}[\text{Softplus}(-D(G(\bm{z})))]\).
+	\item The Hinge loss~(\cite{implicit}):  \(L_D=\set{E}_{P_{\rdv{X}}}[\text{ReLU}(1-D(\bm{x}))]+\E_{P_{\rdv{Z}}}[\text{ReLU}(1+D(G(\bm{z})))]\), \(L_G=\E_{P_{\rdv{Z}}}[-D(G(\bm{z}))]\), which is notably known for usage in support vector machines and is related to the total variation (TV) distance (\cite{f_divergence_theory}).
+	\item The Wasserstein loss~(\cite{wgan,wgan_gp}), which is derived from the Wasserstein distance between \(P_{\rdv{X}}\) and \(P_{G}\): \(L_G=-\E_{P_{\rdv{Z}}}[D(G(\bm{z}))]\), \(L_D=\E_{P_{\rdv{Z}}}[D(G(\bm{z}))]-\set{E}_{P_{\rdv{X}}}[D(\bm{x})]\), where \(D\) is subject to some Lipschitz constraint.
+	\item The maximum mean discrepancy (MMD) (\cite{mmd_gan_g,mmd_gan_t}), as described in Section~\ref{sec:all_the_gans}.
+\end{itemize}
+
+\subsection{Network Architecture}
+\label{sec:architecture}
+
+For unsupervised image generation tasks on CIFAR-10 and STL-10 datasets, the DCGAN architecture from \cite{spectral} was used. For CelebA and LSUN bedroom datasets, we added more layers to the generator and discriminator accordingly. See Table~\ref{Tab:architecture1} and~\ref{Tab:architecture2} for details. 
+
+\begin{table}[htb]
+	\centering
+	\caption{DCGAN models for image generation on CIFAR-10 (\(h=w=4\), \(H=W=32\)) and STL-10 (\(h=w=6\), \(H=W=48\)) datasets. For non-saturating loss and hinge loss, \(s=1\); for MMD-rand, MMD-rbf, MMD-rq, \(s=16\).}
+	\label{Tab:architecture1}
+	\begin{subtable}{0.45\textwidth}
+		\centering
+		\caption{Generator}
+		\begin{tabular}{c}
+			\toprule
+			\(\bm{z}\in\set{R}^{128}\sim\ds{N}(\bm{0},\bm{I})\) \\
+			\midrule
+			\(128\to h\times w\times512\), dense, linear \\
+			\midrule
+			\(4\times4\), stride 2 deconv, \(256\), BN, ReLU\\
+			\midrule
+			\(4\times4\), stride 2 deconv, \(128\), BN, ReLU\\
+			\midrule
+			\(4\times4\), stride 2 deconv, \(64\), BN, ReLU\\
+			\midrule
+			\(3\times3\), stride 1 conv, \(3\), Tanh\\
+			\bottomrule
+		\end{tabular}
+	\end{subtable}
+	~
+	\begin{subtable}{0.45\textwidth}
+		\centering
+		\caption{Discriminator}
+		\begin{tabular}{c}
+			\toprule
+			RGB image \(\bm{x}\in[-1,1]^{H\times W\times3}\) \\
+			\midrule
+			\(3\times3\), stride 1 conv, \(64\), LReLU\\
+			\midrule
+			\(4\times4\), stride 2 conv, \(128\), LReLU\\
+			\(3\times3\), stride 1 conv, \(128\), LReLU\\
+			\midrule
+			\(4\times4\), stride 2 conv, \(256\), LReLU\\
+			\(3\times3\), stride 1 conv, \(256\), LReLU\\
+			\midrule
+			\(4\times4\), stride 2 conv, \(512\), LReLU\\
+			\(3\times3\), stride 1 conv, \(512\), LReLU\\
+			\midrule
+			\(h\times w\times512\to s\), dense, linear\\
+			\bottomrule
+		\end{tabular}
+	\end{subtable}
+\end{table}
+
+\begin{table}[hbt]
+	\centering
+	\caption{DCGAN models for image generation on CelebA and LSUN-bedroom datasets. For non-saturating loss and hinge loss, \(s=1\); for MMD-rand, MMD-rbf, MMD-rq, \(s=16\).}
+	\label{Tab:architecture2}
+	\begin{subtable}{0.45\textwidth}
+		\centering
+		\caption{Generator}
+		\begin{tabular}{c}
+			\toprule
+			\(\bm{z}\in\set{R}^{128}\sim\ds{N}(\bm{0},\bm{I})\) \\
+			\midrule
+			\(128\to 4\times 4\times1024\), dense, linear \\
+			\midrule
+			\(4\times4\), stride 2 deconv, \(512\), BN, ReLU\\
+			\midrule
+			\(4\times4\), stride 2 deconv, \(256\), BN, ReLU\\
+			\midrule
+			\(4\times4\), stride 2 deconv, \(128\), BN, ReLU\\
+			\midrule
+			\(4\times4\), stride 2 deconv, \(64\), BN, ReLU\\
+			\midrule
+			\(3\times3\), stride 1 conv, \(3\), Tanh\\
+			\bottomrule
+		\end{tabular}
+	\end{subtable}
+	~
+	\begin{subtable}{0.45\textwidth}
+		\centering
+		\caption{Discriminator}
+		\begin{tabular}{c}
+			\toprule
+			RGB image \(\bm{x}\in[-1,1]^{64\times 64\times3}\) \\
+			\midrule
+			\(3\times3\), stride 1 conv, \(64\), LReLU\\
+			\midrule
+			\(4\times4\), stride 2 conv, \(128\), LReLU\\
+			\(3\times3\), stride 1 conv, \(128\), LReLU\\
+			\midrule
+			\(4\times4\), stride 2 conv, \(256\), LReLU\\
+			\(3\times3\), stride 1 conv, \(256\), LReLU\\
+			\midrule
+			\(4\times4\), stride 2 conv, \(512\), LReLU\\
+			\(3\times3\), stride 1 conv, \(512\), LReLU\\
+			\midrule
+			\(4\times4\), stride 2 conv, \(1024\), LReLU\\
+			\(3\times3\), stride 1 conv, \(1024\), LReLU\\
+			\midrule
+			\(4\times 4\times512\to s\), dense, linear\\
+			\bottomrule
+		\end{tabular}
+	\end{subtable}
+\end{table}
+
+\section{Power Iteration for Convolution Operation}
+\label{sec:pico}
+
+This section introduces the power iteration for convolution operation (PICO) method to estimate the spectral norm of a convolution kernel, and compare PICO with the power iteration for matrix (PIM) method used in \cite{spectral}.
+
+\subsection{Method Formation}
+\label{sec:pico_formation}
+For a weight matrix \(\bm{W}\), the spectral norm  is defined as \(\sigma(\bm{W})=\max_{\norm{\bm{v}}_2\le1}\norm{\bm{W}\bm{v}}_2\). The PIM is used to estimate \(\sigma(\bm{W})\) (\cite{spectral}), which iterates between two steps:
+\begin{enumerate}[leftmargin=*]
+	\item Update \(\bm{u}=\bm{W}\bm{v}/\norm{\bm{W}\bm{v}}_2\);
+	\item Update \(\bm{v}=\bm{W}^T\bm{u}/\norm{\bm{W}^T\bm{u}}_2\).
+\end{enumerate}
+The convolutional kernel \(\bm{W}_{c}\) is a tensor of shape \(h\times w\times c_{in}\times c_{out}\) with \(h,w\) the receptive field size and \(c_{in},c_{out}\) the number of input/output channels. To estimate \(\sigma(\bm{W}_{c})\), \cite{spectral} reshaped it into a matrix \(\bm{W}_{rs}\) of shape \((hwc_{in})\times c_{out}\) and estimated \(\sigma(\bm{W}_{rs})\). 
+
+We propose a simple method to calculate \(\bm{W}_{c}\) directly based on the fact that convolution operation is linear. For any linear map \(T:\set{R}^m\to\set{R}^n\), there exists matrix \(\bm{W}_L\in\set{R}^{n\times m}\) such that \(\bm{y}=T(\bm{x})\) can be represented as \(\bm{y}=\bm{W}_L\bm{x}\). Thus, we may simply substitute \(\bm{W}_L=\frac{\partial\bm{y}}{\partial\bm{x}}\) in the PIM method to estimate the spectral norm of any linear operation. In the case of convolution operation \(*\), there exist doubly block circulant matrix \(\bm{W}_{dbc}\) such that \(\bm{u}=\bm{W}_c*\bm{v}=\bm{W}_{dbc}\bm{v}\). Consider \(\bm{v}'=\bm{W}_{dbc}^T\bm{u}=[\frac{\partial\bm{u}}{\partial\bm{v}}]^T\bm{u}\) which is essentially the transpose convolution of \(\bm{W}_c\) on \(\bm{u}\) (\cite{conv_guide}). Thus, similar to PIM, PICO iterates between the following two steps:
+\begin{enumerate}[leftmargin=*]
+	\item Update \(\bm{u}=\bm{W}_c*\bm{v}/\norm{\bm{W}_c*\bm{v}}_2\);
+	\item Do transpose convolution of \(\bm{W}_c\) on \(\bm{u}\) to get \(\hat{\bm{v}}\); update \(\bm{v}=\hat{\bm{v}}/\norm{\hat{\bm{v}}}_2\).
+\end{enumerate}
+Similar approaches have been proposed in \cite{pico_similar} and \cite{pico_similar2} from different angles, which we were not aware during this study. In addition, \cite{fft_sv} proposes to compute the exact singular values of convolution kernels using FFT and SVD. In spectral normalization, only the first singular value is concerned, making the power iteration methods PIM and PICO more efficient than FFT and thus preferred in our study. However, we believe the exact method FFT+SVD (\cite{fft_sv}) may eventually inspire more rigorous regularization methods for GAN.
+
+The proposed PICO method estimates the real spectral norm of a convolution kernel at each layer, thus enforces an upper bound on the Lipschitz constant of the discriminator \(D\). Denote the upper bound as \(\text{LIP}_{\text{PICO}}\). In this study, Leaky ReLU (LReLU) was used at each layer of \(D\), thus \(\text{LIP}_{\text{PICO}}\approx1\) (\cite{pico_similar2}). In practice, however, PICO would often cause the norm of the signal passing through \(D\) to decrease to zero, because at each layer,
+\begin{itemize}[leftmargin=*]
+	\item the signal hardly coincides with the first singular-vector of the convolution kernel; and
+	\item the activation function LReLU often reduces the norm of the signal.
+\end{itemize}
+Consequently, the discriminator outputs tend to be similar for all the inputs. To compensate the loss of norm at each layer, the signal is multiplied by a constant \(C\) after each spectral normalization. This essentially enlarges \(\text{LIP}_{\text{PICO}}\) by \(C^K\) where \(K\) is the number of layers in the DCGAN discriminator. For all experiments in Section~\ref{sec:experiments}, we fixed \(C=\frac{1}{0.55}\approx1.82\) as all loss functions performed relatively well empirically. In Appendix Section~\ref{sec:exp:pico_pim}, we tested the effects of coefficient \(C^K\) on the performance of several loss functions.
+
+\subsection{Comparison to PIM}
+\label{sec:compare_pim}
+PIM (\cite{spectral}) also enforces an upper bound \(\text{LIP}_{\text{PIM}}\) on the Lipschitz constant of the discriminator \(D\). Consider a convolution kernel \(\bm{W}_{c}\) with receptive field size \(h\times w\) and stride \(s\). Let \(\sigma_{\text{PICO}}\) and \(\sigma_{\text{PIM}}\) be the spectral norm estimated by PICO and PIM respectively. We empirically found\footnote{This was obtained by optimizing \(\sigma_{\text{PICO}}/\sigma_{\text{PIM}}\) w.r.t. a variety of randomly initialized kernel \(\bm{W}_{c}\). Both gradient descent and Adam methods were tested with a small learning rate \(1e^{-5}\) so that the error of spectral norm estimation may be ignored at each iteration.} that \(\sigma_{\text{PIM}}^{-1}\) varies in the range \([\sigma_{\text{PICO}}^{-1}, \frac{\sqrt{hw}}{s}\sigma_{\text{PICO}}^{-1}]\), depending on the kernel \(\bm{W}_{c}\). For a typical kernel of size \(3\times3\) and stride \(1\), \(\sigma_{\text{PIM}}^{-1}\) may vary from \(\sigma_{\text{PICO}}^{-1}\) to \(3\sigma_{\text{PICO}}^{-1}\). Thus, \(\text{LIP}_{\text{PIM}}\) is indefinite and may vary during training. In deep convolutional networks, PIM could potentially result in a very loose constraint on the Lipschitz constant of the network. In Appendix Section~\ref{sec:exp:pico_pim}, we experimentally compare the performance of PICO and PIM with several loss functions.
+
+\subsection{Experiments}
+\label{sec:exp:pico_pim}
+
+\begin{figure}[!ht]
+	\centering
+	\begin{subfigure}[t]{\linewidth}
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[
+		boxplot/draw direction=y,
+		width=\textwidth, height=0.32\textwidth,
+		ymax=60, ytick = {20, 30, 40, 50},
+		ylabel={FID},
+		ymajorgrids=true, grid style=dashed,
+		xmin=0, xmax=6, x tick label style={font=\small}, 
+		xtick = {0.5, 1.5, 2.5, 3.5, 4.5, 5.5}, xticklabels={{\(C^K=16\)}, {\(C^K=32\)}, {\(C^K=64\)}, {\(C^K=128\)}, {\(C^K=256\)}, {PIM}},
+		cycle list={{matlab1},{matlab2},{matlab3},{matlab4}},
+		boxplot={
+			draw position={1/4 + floor(\plotnumofactualtype/4) + 1/6*fpumod(\plotnumofactualtype,4)},
+			box extend=0.125},
+		every axis plot/.append style={fill,fill opacity=0.3},
+		legend entries={Hinge,MMD-rbf,MMD-rep,MMD-rep-b},
+		legend to name={legend},
+		legend style={font=\footnotesize, draw=none, inner sep=-1.5pt, column sep=2pt, legend columns=-1},
+		name=border
+		]
+		% format: data\\ lower wisker\\ median\\ upper quartile\\ lower quartile\\ upper whisker
+		\addplot table[row sep=\\,y index=0] {data\\ 31.463\\ 32.098\\ 38.176\\ 31.658\\ 49.847\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 48.326\\ 48.326\\ 48.326\\ 48.326\\ 48.326\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 18.509\\ 20.541\\ 22.840\\ 19.698\\ 25.356\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 17.572\\ 19.542\\ 21.994\\ 18.746\\ 23.620\\ };
+		
+		\addplot table[row sep=\\,y index=0] {data\\ 27.034\\ 30.684\\ 40.483\\ 28.179\\ 46.487\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 36.512\\ 37.582\\ 38.653\\ 36.512\\ 38.653\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 16.636\\ 19.641\\ 22.123\\ 18.037\\ 23.412\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 16.497\\ 18.811\\ 21.604\\ 17.572\\ 24.059\\ };
+		
+		\addplot table[row sep=\\,y index=0] {data\\ 23.496\\ 26.715\\ 30.916\\ 25.169\\ 44.945\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 29.431\\ 34.939\\ 41.247\\ 31.456\\ 46.742\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 17.000\\ 20.932\\ 22.569\\ 18.457\\ 25.952\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 16.658\\ 21.686\\ 23.870\\ 18.339\\ 27.194\\ };
+		
+		\addplot table[row sep=\\,y index=0] {data\\ 22.895\\ 25.582\\ 27.383\\ 24.059\\ 27.791\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 26.505\\ 31.517\\ 33.877\\ 28.665\\ 35.314\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 18.816\\ 22.045\\ 23.258\\ 21.018\\ 25.994\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 19.986\\ 23.131\\ 25.566\\ 20.993\\ 28.992\\ };
+		
+		\addplot table[row sep=\\,y index=0] {data\\ 23.740\\ 26.926\\ 29.015\\ 25.271\\ 32.715\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 27.344\\ 30.274\\ 34.044\\ 28.466\\ 44.504\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 19.479\\ 24.740\\ 27.676\\ 22.587\\ 32.872\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 21.529\\ 25.614\\ 28.263\\ 23.716\\ 30.923\\ };
+		
+		\addplot table[row sep=\\,y index=0] {data\\ 23.604\\ 26.318\\ 28.948\\ 24.659\\ 31.293\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 26.561\\ 32.323\\ 35.403\\ 29.105\\ 46.134\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 19.979\\ 22.749\\ 26.255\\ 20.080\\ 27.803\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 18.243\\ 23.411\\ 26.630\\ 20.249\\ 29.054\\ };
+		
+		\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:0.25,50) {11};
+		\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:0.5-0.083,50) {15};
+		%\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:0.5+0.083,50) {0};
+		%\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:0.75,50) {0};
+		
+		\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:1.25,50) {5};
+		\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:1.5-0.083,50) {14};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:1.5+0.083,50) {2};
+		%\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:1.75,50) {0};
+		
+		%\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:2.25,50) {0};
+		\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:2.5-0.083,50) {5};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:2.5+0.083,50) {5};
+		%\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:2.75,50) {0};
+		
+		%\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:3.25,50) {0};
+		\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:3.5-0.083,50) {1};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:3.5+0.083,50) {4};
+		%\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:3.75,50) {0};
+		
+		%\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:4.25,50) {0};
+		%\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:4.5-0.083,50) {0};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:4.5+0.083,50) {3};
+		%\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:4.75,50) {0};
+		
+		%\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:5.25,50) {0};
+		\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:5.5-0.083,50) {1};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:5.5+0.083,50) {6};
+		%\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:5.75,50) {0};
+		\end{axis}
+		\node[above left] at (border.north east) {\ref{legend}};
+		\end{tikzpicture}
+		\caption{CIFAR-10\label{fig:pico_fid_cifar}}
+	\end{subfigure}
+	
+	\begin{subfigure}[t]{\linewidth}
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[
+		boxplot/draw direction=y,
+		width=\textwidth, height=0.32\textwidth,
+		ymax=90, ytick = {40, 50, 60, 70, 80},
+		ylabel={FID},
+		ymajorgrids=true, grid style=dashed,
+		xmin=0, xmax=6, x tick label style={font=\small}, 
+		xtick = {0.5, 1.5, 2.5, 3.5, 4.5, 5.5}, xticklabels={{\(C^K=16\)}, {\(C^K=32\)}, {\(C^K=64\)}, {\(C^K=128\)}, {\(C^K=256\)}, {PIM}},
+		cycle list={{matlab1},{matlab2},{matlab3},{matlab4}},
+		boxplot={
+			draw position={1/4 + floor(\plotnumofactualtype/4) + 1/6*fpumod(\plotnumofactualtype,4)},
+			box extend=0.125},
+		every axis plot/.append style={fill,fill opacity=0.3},
+		legend entries={Hinge,MMD-rbf,MMD-rep,MMD-rep-b},
+		legend to name={legend},
+		legend style={font=\footnotesize, draw=none, inner sep=-1.5pt, column sep=2pt, legend columns=-1},
+		name=border
+		]
+		% format: data\\ lower wisker\\ median\\ upper quartile\\ lower quartile\\ upper whisker
+		\addplot table[row sep=\\,y index=0] {data\\ 59.584\\ 64.733\\ 67.990\\ 61.701\\ 73.821\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 80\\ 80\\ 80\\ 80\\ 80\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 40.754\\ 42.096\\ 42.905\\ 41.249\\ 46.627\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 37.426\\ 40.844\\ 41.936\\ 39.548\\ 44.131\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 52.284\\ 57.191\\ 63.244\\ 54.574\\ 78.542\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 62.185\\ 68.633\\ 71.646\\ 62.333\\ 76.280\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 36.658\\ 39.623\\ 42.427\\ 37.722\\ 44.833\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 36.962\\ 38.918\\ 39.838\\ 37.977\\ 45.378\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 50.077\\ 53.211\\ 57.427\\ 51.197\\ 61.203\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 57.832\\ 63.157\\ 65.894\\ 58.900\\ 69.339\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 37.155\\ 40.892\\ 46.964\\ 38.180\\ 50.230\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 37.306\\ 39.252\\ 43.833\\ 38.782\\ 47.073\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 47.245\\ 50.891\\ 52.443\\ 48.986\\ 53.695\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 54.233\\ 57.802\\ 60.349\\ 56.928\\ 65.736\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 36.802\\ 41.720\\ 45.427\\ 38.590\\ 46.854\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 38.865\\ 40.788\\ 43.335\\ 40.274\\ 51.231\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 46.258\\ 49.372\\ 51.404\\ 48.188\\ 61.251\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 53.435\\ 57.106\\ 57.950\\ 55.703\\ 62.340\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 40.392\\ 42.299\\ 48.482\\ 40.576\\ 52.580\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 41.208\\ 43.646\\ 46.677\\ 42.497\\ 55.609\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 47.096\\ 49.731\\ 53.873\\ 47.830\\ 62.762\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 53.166\\ 56.822\\ 60.805\\ 54.724\\ 63.477\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 40.402\\ 42.296\\ 47.988\\ 40.612\\ 49.909\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 39.776\\ 42.067\\ 44.080\\ 41.016\\ 52.465\\ };
+		
+		\iftrue
+		\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:0.25,80) {6};
+		\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:0.5-0.083,80) {16};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:0.5+0.083,80) {4};
+		%\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:0.75,80) {0};
+		
+		\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:1.25,80) {2};
+		\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:1.5-0.083,80) {10};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:1.5+0.083,80) {4};
+		%\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:1.75,80) {0};
+		
+		%\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:2.25,80) {0};
+		\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:2.5-0.083,80) {2};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:2.5+0.083,80) {9};
+		%\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:2.75,80) {0};
+		
+		%\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:3.25,80) {0};
+		%\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:3.5-0.083,80) {0};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:3.5+0.083,80) {8};
+		%\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:3.75,80) {0};
+		
+		%\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:4.25,80) {0};
+		%\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:4.5-0.083,80) {0};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:4.5+0.083,80) {8};
+		%\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:4.75,80) {0};
+		
+		%\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:5.25,80) {0};
+		%\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:5.5-0.083,80) {0};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:5.5+0.083,80) {11};
+		%\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:5.75,80) {0};
+		\fi
+		\end{axis}
+		\node[above left] at (border.north east) {\ref{legend}};
+		\end{tikzpicture}
+		\caption{STL-10\label{fig:pico_fid_stl}}
+	\end{subfigure}
+	
+	\begin{subfigure}[t]{\linewidth}
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[
+		boxplot/draw direction=y,
+		width=\textwidth, height=0.32\textwidth,
+		ymax=60, ytick = {10, 20, 30, 40, 50},
+		ylabel={FID},
+		ymajorgrids=true, grid style=dashed,
+		xmin=0, xmax=6, x tick label style={font=\small}, 
+		xtick = {0.5, 1.5, 2.5, 3.5, 4.5, 5.5}, xticklabels={{\(C^K=16\)}, {\(C^K=32\)}, {\(C^K=64\)}, {\(C^K=128\)}, {\(C^K=256\)}, {PIM}},
+		cycle list={{matlab1},{matlab2},{matlab3},{matlab4}},
+		boxplot={
+			draw position={1/4 + floor(\plotnumofactualtype/4) + 1/6*fpumod(\plotnumofactualtype,4)},
+			box extend=0.125},
+		every axis plot/.append style={fill,fill opacity=0.3},
+		legend entries={Hinge,MMD-rbf,MMD-rep,MMD-rep-b},
+		legend to name={legend},
+		legend style={font=\footnotesize, draw=none, inner sep=-1.5pt, column sep=2pt, legend columns=-1},
+		name=border
+		]
+		% format: data\\ lower wisker\\ median\\ upper quartile\\ lower quartile\\ upper whisker
+		\addplot table[row sep=\\,y index=0] {data\\ 44.121\\ 46.244\\ 48.367\\ 44.121\\ 48.367\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 38.573\\ 38.778\\ 38.936\\ 38.624\\ 38.989\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 7.649\\ 9.676\\ 12.890\\ 8.580\\ 18.415\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 7.718\\ 8.296\\ 9.088\\ 8.115\\ 10.989\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 14.725\\ 24.911\\ 35.122\\ 18.721\\ 45.275\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 25.756\\ 31.340\\ 40.849\\ 29.707\\ 47.659\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 7.832\\ 9.004\\ 9.867\\ 8.213\\ 14.803\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 6.780\\ 7.790\\ 8.347\\ 7.198\\ 15.097\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 10.339\\ 18.136\\ 21.336\\ 13.520\\ 41.544\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 21.676\\ 29.714\\ 32.444\\ 24.767\\ 44.624\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 6.811\\ 9.576\\ 13.431\\ 7.639\\ 16.273\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 6.424\\ 7.767\\ 8.573\\ 7.013\\ 21.110\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 9.081\\ 12.907\\ 14.817\\ 10.650\\ 19.472\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 12.812\\ 19.478\\ 22.882\\ 17.221\\ 30.474\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 7.404\\ 9.992\\ 12.019\\ 7.743\\ 13.215\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 6.616\\ 7.817\\ 9.671\\ 7.137\\ 16.574\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 8.947\\ 11.150\\ 12.734\\ 10.071\\ 13.691\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 12.544\\ 18.055\\ 21.483\\ 15.116\\ 33.719\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 8.990\\ 9.459\\ 9.928\\ 8.990\\ 9.928\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 6.571\\ 8.400\\ 10.187\\ 7.433\\ 17.351\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 10.023\\ 12.308\\ 12.909\\ 11.644\\ 19.102\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 13.061\\ 16.762\\ 24.983\\ 14.827\\ 33.352\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 8.508\\ 10.296\\ 11.481\\ 8.799\\ 13.142\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 7.088\\ 9.887\\ 14.104\\ 8.766\\ 15.771\\ };
+		
+		\iftrue
+		\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:0.25,50) {14};
+		\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:0.5-0.083,50) {13};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:0.5+0.083,50) {5};
+		%\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:0.75,50) {0};
+		
+		\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:1.25,50) {7};
+		\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:1.5-0.083,50) {11};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:1.5+0.083,50) {4};
+		%\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:1.75,50) {0};
+		
+		\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:2.25,50) {2};
+		\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:2.5-0.083,50) {2};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:2.5+0.083,50) {7};
+		\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:2.75,50) {1};
+		
+		\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:3.25,50) {1};
+		%\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:3.5-0.083,50) {0};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:3.5+0.083,50) {9};
+		\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:3.75,50) {1};
+		
+		%\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:4.25,50) {0};
+		%\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:4.5-0.083,50) {0};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:4.5+0.083,50) {14};
+		\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:4.75,50) {1};
+		
+		%\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:5.25,50) {0};
+		%\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:5.5-0.083,50) {0};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:5.5+0.083,50) {10};
+		\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:5.75,50) {2};
+		\fi
+		\end{axis}
+		\node[above left] at (border.north east) {\ref{legend}};
+		\end{tikzpicture}
+		\caption{CelebA\label{fig:pico_fid_celeba}}
+	\end{subfigure}
+	
+	\begin{subfigure}[t]{\linewidth}
+		\centering
+		\begin{tikzpicture}
+		\begin{axis}[
+		boxplot/draw direction=y,
+		width=\textwidth, height=0.32\textwidth,
+		ymax=110, ytick = {20, 40, 60, 80},
+		ylabel={FID},
+		ymajorgrids=true, grid style=dashed,
+		xmin=0, xmax=6, x tick label style={font=\small}, 
+		xtick = {0.5, 1.5, 2.5, 3.5, 4.5, 5.5}, xticklabels={{\(C^K=16\)}, {\(C^K=32\)}, {\(C^K=64\)}, {\(C^K=128\)}, {\(C^K=256\)}, {PIM}},
+		cycle list={{matlab1},{matlab2},{matlab3},{matlab4}},
+		boxplot={
+			draw position={1/4 + floor(\plotnumofactualtype/4) + 1/6*fpumod(\plotnumofactualtype,4)},
+			box extend=0.125},
+		every axis plot/.append style={fill,fill opacity=0.3},
+		legend entries={Hinge,MMD-rbf,MMD-rep,MMD-rep-b},
+		legend to name={legend},
+		legend style={font=\footnotesize, draw=none, inner sep=-1.5pt, column sep=2pt, legend columns=-1},
+		name=border
+		]
+		% format: data\\ lower wisker\\ median\\ upper quartile\\ lower quartile\\ upper whisker
+		\addplot table[row sep=\\,y index=0] {data\\ 74.679\\ 79.419\\ 84.158\\ 74.679\\ 84.158\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 90\\ 90\\ 90\\ 90\\ 90\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 15.916\\ 19.432\\ 21.502\\ 17.720\\ 26.156\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 16.591\\ 18.733\\ 22.525\\ 17.486\\ 36.919\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 29.138\\ 55.769\\ 78.358\\ 53.375\\ 82.385\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 90\\ 90\\ 90\\ 90\\ 90\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 17.188\\ 20.966\\ 32.172\\ 19.376\\ 73.465\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 13.576\\ 15.470\\ 16.600\\ 14.635\\ 25.130\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 25.535\\ 31.394\\ 37.797\\ 26.668\\ 67.085\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 90\\ 90\\ 90\\ 90\\ 90\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 16.013\\ 17.653\\ 18.629\\ 16.710\\ 20.784\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 11.224\\ 15.225\\ 16.262\\ 12.001\\ 18.764\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 17.197\\ 25.088\\ 31.586\\ 22.748\\ 52.809\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 90\\ 90\\ 90\\ 90\\ 90\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 16.533\\ 18.931\\ 22.538\\ 17.270\\ 25.222\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 11.690\\ 14.162\\ 18.097\\ 12.227\\ 22.536\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 18.394\\ 23.628\\ 28.156\\ 21.763\\ 47.414\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 90\\ 90\\ 90\\ 90\\ 90\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 13.188\\ 35.268\\ 35.772\\ 24.016\\ 35.853\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 13.784\\ 19.213\\ 23.281\\ 14.928\\ 34.710\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 27.380\\ 34.655\\ 58.501\\ 32.865\\ 86.915\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 90\\ 90\\ 90\\ 90\\ 90\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 74.033\\ 74.033\\ 74.033\\ 74.033\\ 74.033\\ };
+		\addplot table[row sep=\\,y index=0] {data\\ 20.120\\ 25.744\\ 33.838\\ 23.055\\ 43.427\\ };
+		
+		\iftrue
+		\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:0.25,90) {14};
+		\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:0.5-0.083,90) {16};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:0.5+0.083,90) {5};
+		\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:0.75,90) {1};
+		
+		\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:1.25,90) {9};
+		\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:1.5-0.083,90) {16};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:1.5+0.083,90) {6};
+		%\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:1.75,90) {0};
+		
+		\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:2.25,90) {6};
+		\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:2.5-0.083,90) {16};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:2.5+0.083,90) {11};
+		%\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:2.75,90) {0};
+		
+		\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:3.25,90) {3};
+		\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:3.5-0.083,90) {16};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:3.5+0.083,90) {12};
+		%\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:3.75,90) {0};
+		
+		\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:4.25,90) {2};
+		\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:4.5-0.083,90) {16};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:4.5+0.083,90) {12};
+		\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:4.75,90) {2};
+		
+		\node[above, align=center, text=matlab1, font=\scriptsize] at (axis cs:5.25,90) {4};
+		\node[above, align=center, text=matlab2, font=\scriptsize] at (axis cs:5.5-0.083,90) {16};
+		\node[above, align=center, text=matlab3, font=\scriptsize] at (axis cs:5.5+0.083,90) {15};
+		\node[above, align=center, text=matlab4, font=\scriptsize] at (axis cs:5.75,90) {1};
+		\fi
+		\end{axis}
+		\node[above left] at (border.north east) {\ref{legend}};
+		\end{tikzpicture}
+		\caption{LSUN-bedroom\label{fig:pico_fid_lsun}}
+	\end{subfigure}
+	\caption{Boxplot of the FID scores for 16 learning rate combinations on four datasets: (a) CIFAR-10, (b) STL-10, (c) CelebA, (d) LSUN-bedroom, using four loss functions, Hinge, MMD-rbf, MMD-rep and MMD-rmb. Spectral normalization was applied to discriminator with two power iteration methods: PICO and PIM. For PICO, five coefficients \(C^K\) were tested: 16, 32, 64, 128, and 256. A learning rate combination was considered diverged or poorly-performed if the FID score exceeded a threshold \(\tau\), which is 50, 80, 50, 90 for CIFAR-10, STL-10, CelebA and LSUN-bedroom respectively. The box quartiles were plotted based on the cases with \(\text{FID}<\tau\) while the number of diverged or poorly-performed cases (out of 16 learning rate combinations) was shown above each box if it is non-zero. We introduced \(\tau\) because the diverged cases often had arbitrarily large and non-meaningful FID scores.\label{fig:pico_vs_pim}}
+\end{figure}
+
+\begin{table}[t]
+	\caption{Fr\'echet Inception distance (FID) on image generation tasks using spectral normalization with two power iteration methods PICO and PIM}
+	\centering
+	\label{Tab:pico_pim_fid}
+	%\setlength\extrarowheight{2pt}
+	\begin{threeparttable}
+		\begin{tabular}{L{2cm} c c c c c c c c c}
+			\toprule
+			\multirow{2}{*}{Methods} & \multirow{2}{1cm}{\(C^K\) in PICO} & \multicolumn{2}{c}{CIFAR-10} & \multicolumn{2}{c}{STL-10} & \multicolumn{2}{c}{CelebA} & \multicolumn{2}{c}{LSUN-bedrom} \\
+			\cmidrule(lr){3-4} \cmidrule(lr){5-6} \cmidrule(lr){7-8} \cmidrule(lr){9-10}
+			& & PIM & PICO & PIM & PICO & PIM & PICO & PIM & PICO\\
+			\midrule
+			Hinge & 128 & 23.60 & 22.89 & 47.10 & 47.24 & 10.02 & 9.08 & 27.38 & 17.20 \\
+			MMD-rbf & 128 & 26.56 & 26.50 & 53.17 & 54.23 & 13.06 & 12.81 & & \\
+			MMD-rep & 64 & 19.98 & 17.00 & 40.40 & 37.15 & 8.51 & 6.81 & 74.03 & 16.01 \\
+			MMD-rep-b & 64 & 18.24 & 16.65 & 39.78 & 37.31 & 7.09 & 6.42 & 20.12 & 11.22 \\
+			\bottomrule
+		\end{tabular}
+	\iffalse
+		\begin{tablenotes}
+			\item[1] MS-SSIM is not compatible with CIFAR-10 and STL-10 which have data from many classes; for CelebA and LSUN-bedroom, IS is not meaningful (\cite{mmd_gan_t}); thus they are not shown. \item[2] On LSUN-bedroom, MMD-rbf and MMD-rq did not achieve reasonable results and thus are omitted.
+		\end{tablenotes}
+	\fi
+	\end{threeparttable}
+\end{table}
+
+In this section, we empirically evaluate the effects of coefficient \(C^K\) on the performance of PICO and compare PICO against PIM using several loss functions.
+
+\textbf{Experiment setup:} We used a similar setup as Section~\ref{sec:exp:setup} with the following adjustments. Four loss functions were tested: hinge, MMD-rbf, MMD-rep and MMD-rep-b. Either PICO or PIM was used at each layer of the discriminator. For PICO, five coefficients \(C^K\) were tested: 16, 32, 64, 128 and 256 (note this is the overall coefficient for \(K\) layers; \(K=8\) for CIFAR-10 and STL-10; \(K=10\) for CelebA and LSUN-bedroom; see Appendix \ref{sec:architecture}). FID was used to evaluate the performance of each combination of loss function and power iteration method, e.g., hinge + PICO with \(C^K=16\).
+
+\textbf{Results:} For each combination of loss function and power iteration method, the distribution of FID scores over 16 learning rate combinations is shown in Fig.~\ref{fig:pico_vs_pim}. We separated well-performed learning rate combinations from diverged or poorly-performed ones using a threshold \(\tau\) as the diverged cases often had non-meaningful FID scores. The boxplot shows the distribution of FID scores for good-performed cases while the number of diverged or poorly-performed cases was shown above each box if it is non-zero. 
+
+Fig.~\ref{fig:pico_vs_pim} shows that:
+\begin{enumerate}[label=\arabic*), leftmargin=*]
+	\item When PICO was used, the hinge, MMD-rbf and MMD-rep methods were sensitive to the choices of \(C^K\) while MMD-rep-b was robust. For hinge and MMD-rbf, higher \(C^K\) may result in better FID scores and less diverged cases over 16 learning rate combinations. For MMD-rep, higher \(C^K\) may cause more diverged cases; however, the best FID scores were often achieved with \(C^K=64\) or \(128\).
+	\item For CIFAR-10, STL-10 and CelebA datasets, PIM performed comparable to PICO with \(C^K=128\) or \(256\) on four loss functions. For LSUN bedroom dataset, it is likely that the performance of PIM corresponded to that of PICO with \(C^K>256\). This implies that PIM may result in a relatively loose Lipschitz constraint on deep convolutional networks. 
+	\item MMD-rep-b performed generally better than hinge and MMD-rbf with tested power iteration methods and hyper-parameter configurations. Using PICO, MMD-rep also achieved generally better FID scores than hinge and MMD-rbf. This implies that, given a limited computational budget, the proposed repulsive loss may be a better choice than the hinge and MMD loss for the discriminator.
+\end{enumerate}
+Table~\ref{Tab:pico_pim_fid} shows the best FID scores obtained by PICO and PIM where \(C^K\) was fixed at \(128\) for hinge and MMD-rbf, and \(64\) for MMD-rep and MMD-rep-b. For hinge and MMD-rbf, PICO performed significantly better than PIM on the LSUN-bedroom dataset and comparably on the rest datasets. For MMD-rep and MMD-rep-b, PICO achieved consistently better FID scores than PIM. 
+
+However, compared to PIM, PICO has a higher computational cost which roughly equals the additional cost incurred by increasing the batch size by two (\cite{pico_similar}). This may be problematic when a small batch has to be used due to memory constraints, e.g., when handling high resolution images on a single GPU. Thus, we recommend using PICO when the computational cost is less of a concern. 
+
+\section{Supplementary Experiments}
+\label{sec:supp_exp}
+
+\subsection{Lipschitz Constraint via Gradient Penalty}
+\label{sec:exp:gp}
+
+\begin{table}[t]
+	\begin{minipage}{0.48\linewidth}
+		\centering
+		%\setlength\extrarowheight{2pt}
+		\begin{threeparttable}
+			\caption{Inception score (IS) and Fr\'echet Inception distance (FID) on CIFAR-10 dataset using gradient penalty and different loss functions}
+			\label{Tab:rep_gp}
+			\begin{tabular}{L{2.6cm} c c}
+				\toprule
+				Methods\tnote{1} & IS & FID\\
+				\midrule
+				Real data & 11.31 & 2.09 \\
+				\midrule
+				SMMDGAN\tnote{2} & 7.0 & 31.5 \\
+				SN-SMMDGAN\tnote{2} & \textbf{7.3} & 25.0 \\
+				\midrule
+				MMD-rep-gp & 7.26 & \textbf{23.01} \\
+				\bottomrule
+			\end{tabular}
+			\begin{tablenotes}
+				\item[1] All methods used the same DCGAN architecture. \item[2] Results from \cite{mmd_gp} Table 1.
+			\end{tablenotes}
+		\end{threeparttable}
+	\end{minipage}
+	%
+	\begin{minipage}{0.48\linewidth}
+		\centering
+		%\setlength\extrarowheight{2pt}
+		\begin{threeparttable}
+			\caption{Inception score (IS), Fr\'echet Inception distance (FID) on CIFAR-10 dataset using MMD-rep and different dimensions of discriminator outputs}
+			\label{Tab:rep_os}
+			\begin{tabular}{L{2.2cm} c c c}
+				\toprule
+				Methods & \(C^K\) & IS & FID\\
+				\midrule
+				Real data & & 11.31 & 2.09 \\
+				\midrule
+				MMD-rep-1 & 64 & 7.43 & 22.43 \\
+				MMD-rep-4 & 64 & 7.81 & 17.87 \\
+				MMD-rep-16 & 32 & 8.20 & 16.99 \\
+				MMD-rep-64 & 32 & 8.08 & 15.65 \\
+				MMD-rep-256 & 32 & 7.96 & 16.61 \\
+				\bottomrule
+			\end{tabular}
+		\iffalse
+			\begin{tablenotes}
+				\item[1] Results from \cite{spectral} Table 7. \item[2] Results from \cite{mmd_gp} Table 1.
+			\end{tablenotes}
+		\fi
+		\end{threeparttable}
+	\end{minipage}
+\end{table}
+
+Gradient penalty has been widely used to impose the Lipschitz constraint on the discriminator arguably since Wasserstein GAN (\cite{wgan_gp}). This section explores whether the proposed repulsive loss can be applied with gradient penalty. 
+
+Several gradient penalty methods have been proposed for MMD-GAN. \cite{mmd_gan_t} penalized the gradient norm of witness function \(f_w(\bm{z})=\set{E}_{P_{\rdv{X}}}[k_D(\bm{z},\bm{x})]-\set{E}_{P_G}[k_D(\bm{z},\bm{y})]\) w.r.t. the interpolated sample \(\bm{z}=u\bm{x}+(1-u)\bm{y}\) to one, where \(u\sim\ds{U}(0,1)\)\footnote{Empirically, we found this gradient penalty did not work with the repulsive loss. The reason may be the attractive loss \(L_D^{\text{att}}\) (Eq.~\ref{eq:L_D}) is symmetric in the sense that swapping \(P_{\rdv{X}}\) and \(P_{G}\) results in the same loss; while the repulsive loss is asymmetric and naturally results in varying gradient norms in data space.}.
+%Note that the squared MMD distance (Eq.~\ref{eq:L_G}) is symmetric in the sense that swapping \(P_{\rdv{X}}\) and \(P_{G}\) results in the same metric. %This is not the case for repulsive loss. %Consider \(L_D^{\text{rep}}=\set{E}_{P_{\rdv{X}}}[f_w(\bm{x})]+\set{E}_{P_G}[f_w(\bm{y})]\) and \(L_G^\text{mmd}=\set{E}_{P_{\rdv{X}}}[f_w(\bm{x})]-\set{E}_{P_G}[f_w(\bm{y})]\). During training, GAN with the repulsive loss (Eq.~\ref{eq:rep_loss}) will likely yield \(\set{E}_{P_G}f_w(\bm{y})<0<\set{E}_{P_{\rdv{X}}}f_w(\bm{x})\) and \(|\set{E}_{P_{\rdv{X}}}f_w(\bm{x})|<|\set{E}_{P_G}f_w(\bm{y})|\); while for the attractive loss,
+%This is not the case for repulsive loss, which may explain that empirically we found this formation of gradient penalty significantly deteriorate the performance.  
+More recently, \cite{mmd_gp} proposed to impose the Lipschitz constraint on the mapping \(\phi \circ D\) directly and derived the Scaled MMD (SMMD) as \(SM_k(P,Q)=\sigma_{\mu,k,\lambda}M_k(P,Q)\), where the scale \(\sigma_{\mu,k,\lambda}\) incorporates gradient and smooth penalties. Using the Gaussian kernel and measure \(\mu=P_{\rdv{X}}\) leads to the discriminator loss:
+\begin{equation}\label{eq:smmd}
+	L_D^{\text{SMMD}}=\frac{L_D^{\text{att}}}{1+\lambda\set{E}_{P_{\rdv{X}}}[\norm{\nabla D(\bm{x})}_F^2]}
+\end{equation}
+We apply the same formation of gradient penalty to the repulsive loss:
+\begin{equation}\label{eq:rep_gp}
+	L_{D}^{\text{rep-gp}}=\frac{L_{D}^{\text{rep}}-1}{1+\lambda\set{E}_{P_{\rdv{X}}}[\norm{\nabla D(\bm{x})}_F^2]}
+\end{equation}
+where the numerator \(L_{D}^{\text{rep}}-1\le0\) so that the discriminator will always attempt to minimize both \(L_{D}^{\text{rep}}\) and the Frobenius norm of gradients \(\nabla D(\bm{x})\) w.r.t. real samples. Meanwhile, the generator is trained using the MMD loss \(L_{G}^{\text{mmd}}\) (Eq.~\ref{eq:L_G}).
+
+\textbf{Experiment setup:} The gradient-penalized repulsive loss \(L_{D}^{\text{rep-gp}}\) (Eq.~\ref{eq:rep_gp}, referred to as MMD-rep-gp) was evaluated on the CIFAR-10 dataset. We found \(\lambda=10\) in \cite{mmd_gp} too restrictive and used \(\lambda=0.1\) instead. Same as \cite{mmd_gp}, the output dimension of discriminator was set to one. Since we entrusted the Lipschitz constraint to the gradient penalty, spectral normalization was not used. The rest experiment setup can be found in Section~\ref{sec:exp:setup}.
+
+\textbf{Results:} Table~\ref{Tab:rep_gp} shows that the proposed repulsive loss can be used with gradient penalty to achieve reasonable results on CIFAR-10 dataset. For comparison, we cited the Inception score and FID for Scaled MMD-GAN (SMMDGAN) and Scaled MMD-GAN with spectral normalization (SN-SMMDGAN) from \cite{mmd_gp}. Note that SMMDGAN and SN-SMMDGAN used the same DCGAN architecture as MMD-rep-gp, but were trained for 150k generator updates and 750k discriminator updates, much more than that of MMD-rep-gp (100k for both \(G\) and \(D\)). Thus, the repulsive loss significantly improved over the attractive MMD loss for discriminator. 
+
+\subsection{Output Dimension of Discriminator}
+\label{sec:exp:D_out}
+In this section, we investigate the impact of the output dimension of discriminator on the performance of repulsive loss. 
+
+\textbf{Experiment setup:} We used a similar setup as Section~\ref{sec:exp:setup} with the following adjustments. The repulsive loss was tested on the CIFAR-10 dataset with a variety of discriminator output dimensions: \(d\in\{1, 4, 16, 64, 256\}\). Spectral normalization was applied to discriminator with the proposed PICO method (see Appendix~\ref{sec:pico}) and the coefficients \(C^K\) selected from \(\{16, 32, 64, 128, 256\}\).
+
+\textbf{Results:} Table~\ref{Tab:rep_os} shows that using more than one output neuron in the discriminator \(D\) significantly improved the performance of repulsive loss over the one-neuron case on CIFAR-10 dataset. The reason may be that using insufficient output neurons makes it harder for the discriminator to learn an injective and discriminative representation of the data (see Fig.~\ref{fig:tsne_rep}). However, the performance gain diminished when more neurons were used, perhaps because it becomes easier for \(D\) to surpass the generator \(G\) and trap it around saddle solutions. The computation cost also slightly increased due to more output neurons.
+
+\subsection{Samples of Unsupervised Image Generation}
+\label{sec:uns_samples}
+
+Generated samples on CelebA dataset are given in Fig.~\ref{fig:samples_celebA} and LSUN bedrooms in Fig.~\ref{fig:samples_lsun}.
+
+\begin{figure}[tb]
+	\centering
+	\begin{subfigure}[t]{0.45\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{celebA_real.png}
+		\caption{Real samples\label{fig:sample_celebA_real}}
+	\end{subfigure}
+	~
+	\begin{subfigure}[t]{0.45\linewidth}
+		\centering
+		\includegraphics[width=1\textwidth]{celebA_hinge.png}
+		\caption{Hinge\label{fig:sample_celebA_hinge}}
+	\end{subfigure}
+	
+	\begin{subfigure}[t]{0.45\linewidth}
+		\centering
+		\includegraphics[width=1\textwidth]{celebA_mmd_rbf.png}
+		\caption{MMD-rbf\label{fig:sample_celebA_rbf}}
+	\end{subfigure}
+	~
+	\begin{subfigure}[t]{0.45\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{celebA_mgb.png}
+		\caption{MMD-rbf-b\label{fig:sample_celebA_mgb}}
+	\end{subfigure}
+	
+	\begin{subfigure}[t]{0.45\linewidth}
+		\centering
+		\includegraphics[width=1\textwidth]{celebA_rep.png}
+		\caption{MMD-rep\label{fig:sample_celebA_rep}}
+	\end{subfigure}
+	~
+	\begin{subfigure}[t]{0.45\linewidth}
+		\centering
+		\includegraphics[width=1\textwidth]{celebA_rmb.png}
+		\caption{MMD-rep-b\label{fig:sample_celebA_rmb}}
+	\end{subfigure}
+	%\includegraphics[width=0.5\textwidth]{D5_200_6m}
+	\caption{Image generation using different loss functions on \(64\times64\) CelebA dataset.}  
+	\label{fig:samples_celebA}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	\begin{subfigure}[t]{0.45\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{lsun_real.png}
+		\caption{Real samples\label{fig:sample_lsun_real}}
+	\end{subfigure}
+	~
+	\begin{subfigure}[t]{0.45\linewidth}
+		\centering
+		\includegraphics[width=1\textwidth]{lsun_logistic.png}
+		\caption{Non-saturating\label{fig:sample_lsun_non_saturating}}
+	\end{subfigure}
+	
+	\begin{subfigure}[t]{0.45\linewidth}
+		\centering
+		\includegraphics[width=1\textwidth]{lsun_hinge.png}
+		\caption{Hinge\label{fig:sample_lsun_hinge}}
+	\end{subfigure}
+	~
+	\begin{subfigure}[t]{0.45\linewidth}
+		\centering
+		\includegraphics[width=1\textwidth]{lsun_mgb.png}
+		\caption{MMD-rbf-b\label{fig:sample_lsun_mgb}}
+	\end{subfigure}
+
+	\begin{subfigure}[t]{0.45\linewidth}
+		\centering
+		\includegraphics[width=1\textwidth]{lsun_rep.png}
+		\caption{MMD-rep\label{fig:sample_lsun_rep}}
+	\end{subfigure}
+	~
+	\begin{subfigure}[t]{0.45\linewidth}
+		\centering
+		\includegraphics[width=1\textwidth]{lsun_rmb.png}
+		\caption{MMD-rep-b\label{fig:sample_lsun_rmb}}
+	\end{subfigure}
+	%\includegraphics[width=0.5\textwidth]{D5_200_6m}
+	\caption{Image generation using different loss functions on \(64\times64\) LSUN bedroom dataset.}  
+	\label{fig:samples_lsun}
+\end{figure}
+
+\end{appendices}
+
+\end{document}

@@ -1,0 +1,25 @@
+\newcommand{\galleryRowSintel}[6]{\vspace*{-0.075cm} \includegraphics[width=0.2\textwidth]{figures/gallery/#1} & \includegraphics[width=0.2\textwidth]{figures/gallery/#2} &  \includegraphics[width=0.2\textwidth]{figures/gallery/#3} &  \includegraphics[width=0.2\textwidth]{figures/gallery/#4} &  \includegraphics[width=0.2\textwidth]{figures/gallery/#5} &  \includegraphics[width=0.2\textwidth]{figures/gallery/#6} \tabularnewline 
+}
+  \resizebox{\linewidth}{!}{%
+    \setlength{\tabcolsep}{0.7pt}%
+    \begin{tabular}{cccccc}%
+      \multirow{2}{*}{Image Overlay} &
+      \multirow{2}{*}{Ground Truth} &
+      FlowFields \cite{flowfields} &
+      PCA-Flow \cite{pcaflowlayers} &
+      FlowNetS \cite{DFIB15} &
+      FlowNet2 \\
+      &
+      &
+      ($22,\!810$ms)&
+      ($140$ms)&
+      ($18$ms)&
+      ($123$ms)\\
+    \galleryRowSintel{sintel/alley_2_overlay.jpg}{sintel/alley_2_gt.jpg}{sintel/alley_2_FlowFields.jpg}{sintel/alley_2_PCA-Flow.jpg}{sintel/alley_2_FlowNetS.jpg}{sintel/alley_2_FlowNet2.jpg}%
+    % \galleryRowSintel{sintel/ambush_5_0012_0013_overlay.jpg}{sintel/ambush_5_0012_0013_gt.jpg}{sintel/ambush_5_0012_0013_FlowFields.jpg}{sintel/ambush_5_0012_0013_PCA-Flow.jpg}{sintel/ambush_5_0012_0013_FlowNetS.jpg}{sintel/ambush_5_0012_0013_FlowNet2.jpg}%
+    \galleryRowSintel{sintel/cave_2_0007_0008_overlay.jpg}{sintel/cave_2_0007_0008_gt.jpg}{sintel/cave_2_0007_0008_FlowFields.jpg}{sintel/cave_2_0007_0008_PCA-Flow.jpg}{sintel/cave_2_0007_0008_FlowNetS.jpg}{sintel/cave_2_0007_0008_FlowNet2.jpg}%
+    % \galleryRowSintel{sintel/cave_4_0038_0039_overlay.jpg}{sintel/cave_4_0038_0039_gt.jpg}{sintel/cave_4_0038_0039_FlowFields.jpg}{sintel/cave_4_0038_0039_PCA-Flow.jpg}{sintel/cave_4_0038_0039_FlowNetS.jpg}{sintel/cave_4_0038_0039_FlowNet2.jpg}%
+    \galleryRowSintel{sintel/temple_3_0030_0031_overlay.jpg}{sintel/temple_3_0030_0031_gt.jpg}{sintel/temple_3_0030_0031_FlowFields.jpg}{sintel/temple_3_0030_0031_PCA-Flow.jpg}{sintel/temple_3_0030_0031_FlowNetS.jpg}{sintel/temple_3_0030_0031_FlowNet2.jpg}%
+    \galleryRowSintel{sintel/ambush_2_0017_0018_overlay.jpg}{sintel/ambush_2_0017_0018_gt.jpg}{sintel/ambush_2_0017_0018_FlowFields.jpg}{sintel/ambush_2_0017_0018_PCA-Flow.jpg}{sintel/ambush_2_0017_0018_FlowNetS.jpg}{sintel/ambush_2_0017_0018_FlowNet2.jpg}       \galleryRowSintel{sintel/cave_4_0049_0050_overlay.jpg}{sintel/cave_4_0049_0050_gt.jpg}{sintel/cave_4_0049_0050_FlowFields.jpg}{sintel/cave_4_0049_0050_PCA-Flow.jpg}{sintel/cave_4_0049_0050_FlowNetS.jpg}{sintel/cave_4_0049_0050_FlowNet2.jpg}%
+    \end{tabular}%
+  }%

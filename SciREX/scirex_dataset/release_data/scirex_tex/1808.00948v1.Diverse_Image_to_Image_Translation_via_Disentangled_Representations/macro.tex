@@ -1,0 +1,146 @@
+%\usepackage{mathptmx}
+\usepackage{xspace}
+\usepackage{color}
+\usepackage{multirow}
+\usepackage{ifthen}
+
+\graphicspath{{figures/}}
+\renewcommand{\baselinestretch}{1}
+
+%%% short-hand notations
+% \newcommand{\Paragraph}[1]{\noindent\paragraph{\textbf{#1}}} % avoid indent for paragraph title
+\newcommand{\ul}[1]{\underline{\smash{#1}}}
+\newcommand{\tb}[1]{\textbf{#1}}
+\newcommand{\mb}[1]{\mathbf{#1}}
+\newcommand{\TODO}{{\textbf{\color{red}[TODO]\,}}}
+\newcommand{\n}{\vskip\baselineskip}
+\def\ith{i^\textit{th}}
+
+%%% comments
+\newcommand {\minghsuan}[1]{{\color{red}\bf{Ming-Hsuan: }#1}\normalfont}
+\newcommand {\james}[1]{{\color{magenta}\textbf{James: }#1}\normalfont}
+\newcommand {\jiabin}[1]{{\color{blue}\textbf{Jia-Bin: }#1}\normalfont}
+
+%%% ignore paragraph
+\long\def\ignorethis#1{}
+
+%%% color
+\definecolor{gray}{rgb}{0.35,0.35,0.35}
+\definecolor{MyBlue}{rgb}{0,0.2,0.8}
+\definecolor{MyRed}{rgb}{0.8,0.2,0}
+\definecolor{MyGreen}{rgb}{0.0,0.5,0.1}
+\definecolor{MyGray}{rgb}{0.4,0.4,0.4}
+\def\newtext#1{\textcolor{blue}{#1}}
+\def\torevise#1{\textcolor{red}{#1}}
+%\def\modtext#1{#1} % temporary used for submission
+\def\red#1{\textcolor{red}{#1}}
+\def\blue#1{\textcolor{blue}{#1}}
+\def\green#1{\textcolor{green}{#1}}
+
+%%% adjust margin
+\newlength\paramargin
+\newlength\figmargin
+\newlength\subfigmargin
+\newlength\secmargin
+\newlength\subsecmargin
+\newlength\tabmargin
+\newlength\eqmargin
+
+\setlength{\paramargin}{-0mm}
+\setlength{\figmargin}{-6.0mm}
+\setlength{\subfigmargin}{-1.25mm}
+\setlength{\secmargin}{-2mm}
+\setlength{\subsecmargin}{-2mm}
+\setlength{\tabmargin}{-4.0mm}
+\setlength{\eqmargin}{-2mm}
+
+%% table control
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\newcommand{\mpage}[2]
+{
+\begin{minipage}[t]{#1\linewidth}\centering
+#2
+\end{minipage}
+}
+\newcommand{\mpageb}[2]
+{
+\begin{minipage}[b]{#1\linewidth}\centering
+#2
+\end{minipage}
+}
+
+\newcommand{\Paragraph}[1]
+{\vspace{2mm} \noindent \textbf{#1}}
+
+%% Latin abbreviations 
+\def\ie{i.e.,~}
+\def\eg{e.g.,~}
+\def\etc{etc}
+\def\cf{cf.~}
+\def\viz{viz.~}
+\def\vs{vs.~}
+\def\etal{et~al.\xspace}
+\def\Naive{Na\"{\i}ve}
+\def\naive{na\"{\i}ve}
+
+
+% symbols using in math
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+
+\setlength{\fboxsep}{0pt}
+\def\padg{{\color{white}g}}
+
+\newcommand{\jbox}[2]{
+  \fbox{%
+  	\begin{minipage}{#1}%
+  		\hfill\vspace{#2}%
+  	\end{minipage}%
+  }}
+
+\newcommand{\jblock}[2]{%
+	\begin{minipage}[t]{#1}\vspace{0cm}\centering%
+	#2%
+	\end{minipage}%
+	}
+
+%% reference macro
+\newcommand{\secref}[1]{Section~\ref{sec:#1}}
+\newcommand{\subsecref}[1]{Section~\ref{subsec:#1}}
+\newcommand{\figref}[1]{Figure~\ref{figure:#1}}
+\newcommand{\tabref}[1]{Table~\ref{tab:#1}}
+\newcommand{\eqnref}[1]{\eqref{eq:#1}}
+\newcommand{\thmref}[1]{Theorem~\ref{#1}}
+\newcommand{\prgref}[1]{Program~\ref{#1}}
+\newcommand{\algref}[1]{Algorithm~\ref{#1}}
+\newcommand{\clmref}[1]{Claim~\ref{#1}}
+\newcommand{\lemref}[1]{Lemma~\ref{#1}}
+\newcommand{\ptyref}[1]{Property~\ref{#1}}
+
+
+
+\newcommand{\bbR}{\mathbb{R}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\bI}{\mathbf{I}}
+\newcommand{\bt}{\mathbf{t}}
+\newcommand{\bp}{\mathbf{p}}
+\newcommand{\bB}{\mathbf{B}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\bz}{\mathbf{z}}
+\newcommand{\hB}{\hat{B}}
+\newcommand{\hb}{\hat{b}}
+
+%\newcommand{\Paragraph}[1]{\noindent\textbf{#1}}
+
+\newcommand{\dummyfig}[1]{
+	\centering
+	\fbox{
+		\begin{minipage}[c][0.33\textheight][c]{0.5\textwidth}
+			\centering{#1}
+		\end{minipage}
+	}
+}

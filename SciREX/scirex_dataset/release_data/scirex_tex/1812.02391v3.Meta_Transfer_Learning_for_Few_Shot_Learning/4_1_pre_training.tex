@@ -1,0 +1,26 @@
+\subsection{DNN training on large-scale data}
+\label{sec_large_scale_pretrain}
+
+This phase is similar to the classic pre-training stage as, e.g., pre-training on Imagenet for object recognition~\cite{Russakovsky2015}.
+%
+%
+Here, we do not consider data/domain adaptation from other datasets, and  pre-train on readily available data of few-shot learning benchmarks, allowing for fair comparison with other few-shot learning methods.
+%
+Specifically, for a particular few-shot dataset, we merge all-class data $\mathcal{D}$ for pre-training.
+%
+For instance, for miniImageNet~\cite{VinyalsBLKW16}, there are totally $64$ classes in the training split of $\mathcal{D}$ and each class contains $600$ samples used to pre-train a $64$-class classifier.
+%
+
+We first randomly initialize a feature extractor $\Theta$ (e.g. CONV layers in ResNets~\cite{HeZRS16}) and a classifier $\theta$ (e.g. the last FC layer in ResNets~\cite{HeZRS16}), and then optimize them by gradient descent as follows,
+\begin{equation}\label{eq_large_scale_update}
+ [\Theta; \theta] =: [\Theta; \theta] - \alpha\nabla\mathcal{L}_{\mathcal{D}}\big([\Theta; \theta]\big),
+\end{equation}
+where $\mathcal{L}$ denotes the following empirical loss,
+\begin{equation}\label{eq_large_scale_loss}
+    \mathcal{L}_{\mathcal{D}}\big([\Theta; \theta]\big) = \frac{1}{|\mathcal{D}|}\sum_{(x,y)\in \mathcal{D}}l\big(f_{[\Theta; \theta]}(x), y\big),
+\end{equation}
+e.g. cross-entropy loss, and $\alpha$ denotes the learning rate. 
+%
+In this phase, the feature extractor $\Theta$ is learned. It will be frozen in the following meta-training and meta-test phases, as shown in Figure~\ref{main_framework_meta_transf_hard_task}. 
+%
+The learned classifier $\theta$ will be discarded, because subsequent few-shot tasks contain different classification objectives, e.g. $5$-class instead of $64$-class classification for miniImageNet~\cite{VinyalsBLKW16}.

@@ -1,0 +1,165 @@
+We begin with a more formal presentation of the ideas sketched in
+Figure~\ref{fig:fractalnet}.  Convolutional neural networks serve as our
+running example and, in the subsequent section, our experimental platform.
+However, it is worth emphasizing that our framework is more general.  In
+principle, convolutional layers in Figure~\ref{fig:fractalnet} could be
+replaced by a different layer type, or even a custom-designed module or
+subnetwork, in order to generate other fractal architectures.
+
+Let $C$ denote the index of the truncated fractal $f_C(\cdot)$.  Our network's
+structure, connections and layer types, is defined by $f_C(\cdot)$.  A network
+consisting of a single convolutional layer is the base case:
+\begin{equation}
+   f_1(z) = \mathrm{conv}(z)
+   \label{eq:frac-base}
+\end{equation}
+We define successive fractals recursively:
+\begin{equation}
+    f_{C+1}(z) =
+      \left[(f_C \circ f_C)(z)\right] \oplus
+      \left[\mathrm{conv}(z)\right]
+   \label{eq:frac-gen}
+\end{equation}
+where $\circ$ denotes composition and $\oplus$ a join operation.  When drawn
+in the style of Figure~\ref{fig:fractalnet}, $C$ corresponds to the number of
+columns, or width, of network $f_C(\cdot)$.  Depth, defined to be the number of
+$\mathrm{conv}$ layers on the longest path between input and output, scales as
+$2^{C-1}$.  Convolutional networks for classification typically intersperse
+pooling layers.  We achieve the same by using $f_C(\cdot)$ as a building block
+and stacking it with subsequent pooling layers $B$ times, yielding total depth
+$B \cdot 2^{C-1}$.
+
+The join operation $\oplus$ merges two feature blobs into one.  Here, a blob
+is the result of a $\mathrm{conv}$ layer: a tensor holding activations for a
+fixed number of channels over a spatial domain.  The channel count corresponds
+to the size of the filter set in the preceding $\mathrm{conv}$ layer.  As the
+fractal is expanded, we collapse neighboring joins into a single
+$\mathrm{join}$ layer which spans multiple columns, as shown on the right side
+of Figure~\ref{fig:fractalnet}.  The $\mathrm{join}$ layer merges all of its
+input feature blobs into a single output blob.
+
+Several choices seem reasonable for the action of a $\mathrm{join}$ layer,
+including concatenation and addition.  We instantiate each $\mathrm{join}$
+to compute the element-wise mean of its inputs.  This is appropriate for
+convolutional networks in which channel count is set the same for all
+$\mathrm{conv}$ layers within a fractal block.  Averaging might appear similar
+to {\resnet}'s addition operation, but there are critical differences:
+\begin{itemize}
+   \item{
+      {\Resnet} makes clear distinction between pass-through and residual
+      signals.  In {\fracnet}, no signal is privileged.  Every input to a
+      $\mathrm{join}$ layer is the output of an immediately preceding
+      $\mathrm{conv}$ layer.  The network structure alone cannot identify any
+      as being primary.
+   }
+   \item{
+      {\Droppath} regularization, as described next in
+      Section~\ref{sec:droppath}, forces each input to a $\mathrm{join}$ to
+      be individually reliable.  This reduces the reward for even implicitly
+      learning to allocate part of one signal to act as a residual for
+      another.
+   }
+   \item{
+      Experiments show that we can extract high-performance subnetworks
+      consisting of a single column (Section~\ref{sec:evaluation}).  Such a
+      subnetwork is effectively devoid of joins, as only a single path is
+      active throughout.  They produce no signal to which a residual could be
+      added.
+   }
+\end{itemize}
+Together, these properties ensure that $\mathrm{join}$ layers are not an
+alternative method of residual learning.
+
+\subsection{Regularization via {\Droppath}}
+\label{sec:droppath}
+
+\begin{figure}[t]
+   \begin{center}
+      \includestandalone{include/fig-droppath}
+   \end{center}
+   \vspace{-0.02\linewidth}
+   \caption{
+      \textbf{{\Droppath}.}
+         A fractal network block functions with some connections between layers
+         disabled, provided some path from input to output is still available.
+         {\Droppath} guarantees at least one such path, while sampling a
+         subnetwork with many other paths disabled.  During training,
+         presenting a different active subnetwork to each mini-batch prevents
+         co-adaptation of parallel paths.  A global sampling strategy
+         returns a single column as a subnetwork.  Alternating it with local
+         sampling encourages the development of individual columns as
+         performant stand-alone subnetworks.
+   }
+   \label{fig:droppath}
+\end{figure}
+
+{\Dropout}~\citep{dropout} and {\dropconn}~\citep{dropconnect} modify
+interactions between sequential network layers in order to discourage
+co-adaptation.  Since fractal networks contain additional macro-scale
+structure, we propose to complement these techniques with an analogous
+coarse-scale regularization scheme.
+
+Figure~\ref{fig:droppath} illustrates {\droppath}.  Just as {\dropout} prevents
+co-adaptation of activations, {\droppath} prevents co-adaptation of parallel
+paths by randomly dropping operands of the $\mathrm{join}$ layers.  This
+discourages the network from using one input path as an anchor and another as a
+corrective term (a configuration that, if not prevented, is prone to
+overfitting).  We consider two sampling strategies:
+\begin{itemize}
+   \item{
+      \textbf{Local}: a $\mathrm{join}$ drops each input with fixed
+      probability, but we make sure at least one survives.
+   }
+   \item{
+      \textbf{Global}: a single path is selected for the entire network.
+      We restrict this path to be a single column, thereby promoting
+      individual columns as independently strong predictors.
+   }
+\end{itemize}
+As with {\dropout}, signals may need appropriate rescaling.  With element-wise
+means, this is trivial; each $\mathrm{join}$ computes the mean of only its
+active inputs.
+
+In experiments, we train with {\dropout} and a mixture model of $50\%$ local
+and $50\%$ global sampling for {\droppath}.  We sample a new subnetwork each
+mini-batch.  With sufficient memory, we can simultaneously evaluate one local
+sample and all global samples for each mini-batch by keeping separate
+networks and tying them together via weight sharing.
+
+While fractal connectivity permits the use of paths of any length, global
+{\droppath} forces the use of many paths whose lengths differ by orders of
+magnitude (powers of $2$).  The subnetworks sampled by {\droppath} thus exhibit
+large structural diversity.  This property stands in contrast to stochastic
+depth regularization of {\resnet}, which, by virtue of using a fixed drop
+probability for each layer in a chain, samples subnetworks with a concentrated
+depth distribution~\citep{huang2016stochasticdepth}.
+
+Global {\droppath} serves not only as a regularizer, but also as a diagnostic
+tool.  Monitoring performance of individual columns provides insight into both
+the network and training mechanisms, as Section~\ref{sec:introspection}
+discusses in more detail.  Individually strong columns of various depths also
+give users choices in the trade-off between speed (shallow) and accuracy
+(deep).
+
+\subsection{Data Augmentation}
+\label{sec:data-aug}
+
+Data augmentation can reduce the need for regularization.  {\Resnet}
+demonstrates this, achieving 27.22\% error rate on CIFAR-100 with augmentation
+compared to 44.76\% without~\citep{huang2016stochasticdepth}.  While
+augmentation benefits fractal networks, we show that {\droppath} provides
+highly effective regularization, allowing them to achieve competitive results
+even without data augmentation.
+
+\subsection{Implementation Details}
+\label{sec:implementation}
+
+We implement {\fracnet} using Caffe~\citep{caffe14}.  Purely for convenience,
+we flip the order of pool and join layers at the end of a block in
+Figure~\ref{fig:fractalnet}.  We pool individual columns immediately before
+the joins spanning all columns, rather than pooling once immediately after
+them.
+
+We train fractal networks using stochastic gradient descent with momentum.  As
+now standard, we employ batch normalization together with each $\mathrm{conv}$
+layer (convolution, batch norm, then ReLU).

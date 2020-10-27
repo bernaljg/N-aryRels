@@ -1,0 +1,240 @@
+\section{The Label Bias Problem}
+\label{sec:label_bias}
+
+Intuitively, we would like the model to be able to revise an earlier
+decision made during search, when later evidence becomes available
+that rules out the earlier decision as incorrect. At first glance, it
+might appear that a locally normalized model used in conjunction with
+beam search or exact search is able to revise earlier
+decisions. However the label bias problem 
+(see \newcite{bottou},
+\newcite{collins99}
+pages 222-226,
+\newcite{crf},
+\newcite{bottou-lecun-2005}, 
+\newcite{smithJohnson07}) means that locally normalized models often have a very
+weak ability to revise earlier decisions.
+%% Our experiments show consistent improvements in accuracy for globally
+%% normalized models over locally normalized models with beam search; we
+%% suspect that the label bias problem is a major source of this
+%% difference.
+
+This section gives a formal perspective on the label bias problem,
+through a proof that globally normalized models are strictly more
+expressive than locally normalized models. The theorem was originally
+proved\footnote{More precisely \newcite{smithJohnson07} prove the
+  theorem for models with potential functions of the form
+  $\score(d_{i-1}, d_i, x_i)$; the generalization to potential
+  functions of the form $\score(d_{1:i-1}, d_i, x_{1:i})$ is
+  straightforward.}  by \newcite{smithJohnson07}.
+The example
+underlying the proof gives a clear illustration of the label bias
+problem.\footnote{\newcite{smithJohnson07} cite Michael Collins
+as the source of the example underlying the proof.  
+Note that the theorem refers to {\em conditional} models of the form
+$p(d_{1:n} | x_{1:n})$ with global or local normalization.
+Equivalence (or non-equivalence) results for {\em joint} models of the
+form $p(d_{1:n}, x_{1:n})$ are quite different: for example
+results from \newcite{chi99} and \newcite{abneyEtal99} imply that weighted
+context-free grammars (a globally normalized joint model) and
+probabilistic context-free grammars (a locally normalized joint model)
+are equally expressive.}
+
+
+\paragraph{Global Models can be Strictly More Expressive than
+Local Models}
+Consider a tagging problem where the task is to map an input sequence
+$x_{1:n}$ to a decision sequence $d_{1:n}$.
+First, consider a locally normalized model
+where we restrict the scoring function to access only the first
+$i$ input symbols $x_{1:i}$ when scoring decision $d_i$.
+We will return to this restriction soon.
+The scoring function $\score$ can be an otherwise arbitrary function of the
+tuple $\langle d_{1:i-1}, d_i, x_{1:i} \rangle$:
+\begin{align*}
+p_L(d_{1:n} | x_{1:n})
+&=\prod_{i=1}^n p_L(d_i | d_{1:i-1}, x_{1:i}) \\
+&= \frac{\exp \sum_{i=1}^n \score(d_{1:i-1},d_i, x_{1:i}) }
+{\prod_{i=1}^n Z_L(d_{1:i-1}, x_{1:i})}.
+\end{align*}
+
+Second, consider a globally normalized model
+\begin{align*}
+&p_G(d_{1:n} | x_{1:n}) 
+= \frac{\exp \sum_{i=1}^n \score(d_{1:i-1},d_i, x_{1:i}) }
+{Z_G(x_{1:n})}.
+\end{align*}
+This model again makes use of a scoring function $\score(d_{1:i-1},
+d_i, x_{1:i})$ restricted to the first $i$ input symbols when
+scoring decision $d_i$.
+
+Define ${\cal P}_L$ to be the set of all possible distributions
+$p_L(d_{1:n} | x_{1:n})$ under the local model obtained
+as the scores $\score$ vary. Similarly, define ${\cal P}_G$ to be the
+set of all possible distributions $p_G(d_{1:n} | x_{1:n})$
+under the global model. Here a ``distribution'' is a function
+from a pair $(x_{1:n}, d_{1:n})$ to a probability
+$p(d_{1:n} | x_{1:n})$.
+Our main result is the following:
+
+\begin{theorem} See also \newcite{smithJohnson07}.
+%\hspace*{1cm}%\newline
+\hspace*{0.5cm}${\cal P}_L$ is a strict subset of ${\cal P}_G$, that is ${\cal P}_L
+  \subsetneq {\cal P}_G$.
+\end{theorem}
+
+To prove this we will first prove that ${\cal P}_L \subseteq {\cal
+  P}_G$. This step is straightforward. We then show that
+${\cal P}_G \nsubseteq {\cal P}_L$; that is, there are distributions
+in ${\cal P}_G$ that are not in ${\cal P}_L$.
+The proof that ${\cal P}_G \nsubseteq {\cal P}_L$ gives a clear
+illustration of the label bias problem.
+
+
+{\em Proof that ${\cal P}_L \subseteq {\cal P}_G$:} 
+We need to show that for any locally normalized
+distribution $p_L$, we can construct a globally normalized model $p_G$
+such that $p_G = p_L$.
+Consider a locally normalized model with scores
+$\score(d_{1:i-1}, d_i, x_{1:i})$.
+Define a global model $p_G$ with scores
+\[
+\score'(d_{1:i-1}, d_i, x_{1:i}) = 
+\log p_L(d_i | d_{1:i-1}, x_{1:i}).
+\]
+Then it is easily verified that 
+\[p_G(d_{1:n} | x_{1:n}) = 
+p_L(d_{1:n} | x_{1:n}) \]
+for all $x_{1:n}, d_{1:n}$.
+$\qed$
+
+In proving ${\cal P}_G \nsubseteq {\cal P}_L$ we will use a
+simple problem where every example seen in training or test data is
+one of the following two tagged sentences:
+\begin{align}
+x_1 x_2 x_3 = \hbox{a b c}, \;\;d_1 d_2 d_3 = \hbox{A B C}
+\nonumber \\
+x_1 x_2 x_3 = \hbox{a b e}, \;\;d_1 d_2 d_3 = \hbox{A D E}
+\label{eq:lbexample}
+\end{align}
+
+Note that the input $x_2 = \hbox{b}$ is ambiguous: it can take tags
+$\hbox{B}$ or $\hbox{D}$. This ambiguity is resolved when the next
+input symbol, {\tt c} or {\tt e}, is observed.
+
+Now consider a globally normalized model, where the scores
+$\score(d_{1:i-1}, d_i, x_{1:i})$ are defined as follows. 
+Define ${\cal T}$ as the set $\{ (A, B), (B, C), (A, D), (D, E)\}$
+of bigram tag transitions seen in the data. Similarly, define ${\cal
+  E}$ as the set $\{ (a, A), (b, B), (c, C), (b, D), (e, E)\}$ of
+(word, tag) pairs seen in the data. We define 
+\begin{align}
+&\score(d_{1:i-1}, d_i, x_{1:i})
+\label{eq:alpha} \\
+&=\alpha \times \llbracket(d_{i-1}, d_i) \in {\cal T} \rrbracket
++ \alpha \times \llbracket (x_i, d_i) \in {\cal E} \rrbracket
+\nonumber
+\end{align}
+where $\alpha$ is the single scalar parameter of the model,
+and $\llbracket \pi \rrbracket = 1$ if $\pi$ is true, $0$ otherwise.
+
+
+{\em Proof that ${\cal P}_G \nsubseteq {\cal P}_L$:} We
+will construct a globally normalized model $p_G$ such that there is
+no locally normalized model such that $p_L = p_G$.
+
+Under the definition in Eq.~\eqref{eq:alpha},
+it is straightforward to show that
+\begin{align*}\small
+\lim_{\alpha \rightarrow \infty} p_G(\hbox{A B C} | \hbox{a b c}) =
+\lim_{\alpha \rightarrow \infty} p_G(\hbox{A D E} | \hbox{a b e}) = 1 .
+%% \lim_{\rule{0pt}{1.5ex}\mathclap{\alpha \rightarrow \infty}} p_G(\hbox{A B C} | \hbox{a b c}) 
+%% =
+%% \lim_{\rule{0pt}{1.5ex}\mathclap{\alpha \rightarrow \infty}} p_G(\hbox{A D E} | \hbox{a b e}) = 1 .
+\end{align*}
+
+In contrast, under {\em any} definition for $\score(d_{1:i-1}, d_i,
+x_{1:i})$, we must have
+\begin{equation}
+p_L(\hbox{A B C} | \hbox{a b c}) + 
+p_L(\hbox{A D E} | \hbox{a b e}) \leq 1
+\label{eq:localbad}
+\end{equation}
+This follows because $p_L(\hbox{A B C} | \hbox{a b c})
+= p_L(\hbox{A} | \hbox{a}) \times
+p_L(\hbox{B} | \hbox{A}, \hbox{a b}) \times p_L(\hbox{C} | \hbox{A B},
+\hbox{a b c})$
+and $p_L(\hbox{A D E} | \hbox{a b e})
+= p_L(\hbox{A} | \hbox{a}) \times
+p_L(\hbox{D} | \hbox{A}, \hbox{a b}) \times
+p_L(\hbox{E} | \hbox{A D}, \hbox{a b e})$.
+%% \begin{align}
+%% &p_L(\hbox{A B C} | \hbox{a b c}) \nonumber \\
+%% &= p_L(\hbox{A} | \hbox{a}) \times 
+%% p_L(\hbox{B} | \hbox{A}, \hbox{a b}) \times 
+%% p_L(\hbox{C} | \hbox{A B}, \hbox{a b c}) \nonumber
+%% \end{align} 
+%% and
+%% \begin{align}
+%% &p_L(\hbox{A D E} | \hbox{a b e}) \nonumber \\
+%% &= p_L(\hbox{A} | \hbox{a}) \times 
+%% p_L(\hbox{D} | \hbox{A}, \hbox{a b}) \times 
+%% p_L(\hbox{E} | \hbox{A D}, \hbox{a b e}) \nonumber
+%% \end{align} 
+The inequality $p_L(\hbox{B} | \hbox{A}, \hbox{a b}) + p_L(\hbox{D} |
+\hbox{A}, \hbox{a b}) \leq 1$ then immediately implies
+Eq.~\eqref{eq:localbad}.
+
+It follows that for sufficiently large values of $\alpha$, we have 
+$p_G(\hbox{A B C} | \hbox{a b c}) + p_G(\hbox{A D E} | \hbox{a b e}) >
+1$, and given Eq.~\eqref{eq:localbad}
+it is impossible to define a locally normalized
+model with $p_L(\hbox{A B C} | \hbox{a b c}) = p_G(\hbox{A B C} |
+\hbox{a b c})$ and $p_L(\hbox{A D E} | \hbox{a b e}) = 
+p_G(\hbox{A D E} | \hbox{a b e})$.
+$\qed$
+
+%%%%%%%%%%%%%%%
+% Inserted here so that it appears in the right place in the paper.
+\input{tex/experiments-tagging-results}
+%%%%%%%%%%%%%%
+
+Under the restriction that scores $\score(d_{1:i-1}, d_i, x_{1:i})$
+depend only on the first $i$ input symbols,
+the globally normalized model is still able to model the data in
+Eq.~\eqref{eq:lbexample}, while the locally normalized model
+fails (see Eq.~\ref{eq:localbad}). The ambiguity at input symbol
+{\tt b} is naturally resolved when the next symbol ({\tt c} or {\tt
+  e}) is observed, but the locally normalized model is not able to
+revise its prediction.
+
+It is easy to fix the locally normalized model for the example
+in Eq.~\eqref{eq:lbexample} by
+allowing scores $\score(d_{1:i-1}, d_i, x_{1:i+1})$ that 
+take into account the input symbol $x_{i+1}$. 
+More generally we can have a model of the form $\score(d_{1:i-1}, d_i, x_{1:i+k})$
+where the integer $k$ specifies the amount of lookahead in the model.
+Such lookahead is common in practice, but insufficient in general.
+For every amount of lookahead $k$, 
+we can construct examples that cannot be modeled
+with a locally normalized model
+by duplicating the middle input {\tt b} in (\ref{eq:lbexample}) $k+1$ times.
+Only a local model with scores
+$\score(d_{1:i-1}, d_i, x_{1:n})$ that considers the entire
+input can capture any distribution $p(d_{1:n} | x_{1:n})$:
+in this case the decomposition
+$ p_L(d_{1:n} | x_{1:n}) = \prod_{i=1}^n p_L(d_i | d_{1:i-1}, x_{1:n}) $
+makes no independence assumptions.
+
+However, increasing the amount of context used as input comes
+at a cost, requiring more powerful learning algorithms, and
+potentially more training data. For a detailed analysis of the trade-offs
+between structural features in CRFs and more powerful local classifiers
+without structural constraints,
+see \newcite{liang08structure}; in these experiments local classifiers
+are unable to reach the performance of CRFs on problems such as parsing
+and named entity recognition where structural constraints are important.
+Note that there is nothing to preclude an approach that makes use of
+both global normalization and more powerful scoring functions
+$\score(d_{1:i-1}, d_i, x_{1:n})$, obtaining the best of both worlds.
+The experiments that follow make use of both.

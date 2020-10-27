@@ -1,0 +1,308 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\appendix
+
+\section{Contraction Map Example}
+\label{appendix:contraction-example}
+
+Consider a linear 1-hidden unit cycle-structured GNN with $N$ nodes
+$\{1,\dots, N\}$. For simplicity we ignored all edge labels and node labels,
+equivalently this is a simple example with $\numNodeLabels=1$ and
+$\numEdgeLabels=1$.
+At each timestep $t$ we update hidden states $h_1, \ldots, h_N$
+as
+\begin{align}
+  h_i^{(t)} & = m_{i} \cdot h_{i-1}^{(t-1)} + b_{i}, \label{eq:simple-recurrence}
+\end{align}
+%
+for each $i$, where $m_i$ and $b_i$ are parameters of the propagation model.  We use the convention that
+$h_{j}$ cycles around and refers to $h_{N+j}$
+when $j \le 0$.
+Let $\hv^{(t)} = [h^{(t)}_1, \ldots, h^{(t)}_N]^\top$,
+\begin{align}
+  \Mv = \left[
+    \begin{array}{ccccc}
+      0   & 0      & 0      & \ldots  & m_1 \\
+      m_2 & 0      & 0      &         & 0 \\
+      0   & m_3    & 0      &         & 0 \\
+          & \vdots &        & \ddots  &  \\
+      0   & 0      &        & m_{N}   & 0 
+    \end{array}
+    \right]
+\end{align}
+and $\bv = [b_1, \ldots, b_{N}]^\top$.
+We can write the joint update for all $i$ as
+\begin{align}
+  \hv^{(t)} = \Mv \hv^{(t-1)} + \bv = T(\hv^{(t-1)})
+\end{align}
+%
+Restrict the update to define a contraction mapping in the
+Euclidean metric. This means that there is some $\rho < 1$ such that for any $\hv, \hv'$,
+\begin{align}\label{eq:contraction-map-definition}
+||T(\hv) - T(\hv') || < \rho ||\hv - \hv'||,
+\end{align}
+or in other words,
+\begin{align}
+|| \Mv (\hv - \hv') || < \rho ||\hv - \hv'||.
+\end{align}
+%
+We can immediately see that this implies that $|m_i| < \rho$ for
+each $i$ by letting $\hv$ be the elementary vector that is all
+zero except for a 1 in position $i-1$ and letting $\hv'$ be the all zeros vector.
+
+Expanding Eq.~\ref{eq:simple-recurrence}, we get
+\begin{align}
+  h_i^{(t)} & = m_{i} \cdot (m_{i-1} h_{i-1}^{(t-2)} + b_{i-1}) + b_{i}
+    \nonumber\\
+            & = m_{i} m_{i-1} h_{i-1}^{(t-2)} + m_{i} b_{i-1} + b_{i}
+    \nonumber\\
+            & = m_{i} m_{i-1} (m_{i-2} h_{i-2}^{(t-3)} + b_{i-2}) + m_{i}
+    b_{i-1} + b_{i} \nonumber\\
+            & = m_{i} m_{i-1} m_{i-2} h_{i-2}^{(t-3)} + m_{i} m_{i-1} b_{i-2} + m_{i} b_{i-1} + b_{i}.
+\end{align}
+%
+In the GNN model, node label $l_i$ controls which values of $m_i$
+and $b_i$ are used during the propagation. Looking at this expansion
+and noting that $m_i < \rho$ for all $i$, we see that information about
+labels of nodes $\delta$ away will decay at a rate of
+$\left(\frac{1}{\rho}\right)^\delta$.
+Thus, at least in this simple case, the restriction that $T$ be
+a contraction means that it is not able to maintain long-range
+dependencies.
+
+\subsection{Nonlinear Case}
+
+The same analysis can be applied to a nonlinear update, i.e.
+\begin{equation}
+    h^{(t)}_i = \sigma\left(m_i \cdot h^{(t-1)}_{i-1} + b_i\right),
+\end{equation}
+where $\sigma$ is any nonlinear function. Then $T(\hv) =
+\sigma\left(\Mv\hv + \bv\right)$. Let $T(\hv)=[T_1(\hv), ...,
+T_N(\hv)]^\top$, where $T_i(\hv^{(t-1)}) = h_i^{(t)}$. The contraction map
+definition Eq.~\ref{eq:contraction-map-definition} implies that each entry of
+the Jacobian matrix of $T$ is bounded by $\rho$, i.e.
+\begin{equation}
+    \left|\pdiff{T_i}{h_j}\right| < \rho, \qquad \forall i, \forall j.
+\end{equation}
+To see this, consider two vectors $\hv$ and $\hv'$, where $h_k=h_k', \forall
+k\neq j$ and $h_j + \Delta = h_j'$. The definition in
+\eqref{eq:contraction-map-definition} implies that for all $i$,
+\begin{equation}
+    ||T_i(\hv) - T_i(\hv')|| \le ||T(\hv) - T(\hv')|| < \rho |\Delta|.
+\end{equation}
+Therefore
+\begin{equation}
+\left\|\frac{T_i(h_1, ..., h_{j-1}, h_j, h_{j+1}, ..., h_N) - T_i(h_1, ...,
+h_{j-1}, h_j+\Delta, h_{j+1}, ..., h_N)}{\Delta}\right\| < \rho,
+\end{equation}
+where the left hand side is $\left\|\pdiff{T_i}{h_j}\right\|$ by definition as
+$\Delta\rightarrow 0$.
+
+When $j=i-1$, 
+\begin{equation}
+    \left|\pdiff{T_i}{h_{i-1}}\right| < \rho.
+\end{equation}
+Also, because of the special cycle graph structure, for all other $j$s we have
+$\pdiff{T_i}{h_j}=0$.  Applying this to the update at timestep $t$, we get
+\begin{equation}
+    \left|\pdiff{h^{(t)}_i}{h^{(t-1)}_{i-1}}\right| < \rho.
+\end{equation}
+
+Now let's see how a change in $h^{(1)}_1$ could affect $h^{(t)}_t$.  Using
+the chain rule and the special graph structure, we have
+\begin{align}
+    \left|\pdiff{h^{(t)}_t}{h^{(1)}_1}\right| &=
+    \left|\pdiff{h^{(t)}_t}{h^{(t-1)}_{t-1}}\cdot
+    \pdiff{h^{(t-1)}_{t-1}}{h^{(t-2)}_{t-2}}\cdots
+    \pdiff{h^{(2)}_2}{h^{(1)}_1}\right| \nonumber\\
+    &= 
+    \left|\pdiff{h^{(t)}_t}{h^{(t-1)}_{t-1}}\right|\cdot
+    \left|\pdiff{h^{(t-1)}_{t-1}}{h^{(t-2)}_{t-2}}\right|\cdots
+    \left|\pdiff{h^{(2)}_2}{h^{(1)}_1}\right| \nonumber\\
+    &< \rho\cdot \rho\cdots \rho = \rho^{t-1}.
+\end{align}
+As $\rho < 1$, this derivative will approach 0 exponentially fast as $t$
+grows. Intuitively, this means that the impact one node has on another node
+far away will decay exponetially, therefore making it difficult to model long
+range dependencies.
+
+
+
+\section{Why are RNN and LSTM so Bad on the Sequence Prediction Tasks?}
+
+RNN and LSTM performance on the sequence prediction tasks, i.e. bAbI task 19,
+shortest path and Eulerian circuit, are very poor compared to single output
+tasks.  The Eulerian circuit task is the one that RNN and LSTM fail most
+dramatically.  A typical training example for this task looks like the
+following,
+\begin{framed}
+\begin{alltt}
+3 connected-to 7
+7 connected-to 3
+1 connected-to 2
+2 connected-to 1
+5 connected-to 7
+7 connected-to 5
+0 connected-to 4
+4 connected-to 0
+1 connected-to 0
+0 connected-to 1
+8 connected-to 6
+6 connected-to 8
+3 connected-to 6
+6 connected-to 3
+5 connected-to 8
+8 connected-to 5
+4 connected-to 2
+2 connected-to 4
+eval eulerian-circuit 5 7       5,7,3,6,8
+\end{alltt}
+\end{framed}
+This describes a graph with two cycles 3-7-5-8-6 and 1-2-4-0, where 3-7-5-8-6
+is the target cycle and 1-2-4-0 is a smaller distractor graph.  All edges are
+presented twice in both directions for symmetry. The task is to find the cycle
+that starts with the given two nodes and in the direction from the first to
+the second.  The distractor graph is added to increase the difficulty of this
+task, this also makes the output cycle not strictly ``Eulerian''.
+
+For RNN and LSTM the above training example is further transformed into a
+sequence of tokens,
+\begin{framed}
+\begin{alltt}
+n4 e1 n8 eol n8 e1 n4 eol n2 e1 n3 eol n3 e1 n2 eol n6 e1 n8 eol
+n8 e1 n6 eol n1 e1 n5 eol n5 e1 n1 eol n2 e1 n1 eol n1 e1 n2 eol
+n9 e1 n7 eol n7 e1 n9 eol n4 e1 n7 eol n7 e1 n4 eol n6 e1 n9 eol
+n9 e1 n6 eol n5 e1 n3 eol n3 e1 n5 eol q1 n6 n8 ans 6 8 4 7 9
+\end{alltt}
+\end{framed}
+Note the node IDs here are different from the ones in the original symbolic
+data. The RNN and LSTM read through the whole sequence, and start to predict
+the first output when reading the \texttt{ans} token.  Then for each
+prediction step, the \texttt{ans} token is fed as the input and the target
+node ID (treated as a class label) is expected as the output.  In this
+current setup, the output of each prediction step is not fed as the input for
+the next. Our \OurMethodShort~model uses the same setup, where the output
+of one step is not used as input to the next, only the predicted node
+annotations $\LL{k}$ carry over from one step to the next, so the
+comparison is still fair for RNN and LSTM.  Changing both our method and the
+baselines to make use of previous predictions is left as future work.
+
+From this example we can see that the sequences the RNN and LSTM have to
+handle is quite long, close to 80 tokens before the predictions are made. Some
+predictions really depend on long range memory, for example the first edge
+(3-7) and first a few tokens (\texttt{n4 e1 n8}) in the sequence are needed to
+make prediction in the third prediction step (3 in the original symbolic data,
+and 4 in the tokenized RNN data). Keeping long range memory in RNNs is
+challenging, LSTMs do better than RNNs but still can't completely solve the
+problem.
+
+Another challenge about this task is the output sequence does not appear in
+the same order as in the input sequence.  In fact, the data has no sequential
+nature at all, even when the edges are randomly permutated, the target output
+sequence should not change.  The same applies for bAbI task 19 and the shortest
+path task. \OurMethodShorts~are good at handling this type of ``static'' data,
+while RNN and LSTM are not.  However future work is needed to determine how
+best to apply \OurMethodShorts~to temporal sequential data which RNN and LSTM are good at.
+This is one limitation of the \OurMethodShorts~model which we discussed in
+\secref{sec:discussion}.
+
+
+\section{Nested Prediction Details}
+\label{appendix:nested-prediction}
+
+Data structures like \emph{list of lists} are nested data structures, in which
+the \texttt{val} pointer of each node in a data structure points to another data
+structure.  Such data structures can
+be represented in separation logic by allowing predicates to be nested.  For
+example, a list of lists can be represented as $\SLls(x, y, \lambda
+t\rightarrow\SLls(t, \texttt{NULL}))$, where $\lambda t\rightarrow\SLls(t,
+\texttt{NULL})$ is a lambda expression and says that for each node in the
+list from $x$ to $y$, its \texttt{val} pointer $t$ satisfies $\SLls(t,
+\texttt{NULL})$. So there is
+a list from $x$ to $y$, where each node in that list points to another list. A
+simple list without nested structures can be represented as $\SLls(x, y,
+\SLNone)$ where $\SLNone$ represents an empty predicate. Note
+that unlike the non-nested case where the \texttt{val} pointer always points
+to \texttt{NULL}, we have to
+consider the \texttt{val} pointers here in order to describe and handle nested data
+structures.
+
+To make our \OurMethodShorts~able to predict nested formulas, we adapt
+\algoref{alg:seplogic-prediction} to \algoref{alg:seplogic-nesting}. Where
+an outer loop goes through each named variable once and generate a nested predicate
+with the node associated with that variable as the active node. The nested
+prediction procedure handles prediction similarly as in
+\algoref{alg:seplogic-prediction}. Before calling the nested prediction
+procedure recursively, the node annotation update in line
+\ref{alg:line-node-annotation} not only annotates nodes in the current structure
+as ``is-explained'', but also annotates nodes linked to via the ``val'' pointer
+from all nodes in the current structure as ``active''. For the list of lists
+example, after predicting ``$\SLls(x, y,$'', the annotation step annotates all
+nodes in the list from $x$ to $y$ as ``is-explained'' and all nodes the
+\texttt{val} pointer points to from the list as ``active''.  This knowledge is
+not hard coded into the algorithm, the annotation model can learn this
+behavior from data.
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Procedure{OuterLoop}{$\graph$}
+        \Comment{Graph $\graph$ with named program variables}
+        \State{$\LLSym{} \leftarrow $ compute initial labels from $\graph$}
+        \For{each variable name $\SLvar$}
+          \State{$v_\ell\leftarrow$ node associated with $\SLvar$}
+          \State{turn on ``active'' bit for $v_\ell$ in $\LLSym{}$}
+          \State{\Call{PredictNestedFormula}{$\graph$, $\LLSym{}$, $\SLvar$}}
+        \EndFor
+    \EndProcedure
+    \\
+    \Procedure{PredictNestedFormula}{$\graph$, $\LLSym{}$, $\SLvar$}
+      \State{$\HHSym{} \leftarrow $ initialize node vectors by $0$-extending
+        $\LLSym{}$}
+      \While{$\exists$ quantifier needed}\Comment{\textbf{Graph-level Classification ($\dagger$)}}
+        \State{$e \leftarrow$ fresh existentially quantified variable name}
+        \State{$v \leftarrow$ pick node}
+          \Comment{\textbf{Node Selection ($\ddagger$)}}      
+        \State{$\LLSym{} \leftarrow$ turn on ``is-named'' for $v$ in $\LLSym{}$}
+        \State{\algoutput{} ``$\exists e . $''}
+      \EndWhile
+      \If{$\SLvar$ is a lambda variable name}
+        \State{\algoutput{} ``$\lambda~\SLvar.$''}
+      \EndIf
+      \State{$\mathit{pred} \leftarrow$ pick data structure predicate}
+        \Comment{\textbf{Graph-level Classification ($\star$)}}
+      \If{$\mathit{pred} = \SLls$}
+        \State{$\ell_{\mathit{end}} \leftarrow$ pick list end node}
+          \Comment{\textbf{Node Selection ($\heartsuit$)}}
+        \State{$\SLvar_\mathit{end} \leftarrow$ get variable name associated
+        with $\ell_\mathit{end}$}
+        \State{\algoutput{} ``$\SLls(\SLvar, \SLvar_{\mathit{end}}, $''}
+      \ElsIf{$\mathit{pred}=\SLtree$}
+        \State{\algoutput{} ``$\SLtree(\SLvar,$''}
+      \Else
+        \State{\algoutput{} ``$\SLempty(\SLvar)~\ast$''}
+        \State{\Return}
+      \EndIf
+      \State{$\LLSym{} \leftarrow$ update node annotations in $\LLSym{}$}
+        \Comment{\textbf{Node Annotation ($\spadesuit$)}}
+        \label{alg:line-node-annotation}
+      \State{$t \leftarrow$ fresh lambda variable name}
+      \State{\Call{PredictNestedFormula}{$\graph$, $\LLSym{}$, $t$}}
+        \Comment{Recursively predict all nested formulas.}
+      \State{\algoutput{} ``$)~\ast$''}
+    \EndProcedure
+  \end{algorithmic}
+  \caption{Nested separation logic formula prediction procedure}
+  \label{alg:seplogic-nesting}
+\end{algorithm}
+
+
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

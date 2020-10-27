@@ -1,0 +1,13 @@
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{pgf,tikz}
+
+
+%------------------------------------------------------------------------------
+\usepgfplotslibrary{external}
+\tikzexternalize
+\newcommand{\extfig}[2]{\tikzsetnextfilename{fig/extern/#1}{#2}}
+\newcommand{\extdata}[1]{\input{#1}}
+%------------------------------------------------------------------------------
+
+\newcommand{\leg}[1]{\addlegendentry{#1}}

@@ -1,0 +1,25 @@
+%\resizebox{0.8\textwidth}{!}{
+\begin{tabular}{l | l | l | l | l | l }
+\# Fmaps    & Classic \cite{sainath2013deep, soltau2014joint, saon2015ibm}  & VB(X)          & VC(X)          & VD(X)          & WD(X)          \\ \hline
+64  &          & conv(3,64)     & conv(3,64)     & conv(3,64)     & conv(3,64)     \\
+    &          & conv(64,64)    & conv(64,64)    & conv(64,64)    & conv(64,64)    \\ %\hline
+    &          & pool 1x3       & pool 1x2       & pool 1x2       & pool 1x2       \\ \hline
+128 &          & conv(64, 128)  & conv(64, 128)  & conv(64, 128)  & conv(64, 128)  \\
+    &          & conv(128, 128) & conv(128, 128) & conv(128, 128) & conv(128, 128) \\ %\hline
+    &          & pool 2x2       & pool 2x2       & pool 1x2       & pool 1x2       \\ \hline
+256 &          &                & conv(128, 256) & conv(128, 256) & conv(128, 256) \\
+    &          &                & conv(256, 256) & conv(256, 256) & conv(256, 256) \\
+    &          &                &                &                & conv(256, 256) \\ %\hline
+    &          &                & pool 1x2       & pool 2x2       & pool 2x2       \\ \hline
+512 & conv9x9(3,512) &          &                & conv(256, 512) & conv(256, 512) \\
+    & pool 1x3  &       &                & conv(512, 512) & conv(512, 512) \\
+    & conv3x4(512,512) &                &                &                & conv(512, 512) \\ %\hline
+    &          &                &                & pool 2x2       & pool 2x2       \\ \hline
+    & \multicolumn{5}{c}{FC 2048}                                                  \\
+    & \multicolumn{5}{c}{FC 2048}                                                  \\
+    & \multicolumn{5}{c}{(FC 2048)}                                                \\
+    & \multicolumn{5}{c}{FC output size}                                           \\ \hline
+    & \multicolumn{5}{c}{Softmax}                                                  \\
+%    \hline
+\end{tabular}
+%}

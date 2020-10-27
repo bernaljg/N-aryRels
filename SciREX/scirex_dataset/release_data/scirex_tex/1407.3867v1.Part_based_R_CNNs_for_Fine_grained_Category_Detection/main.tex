@@ -1,0 +1,49 @@
+\documentclass[runningheads]{llncs}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb} % define this before the line numbering.
+\usepackage{color}
+\usepackage[width=122mm,left=12mm,paperwidth=146mm,height=193mm,top=12mm,paperheight=217mm]{geometry}
+%\usepackage{ruler}
+\usepackage{url}
+
+\begin{document}
+\newcommand{\todo}[1]{{\color{red} {\bf TODO:} \it #1}}
+\newcommand{\ning}[1]{{\color{blue}{\bf Ning:} \it #1}}
+\renewcommand{\tabcolsep}{0.2cm}
+
+\pagestyle{headings}
+\mainmatter
+%\def\ECCV14SubNumber{1074}  % Insert your submission number here
+
+\title{Part-based R-CNNs for \\ Fine-grained Category Detection}
+
+\titlerunning{Part-based R-CNNs for Fine-grained Category Detection}
+
+\authorrunning{Zhang, Donahue, Girshick, Darrell}
+
+\author{Ning Zhang, Jeff Donahue, Ross Girshick, Trevor Darrell\\
+\texttt{\{nzhang,jdonahue,rbg,trevor\}@eecs.berkeley.edu}}
+\institute{University of California, Berkeley}
+
+\maketitle
+
+\begin{abstract}
+\input{abstract}
+
+\keywords{Fine-grained recognition, object detection, convolutional models}
+\end{abstract}
+
+\input{intro}
+
+\input{related_work}
+
+\input{method}
+
+\input{exp}
+
+\input{conclusion}
+
+\newpage
+\bibliographystyle{splncs03}
+\bibliography{reference}
+\end{document}

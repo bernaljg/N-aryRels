@@ -1,0 +1,175 @@
+
+
+
+
+
+
+
+
+\newcounter{img_idx}
+
+
+
+
+
+
+
+\newcounter{cntone}
+\newcommand\settextone[2]{%
+  \csdef{textone#1}{#2}}
+\newcommand\addtextone[1]{%
+  \stepcounter{cntone}%
+  \csdef{textone\thecntone}{#1}}
+\newcommand\gettextone[1]{%
+  \csuse{textone#1}}
+
+
+\newcounter{cnttwo}
+\newcommand\settexttwo[2]{%
+  \csdef{texttwo#1}{#2}}
+\newcommand\addtexttwo[1]{%
+  \stepcounter{cnttwo}%
+  \csdef{texttwo\thecnttwo}{#1}}
+\newcommand\gettexttwo[1]{%
+  \csuse{texttwo#1}}
+
+
+
+
+
+\addtextone{2007_001311}
+\addtextone{2007_001284}
+\addtextone{2007_001430}
+\addtextone{2008_000149}
+\addtextone{2007_007470}
+\addtextone{2007_000762}
+\addtextone{2008_000533}
+
+
+
+\addtexttwo{2010_000666}
+\addtexttwo{2007_000830}
+\addtexttwo{2007_009346}
+\addtexttwo{2009_003666}
+\addtexttwo{2007_002624}
+\addtexttwo{2010_005860}
+\addtexttwo{2008_003333}
+
+
+
+
+\newcounter{img_total_one}
+\setcounter{img_total_one}{\arabic{cntone}}
+\stepcounter{img_total_one}
+
+\newcounter{img_total_two}
+\setcounter{img_total_two}{\arabic{cnttwo}}
+\stepcounter{img_total_two}
+
+
+
+
+
+\begin{figure}[t]
+\centering
+\resizebox{1\linewidth}{!} {
+    \begin{subfigure}{0.7in}
+    \centering
+    \forloop{img_idx}{1}{\value{img_idx} < \value{img_total_one}}{
+        \includegraphics[width=0.7in,height=.8in,keepaspectratio]
+        {examples/voc2012_val/img/{\gettextone{\arabic{img_idx}}}.jpg}\vspace{2pt}    
+    }
+    \vskip -7pt
+    \caption{Testing}
+    \end{subfigure}\hspace{1pt}
+    \begin{subfigure}{0.7in}
+    \centering
+    \forloop{img_idx}{1}{\value{img_idx} < \value{img_total_one}}{
+        \includegraphics[width=0.7in,height=.8in,keepaspectratio]
+        {examples/voc2012_val/gt/{\gettextone{\arabic{img_idx}}}.png}\vspace{2pt}    
+    }
+    \vskip -7pt
+    \caption{Truth}
+    \end{subfigure}\hspace{1pt}
+    \begin{subfigure}{0.7in}
+    \centering
+    \forloop{img_idx}{1}{\value{img_idx} < \value{img_total_one}}{
+        \includegraphics[width=0.7in,height=.8in,keepaspectratio]
+        {examples/voc2012_val/predict/{\gettextone{\arabic{img_idx}}}.png}\vspace{2pt}    
+    }
+    \vskip -7pt
+    \caption{Predict}
+    \end{subfigure}\hspace{2pt}
+
+    \hfill\vrule\hfill\hspace{2pt}
+
+    \begin{subfigure}{0.7in}
+    \centering
+    \forloop{img_idx}{1}{\value{img_idx} < \value{img_total_two}}{
+        \includegraphics[width=0.7in,height=.8in,keepaspectratio]
+        {examples/voc2012_val/img/{\gettexttwo{\arabic{img_idx}}}.jpg}\vspace{2pt}    
+    }
+    \vskip -7pt
+    \caption{Testing}
+    \end{subfigure}\hspace{1pt}
+    \begin{subfigure}{0.7in}
+    \centering
+    \forloop{img_idx}{1}{\value{img_idx} < \value{img_total_two}}{
+        \includegraphics[width=0.7in,height=.8in,keepaspectratio]
+        {examples/voc2012_val/gt/{\gettexttwo{\arabic{img_idx}}}.png}\vspace{2pt}    
+     }
+     \vskip -7pt
+     \caption{Truth}
+     \end{subfigure}\hspace{1pt}
+     \begin{subfigure}{0.7in}
+     \centering
+     \forloop{img_idx}{1}{\value{img_idx} < \value{img_total_two}}{
+        \includegraphics[width=0.7in,height=.8in,keepaspectratio]
+        {examples/voc2012_val/predict/{\gettexttwo{\arabic{img_idx}}}.png}\vspace{2pt}    
+     }
+     \vskip -7pt
+     \caption{Predict}
+     \end{subfigure} 
+}
+\vspace{2pt}
+    \caption{Some prediction examples of our method.}
+    \label{fig:example_voc}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

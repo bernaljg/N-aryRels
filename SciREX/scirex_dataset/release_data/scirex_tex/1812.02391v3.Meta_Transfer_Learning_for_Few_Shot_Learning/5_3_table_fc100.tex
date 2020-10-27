@@ -1,0 +1,28 @@
+
+\begin{table*}[t]
+  \small
+  \centering
+  \begin{tabular}{l l lccc}
+    \toprule
+     \multicolumn{2}{c}{Few-shot learning method} & Feature extractor & 1-shot & 5-shot & 10-shot \\
+    \midrule    
+    \multirow{1}{*}{\emph{Gradient descent}} 
+    & MAML, ~\cite{FinnAL17}${}^{\ddag}$ & 4 CONV  &  38.1 $\pm$ $1.7$ & 50.4 $\pm$ $1.0$  & 56.2 $\pm$ $0.8$\\
+    \midrule
+    \multirow{1}{*}{\emph{Memory network}}
+    & TADAM, \cite{OreshkinNIPS18} & ResNet-12 (pre)${}^{\dag}$   & 40.1 $\pm$ $0.4$  & 56.1 $\pm$ $0.4$ &  61.6 $\pm$ $0.5$\\
+    \midrule
+   MAML, HT  & \emph{FT} $[\Theta; \theta]$, HT meta-batch & 4 CONV & 39.9 $\pm$ $1.8$ & 51.7 $\pm$ $0.9$ &  57.2 $\pm$ $0.8$ \\
+    MAML deep, HT  &  \emph{FT} $[\Theta; \theta]$, HT meta-batch & ResNet-12 (pre) & 41.8 $\pm$ $1.9$ & 55.1 $\pm$ $0.9$ & 61.9 $\pm$ $0.8$ \\
+     \midrule
+    \multirow{2}{*}{\textbf{MTL (Ours)}}
+    & \emph{SS} $[\Theta; \theta]$, meta-batch & ResNet-12 (pre) & 43.6 $\pm$ $1.8$ & 55.4 $\pm$ $0.9$ & 62.4 $\pm$ $0.8$ \\
+    & \emph{SS} $[\Theta; \theta]$, HT meta-batch & ResNet-12 (pre) & \textbf{45.1} $\mathbf{\pm}$ $\mathbf{1.8}$ &  \textbf{57.6} $\mathbf{\pm}$ $\mathbf{0.9}$ & \textbf{63.4} $\mathbf{\pm}$ $\mathbf{0.8}$ \\
+  \bottomrule
+  \multicolumn{6}{l}{${}^{\dag}$Additional 72 fully connected layers  { } ${}^{\ddag}$Our implementation using the public code of MAML.}\\
+\end{tabular}
+  \vspace{0.1cm}
+  \caption{The 5-way with 1-shot, 5-shot and 10-shot classification accuracy (\%) on Fewshot-CIFAR100 (FC100) dataset. ``pre'' means pre-trained for a single classification task using all training datapoints.}
+    \label{table_fc100}
+    \vspace{-0.3cm}
+\end{table*}

@@ -1,0 +1,25 @@
+%
+%
+%
+%
+%
+%
+%
+%
+%
+{\small
+\begin{tabular}{@{}lc@{\hspace{5pt}}c@{}}
+\toprule
+                  & classification       & retrieval \\ 
+\midrule 
+spatial pooling   & avg. pooling         & RMAC~\cite{TOLIAS20143466} or GeM~\cite{radenovic2018fine} \\
+loss              & cross-entropy        & triplet~\cite{Gordo2016DeepIR}  \\
+batch sampling    & diverse              & similar images in batch  \\
+whitening         & no                   & yes  \\
+resolution        & low ($224^2$--$300^2$)           & high ($800$--$1$k$\times$scaled) \\
+%
+%
+%
+%
+\bottomrule
+\end{tabular}}

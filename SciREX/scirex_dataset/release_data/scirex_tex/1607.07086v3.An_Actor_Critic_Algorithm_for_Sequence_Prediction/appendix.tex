@@ -1,0 +1,196 @@
+\section{Hyperparameters}
+\label{sec:hyperparameters}
+
+For machine translation experiments the variance penalty coefficient $\lambda$
+was set to $10^{-4}$, and the delay coefficients $\gamma_{\theta}$ and
+$\gamma_{\phi}$ were both set to $10^{-4}$. For REINFORCE with the critic we did not use 
+a delayed actor, i.e. $\gamma_{\theta}$ was set to 1. For the spelling correction
+task we used the same $\gamma_{\theta}$ and $\gamma_{\phi}$ but a different 
+$\lambda=10^{-3}$. When we used a combined training criterion, the weight of the log-likelihood gradient $\lambda_{LL}$ was always 0.1. All initial weights were sampled from a centered uniform distribution with
+width $0.1$.
+
+In some of our experiments we provided the actor states as additional inputs to
+the critic.  Specifically, we did so in our spelling correction experiments and
+in our WMT 14 machine translation study. All the other results were obtained
+without this technique.
+
+For decoding with beam search we substracted the length of a candidate
+times $\rho$ from the log-likelihood cost. The exact value of $\rho$ 
+was selected on the validation set and was equal to $0.8$
+for models trained by log-likelihood and REINFORCE and to $1.0$
+for models trained by actor-critic and REINFORCE-critic.
+
+For some of the hyperparameters we performed an ablation study. The results are reported in Table \ref{tab:ablation}.
+
+\begin{table}
+    \caption{Results of an ablation study. We tried varying the actor update speed $\gamma_{\theta}$, 
+             the critic update speed $\gamma_{\phi}$, the value penalty coefficient $\lambda$, 
+             whether or not reward shaping is used, whether or not temporal difference (TD) learning is used
+             for the critic. Reported are the best training and validation BLEU score obtained in the course
+             of the first 10 training epochs. Some of the validation scores would still improve with longer training.
+             Greedy search was used for decoding.}
+    \centering
+    \begin{tabular}{c  c  c  c  c  c c}
+        $\gamma_{\theta}$ & $\gamma_{\phi}$ & $\lambda$ & reward shaping & TD & train BLEU & valid BLEU \\
+        \hline
+        \multicolumn{7}{c}{baseline} \\
+        % ted16a & 
+        % 0.001 & 0.001 & $10^{-3}$ & yes & yes & 33.66 & 23.01 \\
+        % \hline
+        % ted16k & 
+        0.001 & 0.001 & $10^{-3}$ & yes & yes & 33.73 & 23.16 \\
+        \hline
+        \multicolumn{7}{c}{with different $\gamma_{\phi}$} \\
+        % ted16f & 
+        0.001 & 0.01 & $10^{-3}$ & yes & yes & 33.52 & 23.03 \\
+        % ted16g & 
+        0.001 & 0.1 & $10^{-3}$ & yes & yes & 32.63 & 22.80 \\
+        % ted16l & 
+        0.001 & 1 & $10^{-3}$ & yes & yes & 9.59 & 8.14 \\
+        \hline
+        \multicolumn{7}{c}{with different $\gamma_{\theta}$} \\
+        % ted19 & 
+        1 & 0.001 & $10^{-3}$ & yes & yes & 32.9 & 22.88 \\
+        \hline
+        \multicolumn{7}{c}{without reward shaping} \\
+        % ted16o2 &
+        0.001 & 0.001 & $10^{-3}$ & no & yes & 32.74 & 22.61 \\
+        \hline
+        \multicolumn{7}{c}{without temporal difference learning} \\
+        % ted16i2 & 
+        0.001 & 0.001 & $10^{-3}$ & yes & no & 23.2 & 16.36 \\
+        \hline
+        \multicolumn{7}{c}{with different $\lambda$} \\
+        % ted16n & 
+        0.001 & 0.001 & $3 * 10^{-3}$ & yes & yes & 32.4 & 22.48 \\
+        % ted16m2 & 
+        0.001 & 0.001 & $10^{-4}$ & yes & yes & 34.10 & 23.15 \\
+        % ted16m4 & 
+        0.001 & 0.001 & $10^{-6}$ & yes & yes & 35.00 & 23.10 \\
+        % ted16m7 & 
+        0.001 & 0.001 & $10^{-8}$ & yes & yes & 33.6 & 22.72 \\
+        % ted16m5 & 
+        0.001 & 0.001 & $0$ & yes & yes & 27.41 & 20.55 \\
+    \end{tabular}
+    \label{tab:ablation}
+\end{table}
+
+\section{Data}
+\label{sec:data}
+For the IWSLT 2014 data the sizes of validation and tests set were 6,969 and 6,750, 
+respectively. We limited the number of words in the English and German
+vocabularies to the 22,822 and 32,009 most frequent words, respectively, and
+replaced all other words with a special token. The maximum sentence length
+in our dataset was 50. For WMT14 we used vocabularies of 30,000 words for both English and French, and the maximum sentence length was also 50.
+
+
+\section{Generated Q-values}
+
+In Table \ref{tab:qvalues} we provide an example of value predictions
+that the critic outputs for candidate next words. One can see that the critic has
+indeed learnt to assign larger values for the appropriate next words.
+While the critic does not always produce sensible estimates and can often predict
+a high return for irrelevant rare words, this is greatly reduced using the variance
+penalty term from Equation \eqref{eq:variance_penalty}.
+
+\begin{figure}[h]%{r}{0.7\textwidth}
+\centering
+\label{tab:qvalues}
+\caption{The best 3 words according to the critic at intermediate
+        steps of generating a translation. The numbers in parentheses
+        are the value predictions $\hat{Q}$. The German original is 
+        ``\"{u}ber eine davon will ich hier erz\"{a}hlen .''
+        The reference translation is 
+        ``and there's one I want to talk about''.}
+
+\begin{tabular}{c|c}
+    \textrm{Word} & \textrm{Words with largest $\hat{Q}$} \\
+    \hline
+    % BOS  &
+    %#,(3.582) and(3.529) \&apos;m(3.529) \\
+    one &
+    and(6.623) there(6.200) but(5.967) \\
+    of &
+    that(6.197) one(5.668) \&apos;s(5.467) \\
+    them &
+    that(5.408) one(5.118) i(5.002) \\
+    i &
+    that(4.796) i(4.629) ,(4.139) \\
+    want &
+    want(5.008) i(4.160) \&apos;t(3.361) \\
+    to &
+    to(4.729) want(3.497) going(3.396) \\
+    tell &
+    talk(3.717) you(2.407) to(2.133) \\
+    you &
+    about(1.209) that(0.989) talk(0.924) \\
+    about &
+    about(0.706) .(0.660) right(0.653) \\
+    here &
+    .(0.498) ?(0.291) --(0.285) \\
+    . &
+    .(0.195) there(0.175) know(0.087) \\
+     $\emptyset$  &
+    .(0.168)  $\emptyset$ (-0.093) ?(-0.173) \\
+\end{tabular}
+\end{figure}
+
+\newpage
+
+\section{Proof of Equation \eqref{eq:ac}}
+
+\begin{align*}
+    \frac{dV}{d\theta} = 
+    \frac{d}{d\theta} \Exp_{\hat{Y} \sim p(\hat{Y})} R(\hat{Y}) =
+    \sum\limits_{\hat{Y}}
+    \frac{d}{d\theta}
+    \left[
+    p(\hat{y}_1) p(\hat{y}_2|\hat{y}_1) 
+    \ldots
+    p(\hat{y}_T|\hat{y}_1 \ldots \hat{y}_{T-1})
+    \right]
+    R(\hat{Y}) = \notag\\
+    \sum\limits_{t=1}^T
+    \sum\limits_{\hat{Y}}
+    p(\hat{Y}_{1 \ldots t-1})
+    \frac{dp(\hat{y}_t|\hat{Y}_{1 \ldots t - 1})}{d\theta}
+    p(\hat{Y}_{t+1 .. T}|\hat{Y}_{1 \ldots t})
+    R(\hat{Y}) = \notag\\
+    \begin{aligned}
+        & \sum\limits_{t=1}^T
+          \sum\limits_{\hat{Y}_{1 \ldots t}}
+          p(\hat{Y}_{1 \ldots t-1})
+          \frac{dp(\hat{y}_t|\hat{Y}_{1 \ldots t - 1})}{d\theta}
+        &  \sum\limits_{\hat{Y}_{t + 1 \ldots T}}
+           p(\hat{Y}_{t+1 .. T}|\hat{Y}_{1 \ldots t})
+           \sum\limits_{\tau=1}^T 
+           r_{\tau}(\hat{y}_{\tau}; \hat{Y}_{1 \ldots \tau - 1})
+    \end{aligned} 
+    =\notag\\
+    \begin{aligned}
+        & \sum\limits_{t=1}^T
+          \sum\limits_{\hat{Y}_{1 \ldots t}}
+          p(\hat{Y}_{1 \ldots t-1})
+          \frac{dp(\hat{y}_t|\hat{Y}_{1 \ldots t - 1})}{d\theta} \\
+        &  \left[
+          r_t(\hat{y}_t; \hat{Y}_{1 \ldots t - 1}) +
+          \sum\limits_{\hat{Y}_{t + 1 \ldots T}}
+           p(\hat{Y}_{t+1 .. T}|\hat{Y}_{1 \ldots t})
+           \sum\limits_{\tau=t+1}^T 
+           r_{\tau}(\hat{y}_{\tau}; \hat{Y}_{1 \ldots \tau - 1})
+           \right]
+    \end{aligned} 
+    = \notag\\
+    \sum\limits_{t=1}^T
+    \Exp_{\hat{Y}_{1 \ldots t - 1} \sim p(\hat{Y}_{1 \ldots t - 1})}
+    \sum\limits_{a \in A}
+    \frac{dp(a|\hat{Y}_{1 \ldots t - 1})}{d\theta}
+    Q(a;\hat{Y}_{1 \ldots t - 1}) 
+    = \notag\\
+    \Exp_{\hat{Y} \sim p(\hat{Y})} 
+    \sum\limits_{t=1}^T
+    \sum\limits_{a \in \mathcal{A}}
+    \frac{dp(a|\hat{Y}_{1 \ldots t - 1})}{d\theta}
+    Q(a;\hat{Y}_{1 \ldots t - 1})
+\end{align*}    
+

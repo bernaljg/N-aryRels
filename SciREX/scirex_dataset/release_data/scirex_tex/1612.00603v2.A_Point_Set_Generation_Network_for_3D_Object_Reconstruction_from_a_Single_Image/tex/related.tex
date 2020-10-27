@@ -1,0 +1,52 @@
+\label{sec:related}
+
+% emphasize the advantage of point set based representation over volumetric/depth map
+% \todo{
+% \begin{enumerate}
+%   \item 3D reconstruction from single images: 
+%   \begin{enumerate}
+%     \item non-shape collection
+%     \begin{enumerate}
+%       \item Hoiem's 3d paper
+%       \item Make3D
+%       \item Category-Specific Object Reconstruction from a Single Image
+%       \item line of kinect paper (from David Eigen and Rob Fergus)
+%     \end{enumerate} 
+%     \item shape collection
+%     \begin{enumerate}
+%       \item Hao's SIG14 paper
+%       \item Single-View Reconstruction via Joint Analysis of Image and Shape Collections
+%       \item Multi-view 3D Models from Single Images with a Convolutional Network
+%       \item 3D R2N2
+%       \item Deepmind's paper
+%     \end{enumerate} 
+%   \end{enumerate}
+%   \item Set prediction in deep learning
+%     \begin{enumerate
+%       \item Pointer Networks
+%       \item ORDER MATTERS: SEQUENCE TO SEQUENCE FOR SETS
+%     \end{enumerate}
+%   \item Capturing groundtruth uncertainty
+%     \begin{enumerate}
+%       \item Anticipating the future by watching unlabeled video
+%       \item VAE
+%     \end{enumerate}
+% \end{enumerate}
+% }
+
+\paragraph{3D reconstruction from single images}
+%Image-based 3D reconstruction has been studied for decades. 
+While most researches focus on multi-view geometry such as SFM and SLAM~\cite{haming2010structure, fuentes2015visual}, ideally, one expect that 3D can be reconstructed from the abundant single-view images. 
+
+Under this setting, however, the problem is ill-posed and priors must be incorporated. Early work such as ShapeFromX~\cite{horn1989obtaining,aloimonos1988shape} made strong assumptions over the shape or the environment lighting conditions. \cite{hoiem2005automatic,saxena2009make3d} pioneered the use of learning-based approach for simple geometric structures. Coarse correspondences in an image collection can also be used for rough 3D shape estimation~\cite{shapesKarTCM15,carreira2016lifting}. As commodity 3D sensors become popular, RGBD database has been built and used to train learning-based systems~\cite{eigen2014depth,Fouhey13}. Though great progress has been made, these methods still cannot robustly reconstruct complete and quality shapes from single images. Stronger shape priors are missing.
+
+Recently, large-scale repositories of 3D CAD models, such as ShapeNet~\cite{shapenet2015}, have been introduced. They have great potential for 3D reconstruction tasks. For example, \cite{su2014estimating,huang2015single} proposed to deform and reassemble existing shapes into a new model to fit the observed image. These systems rely on high-quality image-shape correspondence, which is a challenging and ill-posed problem itself.
+
+More relevant to our work is \cite{choy20163d}. 
+%Trained with supervision from shape databases, their neural network can exploit and integrate subtle 3D cues such as contour, occlusion, and shading patterns. 
+Given a single image, they use a neural network to predict the underlying 3D object as a 3D volume. There are two key differences between our work and \cite{choy20163d}: First, the predicted object in \cite{choy20163d} is a 3D volume; whilst ours is a point cloud. As demonstrated and analyzed in Sec~\ref{sec:exp:rgb}, point set forms a nicer shape space for neural networks, thus the predicted shapes tend to be more complete and natural. Second, we allow multiple reconstruction candidates for a single input image. This design reflects the fact that a single image cannot fully determine the reconstruction of a 3D shape. %, thus the solution has to be a distribution. 
+
+\paragraph{Deep learning for geometric object synthesis} In general, the field of how to predict geometries in an end-to-end fashion is quite a virgin land. In particular, our output, 3D point set, is still not a typical object in the deep learning community. A point set contains orderless samples from a metric-measure space. Therefore, equivalent classes are defined up to a permutation; in addition, the ground distance must be taken into consideration. To our knowledge, we are not aware of prior deep learning systems with the abilities to predict such objects. % In natural language processing, the sequence prediction problems, such as machine translation, seems to be related to our goal, as they also produce a set output. However, as analyzed in \cite{vinyals2015order}, the order of discrete tokens in a language model does matter. 
+% The most relevant prior work to our effort might be \cite{vinyals2015pointer}, which proposed a model that can predict some geometric properties from a point set that is invariant to the  order of \emph{input} points.
+
+% \paragraph{Predicting multiple plausible solutions} 

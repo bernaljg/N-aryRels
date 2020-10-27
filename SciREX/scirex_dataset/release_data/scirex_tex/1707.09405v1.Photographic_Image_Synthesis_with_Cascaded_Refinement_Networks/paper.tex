@@ -1,0 +1,109 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{iccv}
+
+\input{vcl-shortcuts.tex}
+
+% Include other packages here, before hyperref.
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+\iccvfinalcopy % *** Uncomment this line for the final submission
+
+\def\iccvPaperID{253} % *** Enter the ICCV Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+\ificcvfinal\pagestyle{empty}\fi
+\begin{document}
+
+%%%%%%%%% TITLE
+\title{Photographic Image Synthesis with Cascaded Refinement Networks}
+
+\setcounter{footnote}{1}
+
+\author{Qifeng Chen\thanks{Intel Labs}~~\thanks{Stanford University}
+%\\
+%\textsuperscript{1}Stanford University
+% For a paper whose authors are all at the same institution,
+% omit the following lines up until the closing ``}''.
+% Additional authors and addresses can be added with ``\and'',
+% just like the second author.
+% To save space, use either the email address or home page, not both
+\and
+Vladlen Koltun\footnotemark[2]
+%\\
+%\textsuperscript{2}Intel Labs
+}
+
+\makeatletter
+\g@addto@macro\@maketitle{
+  \begin{figure}[H]
+  \setlength{\linewidth}{\textwidth}
+  \setlength{\hsize}{\textwidth}
+  \vspace{-7mm}
+  \centering
+ 	\begin{tabular}{@{}c@{\hspace{1mm}}c@{}}
+  \includegraphics[width=0.493\textwidth]{figures/Label_000027.png} &
+  \includegraphics[width=0.493\textwidth]{figures/Ours_000027.jpg}\vspace{0mm}\\
+  \includegraphics[width=0.493\textwidth]{figures/Label_000338.png} &
+  \includegraphics[width=0.493\textwidth]{figures/Ours_000338.jpg}\\
+\small (a) Input semantic layouts & \small (b) Synthesized images
+ 	\end{tabular}
+  \vspace{1mm}
+  \caption{Given a pixelwise semantic layout, the presented model synthesizes an image that conforms to this layout. (a) Semantic layouts from the Cityscapes dataset of urban scenes; semantic classes are coded by color. (b) Images synthesized by our model for these layouts. The layouts shown here and throughout the paper are from the validation set and depict scenes from new cities that were never seen during training. Best viewed on the screen.}
+  \label{fig:teaser}
+%  \vspace{2mm}
+  \end{figure}
+}
+\makeatother
+
+\maketitle
+%\thispagestyle{empty}
+
+%%%%%%%%% ABSTRACT
+\begin{abstract}
+We present an approach to synthesizing photographic images conditioned on semantic layouts. Given a semantic label map, our approach produces an image with photographic appearance that conforms to the input layout. The approach thus functions as a rendering engine that takes a two-dimensional semantic specification of the scene and produces a corresponding photographic image. Unlike recent and contemporaneous work, our approach does not rely on adversarial training. We show that photographic images can be synthesized from semantic layouts by a single feedforward network with appropriate structure, trained end-to-end with a direct regression objective. The presented approach scales seamlessly to high resolutions; we demonstrate this by synthesizing photographic images at 2-megapixel resolution, the full resolution of our training data. Extensive perceptual experiments on datasets of outdoor and indoor scenes demonstrate that images synthesized by the presented approach are considerably more realistic than alternative approaches.
+\end{abstract}
+
+%%%%%%%%% BODY TEXT
+
+\section{Introduction}
+\label{sec:introduction}
+\input{tex/introduction.tex}
+
+\section{Related Work}
+\label{sec:related}
+\input{tex/related-work.tex}
+
+\section{Method}
+\label{sec:method}
+\input{tex/method.tex}
+
+%\section{Extensions}
+%\label{sec:extensions}
+%\input{tex/extensions.tex}
+
+\section{Baselines}
+\label{sec:baselines}
+\input{tex/baselines.tex}
+
+\section{Experiments}
+\label{sec:experiments}
+\input{tex/experiments.tex}
+
+\section{Conclusion}
+\label{sec:discussion}
+\input{tex/discussion.tex}
+
+\balance
+
+{\small
+\bibliographystyle{ieee}
+\bibliography{paper}
+}
+
+\end{document}

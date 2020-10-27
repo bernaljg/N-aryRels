@@ -1,0 +1,456 @@
+\begin{thebibliography}{70}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Asano et~al.(2017)Asano, Mizumoto, and Inui]{asano2017reference}
+Hiroki Asano, Tomoya Mizumoto, and Kentaro Inui.
+\newblock Reference-based metrics can be replaced with reference-less metrics
+  in evaluating grammatical error correction systems.
+\newblock In \emph{IJCNLP}, 2017.
+
+\bibitem[Bahdanau et~al.(2014)Bahdanau, Cho, and
+  Bengio]{DBLP:journals/corr/BahdanauCB14}
+Dzmitry Bahdanau, Kyunghyun Cho, and Yoshua Bengio.
+\newblock Neural machine translation by jointly learning to align and
+  translate.
+\newblock \emph{CoRR}, abs/1409.0473, 2014.
+\newblock URL \url{http://arxiv.org/abs/1409.0473}.
+
+\bibitem[Behera \& Bhattacharyya(2013)Behera and
+  Bhattacharyya]{behera2013automated}
+Bibek Behera and Pushpak Bhattacharyya.
+\newblock Automated grammar correction using hierarchical phrase-based
+  statistical machine translation.
+\newblock In \emph{IJCNLP}, 2013.
+
+\bibitem[Brockett et~al.(2006)Brockett, Dolan, and
+  Gamon]{brockett2006correcting}
+Chris Brockett, William~B Dolan, and Michael Gamon.
+\newblock Correcting esl errors using phrasal smt techniques.
+\newblock In \emph{COLING/ACL}, 2006.
+
+\bibitem[Bryant \& Ng(2015)Bryant and Ng]{bryant2015far}
+Christopher Bryant and Hwee~Tou Ng.
+\newblock How far are we from fully automatic high quality grammatical error
+  correction?
+\newblock In \emph{ACL/IJCNLP}, 2015.
+
+\bibitem[Bryant et~al.(2017)Bryant, Felice, and Briscoe]{bryant2017automatic}
+Christopher Bryant, Mariano Felice, and E~Briscoe.
+\newblock Automatic annotation and evaluation of error types for grammatical
+  error correction.
+\newblock In \emph{ACL}, 2017.
+
+\bibitem[Cho et~al.(2014)Cho, van Merrienboer, Gulcehre, Bahdanau, Bougares,
+  Schwenk, and Bengio]{cho-EtAl:2014:EMNLP2014}
+Kyunghyun Cho, Bart van Merrienboer, Caglar Gulcehre, Dzmitry Bahdanau, Fethi
+  Bougares, Holger Schwenk, and Yoshua Bengio.
+\newblock Learning phrase representations using rnn encoder--decoder for
+  statistical machine translation.
+\newblock In \emph{EMNLP}, October 2014.
+
+\bibitem[Chodorow et~al.(2007)Chodorow, Tetreault, and
+  Han]{chodorow2007detection}
+Martin Chodorow, Joel~R Tetreault, and Na-Rae Han.
+\newblock Detection of grammatical errors involving prepositions.
+\newblock In \emph{ACL-SIGSEM workshop on prepositions}, 2007.
+
+\bibitem[Chollampatt \& Ng(2017)Chollampatt and Ng]{chollampatt-ng:2017:BEA}
+Shamil Chollampatt and Hwee~Tou Ng.
+\newblock Connecting the dots: Towards human-level grammatical error
+  correction.
+\newblock In \emph{Workshop on Innovative Use of NLP for Building Educational
+  Applications}, 2017.
+
+\bibitem[Chollampatt \& Ng(2018)Chollampatt and Ng]{chollampatt2018}
+Shamil Chollampatt and Hwee~Tou Ng.
+\newblock A multilayer convolutional encoder-decoder neural network for
+  grammatical error correction.
+\newblock \emph{arXiv preprint arXiv:1801.08831}, 2018.
+
+\bibitem[Chollampatt et~al.(2016{\natexlab{a}})Chollampatt, Hoang, and
+  Ng]{chollampatt2016adapting}
+Shamil Chollampatt, Duc~Tam Hoang, and Hwee~Tou Ng.
+\newblock Adapting grammatical error correction based on the native language of
+  writers with neural network joint models.
+\newblock In \emph{EMNLP}, 2016{\natexlab{a}}.
+
+\bibitem[Chollampatt et~al.(2016{\natexlab{b}})Chollampatt, Taghipour, and
+  Ng]{chollampatt2016neural}
+Shamil Chollampatt, Kaveh Taghipour, and Hwee~Tou Ng.
+\newblock Neural network translation models for grammatical error correction.
+\newblock \emph{arXiv preprint arXiv:1606.00189}, 2016{\natexlab{b}}.
+
+\bibitem[Choshen \& Abend(2018)Choshen and Abend]{choshen2018inherent}
+Leshem Choshen and Omeri Abend.
+\newblock Inherent biases in reference-based evaluation for grammatical error
+  correction and text simplification.
+\newblock \emph{arXiv preprint arXiv:1804.11254}, 2018.
+
+\bibitem[Dahlmeier \& Ng(2011)Dahlmeier and Ng]{dahlmeier2011correcting}
+Daniel Dahlmeier and Hwee~Tou Ng.
+\newblock Correcting semantic collocation errors with l1-induced paraphrases.
+\newblock In \emph{EMNLP}, 2011.
+
+\bibitem[Dahlmeier \& Ng(2012{\natexlab{a}})Dahlmeier and
+  Ng]{dahlmeier-ng:2012:NAACL-HLT}
+Daniel Dahlmeier and Hwee~Tou Ng.
+\newblock Better evaluation for grammatical error correction.
+\newblock In \emph{NAACL}, 2012{\natexlab{a}}.
+
+\bibitem[Dahlmeier \& Ng(2012{\natexlab{b}})Dahlmeier and
+  Ng]{dahlmeier2012beam}
+Daniel Dahlmeier and Hwee~Tou Ng.
+\newblock A beam-search decoder for grammatical error correction.
+\newblock In \emph{EMNLP/CoNLL}, 2012{\natexlab{b}}.
+
+\bibitem[Dahlmeier \& Ng(2012{\natexlab{c}})Dahlmeier and
+  Ng]{dahlmeier2012better}
+Daniel Dahlmeier and Hwee~Tou Ng.
+\newblock Better evaluation for grammatical error correction.
+\newblock In \emph{NAACL}, 2012{\natexlab{c}}.
+
+\bibitem[Dahlmeier et~al.(2013)Dahlmeier, Ng, and Wu]{dahlmeier2013building}
+Daniel Dahlmeier, Hwee~Tou Ng, and Siew~Mei Wu.
+\newblock Building a large annotated corpus of learner english: The nus corpus
+  of learner english.
+\newblock In \emph{Workshop on innovative use of NLP for building educational
+  applications}, 2013.
+
+\bibitem[Dale \& Kilgarriff(2011)Dale and Kilgarriff]{dale2011helping}
+Robert Dale and Adam Kilgarriff.
+\newblock Helping our own: The hoo 2011 pilot shared task.
+\newblock In \emph{European Workshop on Natural Language Generation}, 2011.
+
+\bibitem[De~Felice \& Pulman(2008)De~Felice and Pulman]{de2008classifier}
+Rachele De~Felice and Stephen~G Pulman.
+\newblock A classifier-based approach to preposition and determiner error
+  correction in l2 english.
+\newblock In \emph{COLING}, 2008.
+
+\bibitem[Felice \& Yuan(2014)Felice and Yuan]{felice-yuan:2014:SRW}
+Mariano Felice and Zheng Yuan.
+\newblock Generating artificial errors for grammatical error correction.
+\newblock In \emph{Student Research Workshop at EACL}, April 2014.
+
+\bibitem[Felice et~al.(2014)Felice, Yuan, Andersen, Yannakoudakis, and
+  Kochmar]{felice2014grammatical}
+Mariano Felice, Zheng Yuan, {\O}istein~E Andersen, Helen Yannakoudakis, and
+  Ekaterina Kochmar.
+\newblock Grammatical error correction using hybrid systems and type filtering.
+\newblock In \emph{CoNLL (Shared Task)}, 2014.
+
+\bibitem[Foster \& Andersen(2009)Foster and Andersen]{foster2009generrate}
+Jennifer Foster and {\O}istein~E Andersen.
+\newblock Generrate: generating errors for use in grammatical error detection.
+\newblock In \emph{Workshop on innovative use of nlp for building educational
+  applications}, 2009.
+
+\bibitem[Ge et~al.(2018)Ge, Wei, and Zhou]{ge2018fluency}
+Tao Ge, Furu Wei, and Ming Zhou.
+\newblock Fluency boost learning and inference for neural grammatical error
+  correction.
+\newblock In \emph{ACL}, 2018.
+
+\bibitem[Gehring et~al.(2017)Gehring, Auli, Grangier, Yarats, and
+  Dauphin]{gehring2017convolutional}
+Jonas Gehring, Michael Auli, David Grangier, Denis Yarats, and Yann~N Dauphin.
+\newblock Convolutional sequence to sequence learning.
+\newblock \emph{arXiv preprint arXiv:1705.03122}, 2017.
+
+\bibitem[Grundkiewicz \& Junczys-Dowmunt(2018)Grundkiewicz and
+  Junczys-Dowmunt]{grundkiewicz2018near}
+Roman Grundkiewicz and Marcin Junczys-Dowmunt.
+\newblock Near human-level performance in grammatical error correction with
+  hybrid machine translation.
+\newblock \emph{arXiv preprint arXiv:1804.05945}, 2018.
+
+\bibitem[Han et~al.(2010)Han, Tetreault, Lee, and Ha]{han2010using}
+Na-Rae Han, Joel~R Tetreault, Soo-Hwa Lee, and Jin-Young Ha.
+\newblock Using an error-annotated learner corpus to develop an esl/efl error
+  correction system.
+\newblock In \emph{LREC}, 2010.
+
+\bibitem[He et~al.(2016)He, Xia, Qin, Wang, Yu, Liu, and Ma]{he2016dual}
+Di~He, Yingce Xia, Tao Qin, Liwei Wang, Nenghai Yu, Tieyan Liu, and Wei-Ying
+  Ma.
+\newblock Dual learning for machine translation.
+\newblock In \emph{NIPS}, 2016.
+
+\bibitem[Hoang et~al.(2016)Hoang, Chollampatt, and Ng]{Hoang2016Exploiting}
+Duc~Tam Hoang, Shamil Chollampatt, and Hwee~Tou Ng.
+\newblock Exploiting n-best hypotheses to improve an smt approach to
+  grammatical error correction.
+\newblock In \emph{IJCAI}, 2016.
+
+\bibitem[Ji et~al.(2017)Ji, Wang, Toutanova, Gong, Truong, and
+  Gao]{ji2017nested}
+Jianshu Ji, Qinlong Wang, Kristina Toutanova, Yongen Gong, Steven Truong, and
+  Jianfeng Gao.
+\newblock A nested attention neural hybrid model for grammatical error
+  correction.
+\newblock In \emph{ACL}, 2017.
+
+\bibitem[Junczys-Dowmunt \& Grundkiewicz(2014)Junczys-Dowmunt and
+  Grundkiewicz]{junczys2014amu}
+Marcin Junczys-Dowmunt and Roman Grundkiewicz.
+\newblock The amu system in the conll-2014 shared task: Grammatical error
+  correction by data-intensive and feature-rich statistical machine
+  translation.
+\newblock In \emph{CoNLL (Shared Task)}, 2014.
+
+\bibitem[Junczys-Dowmunt \& Grundkiewicz(2016)Junczys-Dowmunt and
+  Grundkiewicz]{junczys2016phrase}
+Marcin Junczys-Dowmunt and Roman Grundkiewicz.
+\newblock Phrase-based machine translation is state-of-the-art for automatic
+  grammatical error correction.
+\newblock \emph{arXiv preprint arXiv:1605.06353}, 2016.
+
+\bibitem[Junczys-Dowmunt et~al.(2018)Junczys-Dowmunt, Grundkiewicz, Guha, and
+  Heafield]{junczys2018approaching}
+Marcin Junczys-Dowmunt, Roman Grundkiewicz, Shubha Guha, and Kenneth Heafield.
+\newblock Approaching neural grammatical error correction as a low-resource
+  machine translation task.
+\newblock \emph{arXiv preprint arXiv:1804.05940}, 2018.
+
+\bibitem[Kaneko et~al.(2017)Kaneko, Sakaizawa, and
+  Komachi]{kaneko2017grammatical}
+Masahiro Kaneko, Yuya Sakaizawa, and Mamoru Komachi.
+\newblock Grammatical error detection using error-and grammaticality-specific
+  word embeddings.
+\newblock In \emph{IJCNLP}, 2017.
+
+\bibitem[Leacock et~al.(2010)Leacock, Chodorow, Gamon, and
+  Tetreault]{leacock2010automated}
+Claudia Leacock, Martin Chodorow, Michael Gamon, and Joel Tetreault.
+\newblock Automated grammatical error detection for language learners.
+\newblock \emph{Synthesis lectures on human language technologies}, 3\penalty0
+  (1):\penalty0 1--134, 2010.
+
+\bibitem[Madnani et~al.(2011)Madnani, Tetreault, Chodorow, and
+  Rozovskaya]{madnani2011they}
+Nitin Madnani, Joel Tetreault, Martin Chodorow, and Alla Rozovskaya.
+\newblock They can help: Using crowdsourcing to improve the evaluation of
+  grammatical error detection systems.
+\newblock In \emph{ACL}, 2011.
+
+\bibitem[Mizumoto \& Matsumoto(2016)Mizumoto and
+  Matsumoto]{mizumoto2016discriminative}
+Tomoya Mizumoto and Yuji Matsumoto.
+\newblock Discriminative reranking for grammatical error correction with
+  statistical machine translation.
+\newblock In \emph{NAACL}, 2016.
+
+\bibitem[Mizumoto et~al.(2011)Mizumoto, Komachi, Nagata, and
+  Matsumoto]{mizumoto2011mining}
+Tomoya Mizumoto, Mamoru Komachi, Masaaki Nagata, and Yuji Matsumoto.
+\newblock Mining revision log of language learning sns for automated japanese
+  error correction of second language learners.
+\newblock In \emph{IJCNLP}, 2011.
+
+\bibitem[Napoles et~al.(2015)Napoles, Sakaguchi, Post, and
+  Tetreault]{napoles2015ground}
+Courtney Napoles, Keisuke Sakaguchi, Matt Post, and Joel Tetreault.
+\newblock Ground truth for grammatical error correction metrics.
+\newblock In \emph{ACL/IJCNLP}, 2015.
+
+\bibitem[Napoles et~al.(2016)Napoles, Sakaguchi, and
+  Tetreault]{napoles2016there}
+Courtney Napoles, Keisuke Sakaguchi, and Joel Tetreault.
+\newblock There's no comparison: Reference-less evaluation metrics in
+  grammatical error correction.
+\newblock In \emph{EMNLP}, 2016.
+
+\bibitem[Napoles et~al.(2017)Napoles, Sakaguchi, and
+  Tetreault]{napoles2017jfleg}
+Courtney Napoles, Keisuke Sakaguchi, and Joel Tetreault.
+\newblock Jfleg: A fluency corpus and benchmark for grammatical error
+  correction.
+\newblock \emph{arXiv preprint arXiv:1702.04066}, 2017.
+
+\bibitem[Ng et~al.(2014)Ng, Wu, Briscoe, Hadiwinoto, Susanto, and
+  Bryant]{ng2014conll}
+Hwee~Tou Ng, Siew~Mei Wu, Ted Briscoe, Christian Hadiwinoto, Raymond~Hendy
+  Susanto, and Christopher Bryant.
+\newblock The conll-2014 shared task on grammatical error correction.
+\newblock In \emph{CoNLL (Shared Task)}, 2014.
+
+\bibitem[Nicholls(2003)]{nicholls2003cambridge}
+Diane Nicholls.
+\newblock The cambridge learner corpus: Error coding and analysis for
+  lexicography and elt.
+\newblock In \emph{Corpus Linguistics 2003 conference}, 2003.
+
+\bibitem[Rei \& Yannakoudakis(2016)Rei and
+  Yannakoudakis]{rei-yannakoudakis:2016:P16-1}
+Marek Rei and Helen Yannakoudakis.
+\newblock Compositional sequence labeling models for error detection in learner
+  writing.
+\newblock In \emph{ACL}, 2016.
+
+\bibitem[Rei et~al.(2017)Rei, Felice, Yuan, and Briscoe]{rei2017artificial}
+Marek Rei, Mariano Felice, Zheng Yuan, and Ted Briscoe.
+\newblock Artificial error generation with machine translation and syntactic
+  patterns.
+\newblock \emph{arXiv preprint arXiv:1707.05236}, 2017.
+
+\bibitem[Rozovskaya \& Roth(2010)Rozovskaya and Roth]{rozovskaya2010training}
+Alla Rozovskaya and Dan Roth.
+\newblock Training paradigms for correcting errors in grammar and usage.
+\newblock In \emph{NAACL}, 2010.
+
+\bibitem[Rozovskaya \& Roth(2011)Rozovskaya and Roth]{rozovskaya2011algorithm}
+Alla Rozovskaya and Dan Roth.
+\newblock Algorithm selection and model adaptation for esl correction tasks.
+\newblock In \emph{ACL}, 2011.
+
+\bibitem[Rozovskaya \& Roth(2016)Rozovskaya and
+  Roth]{rozovskaya2016grammatical}
+Alla Rozovskaya and Dan Roth.
+\newblock Grammatical error correction: Machine translation and classifiers.
+\newblock In \emph{ACL}, 2016.
+
+\bibitem[Rozovskaya et~al.(2012)Rozovskaya, Sammons, and
+  Dan]{Rozovskaya2012The}
+Alla Rozovskaya, Mark Sammons, and Roth Dan.
+\newblock The ui system in the hoo 2012 shared task on error correction.
+\newblock In \emph{Workshop on Building Educational Applications Using NLP},
+  2012.
+
+\bibitem[Rozovskaya et~al.(2014)Rozovskaya, Chang, Sammons, Roth, and
+  Habash]{rozovskaya2014illinois}
+Alla Rozovskaya, Kai-Wei Chang, Mark Sammons, Dan Roth, and Nizar Habash.
+\newblock The illinois-columbia system in the conll-2014 shared task.
+\newblock In \emph{CoNLL (Shared Task)}, 2014.
+
+\bibitem[Sakaguchi et~al.(2016)Sakaguchi, Napoles, Post, and
+  Tetreault]{sakaguchi2016reassessing}
+Keisuke Sakaguchi, Courtney Napoles, Matt Post, and Joel Tetreault.
+\newblock Reassessing the goals of grammatical error correction: Fluency
+  instead of grammaticality.
+\newblock \emph{Transactions of the Association of Computational Linguistics},
+  4\penalty0 (1):\penalty0 169--182, 2016.
+
+\bibitem[Sakaguchi et~al.(2017)Sakaguchi, Post, and
+  Van~Durme]{sakaguchi2017grammatical}
+Keisuke Sakaguchi, Matt Post, and Benjamin Van~Durme.
+\newblock Grammatical error correction with neural reinforcement learning.
+\newblock In \emph{IJCNLP}, 2017.
+
+\bibitem[Schmaltz et~al.(2017)Schmaltz, Kim, Rush, and
+  Shieber]{schmaltz-EtAl:2017:EMNLP2017}
+Allen Schmaltz, Yoon Kim, Alexander Rush, and Stuart Shieber.
+\newblock Adapting sequence models for sentence correction.
+\newblock In \emph{EMNLP}, 2017.
+
+\bibitem[Sennrich et~al.(2016)Sennrich, Haddow, and
+  Birch]{sennrich2016improving}
+Rico Sennrich, Barry Haddow, and Alexandra Birch.
+\newblock Improving neural machine translation models with monolingual data.
+\newblock In \emph{ACL}, 2016.
+
+\bibitem[Susanto et~al.(2014)Susanto, Phandi, and Ng]{Susanto2014System}
+Raymond~Hendy Susanto, Peter Phandi, and Hwee~Tou Ng.
+\newblock System combination for grammatical error correction.
+\newblock In \emph{EMNLP}, 2014.
+
+\bibitem[Sutskever et~al.(2013)Sutskever, Martens, Dahl, and
+  Hinton]{sutskever2013importance}
+Ilya Sutskever, James Martens, George Dahl, and Geoffrey Hinton.
+\newblock On the importance of initialization and momentum in deep learning.
+\newblock In \emph{ICML}, 2013.
+
+\bibitem[Sutskever et~al.(2014)Sutskever, Vinyals, and
+  Le]{DBLP:journals/corr/SutskeverVL14}
+Ilya Sutskever, Oriol Vinyals, and Quoc~V. Le.
+\newblock Sequence to sequence learning with neural networks.
+\newblock \emph{CoRR}, abs/1409.3215, 2014.
+\newblock URL \url{http://arxiv.org/abs/1409.3215}.
+
+\bibitem[Tajiri et~al.(2012)Tajiri, Komachi, and Matsumoto]{tajiri2012tense}
+Toshikazu Tajiri, Mamoru Komachi, and Yuji Matsumoto.
+\newblock Tense and aspect error correction for esl learners using global
+  context.
+\newblock In \emph{ACL}, 2012.
+
+\bibitem[Tetreault et~al.(2010{\natexlab{a}})Tetreault, Foster, and
+  Chodorow]{tetreault2010using}
+Joel Tetreault, Jennifer Foster, and Martin Chodorow.
+\newblock Using parse features for preposition selection and error detection.
+\newblock In \emph{ACL}, 2010{\natexlab{a}}.
+
+\bibitem[Tetreault et~al.(2010{\natexlab{b}})Tetreault, Filatova, and
+  Chodorow]{tetreault2010rethinking}
+Joel~R Tetreault, Elena Filatova, and Martin Chodorow.
+\newblock Rethinking grammatical error annotation and evaluation with the
+  amazon mechanical turk.
+\newblock In \emph{Workshop on Innovative Use of NLP for Building Educational
+  Applications}, 2010{\natexlab{b}}.
+
+\bibitem[Vaswani et~al.(2017)Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez,
+  Kaiser, and Polosukhin]{vaswani2017attention}
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones,
+  Aidan~N Gomez, {\L}ukasz Kaiser, and Illia Polosukhin.
+\newblock Attention is all you need.
+\newblock In \emph{NIPS}, 2017.
+
+\bibitem[Xia et~al.(2017)Xia, Tian, Wu, Lin, Qin, Yu, and Liu]{DXiaTWLQYL17}
+Yingce Xia, Fei Tian, Lijun Wu, Jianxin Lin, Tao Qin, Nenghai Yu, and Tie{-}Yan
+  Liu.
+\newblock Deliberation networks: Sequence generation beyond one-pass decoding.
+\newblock In \emph{NIPS}, 2017.
+
+\bibitem[Xie et~al.(2016)Xie, Avati, Arivazhagan, Jurafsky, and
+  Ng]{xie2016neural}
+Ziang Xie, Anand Avati, Naveen Arivazhagan, Dan Jurafsky, and Andrew~Y Ng.
+\newblock Neural language correction with character-based attention.
+\newblock \emph{arXiv preprint arXiv:1603.09727}, 2016.
+
+\bibitem[Xie et~al.(2018)Xie, Genthial, Xie, Ng, and Jurafsky]{xie2018noising}
+Ziang Xie, Guillaume Genthial, Stanley Xie, Andrew Ng, and Dan Jurafsky.
+\newblock Noising and denoising natural language: Diverse backtranslation for
+  grammar correction.
+\newblock In \emph{NAACL}, 2018.
+
+\bibitem[Yannakoudakis et~al.(2017)Yannakoudakis, Rei, Andersen, and
+  Yuan]{yannakoudakis2017neural}
+Helen Yannakoudakis, Marek Rei, {\O}istein~E Andersen, and Zheng Yuan.
+\newblock Neural sequence-labelling models for grammatical error correction.
+\newblock In \emph{EMNLP}, 2017.
+
+\bibitem[Yoshimoto et~al.(2013)Yoshimoto, Kose, Mitsuzawa, Sakaguchi, Mizumoto,
+  Hayashibe, Komachi, and Matsumoto]{yoshimoto2013naist}
+Ippei Yoshimoto, Tomoya Kose, Kensuke Mitsuzawa, Keisuke Sakaguchi, Tomoya
+  Mizumoto, Yuta Hayashibe, Mamoru Komachi, and Yuji Matsumoto.
+\newblock Naist at 2013 conll grammatical error correction shared task.
+\newblock In \emph{CoNLL (Shared Task)}, 2013.
+
+\bibitem[Yuan \& Briscoe(2016)Yuan and Briscoe]{yuan2016grammatical}
+Zheng Yuan and Ted Briscoe.
+\newblock Grammatical error correction using neural machine translation.
+\newblock In \emph{NAACL}, 2016.
+
+\bibitem[Yuan \& Felice(2013)Yuan and Felice]{yuan2013constrained}
+Zheng Yuan and Mariano Felice.
+\newblock Constrained grammatical error correction using statistical machine
+  translation.
+\newblock In \emph{CoNLL (Shared Task)}, 2013.
+
+\bibitem[Yuan et~al.(2016)Yuan, Briscoe, Felice, Yuan, Briscoe, and
+  Felice]{Yuan2016Candidate}
+Zheng Yuan, Ted Briscoe, Mariano Felice, Zheng Yuan, Ted Briscoe, and Mariano
+  Felice.
+\newblock Candidate re-ranking for smt-based grammatical error correction.
+\newblock In \emph{Workshop on Innovative Use of NLP for Building Educational
+  Applications}, 2016.
+
+\bibitem[Zhang et~al.(2018)Zhang, Liu, Li, Zhou, and Chen]{zhang2018joint}
+Zhirui Zhang, Shujie Liu, Mu~Li, Ming Zhou, and Enhong Chen.
+\newblock Joint training for neural machine translation models with monolingual
+  data.
+\newblock \emph{arXiv preprint arXiv:1803.00353}, 2018.
+
+\end{thebibliography}

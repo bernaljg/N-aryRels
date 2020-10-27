@@ -1,0 +1,42 @@
+Table~\ref{tab:error} summarizes the modes of errors by \sysshort\  and shows examples for each category of error in SQuAD. 
+\begin{table}[!htb]
+    \centering
+    \begin{tabular}{L{2cm} C{1.5cm} L{9.5cm}}
+        Error type & Ratio (\%) & Example\\
+        \hline
+        \hline
+        Imprecise answer boundaries & 50 & \parbox[t]{9cm}{\textbf{Context}: ``The Free Movement of Workers Regulation articles 1 to 7 set out the main provisions on equal treatment of workers.''\\
+        \textbf{Question}: ``Which articles of the Free Movement of Workers Regulation set out the primary provisions on equal treatment of workers?''\\
+        \textbf{Prediction}: ``1 to 7'',
+        \textbf{Answer}: ``articles 1 to 7'' \\}\\
+        \hline
+        Syntactic complications and ambiguities & 28 & \parbox[t]{9cm}{\textbf{Context}: ``A piece of paper was later found on which Luther had written his last statement. ''\\
+        \textbf{Question}: ``What was later discovered written by Luther?''\\
+        \textbf{Prediction}: ``A piece of paper'',
+        \textbf{Answer}: ``his last statement'' \\}\\
+        \hline
+        Paraphrase problems & 14 & \parbox[t]{9cm}{\textbf{Context}: ``Generally, education in Australia follows the three-tier model which includes primary education (primary schools), followed by secondary education (secondary schools/high schools) and tertiary education (universities and/or TAFE colleges).''\\
+        \textbf{Question}: ``What is the first model of education, in the Australian system?''\\
+        \textbf{Prediction}: ``three-tier'',
+        \textbf{Answer}: ``primary education'' \\}\\
+        \hline
+        External knowledge & 4 & \parbox[t]{9cm}{\textbf{Context}: ``On June 4, 2014, the NFL announced that the practice of branding Super Bowl games with Roman numerals, a practice established at Super Bowl V, would be temporarily suspended, and that the game would be named using Arabic numerals as Super Bowl 50 as opposed to Super Bowl L.''\\
+        \textbf{Question}: ``If Roman numerals were used in the naming of the 50th Super Bowl, which one would have been used?'\\
+        \textbf{Prediction}: ``Super Bowl 50'',
+        \textbf{Answer}: ``L''\\}\\
+        \hline
+        Multi-sentence & 2 & \parbox[t]{9cm}{\textbf{Context}: ``Over the next several years in addition to host to host interactive connections the network was enhanced to support terminal to host connections, host to host batch connections (remote job submission, remote printing, batch file transfer), interactive file transfer, gateways to the Tymnet and Telenet public data networks, X.25 host attachments, gateways to X.25 data networks, Ethernet attached hosts, and eventually TCP/IP and additional public universities in Michigan join the network. All of this set the stage for Merit's role in the NSFNET project starting in the mid-1980s.''\\
+        \textbf{Question}: ``What set the stage for Merits role in NSFNET''\\
+        \textbf{Prediction}: ``All of this set the stage for Merit 's role in the NSFNET project starting in the mid-1980s'',
+        \textbf{Answer}: ``Ethernet attached hosts, and eventually TCP/IP and additional public universities in Michigan join the network''\\}\\
+        \hline
+        Incorrect preprocessing & 2 & \parbox[t]{9cm}{\textbf{Context}: ``English chemist John Mayow (1641-1679) refined this work by showing that fire requires only a part of air that he called spiritus nitroaereus or just nitroaereus.''\\
+        \textbf{Question}: ``John Mayow died in what year?''\\
+        \textbf{Prediction}: ``1641-1679'',
+        \textbf{Answer}: ``1679''}\\
+        
+    \end{tabular}
+    \caption{Error analysis on SQuAD. We randomly selected EM-incorrect answers and classified them into 6 different categories.
+    Only relevant sentence(s) from the context shown for brevity. }
+    \label{tab:error}
+\end{table}

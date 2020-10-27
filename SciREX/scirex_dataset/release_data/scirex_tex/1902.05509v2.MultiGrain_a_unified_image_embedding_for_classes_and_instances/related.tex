@@ -1,0 +1,61 @@
+%
+\section{Related work}
+\label{sec:related}
+%
+\paragraph{Image classification.} 
+Most computer vision architectures designed for a wide range of tasks leverage a trunk architecture initially designed for classification, such as Residual networks~\cite{he16resnet}. An improvement on the trunk architecture eventually translates to better accuracies in other tasks~\cite{he2017mask}, as shown on the detection task of the LSVRC'15 challenge. While recent architectures~\cite{hu2018squeeze,huang2017densely,Xie2017AggregatedRT} have exhibited some additional gains, other lines of research have been investigated successfully. For instance, a recent trend~\cite{mahajan2018exploring} is to train high capacity networks by leveraging much larger training sets of of weakly annotated data. 
+To our knowledge, the state of the art on Imagenet ILSVRC 2012 benchmark for a model learned from scratch on Imagenet train data only is currently hold by the gigantic AmoebaNet-B architecture~\cite{huang2018gpipe} (557M parameters), which takes 480x480 images as input. 
+
+In our paper, we choose ResNet-50~\cite{he16resnet} (25.6M parameters), as this architecture is adopted in the literature in many works both on image classification and instance retrieval. 
+
+\paragraph{Image search: from local features to CNN.} 
+``Image search'' is a generic retrieval task that is usually associated with and evaluated for more specific problems such as landmark recognition~\cite{Jegou2008HammingEA,Philbin07}, particular object recognition~\cite{nister2006scalable} or copy detection~\cite{Douze2009EvaluationOG}, for which the objective is to find the images most similar to the query in a large image collection. 
+In this paper ``image retrieval'' will refer to instance-level retrieval, where object instances are as broad as possible, \ie not restricted to buildings, as in the Oxford/Paris benchmark.
+%
+Effective systems for image retrieval rely on accurate image descriptors.  
+Typically, a query image is described by an embedding vector, and the task amounts to searching the nearest neighbors of this vector in the embedding space. Possible improvement include refinement steps such as geometric verification \cite{Philbin07}, query expansion~\cite{chum2007total,TOLIAS20143466}, or database-side pre-processing or augmentation \cite{tolias2016image,turcot2009better}. 
+
+%
+
+Local image descriptors are traditionally aggregated to global image descriptors suited for matching in an inverted database, as in the seminal bag-of-words model~\cite{Sivic2003VideoGA}.
+After the emergence of convolutional neural networks (CNNs) for large-scale classification on ImageNet~\cite{krizhevsky2012imagenet, ILSVRC15}, it has become apparent that CNNs trained on classification datasets are very competitive image feature extractors for various vision tasks, including instance retrieval~\cite{babenko2014neural,gong2014multi,Razavian2014CNNFO}. 
+
+
+
+%
+%
+\paragraph{Specific architectures for particular object retrieval}\hspace{-1em} are built upon a regular classification trunk, and modified so the pooling stage gives more spatial locality in order to cope with small objects and clutter. 
+%
+%
+%
+For instance, a competitive baseline for instance retrieval on various datasets is the R-MAC image descriptor~\cite{Tolias2015ParticularOR}. It aggregates regionally pooled features extracted from a CNN. %
+The authors show that this specialized pooling combined with PCA whitening~\cite{jegou2012negative} leads to efficient many-to-many comparisons between image regions, highly beneficial to image retrieval.
+%
+Gordo~et~al.~\cite{Gordo2016DeepIR, Gordo2017EndtoEndLO} show that fine-tuning these regionally-aggregated representations end-to-end on an external image retrieval dataset using a ranking loss yields significant improvements for instance retrieval. 
+
+Radenovi{\'c}~\etal~\cite{radenovic2018fine} show that R-MAC pooling is advantageously replaced by a generalized mean pooling (see \cref{sec:p-pooling}), which is a spatial pooling of the features exponentiated to an exponent $p$ over the whole image. The exponentiation localizes the features on the point of interests in the image, replacing regional aggregation in R-MAC. %
+
+\paragraph{Multi-task training}\hspace{-1em}
+is an active area of research~\cite{Kokkinos2017UberNetTA,Zamir2018TaskonomyDT}, motivated by the observation that deep neural networks are transferable to a wide range of vision tasks~\cite{Razavian2014CNNFO}. 
+%
+Moreover trained deep neural networks exhibit a high level of compressibility~\cite{han2015deep}. 
+%
+In some cases, sharing the capacity of neural networks between different tasks through shared parameters  
+%
+helps the learning by allowing complementary training among datasets and low-level features. 
+Despite some successes with multi-task networks for vision such as UberNet~\cite{Kokkinos2017UberNetTA}, the design and training of multi-task networks still involve numerous heuristics. 
+Ongoing lines of work include finding the right architecture for an efficient sharing of parameters~\cite{rebuffi2018efficient}, and finding the right optimization parameters for such networks in order to depart from the traditional setting of single-task single-dataset end-to-end gradient descent, and efficiently weight the gradients in order to obtain a well-performing network in all tasks~\cite{guo2018dynamic}. 
+
+\paragraph{Data augmentation}\hspace{-1em} is a cornerstone of the training in large-scale vision applications~\cite{krizhevsky2012imagenet}, which improves generalization and reduces over-fitting. 
+%
+In a stochastic gradient descent (SGD) optimization setting, we show that including multiple data-augmented instances of the same image in one optimization batch, rather than having only distinct images in the batch, significantly enhances the effect of data-augmentations and improve the generalization of the network. 
+A related batch augmented (BA) sampling strategy was concurrently introduced by Hoffer et al.~\cite{2019arXiv190109335H}. 
+When augmenting the size of the batches in a large-scale distributed optimization of a neural network, they show that filling these bigger batches with data-augmented copies of the image in the batch yields better generalization performance, and uses computing resources more efficiently through reduced data processing time. 
+As discussed in~\cref{sec:data-augmented-batches} and highlighted in our classification results (\cref{sec:classif-results}), we show that a gain in performance under this sampling scheme is obtained~\emph{using the same batch size}, \ie, with a lower number of distinct images per batch. 
+We consider this scheme of repeated augmentations (RA) within the batch as a way to boost the effect of data augmentation over the course of the optimization. 
+Our results indicate that RA is a technique of general interest, beyond large-scale distributed training applications, for improving the generalization of neural networks. 
+
+
+%
+%
+%

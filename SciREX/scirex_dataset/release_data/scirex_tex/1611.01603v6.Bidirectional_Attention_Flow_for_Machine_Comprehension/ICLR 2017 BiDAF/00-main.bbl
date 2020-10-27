@@ -1,0 +1,198 @@
+\begin{thebibliography}{33}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Antol et~al.(2015)Antol, Agrawal, Lu, Mitchell, Batra,
+  Lawrence~Zitnick, and Parikh]{antol2015vqa}
+Stanislaw Antol, Aishwarya Agrawal, Jiasen Lu, Margaret Mitchell, Dhruv Batra,
+  C~Lawrence~Zitnick, and Devi Parikh.
+\newblock Vqa: Visual question answering.
+\newblock In \emph{ICCV}, 2015.
+
+\bibitem[Bahdanau et~al.(2015)Bahdanau, Cho, and Bengio]{Bahdanau2014NeuralMT}
+Dzmitry Bahdanau, Kyunghyun Cho, and Yoshua Bengio.
+\newblock Neural machine translation by jointly learning to align and
+  translate.
+\newblock \emph{ICLR}, 2015.
+
+\bibitem[Chen et~al.(2016)Chen, Bolton, and Manning]{thorough}
+Danqi Chen, Jason Bolton, and Christopher~D. Manning.
+\newblock A thorough examination of the cnn/daily mail reading comprehension
+  task.
+\newblock In \emph{ACL}, 2016.
+
+\bibitem[Cui et~al.(2016)Cui, Chen, Wei, Wang, Liu, and Hu]{aoa}
+Yiming Cui, Zhipeng Chen, Si~Wei, Shijin Wang, Ting Liu, and Guoping Hu.
+\newblock Attention-over-attention neural networks for reading comprehension.
+\newblock \emph{arXiv preprint arXiv:1607.04423}, 2016.
+
+\bibitem[Dhingra et~al.(2016)Dhingra, Liu, Cohen, and Salakhutdinov]{ga}
+Bhuwan Dhingra, Hanxiao Liu, William~W Cohen, and Ruslan Salakhutdinov.
+\newblock Gated-attention readers for text comprehension.
+\newblock \emph{arXiv preprint arXiv:1606.01549}, 2016.
+
+\bibitem[Fukui et~al.(2016)Fukui, Park, Yang, Rohrbach, Darrell, and
+  Rohrbach]{fukui2016multimodal}
+Akira Fukui, Dong~Huk Park, Daylen Yang, Anna Rohrbach, Trevor Darrell, and
+  Marcus Rohrbach.
+\newblock Multimodal compact bilinear pooling for visual question answering and
+  visual grounding.
+\newblock In \emph{EMNLP}, 2016.
+
+\bibitem[Hermann et~al.(2015)Hermann, Kocisk{\'y}, Grefenstette, Espeholt, Kay,
+  Suleyman, and Blunsom]{Hermann2015TeachingMT}
+Karl~Moritz Hermann, Tom{\'a}s Kocisk{\'y}, Edward Grefenstette, Lasse
+  Espeholt, Will Kay, Mustafa Suleyman, and Phil Blunsom.
+\newblock Teaching machines to read and comprehend.
+\newblock In \emph{NIPS}, 2015.
+
+\bibitem[Hill et~al.(2016)Hill, Bordes, Chopra, and Weston]{hill2015goldilocks}
+Felix Hill, Antoine Bordes, Sumit Chopra, and Jason Weston.
+\newblock The goldilocks principle: Reading children's books with explicit
+  memory representations.
+\newblock In \emph{ICLR}, 2016.
+
+\bibitem[Hochreiter \& Schmidhuber(1997)Hochreiter and Schmidhuber]{lstm}
+Sepp Hochreiter and Jurgen Schmidhuber.
+\newblock Long short-term memory.
+\newblock \emph{Neural Computation}, 1997.
+
+\bibitem[Kadlec et~al.(2016)Kadlec, Schmid, Bajgar, and
+  Kleindienst]{kadlec2016text}
+Rudolf Kadlec, Martin Schmid, Ondrej Bajgar, and Jan Kleindienst.
+\newblock Text understanding with the attention sum reader network.
+\newblock In \emph{ACL}, 2016.
+
+\bibitem[Kim(2014)]{char-cnn}
+Yoon Kim.
+\newblock Convolutional neural networks for sentence classification.
+\newblock In \emph{EMNLP}, 2014.
+
+\bibitem[Kobayashi et~al.(2016)Kobayashi, Tian, Okazaki, and Inui]{DER}
+Sosuke Kobayashi, Ran Tian, Naoaki Okazaki, and Kentaro Inui.
+\newblock Dynamic entity representation with max-pooling improves machine
+  reading.
+\newblock In \emph{NAACL-HLT}, 2016.
+
+\bibitem[Lee et~al.(2016)Lee, Kwiatkowski, Parikh, and Das]{lee2016learning}
+Kenton Lee, Tom Kwiatkowski, Ankur Parikh, and Dipanjan Das.
+\newblock Learning recurrent span representations for extractive question
+  answering.
+\newblock \emph{arXiv preprint arXiv:1611.01436}, 2016.
+
+\bibitem[Lu et~al.(2016)Lu, Yang, Batra, and Parikh]{lu2016hierarchical}
+Jiasen Lu, Jianwei Yang, Dhruv Batra, and Devi Parikh.
+\newblock Hierarchical question-image co-attention for visual question
+  answering.
+\newblock In \emph{NIPS}, 2016.
+
+\bibitem[Malinowski et~al.(2015)Malinowski, Rohrbach, and
+  Fritz]{Malinowski2015AskYN}
+Mateusz Malinowski, Marcus Rohrbach, and Mario Fritz.
+\newblock Ask your neurons: A neural-based approach to answering questions
+  about images.
+\newblock In \emph{ICCV}, 2015.
+
+\bibitem[Pennington et~al.(2014)Pennington, Socher, and Manning]{glove}
+Jeffrey Pennington, Richard Socher, and Christopher~D Manning.
+\newblock Glove: Global vectors for word representation.
+\newblock In \emph{EMNLP}, 2014.
+
+\bibitem[Rajpurkar et~al.(2016)Rajpurkar, Zhang, Lopyrev, and
+  Liang]{rajpurkar2016squad}
+Pranav Rajpurkar, Jian Zhang, Konstantin Lopyrev, and Percy Liang.
+\newblock Squad: 100,000+ questions for machine comprehension of text.
+\newblock In \emph{EMNLP}, 2016.
+
+\bibitem[Richardson et~al.(2013)Richardson, Burges, and
+  Renshaw]{richardson2013mctest}
+Matthew Richardson, Christopher~JC Burges, and Erin Renshaw.
+\newblock Mctest: A challenge dataset for the open-domain machine comprehension
+  of text.
+\newblock In \emph{EMNLP}, 2013.
+
+\bibitem[Shen et~al.(2016)Shen, Huang, Gao, and Chen]{reasonet}
+Yelong Shen, Po-Sen Huang, Jianfeng Gao, and Weizhu Chen.
+\newblock Reasonet: Learning to stop reading in machine comprehension.
+\newblock \emph{arXiv preprint arXiv:1609.05284}, 2016.
+
+\bibitem[Sordoni et~al.(2016)Sordoni, Bachman, and Bengio]{iterative}
+Alessandro Sordoni, Phillip Bachman, and Yoshua Bengio.
+\newblock Iterative alternating neural attention for machine reading.
+\newblock \emph{arXiv preprint arXiv:1606.02245}, 2016.
+
+\bibitem[Srivastava et~al.(2014)Srivastava, Hinton, Krizhevsky, Sutskever, and
+  Salakhutdinov]{dropout}
+Nitish Srivastava, Geoffrey~E. Hinton, Alex Krizhevsky, Ilya Sutskever, and
+  Ruslan Salakhutdinov.
+\newblock Dropout: a simple way to prevent neural networks from overfitting.
+\newblock \emph{JMLR}, 2014.
+
+\bibitem[Srivastava et~al.(2015)Srivastava, Greff, and Schmidhuber]{highway}
+Rupesh~Kumar Srivastava, Klaus Greff, and J{\"u}rgen Schmidhuber.
+\newblock Highway networks.
+\newblock \emph{arXiv preprint arXiv:1505.00387}, 2015.
+
+\bibitem[Trischler et~al.(2016)Trischler, Ye, Yuan, and Suleman]{epireader}
+Adam Trischler, Zheng Ye, Xingdi Yuan, and Kaheer Suleman.
+\newblock Natural language comprehension with the epireader.
+\newblock In \emph{EMNLP}, 2016.
+
+\bibitem[Wang \& Jiang(2016)Wang and Jiang]{wang2016machine}
+Shuohang Wang and Jing Jiang.
+\newblock Machine comprehension using match-lstm and answer pointer.
+\newblock \emph{arXiv preprint arXiv:1608.07905}, 2016.
+
+\bibitem[Weston et~al.(2015)Weston, Chopra, and Bordes]{memnn}
+Jason Weston, Sumit Chopra, and Antoine Bordes.
+\newblock Memory networks.
+\newblock In \emph{ICLR}, 2015.
+
+\bibitem[Xiong et~al.(2016{\natexlab{a}})Xiong, Merity, and
+  Socher]{xiong2016dynamic}
+Caiming Xiong, Stephen Merity, and Richard Socher.
+\newblock Dynamic memory networks for visual and textual question answering.
+\newblock In \emph{ICML}, 2016{\natexlab{a}}.
+
+\bibitem[Xiong et~al.(2016{\natexlab{b}})Xiong, Zhong, and Socher]{dcn}
+Caiming Xiong, Victor Zhong, and Richard Socher.
+\newblock Dynamic coattention networks for question answering.
+\newblock \emph{arXiv preprint arXiv:1611.01604}, 2016{\natexlab{b}}.
+
+\bibitem[Xu \& Saenko(2016)Xu and Saenko]{Xu2016AskAA}
+Huijuan Xu and Kate Saenko.
+\newblock Ask, attend and answer: Exploring question-guided spatial attention
+  for visual question answering.
+\newblock In \emph{ECCV}, 2016.
+
+\bibitem[Yang et~al.(2016)Yang, Dhingra, Yuan, Hu, Cohen, and
+  Salakhutdinov]{yang2016words}
+Zhilin Yang, Bhuwan Dhingra, Ye~Yuan, Junjie Hu, William~W Cohen, and Ruslan
+  Salakhutdinov.
+\newblock Words or characters? fine-grained gating for reading comprehension.
+\newblock \emph{arXiv preprint arXiv:1611.01724}, 2016.
+
+\bibitem[Yang et~al.(2015)Yang, He, Gao, Deng, and Smola]{yang2015stacked}
+Zichao Yang, Xiaodong He, Jianfeng Gao, Li~Deng, and Alex Smola.
+\newblock Stacked attention networks for image question answering.
+\newblock \emph{arXiv preprint arXiv:1511.02274}, 2015.
+
+\bibitem[Yu et~al.(2016)Yu, Zhang, Hasan, Yu, Xiang, and Zhou]{chunk}
+Yang Yu, Wei Zhang, Kazi Hasan, Mo~Yu, Bing Xiang, and Bowen Zhou.
+\newblock End-to-end reading comprehension with dynamic answer chunk ranking.
+\newblock \emph{arXiv preprint arXiv:1610.09996}, 2016.
+
+\bibitem[Zeiler(2012)]{adadelta}
+Matthew~D Zeiler.
+\newblock Adadelta: an adaptive learning rate method.
+\newblock \emph{arXiv preprint arXiv:1212.5701}, 2012.
+
+\bibitem[Zhu et~al.(2016)Zhu, Groth, Bernstein, and Fei-Fei]{Zhu2015Visual7WGQ}
+Yuke Zhu, Oliver Groth, Michael~S. Bernstein, and Li~Fei-Fei.
+\newblock Visual7w: Grounded question answering in images.
+\newblock In \emph{CVPR}, 2016.
+
+\end{thebibliography}

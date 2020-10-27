@@ -1,0 +1,15 @@
+% !TEX root = ./notes.tex
+\section{Related Work}
+Since their introduction in \citet{mikolov2010recurrent}, many improvements have been proposed for RNNLMs , including different dropout methods \citep{zaremba2014recurrent,gal2015theoretically}, novel recurrent units \citep{zilly2016recurrent}, and use of pointer networks to complement the recurrent neural network \citep{merity2016pointer}.
+However, none of the improvements dealt with the loss structure, and to the best of our knowledge, our work is the first to offer a new loss framework.
+
+Our technique is closely related to the one in \citet{hinton2015distilling}, where they also try to estimate a more informed data distribution and augment the conventional loss with KL divergence between model prediction distribution and the estimated data distribution. However, they estimate their data distribution by training large networks on the data and then use it to improve learning in smaller networks. This is fundamentally different from our approach, where we improve learning by transferring knowledge between different parts of the same network, in a self contained manner.
+
+The work we present in this paper is based on a report which was made public in \citet{inanimproved}.
+We have recently come across a concurrent preprint \citep{press2016using} where the authors reuse the word embedding matrix in the output projection to improve language modeling.
+However, their work is purely empirical, and they do not provide any theoretical justification for their approach.
+Finally, we would like to note that the idea of using the same representation for input and output words has been explored in the past, and there exists language models which could be interpreted as simple neural networks with shared input and output embeddings \citep{nnlm:2001:nips,mnih2007three}.
+However, shared input and output representations were implicitly built into these models, rather than proposed as a supplement to a baseline.
+Consequently, possibility of improvement was not particularly pursued by sharing input and output representations.
+
+

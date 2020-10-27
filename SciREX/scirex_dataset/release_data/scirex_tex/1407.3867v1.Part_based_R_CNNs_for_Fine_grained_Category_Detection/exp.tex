@@ -1,0 +1,245 @@
+\section{Evaluation}
+In this section, we present a comparative performance evaluation of our proposed method.
+Specifically, we conduct experiments on the widely-used fine-grained benchmark Caltech-UCSD birds dataset \cite{DatasetCUB200} (CUB200-2011).
+The classification task is to discriminate among 200 species of birds, and is challenging for computer vision systems due to the high degree of similarity between categories.
+It contains 11,788 images of 200 bird species. Each image is annotated with its bounding box and the image coordinates of fifteen keypoints: the beak, back, breast, belly, forehead, crown, left eye, left leg, left wing, right eye, right leg, right wing, tail, nape and throat. We train and test on the splits included with the dataset, which contain around 30 training samples for each species.
+Following the protocol of \cite{dpd}, we use two semantic parts for the bird dataset: head and body.
+%Figure~\ref{fig:ningfig} (left) illustrates the set of keypoints which comprise the head part, and Figure~\ref{fig:ningfig} (right) illustrates the body part.
+
+We use the open-source package Caffe~\cite{Jia13caffe} to extract deep features and fine-tune our CNNs. For object and part detections, we use the Caffe reference model, which is almost identical to the model used by Krizhevsky et al. in \cite{krizhevsky}. We refer deep features from each layer as \texttt{conv}$n$, \texttt{pool}$n$, or \texttt{fc}$n$ for the $n$th layer of the CNN, which is the output of a convolutional,
+pooling, or fully connected layer respectively.
+We use \texttt{fc6} to train R-CNN object and part detectors as well as image representation for classification.
+%We use \texttt{fc6} to train R-CNN object and part detectors as well as image representation for classification, except in the experiments using fine-tuned networks where \texttt{fc7} features are used, as these features are directly optimized for input into a linear classifier on the target bird classification task.
+For $\delta^{NP}$, nearest neighbors are computed using \texttt{pool5}  and cosine distance metric.
+
+
+\subsection{Fine-grained categorization}
+We first present results on the standard fine-grained categorization task associated with the Caltech-UCSD birds dataset.
+The first set of results in Table~\ref{tab:finegrainedres} are achieved in the setting where the ground truth bounding box for the entire bird is known at test time, as most state-of-art methods assume, making the categorization task somewhat easier. 
+In this setting, our part-based method with the local non-parametric geometric constraint $\delta^{NP}$ works the best without fine-tuning, achieving 68.1\% classification accuracy without fine-tuning.
+Fine-tuning improves this result by a large margin, to over 76\%.
+We compare our results against three state-of-the-art baseline approaches with results assuming the ground truth bounding box at test time. We use deep convolutional features as the authors of \cite{decaf}, but they use a HOG-based DPM as their part localization method. The increase in performance is likely due to better part localization (see Table \ref{tab:partlocalres}). Oracle method uses the ground truth bounding box and part annotations for both training and test time. 
+
+The second set of results is in the less artificial setting where the bird bounding box is \emph{unknown} at test time. Most of the literature on this dataset doesn't  report performance in this more difficult, but more realistic setting. As Table \ref{tab:finegrainedres} shows, in this setting our part-based method works much better than the baseline DPD model. We achieve 66.0\% classification accuracy without finetuning , almost as good as the accuracy we can achieve when the ground truth bounding box is given. This means there is no need to annotate any box during test time to classify the bird species. With finetuned CNN models, our method achieves 73.89\% classification accuracy. 
+We are unaware of any other published results in this more difficult setting, but we note that our method outperforms previous state-of-the-art even without knowledge of the ground truth bounding box.
+
+Another interesting experiment we did is to remove the part descriptors by only looking at the image descriptors inside the predicted bounding box. By having geometric constraints over part locations relative to object location, our method is able to help localize the object. As Table \ref{tab:finegrained_noparts} shows, our method outperforms a single object detector using R-CNN, which means the geometric constraints helps our method better localize the object window. The detection of strong DPM is not as accurate as our method, which explains the performance drop.
+The ``oracle'' method uses the ground truth bounding box and achieves 57.94\% accuracy, which is still much lower than the method in Table \ref{tab:finegrainedres} of using both image descriptors inside object and parts.
+
+
+\begin{table}[t]
+\centering
+\caption{Fine-grained categorization results on CUB200-2011 bird dataset. -ft means extracting deep features from finetuned CNN models using each semantic part. Oracle method uses the ground truth bounding box and part annotations for both training and test time. } 
+\begin{tabular}{|l|r|}
+\hline
+\multicolumn{2}{|c|}{Bounding Box Given} \\
+\hline
+DPD~\cite{dpd} & 50.98\% \\
+DPD+DeCAF feature ~\cite{decaf} & 64.96\% \\
+POOF~\cite{poof} & 56.78\% \\
+Symbiotic Segmentation~\cite{iccv13_symbiotic} & 59.40\% \\
+Alignment~\cite{iccv13_alignment} & 62.70\%\\
+\hline
+Oracle & 72.83\% \\
+Oracle-ft & 82.02\%\\
+\hline
+Ours ($\Delta_{\mathrm{box}}$) & 67.55\% \\
+Ours ($\Delta_{\mathrm{geometric}}$ with $\delta^{MG}$) & 67.98\% \\
+Ours ($\Delta_{\mathrm{geometric}}$ with $\delta^{NP}$) & 68.07\% \\
+Ours-ft ($\Delta_{\mathrm{box}}$) & 75.34\% \\
+Ours-ft ($\Delta_{\mathrm{geometric}}$ with $\delta^{MG}$) &  \textbf{76.37\%}\\
+Ours-ft ($\Delta_{\mathrm{geometric}}$ with $\delta^{NP}$) & 76.34\%\\
+\hline
+\hline
+\multicolumn{2}{|c|}{Bounding Box Unknown} \\
+\hline
+DPD+DeCAF~\cite{decaf} with no bounding box & 44.94\% \\
+Ours ($\Delta_{\mathrm{null}}$) & 64.57\% \\
+Ours ($\Delta_{\mathrm{box}}$)& 65.22\% \\
+Ours ($\Delta_{\mathrm{geometric}}$ with $\delta^{MG}$) &65.98\% \\
+Ours ($\Delta_{\mathrm{geometric}}$ with $\delta^{NP}$) & 65.96\% \\
+Ours-ft ($\Delta_{\mathrm{box}}$)& 72.73\% \\
+Ours-ft ($\Delta_{\mathrm{geometric}}$ with $\delta^{MG}$) & 72.95\% \\
+Ours-ft ($\Delta_{\mathrm{geometric}}$ with $\delta^{NP}$) & \textbf{73.89\%} \\
+\hline
+\end{tabular}
+\label{tab:finegrainedres}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{Fine-grained categorization results on CUB200-2011 bird dataset with \emph{no parts}. We trained a linear SVM using deep features on all the methods. Therefore only the bounding box prediction is the factor of difference. -ft is the result of extracting deep features from fine-tuned CNN model on bounding box patches. } \label{tab:finegrained_noparts}
+\begin{tabular}{|l|r|}
+\hline
+Oracle (ground truth bounding box) & 57.94\%\\
+Oracle-ft & 68.29\% \\
+\hline 
+Strong DPM \cite{Hossein_ECCV12} & 38.02\% \\
+R-CNN~\cite{rcnn} & 51.05\% \\
+\hline \hline
+Ours ($\Delta_{\mathrm{box}}$)  & 50.17\% \\
+Ours ($\Delta_{\mathrm{geometric}}$ with $\delta^{MG}$) & 51.83\% \\
+Ours ($\Delta_{\mathrm{geometric}}$ with $\delta^{NP}$) & 52.38\%\\
+Ours-ft ($\Delta_{\mathrm{box}}$)  &  62.13\%\\
+Ours-ft ($\Delta_{\mathrm{geometric}}$ with $\delta^{MG}$) & 62.06\% \\
+Ours-ft ($\Delta_{\mathrm{geometric}}$ with $\delta^{NP}$) & \textbf{62.75\%} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Part localization}
+We now present results evaluating in isolation the ability of our system to accurately localize parts.
+Our results in Table~\ref{tab:partlocalres} are given in terms of the Percentage of Correctly Localized Parts (PCP) metric. 
+For the first set of results, the whole object bounding box is given and the task is simply to correctly localize the parts inside of this bounding box, with parts having $\ge 0.5$ overlap with ground truth counted as correct.
+
+For the second set of results, the PCP metric is computed on top-ranked parts predictions using the objective function described in Sec. 3.2.
+Note that in this more realistic setting we do not assume knowledge of the ground truth bounding box at test time -- despite this limitation, our system produces accurate part localizations.
+% It is worthy to note that we don't have any assumption that the object bounding box prediction having at least 0.5 overlap with the ground truth bounding box, as some other methods suggested.
+% The main point is to show without any knowledge of bounding box at test time, our system is able to produce accurate part localizations. 
+
+\begin{table}[t]
+\centering
+\caption{Recall of region proposals produced by selective search methods on CUB200-2011 bird dataset. We use ground truth part annotations to compute the recall, as defined by the proportion of ground truth boxes for which there exists a region proposal with overlap at least 0.5, 0.6 and 0.7 respectively.}\label{tab:selective_search_recall}
+\begin{tabular}{|c|c|c|c|}
+\hline
+%\multicolumn{4}{|c|}{Bounding Box Given} \\
+%\hline
+%Overlap & 0.50 & 0.60 & 0.70\\
+%\hline
+%Head & 94.71\% &  & \\
+%Body & 97.39\%  & & \\
+%\hline
+%\multicolumn{4}{|c|}{Bounding Box Unknown} \\
+%\hline
+Overlap & 0.50 & 0.60 & 0.70\\
+\hline
+Bounding box & 96.70\% & 97.68\% & 89.50\% \\
+Head &  93.34\% & 73.87\%& 37.57\%\\
+Body & 96.70\% & 85.97\%&54.68\%\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{Part localization accuracy in terms of PCP (Percentage of Correctly Localized Parts) on the CUB200-2011 bird dataset. There are two different settings: with given bounding box and without bounding box. } 
+\label{tab:partlocalres}
+\begin{tabular}{|l|r|r|}
+\hline
+\multicolumn{3}{|c|}{Bounding Box Given} \\
+\hline
+& \multicolumn{1}{|c|}{Head}
+& \multicolumn{1}{|c|}{Body}
+\\
+\hline
+Strong DPM~\cite{Hossein_ECCV12} & 43.49\% & 75.15\% \\
+Ours ($\Delta_{\mathrm{box}}$)   & 61.40\% & 65.42\% \\
+Ours ($\Delta_{\mathrm{geometric}}$ with $\delta^{MG}$)& 66.03\% & 76.62\% \\
+Ours ($\Delta_{\mathrm{geometric}}$ with $\delta^{NP}$) & \textbf{68.19\%} & \textbf{79.82\%} \\
+\hline
+\multicolumn{3}{|c|}{Bounding Box Unknown} \\
+\hline
+& \multicolumn{1}{|c|}{Head}
+& \multicolumn{1}{|c|}{Body}
+\\
+\hline
+Strong DPM~\cite{Hossein_ECCV12} & 37.44\% & 47.08\% \\
+Ours ($\Delta_{\mathrm{null}}$  ) &60.50\% &  64.43\% \\
+Ours ($\Delta_{\mathrm{box}}$)  & 60.56\% & 65.31\% \\
+Ours ($\Delta_{\mathrm{geometric}}$ with $\delta^{MG}$)& \textbf{61.94\%} & 70.16\% \\ 
+Ours ($\Delta_{\mathrm{geometric}}$ with $\delta^{NP}$) & 61.42\% & \textbf{70.68\%} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure*}[t]
+\begin{center}
+\includegraphics[width=0.45\linewidth]{alpha_plot.pdf}
+\includegraphics[width=0.45\linewidth]{K_plot.pdf}
+\end{center}
+\caption{Cross-validation results on fine-grained accuracy for different values of $\alpha$ (left) and $K$ (right). We split the training data into 5 folds and use cross-validate each hyperparameter setting.}
+\label{fig:crossvalidationalphak}
+\end{figure*}
+
+
+
+
+As shown in Table \ref{tab:partlocalres}, for both settings of given bounding box and unknown bounding box, our methods outperform the strong DPM~\cite{Hossein_ECCV12} method.
+Adding a geometric constraint $\delta^{NP}$ improves our results (79.82\% for body localization compared to 65.42\%). In the fully automatic setting, the top ranked detection and part localization performance on head is 65\% better than the baseline method. $\Delta_{\mathrm{null}}=1$ is the appearance-only case with no geometric constraints applied. Although the fine-grained classification results don't show a big gap between $\Delta_{\mathrm{geometric}}$ and $\Delta_{\mathrm{box}}$, we can see the performance gap for part localization.
+The reason for the small performance gap might be that deep convolutional features are invariant to small translations and rotations,
+limiting the impact of small localization errors on our end-to-end accuracy.
+
+
+We also evaluate the recall performance of selective search region proposals \cite{selsearch} for bounding box and semantic parts. 
+The results of recall given different overlapping thresholds are shown in Table \ref{tab:selective_search_recall}. 
+Recall for the bird head and body parts is high when the overlap requirement is $0.5$, which provides the foundation for localizing these parts given the region proposals. However, we also observe that the recall for head is below $40\%$ when the overlap threshold is $0.7$, indicating the bottom-up region proposals could be a bottleneck for precise part localization.
+
+Other visualizations are shown in Figure~\ref{fig:comparasion}. We show three detection and part localization for each image, the first column is the output from strong DPM, the second column is our methods with individual part predictions and the last column is our method with local prior. We used the model pretrained from \cite{Hossein_ECCV12} to get the results. We also show some failure cases of our method in Figure~\ref{fig:failure}.
+
+
+\subsection{Component Analysis}
+To examine the effect of different values of $\alpha$ and $K$ used in $\Delta_{\mathrm{geometric}}$, we conduct cross-validation experiments.
+Results are shown in Figure~\ref{fig:crossvalidationalphak}. We fix $K=20$ in Figure~\ref{fig:crossvalidationalphak}, left and fix $\alpha = 0.1$ in Figure \ref{fig:crossvalidationalphak}, right. All the experiments on conducted on training data in a cross-validation fashion and we split the training data into 5 folds.
+%\todo{can we add error bars? ... if you still have the results}.
+As the results show, the end-to-end fine-grained classification results are sensitive to the choice of $\alpha$ and $\alpha=0$ is the case of $\Delta_{\mathrm{box}}$ predictions without any geometric constraints. The reason why we have to pick a small $\alpha$ is the pdf of the Gaussian is large compared to the logistic score function output from our part detectors. On the other hand, the choice of $K$ cannot be too small and it is not very sensitive when $K$ is larger than 10. 
+
+
+%Experiment results vary K, vary $\alpha$
+%Answer the following questions,
+%1) Are parts necessary, show results with only root filter
+%2) Are neighbors necssarcy, show only fit into one Gaussian
+%3) Show hor prior helps, show results without prior
+%
+%figure to visualize the prior over neighbors v.s. prior over the whole training data
+
+
+\begin{figure*}
+\begin{center}
+\begin{tabular}{ccc}
+\includegraphics[width=0.3\linewidth]{6_strong_dpm.jpg} &
+\includegraphics[width=0.3\linewidth]{6_individual.jpg} &
+\includegraphics[width=0.3\linewidth]{6_neighbor.jpg} \\
+\includegraphics[trim=0mm 10mm 0mm 10mm, clip, width=0.3\linewidth]{11_strong_dpm.jpg} &
+\includegraphics[trim=0mm 10mm 0mm 10mm, clip, width=0.3\linewidth]{11_individual.jpg} &
+\includegraphics[trim=0mm 10mm 0mm 10mm, clip, width=0.3\linewidth]{11_neighbor.jpg} \\
+\includegraphics[width=0.3\linewidth]{13_strong_dpm.jpg} &
+\includegraphics[width=0.3\linewidth]{13_individual.jpg} &
+\includegraphics[width=0.3\linewidth]{13_neighbor.jpg} \\
+\includegraphics[trim=0mm 20mm 0mm 20mm, clip, width=0.3\linewidth]{15_strong_dpm.jpg} &
+\includegraphics[trim=0mm 20mm 0mm 20mm, clip, width=0.3\linewidth]{15_individual.jpg} &
+\includegraphics[trim=0mm 20mm 0mm 20mm, clip, width=0.3\linewidth]{15_neighbor.jpg} \\
+\includegraphics[width=0.3\linewidth]{16_strong_dpm.jpg} &
+\includegraphics[width=0.3\linewidth]{16_individual.jpg} &
+\includegraphics[width=0.3\linewidth]{16_neighbor.jpg} \\
+\includegraphics[width=0.3\linewidth]{17_strong_dpm.jpg} &
+\includegraphics[width=0.3\linewidth]{17_individual.jpg} &
+\includegraphics[width=0.3\linewidth]{17_neighbor.jpg} \\
+% \includegraphics[width=0.3\linewidth]{19_strong_dpm.jpg} &
+% \includegraphics[width=0.3\linewidth]{19_individual.jpg} &
+% \includegraphics[width=0.3\linewidth]{19_neighbor.jpg} \\
+% \includegraphics[width=0.3\linewidth]{30_strong_dpm.jpg} &
+% \includegraphics[width=0.3\linewidth]{30_individual.jpg} &
+% \includegraphics[width=0.3\linewidth]{30_neighbor.jpg} \\
+Strong DPM & Ours ($\Delta_{box}$) & Ours ($\delta^{NP}$)
+\\
+\end{tabular}
+\end{center}
+\caption{{Examples of bird detection and part localization from strong DPM~\cite{Hossein_ECCV12} (left); our method using $\Delta_{\mathrm{box}}$ part predictions (middle); and our method using $\delta^{NP}$(right). All detection and localization results without any assumption of bounding box. }}
+\label{fig:comparasion}
+\end{figure*}
+
+\begin{figure*}
+\begin{center}
+\includegraphics[height=0.2\linewidth]{8_neighbor.jpg} 
+\includegraphics[height=0.2\linewidth]{32_neighbor.jpg} 
+\includegraphics[height=0.2\linewidth]{41_neighbor.jpg} 
+\includegraphics[height=0.2\linewidth]{57_neighbor.jpg} 
+\includegraphics[height=0.2\linewidth]{58_neighbor.jpg}
+\includegraphics[height=0.2\linewidth]{64_neighbor.jpg} 
+\includegraphics[height=0.2\linewidth]{99_neighbor.jpg} 
+\includegraphics[height=0.2\linewidth]{47_neighbor.jpg} 
+\includegraphics[height=0.2\linewidth]{91_neighbor.jpg} 
+\end{center}
+\caption{{Failure cases of our part localization using $\delta^{NP}$.}}
+\label{fig:failure}
+\end{figure*}

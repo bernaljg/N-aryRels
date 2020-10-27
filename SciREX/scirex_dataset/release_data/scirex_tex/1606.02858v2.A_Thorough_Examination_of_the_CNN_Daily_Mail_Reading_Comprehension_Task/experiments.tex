@@ -1,0 +1,107 @@
+
+
+\section{Experiments}
+\label{sec:experiments}
+\subsection{Training Details}
+For training our conventional classifier, we use the implementation of \ti{LambdaMART} \cite{wu2010adapting} in the RankLib package.\footnote{\url{https://sourceforge.net/p/lemur/wiki/RankLib/}.} We use this ranking algorithm since our problem is naturally a ranking problem and forests of boosted decision trees have been very successful lately (as seen, e.g., in many recent Kaggle competitions). We do not use all the features of \ti{LambdaMART} since we are only scoring 1/0 loss on the first ranked proposal, rather than using an IR-style metric to score ranked results. We use Stanford's neural network dependency parser \cite{chen2014fast} to parse all our document and question text, and all other features can be extracted without additional tools.
+
+\looseness=-1
+For training our neural networks, we only keep the most frequent $|\mathcal{V}| = 50\text{k}$ words (including entity and placeholder markers), and map all other words to an \ti{<unk>} token. We choose word embedding size $d = 100$, and use the $100$-dimensional pre-trained \ti{GloVe} word embeddings \cite{pennington2014glove} for initialization. The attention and output parameters are initialized from a uniform distribution between $(-0.01, 0.01)$, and the GRU weights are initialized from a Gaussian distribution $\mathcal{N}(0, 0.1)$.
+
+We use hidden size $h = 128$ for \ti{CNN} and 256 for \ti{Daily Mail}. Optimization is carried out using vanilla stochastic gradient descent (SGD), with a fixed learning rate of $0.1$. We sort all the examples by the length of its passage, and randomly sample a mini-batch of size 32 for each update. We also apply dropout with probability $0.2$ to the embedding layer and gradient clipping when the norm of gradients exceeds $10$.
+
+Additionally, we think the original indices of entity markers are generated arbitrarily. We attempt to relabel the entity markers based on their first occurrence in the passage and question \footnote{The first occurring entity is relabeled as @entity1, and the second one is relabeled as @entity2, and so on.} and find that this step can make training converge faster as well bring slight gains. We report both results (with and without relabeling) for future reference.
+
+All of our models are run on a single GPU (GeForce GTX TITAN X), with roughly a runtime of 3 hours per epoch for \ti{CNN}, and 12 hours per epoch for \ti{Daily Mail}. We run all the models up to $30$ epochs and select the model that achieves the best accuracy on the development set.
+
+
+We run our models 5 times independently with different random seeds and report average performance across the runs. We also report ensemble results which average the prediction probabilities of the 5 models.
+
+
+% cdm: It'd be good to say how many epochs the models were run for, though I fear that at the moment the answer might be a little motley depending on just how far things had run....
+
+% After $10$ epochs, we halve the learning rate every epoch.
+
+\subsection{Main Results}
+
+\begin{table*}
+\centering
+\begin{tabular}{l C{1.5cm} C{1.5cm} C{1.5cm} C{1.5cm}}
+\toprule
+\multirow{2}{*}{Model} & \multicolumn{2}{c}{CNN} &  \multicolumn{2}{c}{Daily Mail} \\
+& Dev & Test & Dev & Test \\
+\midrule
+ Frame-semantic model $^\dagger$ &36.3  & 40.2 & 35.5 & 35.5 \\
+ Word distance model $^\dagger$ & 50.5 & 50.9 & 56.4 & 55.5 \\
+ Deep LSTM Reader $^\dagger$ & 55.0 & 57.0 & 63.3 & 62.2 \\
+Attentive Reader $^\dagger$ & 61.6 & 63.0 & 70.5 & 69.0 \\
+ Impatient Reader $^\dagger$ & 61.8 & 63.8 & 69.0 & 68.0 \\
+\midrule
+MemNNs (window memory) $^\ddagger$ & 58.0 & 60.6 & N/A & N/A \\
+MemNNs (window memory + self-sup.) $^\ddagger$ & 63.4 & 66.8 & N/A & N/A\\
+MemNNs (ensemble) $^\ddagger$ & 66.2\rlap{$^*$} & 69.4\rlap{$^*$} & N/A & N/A \\
+\midrule
+% \hline
+% AS Reader $^\ddagger$ &  68.6 & 69.5 & 75.0 & 73.9 \\
+% \hline
+% Ours: IR &  & & & \\
+Ours: Classifier & 67.1 & 67.9 & 69.1 & 68.3 \\
+\midrule
+Ours: Neural net & 72.5 & 72.7 & 76.9 & 76.0 \\
+Ours: Neural net (ensemble) &  76.2\rlap{$^*$} & 76.5\rlap{$^*$} & 79.5\rlap{$^*$} & 78.7\rlap{$^*$} \\
+\midrule
+Ours: Neural net (relabeling) &  \tf{73.8} & \tf{73.6} & \tf{77.6} & \tf{76.6} \\
+Ours: Neural net (relabeling, ensemble) & \tf{77.2}\rlap{$^*$} & \tf{77.6}\rlap{$^*$} & \tf{80.2}\rlap{$^*$} & \tf{79.2}\rlap{$^*$}\\
+\bottomrule
+\end{tabular}
+\caption{Accuracy of all models on the \ti{CNN} and \ti{Daily Mail} datasets. Results marked $^\dagger$ are from \protect\cite{hermann2015teaching} and results marked $^\ddagger$ are from \protect\cite{hill2016goldilocks}. \ti{Classifier} and \ti{Neural net} denote our entity-centric classifier and neural network systems respectively. The numbers marked with $^*$ indicate that the results are from ensemble models.}
+\label{table:main-results}
+\end{table*}
+
+Table~\ref{table:main-results} presents our main results. The conventional feature-based classifier obtains $67.9\%$ accuracy on the \ti{CNN} test set. Not only does this significantly outperform any of the symbolic approaches reported in \cite{hermann2015teaching}, it also outperforms all the neural network systems from their paper and the best single-system result reported so far from \cite{hill2016goldilocks}. This suggests that the task might not be as difficult as suggested, and a simple feature set can cover many of the cases. Table \ref{table:feature-ablation} presents a feature ablation analysis of our entity-centric classifier on the development portion of the \ti{CNN} dataset. It shows that $n$-gram match and frequency of entities
+% and word distance
+are the two most important classes of features.
+
+
+
+\begin{table}
+\begin{center}
+\begin{tabular}{l  c }
+\toprule
+Features & Accuracy \\
+\midrule
+Full model &  67.1 \\
+% \midrule
+$-$ whether $e$ is in the passage & 67.1 \\
+$-$ whether $e$ is in the question & 67.0 \\
+$-$ frequency of $e$ & \tf{63.7} \\
+$-$ position of $e$ & 65.9 \\
+$-$ $n$-gram match & \tf{60.5} \\
+$-$ word distance & 65.4 \\
+$-$ sentence co-occurrence & 66.0 \\
+$-$ dependency parse match & 65.6 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\caption{Feature ablation analysis of our entity-centric classifier on
+  the development portion of the \ti{CNN} dataset. The numbers denote
+  the accuracy after we exclude each feature from the full system, so
+  a low number indicates an important feature.}
+\label{table:feature-ablation}
+\end{table}
+
+More dramatically, our single-model neural network surpasses the previous results by a large margin (over 5\%). The relabeling process further improves the results by $0.6\%$ and $0.9\%$, pushing up the state-of-the-art accuracies to {\finalcnn} and {\finaldm} on the two datasets respectively. The ensembles of $5$ models consistently bring further $2 - 4\%$ gains.
+
+% Due to resource constraints, we have not had a chance to investigate ensembles of models, which generally can bring further gains, as demonstrated in \cite{hill2016goldilocks} and many other papers.
+
+% As demonstrated by previous neural MT work (e.g., \cite{sutskever2014sequence}), ensembles of NN models fairly consistently bring further gains.
+
+% Besides, we also test an ensemble model, which averages the prediction probabilities of $5$ neural network models, and it boosted accuracy on the \ti{CNN} dataset by a further $2$ points, roughly mirroring the gains from ensembling in \cite{hill2016goldilocks}. \footnote{Due to resource constraints, we haven't had the chance to investigate more ensemble models, especially on the \ti{Daily Mail} dataset. As demonstrated by previous neural MT work (e.g., \cite{sutskever2014sequence}), ensembles of NN models fairly consistently bring further gains.}
+
+
+
+Concurrently with our paper, \newcite{kadlec2016text} and \newcite{kobayashi2016dynamic} also experiment on these two datasets and report competitive results. However, our model not only still outperforms theirs, but also appears to be structurally simpler. All these recent efforts converge to similar numbers, and we believe that they are approaching the ceiling performance of this task, as we will indicate in the next section.
+
+
+% In the next section, we will conduct an in-depth data analysis on \ti{CNN} dataset, and would like to examine on which of examples our models are able to predict correctly, and on which they are not.
+

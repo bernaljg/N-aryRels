@@ -1,0 +1,62 @@
+\setlength{\fboxsep}{0pt}%
+\setlength{\fboxrule}{2pt}%
+
+\begin{figure}[t]
+% \vspace{10pt}
+\centering
+
+\def\imheight{1cm}
+\def\qnumone{253}
+\def\qnumtwo{1611}
+\def\qnumthree{1609}
+
+\hspace{-10pt}
+
+\setlength\tabcolsep{2mm}
+% \def\arraystretch{1.2}
+
+\begin{tabular}{cccc}
+
+% \hline
+
+\fcolorbox{green}{black}{\includegraphics[height=\imheight]{fig/negatives/q\qnumone.jpg}} &
+\includegraphics[height=\imheight]{fig/negatives/q\qnumone_m2_n1.jpg} &
+\foreach \neg in {2,3}  { 
+	\includegraphics[height=\imheight]{fig/negatives/q\qnumone_m2_n\neg.jpg}
+} $\ldots$& 
+\foreach \neg in {4,5}  { 
+	\includegraphics[height=\imheight]{fig/negatives/q\qnumone_m1_n\neg.jpg}
+}$\ldots$\\
+
+% \hline
+
+\fcolorbox{green}{black}{\includegraphics[height=\imheight]{fig/negatives/q\qnumtwo.jpg}} &
+\includegraphics[height=\imheight]{fig/negatives/q\qnumtwo_m2_n1.jpg} &
+\foreach \neg in {3,4}  { 
+	\includegraphics[height=\imheight]{fig/negatives/q\qnumtwo_m2_n\neg.jpg}
+}$\ldots$ & 
+\foreach \neg in {2,5}  { 
+	\includegraphics[height=\imheight]{fig/negatives/q\qnumtwo_m1_n\neg.jpg}
+}$\ldots$\\
+
+% \hline
+
+\fcolorbox{green}{black}{\includegraphics[height=\imheight]{fig/negatives/q\qnumthree.jpg}} &
+\includegraphics[height=\imheight]{fig/negatives/q\qnumthree_m2_n1.jpg} &
+\foreach \neg in {2,3,4}  { 
+	\includegraphics[height=\imheight]{fig/negatives/q\qnumthree_m2_n\neg.jpg}
+}$\ldots$ & 
+\foreach \neg in {2,3,4}  { 
+	\includegraphics[height=\imheight]{fig/negatives/q\qnumthree_m1_n\neg.jpg}
+}$\ldots$\\
+
+$q$ & $n(q)$ & $\cN_1(q)$ & $\cN_2(q)$ \\
+
+% \hline
+
+\end{tabular}\\[-.7\baselineskip]
+\vspace{5pt}
+\caption{Examples of training query images $q$ (green border), hardest non-matching images $n(q)$ that are always selected as negative examples, and additional non-matching images selected as negative examples by $\cN_1(q)$ and $\cN_2(q)$ methods respectively.
+\label{fig:negatives}
+\vspace{10pt}}
+\end{figure}

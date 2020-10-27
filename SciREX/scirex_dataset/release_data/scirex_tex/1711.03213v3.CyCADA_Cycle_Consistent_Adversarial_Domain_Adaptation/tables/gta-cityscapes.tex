@@ -1,0 +1,40 @@
+\begin{table*}[h]
+  \begin{center}
+  \scriptsize
+  \setlength{\tabcolsep}{1.35pt}
+  \begin{tabular}{l|c|cccccccccccccccccccggg}
+    \toprule
+    \multicolumn{24}{c}{\textbf{GTA5 $\rightarrow$ Cityscapes}} \\
+    \midrule
+     &\rot{Architecture} & \rot{road} & \rot{sidewalk} & \rot{building} & \rot{wall} & \rot{fence} & \rot{pole} & \rot{traffic light} & \rot{traffic sign} & \rot{vegetation} & \rot{terrain} & \rot{sky} & \rot{person} & \rot{rider} & \rot{car} & \rot{truck} & \rot{bus} & \rot{train} & \rot{motorbike} & \rot{bicycle} & \rot{\textbf{mIoU}} & \rot{\textbf{fwIoU}} & \rot{\textbf{Pixel acc.}} \\ \midrule
+    Source only & A            & 26.0 & 14.9 & 65.1 &  5.5 & 12.9 &  8.9 &  6.0 &  2.5 & 70.0 &  2.9 & 47.0 & 24.5 &  0.0 & 40.0 & 12.1 &  1.5 &  0.0 &  0.0 &  0.0 & 17.9 & 41.9 & 54.0 \\
+    FCNs in the wild$^*$ & A & 70.4 & 32.4 & 62.1 & 14.9 &  5.4 & 10.9 & 14.2 &  2.7 & 79.2 & 21.3 & 64.6 & 44.1 &  4.2 & 70.4 &  8.0 &  7.3 &  0.0 &  3.5 &  0.0 & 27.1 & ---  & ---  \\
+		%85.6	30.7	74.7	14.4	13.0	17.6	13.7	5.8	74.6	15.8	69.9	38.2	3.5	72.3	16.0	5.0	0.1	3.6	0.0
+	CyCADA feat-only & A & \bf 85.6 &30.7& 74.7 &14.4 &13.0 &17.6 &13.7 &5.8 &74.6& 15.8 &\textbf{69.9} &38.2 &3.5 &72.3& 16.0& 5.0& 0.1 &3.6 &0.0& 29.2 & 71.5 & 82.5\\ %gta_fcn/adda/lr-1e-5_lambdaD-10_lambdaG-.1_rho-0.99_no_lsgan_weights_shared_discrim_feat_rot-0/net-iter5000.pth
+	%
+    CyCADA pixel-only & A & {83.5} & \textbf{38.3} & \textbf{76.4} & {20.6} & \textbf{16.5} &{22.2} & \textbf{26.2} & \textbf{21.9} & \textbf{80.4} & {28.7} & {65.7} & {49.4} &  4.2 & {74.6} & {16.0} & {26.6} &  {2.0} &  {8.0} &  0.0 & {34.8} & {73.1} & {82.8} \\
+	%
+	CyCADA pixel+feat & A & 85.2&	 37.2 	&\textbf{76.5} 	&\textbf{21.8} 	&15.0& 	\textbf{23.8}&	 22.9& 	21.5 	&\textbf{80.5} 	&\textbf{31.3} 	&60.7 	&\textbf{50.5} 	&\textbf{9.0}	 &\textbf{76.9} 	&\textbf{17.1} 	&\textbf{28.2} 	&\textbf{4.5} 	&\textbf{9.8} 	&0.0& \textbf{35.4} & \bf73.8 & \bf83.6\\ %cyclegta_fcn/adda/lr-1e-5_lambdaD-10_lambdaG-.1_rho-0.99_no_lsgan_weights_shared_discrim_feat_rot-0/net-2000
+	\midrule
+		Oracle - Target Super & A   & 96.4 & 74.5 & 87.1 & 35.3 & 37.8 & 36.4 & 46.9 & 60.1 & 89.0 & 54.3 & 89.8 & 65.6 & 35.9 & 89.4 & 38.6 & 64.1 & 38.6 & 40.5 & 65.1 & 60.3 & 87.6 & 93.1 \\
+		\midrule
+		\midrule
+			Source only & B & 	42.7 &	26.3 &	51.7 &	5.5 &	6.8 &	13.8 &	23.6 &	6.9 &	75.5 &	11.5 &	36.8 &	49.3 &	0.9 &	46.7 &	3.4 &	5.0 &	0.0 &	5.0 &	1.4 & 21.7 &	47.4 &	62.5 \\
+		CyCADA feat-only & B & 	78.1 &	31.1 &	71.2 &	10.3 &	14.1 &	29.8 &	28.1 &	20.9 &	74.0 &	16.8 &	51.9 &	53.6 &	6.1 &	65.4 &	8.2 &	20.9 &	1.8 &	13.9 &	5.9 & 31.7 &	67.4 &	78.4 \\
+		 %results/gta5_to_cityscapes/adda_sgd/weights_unshared_nolsgan_discrim_score/drn26/lr1e-4_crop768_ld1_lg1/net-iter5000.pth
+		 %
+		CyCADA pixel-only & 	B & 63.7 &	24.7 &	69.3 &	21.2 &	17.0 &	30.3 &	33.0 &	
+		\bf 32.0 &	80.5 &	25.3 &	62.3 &	62.0 &	\bf 15.1 &	73.1 &	19.8 &	23.6 &	5.5 &	16.2 &	\bf 28.7 & 37.0 &	63.8 &	75.4 \\ % drn26-cyclegta5-iter115000.pth 
+		%
+		CyCADA pixel+feat & B & \bf 79.1&	\bf 33.1&	\bf 77.9&	\bf 23.4&	\bf 17.3&	\bf 32.1&	\bf 33.3&	31.8& \bf	81.5&	\bf 26.7&	\bf 69.0	&\bf 62.8&	14.7&	\bf 74.5	&\bf 20.9	&\bf 25.6	&\bf 6.9&	\bf 18.8&	20.4 & \bf 39.5	&\bf 72.4&	\bf 82.3\\ %durian8:results/cyclegta5_to_cityscapes/adda_sgd/weights_shared_nolsgan_discrim_score/drn26/lr1e-5_crop768_ld1_lg0.1_momentum0.99/net-iter2975.pt
+		\midrule
+		Oracle - Target Super & B   & 97.3	&79.8&	88.6	&32.5&	48.2&	56.3&	63.6	&73.3	&89.0&	58.9&	93.0&	78.2&	55.2&	92.2&	45.0&	67.3&	39.6&	49.9&	73.6 & 67.4	& 89.6 & 94.3\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \caption{
+    Adaptation between GTA5 and Cityscapes, showing IoU for each class and mean IoU, freq-weighted IoU and pixel accuracy.
+    CyCADA significantly outperforms baselines, nearly closing the gap to the target-trained oracle on pixel accuracy. $^*$FCNs in the wild is by \citet{hoffman_arxiv16}. We compare our model using two base semantic segmentation architectures (A) VGG16-FCN8s~\citep{long_cvpr15} base network and (B) DRN-26~\citep{drn}.
+    }
+  \label{table:gta-cityscapes}
+\end{table*}

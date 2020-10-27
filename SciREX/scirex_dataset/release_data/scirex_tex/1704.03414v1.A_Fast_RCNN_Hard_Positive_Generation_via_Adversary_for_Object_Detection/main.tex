@@ -1,0 +1,139 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{gensymb}
+
+
+\usepackage{color}
+\newcommand{\comment}[1]{{\color{red} #1}}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{hhline}
+\usepackage{makecell}
+\usepackage{colortbl}
+\usepackage[normalem]{ulem}
+\usepackage{soul}
+\usepackage{url}
+\definecolor{Gray}{rgb}{0.7,0.7,0.7}
+%sort&compress
+\usepackage[square,comma,numbers,sort]{natbib}
+\renewcommand{\bibname}{References}
+\renewcommand{\hl}[1]{\underline{\textbf{#1}}}
+
+\usepackage[
+	pagebackref=true,
+	breaklinks=true,
+	letterpaper=true,
+	colorlinks,
+	bookmarks=false,
+	citecolor=red,
+	linkcolor=blue]{hyperref}
+
+\renewcommand{\baselinestretch}{0.98}
+
+
+\newcolumntype{x}{>\small c}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\renewcommand{\hl}[1]{\underline{\textbf{#1}}}
+\newcolumntype{o}{>\small L}
+
+% Include other packages here, before hyperref.
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+ \cvprfinalcopy % *** Uncomment this line for the final submission
+
+\def\cvprPaperID{946} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+\ifcvprfinal\pagestyle{empty}\fi
+\begin{document}
+
+%%%%%%%%% TITLE
+\title{A-Fast-RCNN: Hard Positive Generation via Adversary for Object Detection}
+
+\author{Xiaolong Wang  \quad     \quad  Abhinav Shrivastava    \quad  \quad  Abhinav Gupta  \\
+The Robotics Institute, Carnegie Mellon University \\
+%{\tt\small \{xiaolonw, abhinavg\}@cs.cmu.edu}
+}
+
+\maketitle
+%\thispagestyle{empty}
+
+%%%%%%%%% ABSTRACT
+\begin{abstract}
+How do we learn an object detector that is invariant to occlusions and deformations? Our current solution is to use a data-driven strategy -- collect large-scale datasets which have object instances under different conditions. The hope is that the final classifier can use these examples to learn invariances. But is it really possible to see all the occlusions in a dataset? We argue that like categories, occlusions and object deformations also follow a long-tail. Some occlusions and deformations are so rare that they  hardly happen; yet we want to learn a model invariant to such occurrences. In this paper, we propose an alternative solution. We propose to learn an adversarial network that generates examples with occlusions and deformations. The goal of the adversary is to generate examples that are difficult for the object detector to classify. In our framework both the original detector and adversary are learned in a  joint manner. Our experimental results indicate a 2.3\% mAP boost on VOC07 and a 2.6\% mAP boost on VOC2012 object detection challenge compared to the Fast-RCNN pipeline. We also release the  code\footnote{\url{https://github.com/xiaolonw/adversarial-frcnn}} for this paper.  
+\end{abstract}
+
+
+\vspace{-0.1in}
+\section{Introduction}
+\vspace{-0.05in}
+The goal of object detection is to learn a visual model for concepts such as cars and use this model to localize these concepts in an image. This requires the ability to robustly model invariances to illuminations, deformations, occlusions and other intra-class variations. The standard paradigm to handle these invariances is to collect large-scale datasets which have object instances under different conditions. For example, the COCO dataset~\cite{coco} has more than 10K examples of cars under different occlusions and deformations. The hope is that these examples capture all possible variations of a visual concept and the classifier can then effectively model invariances to them. We believe this has been one of the prime reasons why ConvNets have been so successful at the task of object detection: they are able to use all this data to learn invariances.
+
+\begin{figure}
+    \centering
+    \vspace{-0.25in}
+    \includegraphics[width=\linewidth]{teaser2.pdf}
+    \caption{We argue that both occlusions and deformations follow a long-tail distribution. Some occlusions and deformations are rare. In this paper, we propose to use an adversarial network to generate examples with occlusions and deformations that will be hard for an object detector to classify. Our adversarial network adapts as the object detector becomes better and better. We show boost in detection accuracy with this adversarial learning strategy  empirically.}\label{fig:occlusions}
+    \vspace{-0.2in}
+\end{figure}
+
+
+However, like object categories, we believe even occlusions and deformations follow a long-tail distribution. That is, some of the occlusions and deformations are so rare that there is a low chance that they will occur in large-scale datasets. 
+For example, consider the occlusions shown in Figure~\ref{fig:occlusions}. We notice that some occlusions occur more often than others (\eg, occlusion from other cars in a parking garage is more frequent than from an air conditioner). Similarly, some deformations in animals are common (\eg, sitting/standing poses) while other deformations are very rare.
+
+So, how can we learn invariances to such rare/uncommon occlusions and deformations? While collecting even larger datasets is one possible solution, it is not likely to scale due to the long-tail statistics.
+
+Recently, there has been a lot of work on generating images (or pixels)~\cite{goodfellow2014generative,Denton15,Alec15}. One possible way to learn about these rare occurrences is to generate realistic images by sampling from the tail distribution. However, this is not a feasible solution since image generation would require training examples of these rare occurrences to begin with. Another solution is to generate all possible occlusions and deformations and train object detectors from them. However, since the space of deformations and occlusions is huge, this is not a scalable solution. It has been shown that using all examples is often not the optimal solution~\cite{shrivastavaOHEM,minibatchSVM} and selecting hard examples is better. Is there a way we can generate ``hard'' positive examples with different occlusions and deformations and without generating the pixels themselves?
+
+
+How about training another network: an adversary that creates hard examples by blocking some feature maps spatially or creates spatial deformations by manipulating feature responses. This adversary will predict what it thinks will be hard for a detector like Fast-RCNN~\cite{frcn} and in turn the Fast-RCNN will adapt itself to learn to classify these adversarial examples. The key idea here is to create adversarial examples in convolutional feature space and not generate the pixels directly since the latter is a much harder problem. In our experiments, we show substantial improvements in performance of the adversarial Fast-RCNN (A-Fast-RCNN) compared to the standard Fast-RCNN pipeline.
+
+\input{related.tex}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=1\textwidth]{network_fp.pdf}
+    \caption{Our network architecture of ASDN and how it combines with Fast RCNN approach. Our ASDN network takes as input image patches with features extracted using RoI pooling layer. ASDN network than predicts an occlusion/dropout mask which is then used to drop the feature values and passed onto classification tower of Fast-RCNN.}\label{fig:network}
+\end{figure*}
+
+\input{overview.tex}
+\input{approach.tex}
+\input{experiments.tex}
+
+\vspace{-0.05in}
+\section{Conclusion}
+\vspace{-0.05in}
+
+
+One of the long-term goals of object detection is to learn object models that are invariant to occlusions and deformations. Current approaches focus on learning these invariances by using large-scale datasets. In this paper, we argue that like categories, occlusions and deformations also follow a long-tail distribution: some of them are so rare that they might be hard to sample even in a large-scale dataset. We propose to learn these invariances using adversarial learning strategy. The key idea is to learn an adversary in conjunction with original object detector. This adversary creates examples on the fly with different occlusions and deformations, such that these occlusions/deformations make it difficult for original object detector to classify. Instead of generating examples in pixel space, our adversarial network modifies the features to mimic occlusion and deformations. We show in our experiments that such an adversarial learning strategy provides significant boost in detection performance on VOC and COCO dataset.
+
+
+{\footnotesize
+\noindent {\bf Acknowledgement}:This work is supported by the Intelligence Advanced Research Projects Activity (IARPA) via Department of Interior/ Interior Business Center (DoI/IBC) contract number D16PC00007. The U.S. Government is authorized to reproduce and distribute reprints for Governmental purposes notwithstanding any copyright annotation thereon. Disclaimer: The views and conclusions contained herein are those of the authors and should not be interpreted as necessarily representing the official policies or endorsements, either expressed or implied, of IARPA, DoI/IBC, or the U.S. Government. AG was also supported by Sloan Fellowship.}
+
+
+
+{\small
+\bibliographystyle{ieee}
+\bibliography{local}
+}
+
+
+\end{document}

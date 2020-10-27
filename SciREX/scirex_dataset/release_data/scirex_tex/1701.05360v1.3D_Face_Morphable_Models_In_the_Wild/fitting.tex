@@ -1,0 +1,308 @@
+%
+\section{Model Fitting}
+\label{sec:fitting}
+
+We propose to fit the 3DMM on an input image using Gauss-Newton iterative
+optimization. To this end, herein, we first formulate the cost function and
+then present two optimization procedures.
+
+%
+%
+%
+\subsection{Cost Function}
+The overall cost function of the proposed 3DMM formulation consists of a
+texture-based term, an optional error term based on sparse 2D landmarks and
+optional regularization terms on the parameters.
+
+%
+\textbf{Texture reconstruction cost.} The main term of the optimization problem
+is the one that aims to estimate the shape, texture and camera parameters that
+minimize the ${\ell_2}^2$ norm of the difference between the image feature-based texture that corresponds to the projected 2D locations of the 3D shape instance and the texture instance of the 3DMM. 
+Let us denote by $\mathbf{F}=\mathcal{F}(\mathbf{I})$ the feature-based representation with $C$ channels of an input image $\mathbf{I}$ using Eq.~\ref{equ:features}. 
+Then, the texture reconstruction cost is expressed as
+%
+\begin{equation}
+\argmin_{\mathbf{p}, \mathbf{c}, \boldsymbol{\lambda}}
+\left\lVert\mathbf{F}\left(\mathcal{W}(\mathbf{p},\mathbf{c})\right) - \mathcal{T}(\boldsymbol{\lambda})\right\rVert^2
+\label{equ:data_cost}
+\end{equation}
+%
+Note that $\mathbf{F}\left(\mathcal{W}(\mathbf{p},\mathbf{c})\right)\in\mathbb{R}^{CN}$ denotes
+the operation of sampling the feature-based input image on the projected 2D locations of the 3D shape instance acquired by the camera model (Eq.~\ref{equ:camera_model}).
+
+%
+\textbf{Regularization.} In order to avoid over-fitting effects, we augment the
+cost function with two optional regularization terms over the shape and texture
+parameters. Let us denote as $\mathbf{\Sigma}_s\in\mathbb{R}^{n_s\times n_s}$
+and $\mathbf{\Sigma}_t\in\mathbb{R}^{n_t\times n_t}$ the diagonal matrices with
+the eigenvalues in their main diagonal for the shape and texture models,
+respectively. Based on the PCA nature of the shape and texture models, it is
+assumed that their parameters follow normal prior distributions, i.e.
+$\mathbf{p}\sim\mathcal{N}(\mathbf{0},\mathbf{\Sigma}_s)$ and
+$\boldsymbol{\lambda}\sim\mathcal{N}(\mathbf{0},\mathbf{\Sigma}_t)$.
+We formulate the regularization terms as the ${\ell_2}^2$ of the
+parameters' vectors weighted with the corresponding inverse eigenvalues, i.e.
+%
+\begin{equation}
+\argmin_{\mathbf{p}, \boldsymbol{\lambda}}~c_s\left\lVert\mathbf{p}\right\rVert^2_{\mathbf{\Sigma}_s^{-1}} + c_t\left\lVert\boldsymbol{\lambda}\right\rVert^2_{\mathbf{\Sigma}_t^{-1}}
+\label{equ:priors}
+\end{equation}
+%
+where $c_s$ and $c_t$ are constants that weight the contribution of the regularization
+terms in the cost function.
+
+%
+\textbf{2D landmarks cost.} In order to rapidly adapt the camera parameters in
+the cost of Eq.~\ref{equ:data_cost}, we further expand the optimization problem
+with the term
+%
+\begin{equation}
+\argmin_{\mathbf{p},\mathbf{c}}~c_l\left\lVert\mathcal{W}_l(\mathbf{p},\mathbf{c}) - \mathbf{s}_l\right\rVert^2
+\label{equ:landmarks_cost}
+\end{equation}
+%
+where $\mathbf{s}_l={\left[x_1,y_1,\ldots,x_L,y_L\right]}^\mathsf{T}$ denotes a
+set of $L$ sparse 2D landmark points ($L\ll N$) defined on the image coordinate
+system and $\mathcal{W}_l(\mathbf{p},\mathbf{c})$ returns the $2L\times 1$ vector
+of 2D projected locations of these $L$ sparse landmarks. Intuitively, this term
+aims to drive the optimization procedure using the selected sparse landmarks as
+anchors for which we have the optimal locations $\mathbf{s}_l$.
+This optional landmarks-based cost is weighted with the constant $c_l$.
+
+%
+\textbf{Overall cost function.} The overall 3DMM cost function is formulated as
+the sum of the terms in Eqs.~\ref{equ:data_cost},~\ref{equ:priors},~\ref{equ:landmarks_cost},
+i.e.
+%
+\begin{equation}
+\begin{aligned}
+\argmin_{\mathbf{p},\mathbf{c},\boldsymbol{\lambda}}~& \left\lVert\mathbf{F}\left(\mathcal{W}(\mathbf{p},\mathbf{c})\right) - \mathcal{T}(\boldsymbol{\lambda})\right\rVert^2 + c_l\left\lVert\mathcal{W}_l(\mathbf{p},\mathbf{c}) - \mathbf{s}_l\right\rVert^2 +\\
+& + c_s\left\lVert\mathbf{p}\right\rVert^2_{\mathbf{\Sigma}_s^{-1}} + c_t\left\lVert\boldsymbol{\lambda}\right\rVert^2_{\mathbf{\Sigma}_t^{-1}}
+\label{equ:cost}
+\end{aligned}
+\end{equation}
+%
+The landmarks term as well as the regularization terms are optional and aim to
+facilitate the optimization procedure in order to converge faster and to a better
+minimum. Note that thanks to the proposed ``in-the-wild'' feature-based texture
+model, the cost function does not include any parametric illumination model
+similar to the ones in the relative literature~\cite{blanz1999morphable,blanz2003face}, which greatly
+simplifies the optimization.
+
+%
+%
+%
+\subsection{Gauss-Newton Optimization}
+Inspired by the extensive literature in Lucas-Kanade 2D image
+alignment~\cite{baker2004lucas,matthews2004active,papandreou2008adaptive,tzimiropoulos2013optimization,antonakos2015feature,alabort2016unified},
+we formulate a Gauss-Newton optimization framework. Specifically, given that
+the camera projection model is applied on the image part of
+Eq.~\ref{equ:cost}, the proposed optimization has a ``forward'' nature.
+
+%
+\textbf{Parameters update.} The shape, texture and camera parameters are updated
+in an additive manner, i.e.
+%
+\begin{equation}
+\mathbf{p}\leftarrow\mathbf{p}+\Delta\mathbf{p},~~\boldsymbol{\lambda}\leftarrow\boldsymbol{\lambda}+\Delta\boldsymbol{\lambda},~~\mathbf{c}\leftarrow\mathbf{c}+\Delta\mathbf{c}
+\end{equation}
+%
+where $\Delta\mathbf{p}$, $\Delta\boldsymbol{\lambda}$ and $\Delta\mathbf{c}$
+are their increments estimated at each fitting iteration. 
+Note that in the case of the quaternion
+used to parametrize the 3D rotation matrix, the update is performed as the
+multiplication
+%
+\begin{equation}
+\begin{aligned}
+\mathbf{q}\leftarrow & (\Delta\mathbf{q})\mathbf{q} =
+\left[\begin{array}{c}\Delta q_0\\\Delta\mathbf{q}_{1:3}\end{array}\right]
+\left[\begin{array}{c}q_0\\\mathbf{q}_{1:3}\end{array}\right] = \\
+& = \left[\begin{array}{c}\Delta q_0 q_0 - \Delta\mathbf{q}_{1:3}^\mathsf{T}\mathbf{q}_{1:3}\\ \Delta q_0\mathbf{q}_{1:3} + q_0\Delta\mathbf{q}_{1:3}+\Delta\mathbf{q}_{1:3}\times\mathbf{q}_{1:3}\end{array}\right]
+\end{aligned}
+\end{equation}
+%
+However, we will still denote it as an addition for simplicity. Finally, we found that it is beneficial to keep the focal length constant in most cases, due to its ambiguity with $t_z$.
+
+
+%
+\textbf{Linearization.} By introducing the additive incremental updates on the
+parameters of Eq.~\ref{equ:cost}, the cost function is expressed as
+%
+\begin{equation}
+\begin{aligned}
+\argmin_{\Delta\mathbf{p},\Delta\mathbf{c},\Delta\boldsymbol{\lambda}}~& \left\lVert\mathbf{F}\left(\mathcal{W}(\mathbf{p}+\Delta\mathbf{p},\mathbf{c}+\Delta\mathbf{c})\right) - \mathcal{T}(\boldsymbol{\lambda}+\Delta\boldsymbol{\lambda})\right\rVert^2 + \\
+& + c_l\left\lVert\mathcal{W}_l(\mathbf{p}+\Delta\mathbf{p},\mathbf{c}+\Delta\mathbf{c}) - \mathbf{s}_l\right\rVert^2 +\\
+& + c_s\left\lVert\mathbf{p}+\Delta\mathbf{p}\right\rVert^2_{\mathbf{\Sigma}_s^{-1}} + c_t\left\lVert\boldsymbol{\lambda}+\Delta\boldsymbol{\lambda}\right\rVert^2_{\mathbf{\Sigma}_t^{-1}}
+\end{aligned}
+\label{equ:cost_with_deltas}
+\end{equation}
+%
+Note that the texture reconstruction
+and landmarks constraint terms of this cost function are non-linear due
+to the camera model operation. We need to linearize them around
+$(\mathbf{p}, \mathbf{c})$ using first order Taylor series expansion at
+$(\mathbf{p}+\Delta\mathbf{p},\mathbf{c}+\Delta\mathbf{c})=(\mathbf{p},\mathbf{c})\Rightarrow(\Delta\mathbf{p},\Delta\mathbf{c})=\mathbf{0}$.
+The linearization for the image term gives
+%
+\begin{equation}
+\begin{aligned}
+\mathbf{F}\left(\mathcal{W}(\mathbf{p}+\Delta\mathbf{p},\mathbf{c}+\Delta\mathbf{c})\right) \approx & \mathbf{F}\left(\mathcal{W}(\mathbf{p},\mathbf{c})\right) + \\
+& + \mathbf{J}_{\mathbf{F},\mathbf{p}}\Delta\mathbf{p} + \mathbf{J}_{\mathbf{F},\mathbf{c}}\Delta\mathbf{c}
+\end{aligned}
+\label{equ:image_linearization}
+\end{equation}
+%
+where $\mathbf{J}_{\mathbf{F},\mathbf{p}}=\nabla\mathbf{F}\left.\frac{\partial\mathcal{W}}{\partial\mathbf{p}}\right|_{\mathbf{p}=\mathbf{p}}$
+and
+$\mathbf{J}_{\mathbf{F},\mathbf{c}}=\nabla\mathbf{F}\left.\frac{\partial\mathcal{W}}{\partial\mathbf{c}}\right|_{\mathbf{c}=\mathbf{c}}$
+are the \emph{image Jacobians} with respect to the shape and camera parameters, respectively. Note that most dense feature-extraction functions $\mathcal{F}(\cdot)$ are non-differentiable, thus we simply compute the gradient of the multi-channel feature image $\nabla\mathbf{F}$.
+Similarly, the linearization on the sparse landmarks projection term gives
+%
+\begin{equation}
+\mathcal{W}_l(\mathbf{p}+\Delta\mathbf{p},\mathbf{c}+\Delta\mathbf{c})\approx\mathcal{W}_l(\mathbf{p},\mathbf{c}) + \mathbf{J}_{\mathcal{W}_l,\mathbf{p}}\Delta\mathbf{p} + \mathbf{J}_{\mathcal{W}_l,\mathbf{c}}\Delta\mathbf{c}
+\label{equ:landmarks_linearization}
+\end{equation}
+%
+where
+$\mathbf{J}_{\mathcal{W}_l,\mathbf{p}}=\left.\frac{\partial\mathcal{W}_l}{\partial\mathbf{p}}\right|_{\mathbf{p}=\mathbf{p}}$
+and
+$\mathbf{J}_{\mathcal{W}_l,\mathbf{c}}=\left.\frac{\partial\mathcal{W}_l}{\partial\mathbf{c}}\right|_{\mathbf{c}=\mathbf{c}}$
+are the \emph{camera Jacobians}. Please refer to the supplementary material for more details on the computation of these derivatives.
+
+
+%
+\subsubsection{Simultaneous}
+Herein, we aim to simultaneously solve for all parameters' increments.
+By substituting Eqs.~\ref{equ:image_linearization} and~\ref{equ:landmarks_linearization}
+in Eq.~\ref{equ:cost_with_deltas} we get
+%
+\begin{equation}
+\begin{aligned}
+&\argmin_{\Delta\mathbf{p},\Delta\mathbf{c},\Delta\boldsymbol{\lambda}}\\
+&\left\lVert\mathbf{F}\left(\mathcal{W}(\mathbf{p},\mathbf{c})\right) + \mathbf{J}_{\mathbf{F},\mathbf{p}}\Delta\mathbf{p} + \mathbf{J}_{\mathbf{F},\mathbf{c}}\Delta\mathbf{c} - \mathcal{T}(\boldsymbol{\lambda}+\Delta\boldsymbol{\lambda})\right\rVert^2 + \\
+&+ c_l\left\lVert\mathcal{W}_l(\mathbf{p},\mathbf{c}) + \mathbf{J}_{\mathcal{W}_l,\mathbf{p}}\Delta\mathbf{p} + \mathbf{J}_{\mathcal{W}_l,\mathbf{c}}\Delta\mathbf{c} - \mathbf{s}_l\right\rVert^2 +\\
+&+ c_s\left\lVert\mathbf{p}+\Delta\mathbf{p}\right\rVert^2_{\mathbf{\Sigma}_s^{-1}} + c_t\left\lVert\boldsymbol{\lambda}+\Delta\boldsymbol{\lambda}\right\rVert^2_{\mathbf{\Sigma}_t^{-1}}
+\end{aligned}
+\label{equ:simultaneous_cost}
+\end{equation}
+%
+Let us concatenate the parameters and their increments as
+$\mathbf{b}={[\mathbf{p}^\mathsf{T}, \mathbf{c}^\mathsf{T}, \boldsymbol{\lambda}^\mathsf{T}]}^\mathsf{T}$
+and
+$\Delta\mathbf{b}={[\Delta\mathbf{p}^\mathsf{T}, \Delta\mathbf{c}^\mathsf{T}, \Delta\boldsymbol{\lambda}^\mathsf{T}]}^\mathsf{T}$.
+By taking the derivative of the final linearized cost function with respect to
+$\Delta\mathbf{b}$ and equalizing with zero, we get the solution
+%
+\begin{equation}
+\mathbf{b} = -\mathbf{H}^{-1} \left(\mathbf{J}_{\mathbf{F}}^\mathsf{T}\mathbf{e}_{\mathbf{F}} + c_l\mathbf{J}_{\mathcal{W}_l}^\mathsf{T}\mathbf{e}_l + c_s\mathbf{\Sigma}_s^{-1}\mathbf{p} + c_t\mathbf{\Sigma}_t^{-1}\boldsymbol{\lambda}\right)
+\end{equation}
+%
+where
+$\mathbf{H}={\mathbf{J}_{\mathbf{F}}}^\mathsf{T}\mathbf{J}_{\mathbf{F}} + c_l{\mathbf{J}_{\mathcal{W}_l}}^\mathsf{T}\mathbf{J}_{\mathcal{W}_l} + c_s\mathbf{\Sigma}_s^{-1} + c_t\mathbf{\Sigma}_t^{-1}$
+is the Hessian with
+%
+\begin{equation}
+\begin{aligned}
+\mathbf{J}_{\mathbf{F}} = &~{\left[\mathbf{J}_{\mathbf{F},\mathbf{p}}^\mathsf{T}, \mathbf{J}_{\mathbf{F},\mathbf{c}}^\mathsf{T}, -\mathbf{U}_t^\mathsf{T}\right]}^\mathsf{T}\\
+\mathbf{J}_{\mathcal{W}_l} = &~{\left[\mathbf{J}_{\mathcal{W}_l,\mathbf{p}}^\mathsf{T}, \mathbf{J}_{\mathcal{W}_l,\mathbf{c}}^\mathsf{T}, \mathbf{0}_{n_t\times 2L}\right]}^\mathsf{T}
+\end{aligned}
+\end{equation}
+%
+and
+%
+\begin{equation}
+\begin{aligned}
+\mathbf{e}_{\mathbf{F}} = &~\mathbf{F}\left(\mathcal{W}(\mathbf{p},\mathbf{c})\right) - \mathcal{T}(\boldsymbol{\lambda})\\
+\mathbf{e}_l = &~\mathcal{W}_l(\mathbf{p},\mathbf{c}) - \mathbf{s}_l
+\end{aligned}
+\end{equation}
+%
+are the residual terms. The computational complexity of the Simultaneous algorithm per iteration is dominated by the texture reconstruction term as
+$\mathcal{O}((n_s+n_c+n_t)^3 + CN(n_s+n_c+n_t)^2)$, which in practice is too slow.
+
+
+
+%
+\subsubsection{Project-Out}
+We propose to use a Project-Out optimization approach that is much faster than the Simultaneous. The main idea is to optimize on the orthogonal complement of the texture subspace which will eliminate the need to solve for the texture parameters increment at each iteration. By substituting Eqs.~\ref{equ:image_linearization} and~\ref{equ:landmarks_linearization}
+into Eq.~\ref{equ:cost_with_deltas} and removing the incremental update on the
+texture parameters as well as the texture parameters regularization term,
+we end up with the problem
+%
+\begin{equation}
+\begin{aligned}
+\argmin_{\Delta\mathbf{p},\Delta\mathbf{c},\boldsymbol{\lambda}}~& \left\lVert\mathbf{F}\left(\mathcal{W}(\mathbf{p},\mathbf{c})\right) + \mathbf{J}_{\mathbf{F},\mathbf{p}}\Delta\mathbf{p} + \mathbf{J}_{\mathbf{F},\mathbf{c}}\Delta\mathbf{c} - \mathcal{T}(\boldsymbol{\lambda})\right\rVert^2 + \\
+& + c_l\left\lVert\mathcal{W}_l(\mathbf{p},\mathbf{c}) + \mathbf{J}_{\mathcal{W}_l,\mathbf{p}}\Delta\mathbf{p} + \mathbf{J}_{\mathcal{W}_l,\mathbf{c}}\Delta\mathbf{c} - \mathbf{s}_l\right\rVert^2 +\\
+& + c_s\left\lVert\mathbf{p}+\Delta\mathbf{p}\right\rVert^2_{\mathbf{\Sigma}_s^{-1}}
+\end{aligned}
+\label{equ:project_out_cost}
+\end{equation}
+%
+The solution of Eq.~\ref{equ:project_out_cost} with respect to $\boldsymbol{\lambda}$ is
+readily given by
+%
+\begin{equation}
+\boldsymbol{\lambda} = {\mathbf{U}_t}^\mathsf{T} \left(\mathbf{F}(\mathcal{W}(\mathbf{p},\mathbf{c})) + \mathbf{J}_{\mathbf{F},\mathbf{p}}\Delta\mathbf{p} + \mathbf{J}_{\mathbf{F},\mathbf{c}}\Delta\mathbf{c} - \bar{\mathbf{t}}\right)
+\label{equ:lambda_solution}
+\end{equation}
+%
+By plugging Eq.~\ref{equ:lambda_solution} into Eq.~\ref{equ:project_out_cost},
+we get
+%
+\begin{equation}
+\begin{aligned}
+\argmin_{\Delta\mathbf{p},\Delta\mathbf{c}}~& \left\lVert\mathbf{F}\left(\mathcal{W}(\mathbf{p},\mathbf{c})\right) + \mathbf{J}_{\mathbf{F},\mathbf{p}}\Delta\mathbf{p} + \mathbf{J}_{\mathbf{F},\mathbf{c}}\Delta\mathbf{c} - \bar{\mathbf{t}}\right\rVert^2_\mathbf{P} + \\
+& + c_l\left\lVert\mathcal{W}_l(\mathbf{p},\mathbf{c}) + \mathbf{J}_{\mathcal{W}_l,\mathbf{p}}\Delta\mathbf{p} + \mathbf{J}_{\mathcal{W}_l,\mathbf{c}}\Delta\mathbf{c} - \mathbf{s}_l\right\rVert^2 +\\
+& + c_s\left\lVert\mathbf{p}+\Delta\mathbf{p}\right\rVert^2_{\mathbf{\Sigma}_s^{-1}}
+\end{aligned}
+\label{equ:project_out_cost_2}
+\end{equation}
+%
+where $\mathbf{P}=\mathbf{E}-\mathbf{U}_t{\mathbf{U}_t}^\mathsf{T}$ is the
+orthogonal complement of the texture subspace that functions as the
+``project-out'' operator with $\mathbf{E}$ denoting the $CN \times CN$ unitary matrix.
+Note that in order to derive Eq.~\ref{equ:project_out_cost_2}, we use the properties
+$\mathbf{P}^\mathsf{T}=\mathbf{P}$
+and
+$\mathbf{P}^\mathsf{T}\mathbf{P}=\mathbf{P}$. By differentiating
+Eq.~\ref{equ:project_out_cost_2} and equalizing to zero, we get the solution
+%
+\begin{equation}
+\begin{aligned}
+\Delta\mathbf{p} = &~{\mathbf{H}_{\mathbf{p}}}^{-1} \left( \mathbf{J}_{\mathbf{F},\mathbf{p}}^\mathsf{T} \mathbf{P} \mathbf{e}_{\mathbf{F}} + c_l\mathbf{J}_{\mathcal{W}_l,\mathbf{p}}^\mathsf{T}\mathbf{e}_l + c_s\mathbf{\Sigma}^{-1}_s\mathbf{p}\right)\\
+\Delta\mathbf{c} = &~{\mathbf{H}_{\mathbf{c}}}^{-1} \left( \mathbf{J}_{\mathbf{F},\mathbf{c}}^\mathsf{T} \mathbf{P} \mathbf{e}_{\mathbf{F}} + c_l\mathbf{J}_{\mathcal{W}_l,\mathbf{c}}^\mathsf{T}\mathbf{e}_l\right)
+\end{aligned}
+\label{equ:project_out_solution}
+\end{equation}
+%
+where
+%
+\begin{equation}
+\begin{aligned}
+\mathbf{H}_{\mathbf{p}} = &~\mathbf{J}_{\mathbf{F},\mathbf{p}}^\mathsf{T}\mathbf{P}\mathbf{J}_{\mathbf{F},\mathbf{p}} + c_l\mathbf{J}_{\mathcal{W}_l,\mathbf{p}}^\mathsf{T}\mathbf{J}_{\mathcal{W}_l,\mathbf{p}} + c_s\mathbf{\Sigma}^{-1}\\
+\mathbf{H}_{\mathbf{c}} = &~\mathbf{J}_{\mathbf{F},\mathbf{c}}^\mathsf{T}\mathbf{P}\mathbf{J}_{\mathbf{F},\mathbf{c}} + c_l\mathbf{J}_{\mathcal{W}_l,\mathbf{c}}^\mathsf{T}\mathbf{J}_{\mathcal{W}_l,\mathbf{c}}
+\end{aligned}
+\end{equation}
+%
+are the Hessian matrices and
+%
+\begin{equation}
+\begin{aligned}
+\mathbf{e}_{\mathbf{F}} = &~\mathbf{F}\left(\mathcal{W}(\mathbf{p},\mathbf{c})\right) - \bar{\mathbf{t}}\\
+\mathbf{e}_l = &~\mathcal{W}_l(\mathbf{p},\mathbf{c}) - \mathbf{s}_l
+\end{aligned}
+\end{equation}
+%
+are the residual terms. The texture parameters can be estimated at the end of the iterative procedure using Eq.~\ref{equ:lambda_solution}. 
+
+Note that the most expensive operation is $\mathbf{J}_{\mathbf{F},\mathbf{p}}^\mathsf{T}\mathbf{P}$. However, if we first do $\mathbf{J}_{\mathbf{F},\mathbf{p}}^\mathsf{T}\mathbf{U}_t$ and then multiply this result with $\mathbf{U}_t^\mathsf{T}$, the total cost becomes $\mathcal{O}(CNn_tn_s)$. The same stands for $\mathbf{J}_{\mathbf{F},\mathbf{c}}^\mathsf{T}\mathbf{P}$. Consequently, the cost per iteration is 
+$\mathcal{O}((n_s+n_c)^3 + CNn_t(n_s+n_c) + CN(n_s+n_c)^2)$
+which is much faster than the Simultaneous algorithm.
+
+
+%
+%
+%
+\textbf{Residual masking.}
+In practice, we apply a mask on the texture reconstruction residual of the Gauss-Newton optimization, in order to speed-up the 3DMM fitting. This mask is constructed by first acquiring the set of visible vertexes using z-buffering and then randomly selecting $K$ of them. By keeping the number of vertexes small ($K\approx 5000 \ll N$), we manage to greatly speed-up the fitting process without any accuracy penalty.

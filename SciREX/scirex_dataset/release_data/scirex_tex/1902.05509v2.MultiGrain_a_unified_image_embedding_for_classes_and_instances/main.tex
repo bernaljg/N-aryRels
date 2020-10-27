@@ -1,0 +1,165 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{iccv}
+\usepackage{times}
+\usepackage[inline]{enumitem}
+\usepackage[export]{adjustbox}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}  %
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{calc}
+\usepackage{chngcntr}  %
+\usepackage{silence}
+\WarningFilter{fixltx2e}{fixltx2e is not required}
+\usepackage{fixltx2e}
+\usepackage{dblfloatfix}  %
+\usepackage{framed}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{pifont}%
+\usepackage{placeins}  %
+\usepackage{xfrac}  %
+\usepackage{subcaption}
+\usepackage{makecell}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,backgrounds,calc}
+\usepackage[pagebackref=true,breaklinks=true,colorlinks,bookmarks=false]{hyperref} %
+%
+\urlstyle{sf}
+\usepackage{cleveref} %
+
+
+\usepackage{multibib}
+\newcites{suppl}{Supplemental references}%
+
+\setlength{\tabcolsep}{0.45em}  %
+
+%
+\makeatletter
+\renewcommand\@makefntext[1]{%
+  \noindent\makebox[1em][r]{\@makefnmark}#1}
+\makeatother
+
+\input{notations}  %
+
+%
+\makeatletter
+\renewcommand{\paragraph}{%
+  \@startsection{paragraph}{4}%
+  %
+  {\z@}{0.4em}{-1em}%
+  {\normalfont\normalsize\bfseries}%
+}
+
+%
+\setlist[itemize]{%
+labelsep=5pt,%
+labelindent=0.4\parindent,%
+itemindent=0pt,%
+leftmargin=*,%
+itemsep=-4pt, 
+}
+
+\makeatother
+
+\definecolor{darkgreen}{RGB}{0, 140, 0}
+\definecolor{antiquefuchsia}{rgb}{0.57, 0.36, 0.51}
+\definecolor{auburn}{rgb}{0.43, 0.21, 0.1}
+
+\newcommand{\rv}[1]{{\color{antiquefuchsia}[\textbf{Rv}:#1]}}
+\newcommand{\maxim}[1]{{\color{red}[\textbf{MB}:#1]}}
+\newcommand{\matthijs}[1]{{\color{blue}[\textbf{MD}:#1]}}
+\newcommand{\av}[1]{{\color{auburn}[\textbf{AV}:#1]}}
+\newcommand{\iasonas}[1]{{\color{darkgreen}[\textbf{IK}:#1]}}
+
+%
+%
+%
+%
+%
+%
+
+\newif\ifarxiv
+\global\arxivtrue
+
+\iccvfinalcopy
+\ificcvfinal\pagestyle{empty}\fi
+%
+\def\iccvPaperID{5147}
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+\ifarxiv\pagestyle{plain}\fi
+
+%
+\title{MultiGrain: a unified image embedding for classes and instances}
+\author{\begin{tabular}{ccccc}
+  Maxim Berman\thanks{Did this work during an internship at Facebook AI Research.} & Herv\'e J\'egou & Andrea Vedaldi & Iasonas Kokkinos & Matthijs Douze \\
+  ESAT--PSI, KU Leuven & \multicolumn{4}{c}{Facebook AI Research} \\
+ %
+\end{tabular}}
+
+\ificcvfinal
+\hypersetup{  %
+pdftitle={MultiGrain: a unified image embedding for classes and instances},
+pdfsubject={},
+pdfauthor={Maxim Berman, Herve Jegou, Andrea Vedaldi, Iasonas Kokkinos, Matthijs Douze} %
+pdfkeywords={}
+}
+\fi
+
+\makeatletter
+\let\inserttitle\@title
+%
+\makeatother
+
+\begin{document}
+\maketitle
+\begin{abstract}
+MultiGrain is a network architecture producing compact vector representations that are suited both for image classification and particular object retrieval. 
+It builds on a standard classification trunk.
+The top of the network produces an embedding containing coarse and fine-grained information, so that images can be recognized based on the object class, particular object, or if they are distorted copies.
+Our joint training is simple: we minimize a  cross-entropy loss for classification and a ranking loss 
+that determines if two images are identical up to data augmentation, with no need for additional labels. 
+A key component of MultiGrain is a pooling layer that takes advantage of high-resolution images with a network trained at a lower resolution. 
+
+When fed to a linear classifier, the learned embeddings provide state-of-the-art classification accuracy. 
+For instance, we obtain 79.4\% top-1 accuracy with a ResNet-50 learned on Imagenet, which is a +1.8\% absolute improvement over the AutoAugment method. 
+When compared with the cosine similarity, the same embeddings perform on par with the state-of-the-art for image retrieval at moderate resolutions. 
+
+ %
+
+%
+%
+%
+%
+%
+%
+%
+%
+\end{abstract}
+
+\input{intro}
+\input{related}
+\input{archi}
+\input{experiments}
+\input{conclusions}
+
+\ificcvfinal
+\paragraph*{Acknowledgments.} 
+We thank Kaiming He for useful feedback and references. 
+Maxim Berman is supported by Research Foundation - Flanders (FWO) through project number G0A2716N. PSI--ESAT acknowledges a GPU server donation from FAIR Partnership Program.
+
+\fi
+%
+
+
+{\small\bibliographystyle{ieee}\bibliography{biblio}}
+
+%
+%
+\input{supplementary}
+%
+%
+\end{document}

@@ -1,0 +1,54 @@
+\subsection{Part of Speech Tagging}
+\label{subsection:tagging}
+
+Part of speech (POS) tagging is a classic NLP task,
+where modeling the structure of the output
+is important for achieving state-of-the-art performance.
+
+\paragraph{Data \& Evaluation.}
+
+We conducted experiments on a number of different datasets:
+(1) the English Wall Street Journal (WSJ) part
+of the Penn Treebank \cite{marcus:1993:CL}
+with standard POS tagging splits;
+(2) the English ``Treebank Union'' multi-domain corpus containing
+data from the OntoNotes corpus version 5 \cite{hovy-EtAl:2006:NAACL},
+the English Web Treebank \cite{petrov-mcdonald:2012:SANCL}, and the
+updated and corrected Question Treebank \cite{judge-etAl:2006:ACL}
+with identical setup to \newcite{weiss-etAl:2015:ACL}; and
+(3) the CoNLL '09 multi-lingual shared 
+task \cite{hajic-EtAl:2009:CoNLL}.%\footnote{http://ufal.mff.cuni.cz/conll2009-st/results/results.php}
+
+\paragraph{Model Configuration.}
+
+Inspired by the integrated POS tagging and parsing transition 
+system of \newcite{bohnet-nivre:2012:EMNLP-CoNLL}, 
+we employ a simple transition system that uses only a {\sc Shift} action and 
+predicts the POS tag of the current word on the buffer
+as it gets shifted to the stack. 
+We extract the following features on a window $\pm 3$ tokens centered
+at the current focus token: word, cluster, character n-gram up to length 3.
+We also extract the tag predicted for the previous 4 tokens.
+The network in these experiments has a single hidden layer with
+256 units on WSJ and Treebank Union and 64 on CoNLL'09.
+
+\paragraph{Results.}
+
+In Table \ref{tab:pos} we compare our model
+to a linear CRF and to the compositional
+character-to-word LSTM model of \newcite{ling-EtAl:2015:EMNLP}.
+The CRF is a first-order linear model with exact inference and
+the same emission features as our model. It additionally also
+has transition features of the
+word, cluster and character n-gram up to length 3 on both endpoints of the
+transition.
+The results for \newcite{ling-EtAl:2015:EMNLP}
+were solicited from the authors.
+
+Our local model already compares favorably against these methods on average.
+Using beam search with a locally normalized model does not help, but with global normalization
+it leads to a 7\% reduction in relative error, empirically demonstrating the effect of label bias.
+The set of character ngrams feature is very important, increasing average
+accuracy on the CoNLL'09 datasets by about 0.5\% absolute. 
+This shows that character-level modeling can also be done with a simple feed-forward
+network without recurrence.

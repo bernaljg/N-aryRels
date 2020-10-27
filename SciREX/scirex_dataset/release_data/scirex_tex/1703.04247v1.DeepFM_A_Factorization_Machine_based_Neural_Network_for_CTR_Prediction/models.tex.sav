@@ -1,0 +1,109 @@
+\section{Our Approach}\label{section:App}
+\subsection{Background}\label{section:App:back}
+Given a data set with $n$ instances$(f_i,y_i)$, $i=1,...,n$, where $y_i$ is the label and $f_i$ is including multiple fields of categorical data, such as user, ad, and context information. Generally, each field of categorical data is represented as a vector by one-hot encoding. Then, each instance is converted to $(x_i,y_i)$, where $x_i$ is a vector that consolidated by all fields's encoding and is particularly high-dimensional and extremely sparse. So the task of CTR prediction is to build a prediction model $y_i=CTR\_function(x_i)$ to estimate the probability of a user clicking a specific ad in a given context.
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.48\textwidth]{img/LR-FM.png}
+\caption{{LR vs FM}}\label{fig:lrfm}
+\end{figure}
+\subsubsection{LR}\label{section:App:back:lr}
+As a simple yet effective and efficient approach, generalized linear models have shown great benefits in industrial applications. The model $w$ is obtained by solving a optimization problem:
+\begin{equation}
+\label{eq:LR}
+min_{\omega}=\frac{\lambda}{2}{\Vert w \Vert}_{2}^{2} + \sum_{i=1}^{n}log(1+exp(-y_i\phi_{LM}(w,x_i)))
+\end{equation}
+where $\lambda$ is regularization parameter, and the linear model in the loss function is: $\phi_{LM}(w,x_i)=w \cdot x$.
+
+As we known, one of the most important factors for CTR prediction is to capture feature interactions, including high-order and low-order. But the widely-used linear models lack this ability. In real scenario, adding manual 2-order feature interactions (cross product transformation) is a practical solution for remedying this defect. As Figure~\ref{fig:lrfm} (right) shows, manually adding some feature interactions as new features can extend LR to LR-2. LR-2 sums the weights of 1-order and 2-order features together, then feeds result into a logit function. So it can capture some information of feature interactions. However, manual feature interactions are not enough to CTR prediction. Because there are many feature interactions that do not or rarely appear in the training data. On one hand, LR-2 can not capture those who are absent in training data. On the other hand, rarely appearing feature interaction is difficult to be learned very well.
+
+
+%However, the . In real scenario, we encode 2-order feature interactions through artificial feature engineering. As Eq~\ref{eq:LR2} shows, 2-order feature interaction is weighted by $w_{h(j_1j_2)}$, where $h(j_1j_2)$ is a function encoding $j_1$ and $j_2$ into a natural number\footnote{Note that, .}. So LR can be extended to capture the information of feature interactions. But it is still limited because this means can not measure the feature interactions that .
+%\begin{equation}
+%\label{eq:LR2}
+%\phi_{LR_2}(\omega,x_i)=\sum_{j_1=1}^{d}\sum_{j_2=j_1+1}^{d}\omega_{h(j_1j_2)}x_{j_1}\cdot x_{j_2}
+%\end{equation}
+\subsubsection{FM}\label{section:App:back:fm}
+\begin{figure*}[ht]
+\centering
+\includegraphics[width=0.96\textwidth]{img/architecture-wide.png}
+\caption{{The spectrum of FMNN models}}\label{fig:architecture}
+\end{figure*}
+To address the problem of learning feature interactions automatically, FM is proposed in \cite{fm}. As shown in Figure~\ref{fig:lrfm} (left), there are two parts in FM, 1-order and 2-order. In latter part, it implicitly learns a latent vector for each feature. Each latent vector contains k latent factors, where k is user-specified parameter. In \cite{fm}, author explained that FM can be better than manual feature interaction when the data set is sparse.
+
+In order to understand more clearly, the 2-order part of LR and FM is shown in Eq~\ref{eq:LR2} and Eq~\ref{eq:FM2}. For instance, there are two features, $i$ and $j$. LR-2 uses the weight of interaction $ij$ ($w_{h(j_1j_2)}$\footnote{ where $h(j_1j_2)$ is a function encoding $j_1$ and $j_2$ into a natural number}) to weight the importance of feature interaction $x_{ij}$. So LR-2 only train $V_{h(j_1j_2)}$ when feature i and j appear in a same instance (feature $x_{ij}$ is appear). Different with LR-2, the effect of $x_{ij}$ is modeled by inner product of $V_i$ and $V_j$. So FM can train latent vector $V_i$ ($V_j$) when just $i$($j$) appears or they both appear in a same sample. As a result, the influence of feature interaction is trained better by FM.
+\begin{equation}
+\label{eq:LR2}
+\phi_{LR_2}(V,x)=\sum_{j_1=1}^{d}\sum_{j_2=j_1+1}^{d}V_{h(j_1j_2)}x_{j_1}\cdot x_{j_2}
+\end{equation}
+\begin{equation}
+\label{eq:FM2}
+\phi_{FM_2}(w,x)=\sum_{j_1=1}^{d}\sum_{j_2=j_1+1}^{d}\left< V_i,V_j  \right> x_{j_1}\cdot x_{j_2}
+\end{equation}
+\subsubsection{DNN}\label{section:App:back:dnn}
+Different with Factorization Machine, which is very complicated to learn high-order feature interactions, Deep Neural Network (DNN) has a great potential in learning high-order nonlinear feature interactions. There is a feed-forward neural network in Figure~\ref{fig:architecture} (right). A data instance is fed into the neural network through embedding layer, low-order interaction layer(s), and high-order interaction layer(s). Then a dense real-value feature vector is generated and fed into the logit function of CTR prediction. Except embedding layer, the hidden layers of our deep component conduct the following computations:
+\begin{equation}
+\centering
+\label{eq:h2h}
+a^{(l+1)} = function(W^{(l)}a^{(l)} + b^{(l)})
+\end{equation}
+where $l$ is the layer number and $function$ is a activation function, such as $relu$ and $tanh$. $a^{(l)}$, $W^{(l)}$, $b^{(l)}$ are the activations, model weights, and bias at $l$-th layer.
+
+There is one point to be noted, $a^{(0)}$ is the output of embedding layer. As discussed in Section~\ref{section:App:back}, the input data of CTR prediction is sparse, high-dimensional, categorical, and multi-field. Comparing with image and audio data, which is continuous and dense, there is a huge difference. It is necessary to embed the input vector to a low-dimensional real-valued dense vector at first. A straightforward way is fully connecting the units of input feature vector and the units of embedding layer. But it is inefficient to train, because fully connection would lead to the massive parameters. Another method utilize the field-wise one-hot encoding of CTR prediction. As \cite{fnn} presented, for each field, e.g., \textbf{city}, there are multiple units, each of which presents a specific value of this field, e.g., \textbf{city=London}, and there is only one positive(1) unit, while all others are negative (0). So it is better to embed each field to a latent vector independently and then the embedding parameter is reduced from ${\mid a^{(0)}\mid}\cdot {\mid x \mid }$ to $k\cdot {\mid x \mid }$, where k is a user-specified parameter. After embedding layer, the output is:
+\begin{equation}
+\label{eq:embed}
+a^{(0)}=[e_{field\_1},e_{field\_2},...,e_{|filed|}]
+ \end{equation}
+where $a^{0}$ will be fed into first hidden layer, and $e_{field\_i}$ is the embedding of $i$-th field:
+\begin{equation}
+e_{field\_i} = W^{0}[{start_{field\_i}:end_{field\_i}}]x_{field\_i}
+\label{eq:embedconcat}
+\end{equation}
+where start$_{field\_i}$ and end$_{filed\_i}$ are starting and ending feature indexes of the $i$-th field.
+
+Unfortunately, although DNN can discover high-order unseen feature interactions, it is lack ability of "memorization".
+
+\subsection{Our Model}\label{section:App:model}
+
+In order to learn high-order and low-order features simultaneously, we propose a Factorization Machine Neural Network (FMNN). As Figure~\ref{fig:architecture} (middle) shows, As Figure~\ref{fig:architecture} (middle) shows, two components of FMNN use the same input $x$ which is field-wise one-hot encoded and with no additional feature engineering. Each feature $x_i$ is weighted by a weight $w_i$  and embedded as a latent vector $V_i$ respectively. Then $\left<w,x \right>$ is modeled as 1-order feature effect, and $V_i$ is connected to two layer, the inner product layer of FM component and first hidden layer of deep component. After that, on one hand the effect of 2-order feature interactions are modeled by the output of inner product layer, on the other hand the embedding of each field will be merged as Eq~\ref{eq:embedconcat}. Next, the effect of 1-order and 2-order feature interactions is computed by FM component, while the effect of high-order ones is outputted from DNN component.
+
+In fact, FMNN is a deeper FM because we add a deep component on FM. Therefore, the output unit of FMNN has both FM and DNN output:
+\begin{equation}
+\hat{y}=sigmoid(y_{FM}+y_{DNN})
+\label{eq:FMNNCTR}
+\end{equation}
+where $\hat{y}\in (0,1)$ is the probability of a user clicking a specific ad in a given context, $y_{FM}$ is the output of FM component (presented in Eq~\ref{eq:FM-model}), $y_{DNN}$ is the output of deep component:
+\begin{equation}
+y_{DNN}=W^{|H|+1}a^{H}+b^{|H|+1}
+\label{eq:DNNoutput}
+\end{equation}
+where $|H|$ is the number of hidden layer.
+%\subsubsection{The FM Component}\label{section:App:model:fm}
+
+\noindent \textbf{The FM component} is a 2-order factorization machine, as illustrated in Figure~\ref{fig:architecture} (left):
+\begin{equation}
+\centering
+y_{FM}=\left< w,x  \right> +\sum_{j_1=1}^{d}\sum_{j_2=j_1+1}^{d}\left< V_i,V_j  \right>  x_{j_1}\cdot x_{j_2}
+\label{eq:FM-model}
+\end{equation}
+where $y$ is the prediction, $x=[x_1,x_2,...,x_d]$ is a vector of $d$ features, $w=[w_1,w_2,...,w_d]$ are the 1-order model parameters, $V=[V_1,V_2,...,V_d]$ are the 2-order parameters, $V_i$ is the latent vector for feature $i$. Therefore, as discussed in Section~\ref{section:App:back:fm}, the FM component is able to model 1-order feature and 2-order feature interaction automatically.
+
+\noindent \textbf{The deep component} is a feed-forward neural network for the purpose of capturing high-order feature interactions. Because of the efficiency of single input and advantage of joint training, the deep component is built on the 2-order embedding layer of FM component. Then, the embedding layer gets two-part gradient, inner product layer have the ability of supporting low-order and high-order feature interactions.
+
+As a result, FMNN have better performance than FM and DNN, because the parameter is joint training.
+ 
+\subsection{Relationship with other Neural Networks}
+In addition, FMNN is closely related with other CTR Neural Network, Product-based Neural Network (PNN) and Factorization Machine Supported Neural Network(FNN). The key difference is that FMNN inherit the advantage of FM.
+\subsubsection{FNN}\label{section:App:rela:fnn}
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.48\textwidth]{img/FNN-PNN.png}
+\caption{{FNN and PNN models}}\label{fig:fnnpnn}
+\end{figure}
+
+\subsubsection{PNN}\label{section:App:rela:pnn}
+\subsubsection{wide\&deep}\label{section:App:rela:widedeep}
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.48\textwidth]{img/wide-deep.png}
+\caption{{The wide\&deep model}}\label{fig:widedeep}
+\end{figure}

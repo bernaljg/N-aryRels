@@ -1,0 +1,63 @@
+\begin{figure*}[th]
+\begin{center}
+\footnotesize
+\begin{tikzpicture}[auto, node distance=0.5cm]
+\matrix (m) [matrix of math nodes, 
+    column sep=0.5cm,
+    row sep=0.1cm]
+ {
+&\node(pool5) [block] {\phi_\text{pool5}} ;
+& \node(spp) [block] {\phi_\text{SPP}} ;
+& \node(fc6) [block] {\phi_\text{fc6}};
+& \node(fc7) [block] {\phi_\text{fc7}};
+& \node(fc8) [block] {\phi_\text{fc8c}};
+\\
+\node(dot) [draw,shape=circle,fill=black,minimum size=1mm,inner sep=0] {} ;
+\\
+&\node(ssw) [block] {\text{SSW}};
+& &&& \node(fc8d) [block] {\phi_\text{fc8d}};
+\\
+&& &&\node(fc7d) [block,dotted] {\phi_\text{fc7d}};
+\\
+&& &\node(fc6d) [block,dashed] {\phi_\text{fc6d}};
+\\
+};
+% \node [block,right=1cm of fc8] (cscore) {$\sigma_\text{class}$};
+\node(x) [left=of dot]{$\bx$} ;
+\node [block,right=1cm of fc8d] (dscore) {$\sigma_\text{det}$};
+\node [block,dotted] at (fc7d -| dscore)  (dscore2) {$\sigma_\text{det}$};
+\node [block,dashed] at (fc6d -| dscore)  (dscore3) {$\sigma_\text{det}$};
+\draw (6,0 |- x) node [draw, rectangle] (times) {$\odot$};
+\node [draw, rectangle,right=1cm of times] (sum) {$\Sigma$};
+\node [right=of sum] (y) {$\by$};
+\draw (x) -- (dot);
+\draw[to] (dot) |- (pool5) ;
+\draw[to] (pool5) -- (spp) ;
+\draw[to] (spp) -- (fc6) coordinate[near start](sppt6) ;
+\draw[to] (fc6) -- (fc7) coordinate[near start](fc6t7) ;
+\draw[to] (fc7) -- (fc8) ;
+% \draw[to] (fc8) -- node {$\bx^c$} (cscore) ;
+\draw[to] (fc8) -| node[above left] {$\bx^c$} (times) ;
+\draw[to] (dot) |- (ssw) ;
+\draw[to] (ssw) -| node[right] {$\mathcal{R}$} (spp) ;
+%
+\draw[to] (fc7) |- (fc8d);
+\draw[to] (fc8d) -- node {$\bx^d$} (dscore) ;
+% \draw[to] (cscore) -| (times) ;
+\draw[to] (dscore) -| (times) ;
+%
+\draw[to, dotted] (fc6t7) |- (fc7d);
+\draw[to,dotted] (fc7d) -- (dscore2) ;
+\draw[to,dotted] (dscore2) -| (times) ;
+%
+\draw[to,dashed] (sppt6) |- (fc6d);
+\draw[to,dashed] (fc6d) -- (dscore3) ;
+\draw[to,dashed] (dscore3) -| (times) ;
+%
+\draw[to] (times) -- node {$\bx^\mathcal{R}$} (sum) ;
+\draw[to] (sum) -- (y) ;
+\end{tikzpicture}
+\end{center}
+\caption{{\bf Weakly supervised deep detection network.} The figure illustrates the architecture of WSDDN. There are three variants, depending on the layer used to branch off the detection subnetwork.}\label{f:WSDDN}
+\end{figure*}
+

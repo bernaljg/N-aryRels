@@ -1,0 +1,119 @@
+\begin{thebibliography}{17}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Bahdanau et~al.(2015)Bahdanau, Cho, and Bengio]{bahdanau2014neural}
+Dzmitry Bahdanau, Kyunghyun Cho, and Yoshua Bengio.
+\newblock Neural machine translation by jointly learning to align and
+  translate.
+\newblock In \emph{ICLR}, 2015.
+
+\bibitem[Brown et~al.(1993)Brown, della Pietra, della Pietra, and
+  Mercer]{brown1993mathematics}
+Peter Brown, Vincent della Pietra, Stephen della Pietra, and Robert Mercer.
+\newblock The mathematics of statistical machine translation: Parameter
+  estimation.
+\newblock \emph{Computational Linguistics}, 19\penalty0 (2):\penalty0 263--311,
+  1993.
+
+\bibitem[Cho(2016)]{cho2016noisy}
+Kyunghyun Cho.
+\newblock Noisy parallel approximate decoding for conditional recurrent
+  language model.
+\newblock \emph{arXiv preprint arXiv:1605.03835}, 2016.
+
+\bibitem[Dyer et~al.(2013)Dyer, Chahuneau, and Smith]{dyer2013simple}
+Chris Dyer, Victor Chahuneau, and Noah Smith.
+\newblock A simple, fast, and effective reparameterization of {IBM Model 2}.
+\newblock In \emph{NAACL}, 2013.
+
+\bibitem[Gehring et~al.(2017)Gehring, Auli, Grangier, Yarats, and
+  Dauphin]{gehring2017convolutional}
+Jonas Gehring, Michael Auli, David Grangier, Denis Yarats, and Yann Dauphin.
+\newblock Convolutional sequence to sequence learning.
+\newblock \emph{arXiv preprint arXiv:1705.03122}, 2017.
+
+\bibitem[Kaiser et~al.(2017)Kaiser, Gomez, and Chollet]{kaiser2017depthwise}
+\L{}ukasz Kaiser, Aidan Gomez, and Fran\c{c}ois Chollet.
+\newblock Depthwise separable convolutions for neural machine translation.
+\newblock \emph{arXiv preprint arXiv:1706.03059}, 2017.
+
+\bibitem[Kalchbrenner et~al.(2016)Kalchbrenner, Espeholt, Simonyan, Oord,
+  Graves, and Kavuk\c{c}uo\v{g}lu]{kalchbrenner2016neural}
+Nal Kalchbrenner, Lasse Espeholt, Karen Simonyan, Aaron van~den Oord, Alex
+  Graves, and Koray Kavuk\c{c}uo\v{g}lu.
+\newblock Neural machine translation in linear time.
+\newblock \emph{arXiv preprint arXiv:1610.10099}, 2016.
+
+\bibitem[Kim \& Rush(2016)Kim and Rush]{kim2016sequence}
+Yoon Kim and Alexander Rush.
+\newblock Sequence-level knowledge distillation.
+\newblock In \emph{EMNLP}, 2016.
+
+\bibitem[Koehn \& Knowles(2017)Koehn and Knowles]{koehn2017six}
+Philipp Koehn and Rebecca Knowles.
+\newblock Six challenges for neural machine translation.
+\newblock \emph{arXiv preprint arXiv:1706.03872}, 2017.
+
+\bibitem[Luong et~al.(2015)Luong, Pham, and Manning]{luong2015effective}
+Minh-Thang Luong, Hieu Pham, and Christopher~D Manning.
+\newblock Effective approaches to attention-based neural machine translation.
+\newblock In \emph{EMNLP}, 2015.
+
+\bibitem[Martin et~al.(2010)Martin, Crowther, Knight, Tamborello, and
+  Yang]{martin2010planning}
+Randi Martin, Jason Crowther, Meredith Knight, Franklin Tamborello, and
+  Chin-Lung Yang.
+\newblock Planning in sentence production: Evidence for the phrase as a default
+  planning scope.
+\newblock \emph{Cognition}, 116\penalty0 (2):\penalty0 177--192, 2010.
+
+\bibitem[Papineni et~al.(2002)Papineni, Roukos, Ward, and
+  Zhu]{papineni2002bleu}
+Kishore Papineni, Salim Roukos, Todd Ward, and Wei-Jing Zhu.
+\newblock {BLEU}: {A} method for automatic evaluation of machine translation.
+\newblock In \emph{ACL}, pp.\  311--318, 2002.
+
+\bibitem[Sennrich et~al.(2015)Sennrich, Haddow, and Birch]{sennrich2015neural}
+Rico Sennrich, Barry Haddow, and Alexandra Birch.
+\newblock Neural machine translation of rare words with subword units.
+\newblock \emph{arXiv preprint arXiv:1508.07909}, 2015.
+
+\bibitem[Sutskever et~al.(2014)Sutskever, Vinyals, and
+  L\^{e}]{sutskever2014sequence}
+Ilya Sutskever, Oriol Vinyals, and Qu\^{o}c L\^{e}.
+\newblock Sequence to sequence learning with neural networks.
+\newblock In \emph{NIPS}, 2014.
+
+\bibitem[Vaswani et~al.(2017)Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez,
+  Kaiser, and Polosukhin]{vaswani2017attention}
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan
+  Gomez, \L{}ukasz Kaiser, and Illia Polosukhin.
+\newblock Attention is all you need.
+\newblock \emph{arXiv preprint arXiv:1706.03762}, 2017.
+
+\bibitem[Williams(1992)]{williams1992simple}
+Ronald Williams.
+\newblock Simple statistical gradient-following algorithms for connectionist
+  reinforcement learning.
+\newblock \emph{Machine Learning}, 8\penalty0 (3-4):\penalty0 229--256, 1992.
+
+\bibitem[{Wu} et~al.(2016){Wu}, {Schuster}, {Chen}, {Le}, {Norouzi},
+  {Macherey}, {Krikun}, {Cao}, {Gao}, {Macherey}, {Klingner}, {Shah},
+  {Johnson}, {Liu}, {Kaiser}, {Gouws}, {Kato}, {Kudo}, {Kazawa}, {Stevens},
+  {Kurian}, {Patil}, {Wang}, {Young}, {Smith}, {Riesa}, {Rudnick}, {Vinyals},
+  {Corrado}, {Hughes}, and {Dean}]{wu2016google}
+Y.~{Wu}, M.~{Schuster}, Z.~{Chen}, Q.~V. {Le}, M.~{Norouzi}, W.~{Macherey},
+  M.~{Krikun}, Y.~{Cao}, Q.~{Gao}, K.~{Macherey}, J.~{Klingner}, A.~{Shah},
+  M.~{Johnson}, X.~{Liu}, {\L}.~{Kaiser}, S.~{Gouws}, Y.~{Kato}, T.~{Kudo},
+  H.~{Kazawa}, K.~{Stevens}, G.~{Kurian}, N.~{Patil}, W.~{Wang}, C.~{Young},
+  J.~{Smith}, J.~{Riesa}, A.~{Rudnick}, O.~{Vinyals}, G.~{Corrado},
+  M.~{Hughes}, and J.~{Dean}.
+\newblock Google's neural machine translation system: {Bridging} the gap
+  between human and machine translation.
+\newblock \emph{arXiv preprint arXiv:1609.08144}, 2016.
+
+\end{thebibliography}

@@ -1,0 +1,17 @@
+% \section{Related Tasks and Discussion}
+% \subsection{Related Tasks}
+
+\section{Related Tasks}
+
+We briefly survey other tasks related to reading comprehension.
+
+\tf{MCTest} \cite{richardson2013mctest} is an open-domain reading comprehension task, in the form of fictional short stories, accompanied by multiple-choice questions. It was carefully created using crowd sourcing, and aims at a 7-year-old reading comprehension level.
+
+On the one hand, this dataset has a high demand on various reasoning capacities: over $50\%$ of the questions require multiple sentences to answer and also the questions come in assorted categories (\ti{what}, \ti{why}, \ti{how}, \ti{whose}, \ti{which}, etc). On the other hand, the full dataset has only 660 paragraphs in total (each paragraph is associated with 4 questions), which renders training statistical models (especially complex ones) very difficult.
+
+Up to now, the best solutions \cite{sachan2015learning,wang2015machine} are still heavily relying on manually curated syntactic\slash semantic features, with the aid of additional knowledge (e.g., word embeddings, lexical\slash paragraph databases).
+
+\tf{Children Book Test} \cite{hill2016goldilocks} was developed in a similar spirit to the \ti{CNN}\slash\ti{Daily Mail} datasets. It takes any consecutive 21 sentences from a children's book -- the first 20 sentences are used as the passage, and the goal is to infer a missing word in the 21st sentence (question and answer). The questions are also categorized by the type of the missing word: named entity, common noun, preposition or verb. According to the first study on this dataset \cite{hill2016goldilocks}, a language model (an $n$-gram model or a recurrent neural network) with local context is sufficient for predicting verbs or prepositions; however, for named entities or common nouns, it improves performance to scan through the whole paragraph to make predictions. So far, the best published results are reported by window-based memory networks.
+
+\vspace{-0.1em}
+\tf{bAbI} \cite{weston2016towards} is a collection of artificial datasets, consisting of 20 different reasoning types. It encourages the development of models with the ability to chain reasoning, induction\slash deduction, etc., so that they can answer a question like ``The football is in the \ti{playground}'' after reading a sequence of sentences ``John is in the playground; Bob is in the office; John picked up the football; Bob went to the kitchen.'' Various types of memory networks \cite{sukhbaatar2015end,kumar2016ask} have been shown effective on these tasks, and \newcite{lee2016reasoning} show that vector space models based on extensive problem analysis can obtain near-perfect accuracies on all the categories. Despite these promising results, this dataset is limited to a small vocabulary (only 100--200 words) and simple language variations, so there is still a huge gap from real-world datasets that we need to fill in.

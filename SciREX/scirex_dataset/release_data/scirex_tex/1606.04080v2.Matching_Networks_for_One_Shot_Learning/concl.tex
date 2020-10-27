@@ -1,0 +1,12 @@
+\vspace{-0.09in}
+\section{Conclusion}
+
+In this paper we introduced Matching Networks, a new neural architecture that, by way of its corresponding training regime, is capable of state-of-the-art performance on a variety of one-shot classification tasks.
+There are a few key insights in this work.
+Firstly, one-shot learning is much easier if you train the network to do one-shot learning.
+Secondly, non-parametric structures in a neural network make it easier for networks to remember and adapt to new training sets in the same tasks.
+Combining these observations together yields Matching Networks.
+%
+Further, we have defined new one-shot tasks on ImageNet, a reduced version of ImageNet (for rapid experimentation), and a language modeling task.
+%
+An obvious drawback of our model is the fact that, as the support set $S$ grows in size, the computation for each gradient update becomes more expensive. Although there are sparse and sampling-based methods to alleviate this, much of our future efforts will concentrate around this limitation. Further, as exemplified in the ImageNet dogs subtask, when the label distribution has obvious biases (such as being fine grained), our model suffers. We feel this is an area with exciting challenges which we hope to keep improving in future work.

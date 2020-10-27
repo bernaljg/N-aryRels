@@ -1,0 +1,25 @@
+%\renewcommand{\tabcolsep}{0.15cm}
+\tabcolsep 1.5pt
+\begin{table}[tbp]
+ \scriptsize
+  \centering
+  \begin{tabular}{@{} l c ccc ccc c|c@{}}
+    \toprule
+    Setting& Head   & Sho  & Elb & Wri & Hip & Knee & Ank & PCK$_h$ & AUC\\
+    \midrule
+    \input{pck-head-expidx208.tex}
+    \input{pck-head-expidx371.tex}
+    \midrule
+    $\dense$ (unary)              & 93.5  & 88.6  & 82.2  & 77.1  & 81.7  & 74.4 & \textbf{68.9} & 81.6 & 56.0\\
+    \quad+LSPET        & 94.0  & 89.4  & 82.3  & 77.5  & 82.0          & 74.4          & 68.7          & 81.9          & \textbf{56.5} \\
+    \quad\quad+$\deepcut$ \singb& 94.1  & 90.2  & 83.4  & 77.3  & \textbf{82.6} & \textbf{75.7} & 68.6          & \textbf{82.4} & \textbf{56.5} \\
+    \midrule
+    Tompson et al.~\cite{tompson14nips}  &95.8 & 90.3 & 80.5 & 74.3 & 77.6 & 69.7 & 62.8 & 79.6 & 51.8\\
+    Tompson et al.~\cite{Tompson:2015:EOL}  &\textbf{96.1} & \textbf{91.9} & \textbf{83.9} &\textbf{77.8} & 80.9 & 72.3 & 64.8 & 82.0 & 54.9\\
+    \bottomrule
+  \end{tabular}
+  \vspace{0.1em}     
+  \caption[]{Pose estimation results (PCK$_h$) on MPII Single Person.}
+    \vspace{-1.5em}
+  \label{tab:multicut:mpii}
+\end{table}

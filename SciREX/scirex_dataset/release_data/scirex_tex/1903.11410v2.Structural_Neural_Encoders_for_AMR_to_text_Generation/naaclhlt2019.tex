@@ -1,0 +1,824 @@
+%
+% File naacl2019.tex
+%
+%% Based on the style files for ACL 2018 and NAACL 2018, which were
+%% Based on the style files for ACL-2015, with some improvements
+%%  taken from the NAACL-2016 style
+%% Based on the style files for ACL-2014, which were, in turn,
+%% based on ACL-2013, ACL-2012, ACL-2011, ACL-2010, ACL-IJCNLP-2009,
+%% EACL-2009, IJCNLP-2008...
+%% Based on the style files for EACL 2006 by 
+%%e.agirre@ehu.es or Sergi.Balari@uab.es
+%% and that of ACL 08 by Joakim Nivre and Noah Smith
+
+\documentclass[11pt,a4paper]{article}
+\usepackage[hyperref]{naaclhlt2019}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage{url}
+\usepackage{tikz,pgfplots}
+\usepackage{amsmath}
+\usepackage{varwidth}
+\usepackage{booktabs}
+\usepackage{hyphenat}
+\usepackage{amssymb}
+\usepackage{tikz-dependency}
+% \usepackage{booktabs}
+\usepackage{multirow}
+% \interlinepenalty=10000
+\usetikzlibrary{patterns,calc,shapes,backgrounds,shadows,positioning,fit,matrix,shapes.geometric}
+\tikzset{
+smallnode/.style={
+  circle,
+  inner sep=0pt,
+  text width=5mm,
+  align=center,
+  fill=white
+  }
+}
+
+\aclfinalcopy % Uncomment this line for the final submission
+\def\aclpaperid{1086} %  Enter the acl Paper ID here
+
+%\setlength\titlebox{5cm}
+% You can expand the titlebox if you need extra space
+% to show all the authors. Please do not make the titlebox
+% smaller than 5cm (the original size); we will check this
+% in the camera-ready version and ask you to change it back.
+
+\newcommand\BibTeX{B{\sc ib}\TeX}
+
+\title{Structural Neural Encoders for AMR-to-text Generation}
+
+\author{Marco Damonte
+  \quad Shay B. Cohen
+  \\ \normalsize{School of
+    Informatics, University of Edinburgh}\\ \normalsize{10 Crichton Street,
+    Edinburgh EH8 9AB, UK}
+  \\ \tt{m.damonte@sms.ed.ac.uk} \\
+  \tt{scohen@inf.ed.ac.uk}}
+
+\date{}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+% AMR-to-text generation is the task of generating sentences from AMR graphs. 
+% In order to use sequence-to-sequence architectures, AMR graphs can be converted into sequences.
+% A more direct approach requires the use of graph-to-sequence architectures, which obviate the need for this conversion and has been shown to improve performance. Unlike sequential encoding, graph encoding allows capturing reentrant structures in the AMR graphs explicitly. 
+% We investigate the extent to which reentrancies have an impact on AMR-to-text generation by comparing graph encoders with tree encoders, where reentrancies are not preserved. We show that improvements in dealing with reentrancies and long-range dependencies contribute to higher overall scores for graph encoders.
+AMR-to-text generation is a problem recently introduced to the NLP community, in which the goal is to generate sentences from Abstract Meaning Representation (AMR) graphs. 
+Sequence-to-sequence models can be used to this end by converting the AMR graphs to strings.
+Approaching the problem while working directly with graphs requires the use of graph-to-sequence models that encode the AMR graph into a vector representation.
+Such encoding has been shown to be beneficial in the past, and unlike sequential encoding, it allows us to explicitly capture reentrant structures in the AMR graphs.
+We investigate the extent to which reentrancies (nodes with multiple parents) have an impact on AMR-to-text generation by comparing graph encoders to tree encoders, where reentrancies are not preserved. We show that improvements in the treatment of reentrancies and long-range dependencies contribute to higher overall scores for graph encoders.
+Our best model achieves 24.40 BLEU on LDC2015E86, outperforming the state of the art by 1.1 points and 24.54 BLEU on LDC2017T10, outperforming the state of the art by 1.24 points.
+
+\end{abstract}
+
+\section{Introduction}
+
+\begin{figure}[ht!]
+  \begin{tikzpicture}
+    \draw (-3,10.3) node(a) {(a)};
+    \draw (-0.2,10) node(beg)[ellipse,draw] {eat-01};
+    \draw (-2.1,8.5) node(i)[ellipse,draw, very thick] {\textbf{he}};
+    \draw (-0.2,8.5) node(you)[ellipse,draw] {pizza};
+    \draw (2.5,8.5) node(excuse)[ellipse,draw] {finger};
+    \draw [->] (beg) -- node[left]{\emph{:arg0}} (i);
+    \draw [->] (beg) -- node[right]{\emph{:arg1}} (you);
+    \draw [->] (beg) -- node[right=0.3cm]{\emph{:instrument}} (excuse);
+    \draw[bend left,->, very thick]  (excuse) to node [below] {\emph{part-of}} (i);    
+  \end{tikzpicture}
+  \begin{dependency}[theme = simple]
+   \begin{deptext}
+      \small{eat-01} \& \small{:arg0} \& \small{\textbf{he}} \& \small{:arg1} \& \small{pizza} \& \small{:instr.} \& \small{finger} \& \small{:part-of} \& \small{\textbf{he}} \\
+   \end{deptext}
+   \node (tmp) [below left of = \wordref{1}{1}, xshift = 0.5cm, yshift=1.2cm] {(b)};
+\end{dependency} 
+  \begin{dependency}[theme = simple]
+   \begin{deptext}
+      \small{eat-01} \& \small{:arg0} \& \small{\textbf{he}} \& \small{:arg1} \& \small{pizza} \& \small{:instr.} \& \small{finger} \& \small{:part-of} \& \small{\textbf{he}} \\
+   \end{deptext}
+   \depedge{1}{2}{}
+   \depedge{2}{3}{}
+   \depedge{1}{4}{}
+   \depedge{4}{5}{}
+   \depedge{1}{6}{}
+   \depedge{6}{7}{}
+   \depedge[edge style={very thick}]{7}{8}{}
+   \depedge[edge style={very thick}]{8}{9}{}
+   \node (tmp) [below left of = \wordref{1}{1}, xshift = 0.5cm, yshift=2cm] {(c)};
+\end{dependency}
+  \begin{dependency}[theme = simple]
+   \begin{deptext}
+      \small{eat-01} \& \small{:arg0} \& \small{\textbf{he}} \& \small{:arg1} \& \small{pizza} \& \small{:instr.} \& \small{finger} \& \small{:part-of} \& \small{\textbf{he}} \\
+   \end{deptext}
+   \depedge{1}{2}{}
+   \depedge{2}{3}{}
+   \depedge{1}{4}{}
+   \depedge{4}{5}{}
+   \depedge{1}{6}{}
+   \depedge{6}{7}{}
+   \depedge[edge style={very thick}]{7}{8}{}
+   \depedge[edge style={very thick}]{8}{3}{}
+   \node (tmp) [below left of = \wordref{1}{1}, xshift = 0.5cm, yshift=2cm] {(d)};
+\end{dependency}
+ \caption{(a) AMR for the sentence \emph{He ate the pizza with his fingers} and different input representations: (b) sequential; (c) tree-structured; (d) graph-structured. The nodes and edges in bold highlight a reentrancy.}
+ \label{fig:example}
+\end{figure}
+
+Abstract Meaning Representation (AMR; \citealt{Banarescu13abstractmeaning}) is a semantic graph representation that abstracts away from the syntactic realization of a sentence, where nodes in the graph represent concepts and edges represent semantic relations between them. AMRs are graphs, rather than trees, because co-references and control structures result in nodes with multiple parents, called reentrancies. For instance, the AMR of Figure~\ref{fig:example}(a) contains a reentrancy between \emph{finger} and \emph{he}, caused by the possessive pronoun \emph{his}. AMR-to-text generation is the task of automatically generating natural language from AMR graphs.
+
+% Several AMR-to-text generation systems have been developed in the last few years \cite{flanigangeneration,pourdamghani2016generating,song2016amr,lampouras2017sheffield,mille2017forge,gruzitis2017rigotrio,konstas2017neural,cao,song,beck}. 
+% AMR generation has been framed as a Machine Translation problem, where the source language is AMR \cite{ferreira2017linguistic} and the target language is English. 
+Attentive encoder/decoder architectures, commonly used for Neural Machine Translation (NMT), have been explored for this task \cite{konstas2017neural,song,beck}. 
+In order to use sequence-to-sequence models, \newcite{konstas2017neural} reduce the AMR graphs to sequences, while \newcite{song} and \newcite{beck} directly encode them as graphs. Graph encoding allows the model to explicitly encode reentrant structures present in the AMR graphs.
+While central to AMR, reentrancies are often hard to treat both in parsing and in generation. Previous work either removed them from the graphs, hence obtaining sequential \cite{konstas2017neural} or tree-structured \cite{liu2018toward,takase2016neural} data, while other work maintained them but did not analyze their impact on performance \cite[e.g.,][]{song,beck}. \newcite{damonte2016incremental} showed that state-of-the-art parsers do not perform well in predicting reentrant structures, while \newcite{van2017dealing} compared different pre- and post-processing techniques to improve the performance of sequence-to-sequence parsers with respect to reentrancies. It is not yet clear whether explicit encoding of reentrancies is beneficial for generation.
+
+% An unexplored option lies in between: removing reentrancies so that tree encoders can be used instead. While graph encoders have access to additional information, it is not clear yet the extent to which reentrancies are beneficial for the task.
+
+% \paragraph{Sequential AMRs} 
+% In order to use sequence-to-sequence architectures traditionally employed in NMT, the AMR graphs can be linearized into sequences by traversing them in a pre-defined order and converting them into a sequence of tokens containing the labels of nodes and edges of the graphs (Figure~\ref{fig:example}b). The resulting sequences lose the structural information of the original graph. 
+% In order to partially preserve some structure, \newcite{konstas2017neural} add additional bracketing to the input to represent the structure of the graph, resulting in better performance. Bracketing introduces scope information: it indicates, for example, whether two consecutive words in the sequence represent two nodes connected by an edge in the AMR graph. It is nevertheless not sufficient to represent aspects such as long-range dependencies and reentrancies.
+
+% \paragraph{Tree-structured AMRs}
+% Tree-Structured Long Short-Term Memory Networks (TreeLSTM; \citealt{tai2015improved}) have been successfully used in encoder/decoder models before \cite{eriguchi2016tree,chen2017improved}. \newcite{takase2016neural} encoded AMR graphs with a variant of \nohyphens{TreeLSTM} for headline generation, with positive results. The problem with tree-based methods is that they can only deal with tree structures and as such cannot encode reentrancies, which are a central characteristic of AMRs (Figure~\ref{fig:example}c).
+
+% \paragraph{Graph-structured AMRs}
+% While central to AMR, reentrancies are often hard to deal with, both in parsing and in generation. Previous work either removed them from the graphs, hence obtaining sequential \cite{konstas2017neural} or tree-structured \cite{liu2018toward,takase2016neural} data, while others maintained them while not analyzing their impact on performance \cite[e.g.,][]{song,beck}. \newcite{damonte2016incremental} showed that state-of-the-art parsers do not perform well at predicting reentrant structures, while \newcite{van2017dealing} investigated pre- and post-processing techniques to improve the performance of neural parsers with respect to reentrancies. It is therefore not clear whether explicitly encoding reentrancies (Figure~\ref{fig:example}d) will be beneficial for generation.
+
+In this paper, we compare three types of encoders for AMR: 1) sequential encoders, which reduce AMR graphs to sequences; 2) tree encoders, which ignore reentrancies; and 3) graph encoders. 
+% We compare alternative input representations for AMR-to-text generation: sequential (the AMR is reduced to a sequence), tree-structured (the reentrancies are ignored) and graph-structured. 
+We pay particular attention to two phenomena: reentrancies, which mark co-reference and control structures, and long-range dependencies in the AMR graphs, which are expected to benefit from structural encoding. The contributions of the paper are two-fold:
+\begin{itemize}
+  \item We present structural encoders for the encoder/decoder framework and show the benefits of graph encoders not only compared to sequential encoders but also compared to tree encoders, which have not been studied so far for AMR-to-text generation.
+  \item We show that better treatment of reentrancies and long-range dependencies contributes to improvements in the graph encoders.
+  % \item We show that to better capture reentrancies and long-range dependencies contribute to improvements in the graph encoders.
+  % \item We show that improvements in dealing with reentrancies and long-range dependencies contribute to overall improvements in the graph encoders.
+\end{itemize}
+
+Our best model, based on a graph encoder, achieves state-of-the-art results for both the LDC2015E86 dataset (24.40 on BLEU and 23.79 on Meteor) and the LDC2017T10 dataset (24.54 on BLEU and 24.07 on Meteor).
+
+\section{Input Representations}
+\label{sec:input}
+
+\paragraph{Graph-structured AMRs}
+AMRs are normally represented as rooted and directed graphs:
+\begin{align*}
+\begin{split}
+& G_0 = (V_0, E_0, L), \\
+& V_0 = \{v_1, v_2, \dots, v_n \},\\ 
+& root \in V_0,
+\end{split}
+\end{align*}
+\noindent where $V_0$ are the graph vertices (or nodes) and $root$ is a designated root node in $V_0$. The edges in the AMR are labeled:
+\begin{align*}
+\begin{split}
+& E_0 \subseteq V_0 \times L \times V_0, \\
+& L = \{\ell_1, \ell_2, \dots, \ell_{n'} \}.
+\end{split}
+\end{align*}
+Each edge $e \in E_0$ is a triple: $e=(i,label,j)$, where $i \in V_0$ is the parent node, $label \in L$ is the edge label and $j \in V_0$ is the child node.
+
+In order to obtain unlabeled edges, thus decreasing the total number of parameters required by the models, we replace each labeled edge $e = (i, label, j)$ with two unlabeled edges: $e_1 = (i, label), e_2 = (label, j)$:
+\begin{align*}
+\begin{split}
+& G = (V, E), \\
+& V = V_0 \cup L = \{v_1, \dots, v_n, \ell_1, \dots, \ell_{n'} \},\\
+& E \subseteq (V_0 \times L) \cup (L \times V_0).
+\end{split}
+\end{align*}
+Each unlabeled edge $e \in E$ is a pair: $e=(i,j)$,
+where one of the following holds:
+\begin{enumerate}
+\item $i \in V_0$ and $j \in L$;
+\item $i \in L$ and $j \in V_0$.
+\end{enumerate}
+
+For instance, the edge between \emph{eat-01} and \emph{he} with label \emph{:arg0} of Figure~\ref{fig:example}(a) is replaced by two edges in Figure~\ref{fig:example}(d): an edge between \emph{eat-01} and \emph{:arg0} and another one between \emph{:arg0} and \emph{he}.
+The process, also used in \newcite{beck}, tranforms the input graph into its equivalent Levi graph \cite{levi1942finite}. 
+
+\paragraph{Tree-structured AMRs} 
+In order to obtain tree structures, it is necessary to discard the reentrancies from the AMR graphs. 
+Similarly to \newcite{takase2016neural}, we replace nodes with $n > 1$ incoming edges with $n$ identically labeled nodes, each with a single incoming edge.
+% In the sequential AMRs the reentrancies are removed by generating a new instance of the node every time it is mentioned. In order to remove the reentrancies from the graphs, we replace edges between a parent and a node that already has a parent with an edge between the parent and the new instance of the node in the linearization, as in the highlighted edge of Figure~\ref{fig:example}(c).
+
+% We build AMR trees by drawing the AMR edges on the linearization of the RNN encoders. Similarly to \newcite{beck}, in order to obtain unlabeled relations and decrease the total number of parameters required by the models, edge labels are converted to node labels, as shown in Figure~\ref{fig:example}(c). To discard the reentrancies, we connect each reentrant edge with the node label that follows in the linearization, instead of the original one, as in the highlighted edge of Figure~\ref{fig:example}(c).
+
+\paragraph{Sequential AMRs} Following \newcite{konstas2017neural}, the input sequence is a linearized and anonymized AMR graph. Linearization is used to convert the graph into a sequence:
+\begin{align*}
+\begin{split}
+& x = x_1, \dots, x_N, \\
+& x_i \in V.
+\end{split}
+\end{align*}
+The depth-first traversal of the graph defines the indexing between nodes and tokens in the sequence. For instance, the root node is $x_1$, its leftmost child is $x_2$ and so on. 
+% When a node is visited multiple times, a new token is added to the sequence, effectively removing reentrancy information.
+Nodes with multiple parents are visited more than once. At each visit, their labels are repeated in the sequence, effectively losing reentrancy information, as shown in Figure~\ref{fig:example}(b).
+
+% The linearized sequence lose the reentrancies: every time a node is visited, it is used to generate a token in the sequence, regardless of whether the node has been visited before. 
+% For instance, in the linearization of Figure~\ref{fig:example}(b), \emph{he} is repeated twice. 
+Anonymization removes names and rare words with coarse categories to reduce data sparsity. 
+% Anonymization is crucial given the relatively small size of the AMR datasets. 
+An alternative to anonymization is to employ a copy mechanism \cite{gulcehre2016pointing}, where the models learn to copy rare words from the input itself. In this paper, we follow the anonymization approach. 
+
+\section{Encoders}
+
+In this section, we review the encoders adopted as building blocks for our tree and graph encoders. 
+% we experiment with in Section~\ref{sec:experiments}.
+
+\subsection{Recurrent Neural Network Encoders}
+\label{sec:sequential}
+
+We reimplement the encoder of \newcite{konstas2017neural}, where the sequential linearization is the input to a bidirectional LSTM (BiLSTM; \citealt{graves2013speech}) network. The hidden state of the BiLSTM at step $i$ is used as a context-aware word representation of the $i$-th token in the sequence:
+\begin{align*}
+  e_{1:N}=\mathrm{BiLSTM}(x_{1:N}),
+\end{align*}
+where $e_i \in \mathbb{R}^{d}$, $d$ is the size of the output embeddings. 
+% The decoder, which uses an attention mechanism, works as in traditional sequence-to-sequence models \cite{bahdanau2014neural}.
+
+\subsection{TreeLSTM Encoders}
+\label{sec:tree_encoders}
+
+Tree-Structured Long Short-Term Memory Networks (TreeLSTM; \citealt{tai2015improved}) have been introduced primarily as a way to encode the hierarchical structure of syntactic trees \cite{tai2015improved}, but they have also been applied to AMR for the task of headline generation \cite{takase2016neural}. 
+TreeLSTMs assume tree-structured input, so AMR graphs must be preprocessed to respect this constraint: reentrancies, which play an essential role in AMR, must be removed, thereby transforming the graphs into trees. 
+
+% Similarly to GCNs, we use TreeLSTMs to enhance each token read by the encoders with the context of its neighboring nodes in the graph. 
+We use the Child-Sum variant introduced by \newcite{tai2015improved}, which processes the tree in a bottom-up pass. When visiting a node, the hidden states of its children are summed up in a single vector which is then passed into recurrent gates.
+
+In order to use information from both incoming and outgoing edges (parents and children), we employ bidirectional TreeLSTMs \cite{eriguchi2016tree}, where the bottom-up pass is followed by a top-down pass. The top-down state of the root node is obtained by feeding the bottom-up state of the root node through a feed-forward layer:
+\begin{align*}
+h_{\mathrm{root}}^{\downarrow} = \mathrm{tanh} (W_r h_{\mathrm{root}}^{\uparrow} + b),
+\end{align*}
+where $h_i^{\uparrow}$ is the hidden state of node $x_i \in V$ for the bottom-up pass and $h_i^{\downarrow}$ is the hidden state of node $x_i$ for the top-down pass.
+
+The bottom up states for all other nodes are computed with an LSTM, with the cell state given by their parent nodes:
+\begin{align*}
+h_{i}^{\downarrow} = \mathrm{LSTM} (h_{p(i)}^{\uparrow}, h_{i}^{\uparrow}),
+\end{align*}
+where $p(i)$ is the parent of node $x_i$ in the tree.
+The final hidden states are obtained by concatenating the states from the bottom-up pass and the top-down pass:
+ \begin{align*}
+h_{i} = \big[ h_{i}^{\downarrow} ; h_{i}^{\uparrow} \big] .
+\end{align*}
+
+% We can then extract the hidden state of the root node, which provides us with a single vector representing the entire tree.
+The hidden state of the root node is usually used as a representation for the entire tree. In order to use attention over all nodes, as in traditional NMT \cite{bahdanau2014neural}, we can however build node embeddings by extracting the hidden states of each node in the tree:
+\begin{align*}
+e_{1:N} = h_{1:N}, %, \dots, h_{N}
+\end{align*}
+where $e_i \in \mathbb{R}^{d}$, $d$ is the size of the output embeddings.
+
+The encoder is related to the TreeLSTM encoder of \newcite{takase2016neural}, which however encodes labeled trees and does not use a top-down pass.
+
+\subsection{Graph Convolutional Network Encoders}
+\label{sec:graph_encoders}
+
+Graph Convolutional Network (GCN; \citealt{duvenaud2015convolutional,kipf2016semi}) is a neural network architecture that learns embeddings of nodes in a graph by looking at its nearby nodes. 
+% \newcite{kipf2016semi} use GCNs for citation networks and knowledge graphs. 
+In Natural Language Processing, GCNs have been used for Semantic Role Labeling \cite{marcheggiani2017encoding}, NMT \cite{bastings2017graph}, Named Entity Recognition \cite{cetoli2017graph} and text generation \cite{diego}.
+
+% \newcite{marcheggiani2017encoding} were the first to apply GCN in Natural Language Processing for the task of Semantic Role Labeling. They were also used for NMT \cite{bastings2017graph}, Named Entity Recognition \cite{cetoli2017graph}, and text generation \cite{diego}.
+
+A graph-to-sequence neural network was first introduced by \newcite{xu2018graph2seq}. The authors review the similarities between their approach, GCN and another approach, based on GRUs \cite{li2015gated}. The latter recently inspired a graph-to-sequence architecture for AMR-to-text generation \cite{beck}. Simultaneously, \newcite{song} proposed a graph encoder based on LSTMs. 
+
+The architectures of \newcite{song} and \newcite{beck} are both based on the same core computation of a GCN, which sums over the embeddings of the immediate neighborhood of each node: 
+\begin{align*}
+h_i^{(k + 1)} = \sigma \Bigg( \sum_{j \in \mathcal{N}(i)}{W_{(j,i)}^{(k)}} h_j^{(k)} + b^{(k)}  \Bigg),
+\end{align*}
+where $h_i^{(k)}$ is the embeddings of node $x_i \in V$ at layer $k$, $\sigma$ is a non-linear activation function, $\mathcal{N}(i)$ is the set of the immediate neighbors of $x_i$, $W_{(j,i)}^{(k)} \in \mathbb{R}^{m \times m}$ and $b^{(k)} \in \mathbb{R}^{m}$, with $m$ being the size of the embeddings.
+  
+It is possible to use recurrent networks to model the update of the node embeddings. Specifically, \newcite{beck} uses a GRU layer where the gates are modeled as GCN layers. 
+% The main difference is that in GRUs the weights of each layer are tied, which is not true for traditional multi-layer GCNs.
+\newcite{song} did not use the activation function $\sigma$ and perform an LSTM update instead. 
+
+The systems of \newcite{song} and \newcite{beck} further differ in design and implementation decisions such as in the use of edge label and edge directionality. 
+Throughout the rest of the paper, we follow the traditional, non-recurrent, implementation of GCN also adopted in other NLP tasks \cite{marcheggiani2017encoding,bastings2017graph,cetoli2017graph}. In our experiments, the node embeddings are computed as follows:
+\begin{equation}
+h_i^{(k + 1)} = \sigma \Bigg( \sum_{j \in \mathcal{N}(i)}{W_{\mathrm{dir}(j,i)}^{(k)}} h_j^{(k)} + b^{(k)} \Bigg),
+\label{eq:gcn_final}
+\end{equation}
+where $\mathrm{dir}(j,i)$ indicates the direction of the edge between $x_j$ and $x_i$ (i.e., outgoing or incoming edge). 
+The hidden vectors from the last layer of the GCN network are finally used to represent each node in the graph:
+\begin{align*}
+e_{1:N} = h_1^{(K)}, \dots, h_N^{(K)},
+\end{align*}
+where K is the number of GCN layers used, $e_i \in \mathbb{R}^{d}$, $d$ is the size of the output embeddings. 
+
+% Instead of applying GCNs to labeled graphs as in \newcite{marcheggiani2017encoding}, we encode edge labels as nodes, similarly to \newcite{beck}, as shown in Figure~\ref{fig:example}.
+To regularize the models we apply dropout \cite{srivastava2014dropout} as well as edge dropout \cite{marcheggiani2017encoding}. We also include highway connections \cite{srivastava2015highway} between GCN layers. 
+% % GCNs build representations for each node in the graph, which then need to be aggregated to be passed to the decoder. \newcite{xu2018graph2seq} use a max pooling operation. We found best results when only using the GCN representation of the last LSTM step, similarly to \newcite{bastings2017graph}:
+% \begin{align*}
+% % \begin{split}
+% G_{1:N} = \mathrm{GCN}(x_{1:N}),
+% % \end{split}
+% % \\
+% % \begin{split}
+% % e = G_N,
+% % \end{split}
+% \end{align*}
+% where the $\mathrm{GCN}$ function updates each node representation $x_{i}$ according to Equation~\ref{eq:gcn_final}. 
+% In order to obtain a single vector representing the entire graph, we use the GCN representation of the last LSTM step, as in \newcite{bastings2017graph}.
+
+While GCN can naturally be used to encode graphs, they can also be applied to trees by removing reentrancies from the input graphs. In the experiments of Section~\ref{sec:experiments}, we explore GCN-based models both as graph encoders (reentrancies are maintained) as well as tree encoders (reentrancies are ignored). 
+% By comparing tree encoders with graph encoders we investigate the extent to which reentrancies are beneficial for AMR-to-text generation.
+
+% \section{Where to Introduce RNNs?}
+\section{Stacking Encoders}
+\label{sec:stack}
+
+\begin{figure}[!t]
+ \centering
+  \begin{tikzpicture}
+    \tiny{
+    \draw (4.7,3.7) node(beg)[ellipse,draw] {$x_1$};
+    \draw (4,3.2) node(i)[ellipse,draw] {$x_2$};
+    \draw (4.7,3.2) node(you)[] {$\dots$};
+    \draw (5.4,3.2) node(you)[ellipse,draw] {$x_N$};
+    \draw [->] (beg) -- node[left]{} (i);
+    \draw [->] (beg) -- node[right]{} (you);
+    }
+    \draw (4.7,5.5) node(gcn_l) [draw, rectangle, minimum width=2cm, minimum height=0.7cm, fill=red!15, rounded corners=0.1cm] {GCN/TreeLSTM}; 
+    \tiny{
+      \draw (4.7,7.1) node(rootlup)[ellipse,draw] {$h_1$};
+      \draw (4,6.6) node(i)[ellipse,draw] {$h_2$};
+      \draw (4.7,6.6) node(dotsldown)[] {$\dots$};
+      \draw (5.4,6.6) node(you)[ellipse,draw] {$h_N$};
+      \draw [->] (rootlup) -- node[left]{} (i);
+      \draw [->] (rootlup) -- node[right]{} (you);
+    }
+    \draw (4,8) node(hl0) {$h_1$}; \draw (4.5,8) node(hl1) {$h_2$}; \draw (5,8) node(hldots) {$\dots$}; \draw (5.5,8) node(hln) {$h_n$};
+    \draw (4.7,8.8) node(bilstm_l) [draw, rectangle, minimum width=2cm, minimum height=0.7cm, fill=yellow!15, rounded corners=0.1cm] {BiLSTM};
+    \draw (4,9.7) node(el0) {$e_1$}; \draw (4.5,9.7) node(el1) {$e_2$}; \draw (5,9.7) node(eldots) [minimum height=0.28cm]  {$\dots$}; \draw (5.5,9.7) node(eln) {$e_n$};
+
+    \tiny{
+    \draw (1,3.7) node(beg)[ellipse,draw] {$x_1$};
+    \draw (0.3,3.2) node(i)[ellipse,draw] {$x_2$};
+    \draw (1,3.2) node(you)[] {$\dots$};
+    \draw (1.7,3.2) node(you)[ellipse,draw] {$x_N$};
+    \draw [->] (beg) -- node[left]{} (i);
+    \draw [->] (beg) -- node[right]{} (you);
+    }
+    \draw (0.3,4.7) node(xr0) {$x_1$}; \draw (0.8,4.7) node(xr1) {$x_2$}; \draw (1.3,4.7) node(xrdots) {$\dots$}; \draw (1.8,4.7) node(xrn) {$x_n$};
+    \draw (1,5.5) node(bilstm_r) [draw, rectangle, minimum width=2cm, minimum height=0.7cm, fill=yellow!15, rounded corners=0.1cm] {BiLSTM};
+    \draw (0.3,6.4) node(hr0) {$h_1$}; \draw (0.8,6.4) node(hr1) {$h_2$}; \draw (1.3,6.4) node(hrdots) [minimum height=0.33cm] {$\dots$}; \draw (1.8,6.4) node(hrn) {$h_n$};
+    \tiny{
+    \draw (1,7.7) node(rootrdown)[ellipse,draw] {$h_1$};
+    \draw (0.3,7.2) node(i)[ellipse,draw] {$h_2$};
+    \draw (1,7.2) node(dotsrdown)[] {$\dots$};
+    \draw (1.7,7.2) node(you)[ellipse,draw] {$h_N$};
+    \draw [->] (rootrdown) -- node[left]{} (i);
+    \draw [->] (rootrdown) -- node[right]{} (you);
+    }
+    \draw (1,8.8) node(gcn_r) [draw, rectangle, minimum width=2cm, minimum height=0.7cm, fill=red!15, rounded corners=0.1cm] {GCN/TreeLSTM}; 
+    \tiny{
+      \draw (1,10.3) node(beg)[ellipse,draw] {$e_1$};
+      \draw (0.3,9.7) node(i)[ellipse,draw] {$e_2$};
+      \draw (1,9.7) node(dotsrup)[] {$\dots$};
+      \draw (1.7,9.7) node(you)[ellipse,draw] {$e_N$};
+      \draw [->] (beg) -- node[left]{} (i);
+      \draw [->] (beg) -- node[right]{} (you);
+    }      
+
+    \draw [-, dashed] (3,3.5) -- (3,10);
+    \draw [->,>=stealth, thick, dashed] (1,4) -- (1,4.5);
+    \draw [->,>=stealth, thick] (xr0.north) -- (bilstm_r.south -| xr0.north);
+    \draw [->,>=stealth, thick] (xr1.north) -- (bilstm_r.south -| xr1.north);
+    \draw [->,>=stealth, thick] (xrdots.north) -- (bilstm_r.south -| xrdots.north);
+    \draw [->,>=stealth, thick] (xrn.north) -- (bilstm_r.south -| xrn.north);
+
+    \draw [->,>=stealth, thick] (bilstm_r.north -| hr0.south) -- (hr0.south);
+    \draw [->,>=stealth, thick] (bilstm_r.north -| hr1.south) -- (hr1.south);
+    \draw [->,>=stealth, thick] (bilstm_r.north -| hrdots.south) -- (hrdots.south);
+    \draw [->,>=stealth, thick] (bilstm_r.north -| hrn.south) -- (hrn.south);    
+
+    \draw [->,>=stealth, thick, dashed] (1,6.6) -- (1,7);
+    \draw [->,>=stealth, thick] (1,8) -- (gcn_r.south);
+    \draw [->,>=stealth, thick] (gcn_r.north) -- (dotsrup.south);
+
+    \draw [->,>=stealth, thick] (4.7,4) -- (gcn_l.south);
+    \draw [->,>=stealth, thick] (gcn_l.north) -- (4.7,6.3);
+    \draw [->,>=stealth, thick, dashed] (4.7,7.4) -- (4.7,7.8);
+    \draw [->,>=stealth, thick] (hl0.north) -- (bilstm_l.south -| hl0.north);
+    \draw [->,>=stealth, thick] (hl1.north) -- (bilstm_l.south -| hl1.north);
+    \draw [->,>=stealth, thick] (hldots.north) -- (bilstm_l.south -| hldots.north);
+    \draw [->,>=stealth, thick] (hln.north) -- (bilstm_l.south -| hln.north);
+
+    \draw [->,>=stealth, thick] (bilstm_l.north -| el0.south) -- (el0.south);
+    \draw [->,>=stealth, thick] (bilstm_l.north -| el1.south) -- (el1.south);
+    \draw [->,>=stealth, thick] (bilstm_l.north -| eldots.south) -- (eldots.south);
+    \draw [->,>=stealth, thick] (bilstm_l.north -| eln.south) -- (eln.south);  
+
+  \end{tikzpicture}
+ \caption{Two ways of stacking recurrent and structural models. Left side: structure on top of sequence, where the structural encoders are applied to the hidden vectors computed by the BiLSTM. Right side: sequence on top of structure, where the structural encoder is used to create better embeddings which are then fed to the BiLSTM. The dotted lines refer to the process of converting the graph into a sequence or vice-versa.}
+ \label{fig:arch}
+\end{figure}
+
+% The tree and graph encoders described in the previous sections do not include RNN layers, which are instead the main building block of the baseline sequential encoder. 
+We aimed at stacking the explicit source of structural information provided by TreeLSTMs and GCNs with the sequential information which BiLSTMs extract well. 
+This was shown to be effective for other tasks with both TreeLSTMs \cite{eriguchi2016tree,chen2017improved} and GCNs \cite{marcheggiani2017encoding,cetoli2017graph,bastings2017graph}. In previous work, the structural encoders (tree or graph) were used on top of the BiLSTM network: first, the input is passed through the sequential encoder, the output of which is then fed into the structural encoder. While we experiment with this approach, we also propose an alternative solution where the BiLSTM network is used on top of the structural encoder: the input embeddings are refined by exploiting the explicit structural information given by the graph. The refined embeddings are then fed into the BiLSTM networks. See Figure~\ref{fig:arch} for a graphical representation of the two approaches. In our experiments, we found this approach to be more effective. Compared to models that interleave structural and recurrent components such as the systems of \newcite{song} and \newcite{beck}, stacking the components allows us to test for their contributions more easily.
+
+\subsection{Structure on Top of Sequence}
+\label{sec:ontopofbilstm}
+In this setup, BiLSTMs are used as in Section~\ref{sec:sequential} to encode the linearized and anonymized AMR.
+% \begin{align*}
+% % \begin{split}
+%   \hat{e}_{1:N}=\mathrm{BiLSTM}(x_{1:N}),
+% % \end{split}
+% % \\
+% % \begin{split}
+% % \end{split}
+% \end{align*}
+The context provided by the BiLSTM is a sequential one. We then apply either GCN or TreeLSTM on the output of the BiLSTM, by initializing the GCN or TreeLSTM embeddings with the BiLSTM hidden states. We call these models {\sc SeqGCN} and \nohyphens{{\sc SeqTreeLSTM}}.
+
+% For best results, the attention mechanism concatenates the output of the \nohyphens{BiLSTM} encoder with the output of the structural encoder that follows it. 
+% The context vectors are computed as usual by a weighted average over the hidden states of the encoder at each step:
+% \begin{align*}
+% c_i = \left ( \sum_{j=1}^{N} \hat{\alpha}_{ij} \hat{e}_j \right) \circ \left ( \sum_{j=1}^{N} \alpha_{ij} e_j \right),
+% \end{align*}
+% where the weights $\alpha_{i,j}$ are given by:
+% \begin{align*}
+% \begin{split}
+% \alpha_{i,j} = \frac{\exp(a_{ij})}{\sum_{k=1}^{N} \exp(a_{ik})},
+% \end{split}\\
+% \begin{split}
+% \hat\alpha_{i,j} = \frac{\exp(\hat{a}_{ij})}{\sum_{k=1}^{N} \exp(\hat{a}_{ik})},
+% \end{split}
+% \end{align*}
+% and scoring functions that decide how well the encoder step $e_j$ or $\hat{e}_i$ aligns with the decoder step $d_i$:
+% \begin{align*}
+% \begin{split}
+% a(i,j) = d_i^{\top} W_a e_j ,
+% \end{split}\\
+% \begin{split}
+% \hat{a}(i,j) = d_i^{\top} W_a \hat{e}_j .
+% \end{split}
+% \end{align*}
+
+
+% The attention mechanism concatenates two context vectors: one for the \nohyphens{BiLSTM} encoder and one for the structural encoder that follows it. 
+% The context vectors are computed as usual by a weighted average over the hidden states of the encoder at each step \cite{bahdanau2014neural}.
+
+\subsection{Sequence on Top of Structure}
+\label{sec:bilstmontop}
+
+We also propose a different approach for integrating graph information into the encoder, by swapping the order of the BiLSTM and the structural encoder: we aim at using the structured information provided by the AMR graph as a way to refine the original word representations. We first apply the structural encoder to the input graphs. The GCN or TreeLSTM representations are then fed into the BiLSTM. We call these models {\sc GCNSeq} and {\sc TreeLSTMSeq}. 
+% In this approach, we use attention as in traditional NMT, attending only over the output of the BiLSTM.
+
+The motivation behind this approach is that we know that BiLSTMs, given appropriate input embeddings, are very effective at encoding the input sequences. In order to exploit their strength, we do not amend their output but rather provide them with better input embeddings to start with, by explicitly taking the graph relations into account. 
+% For this, we need the structural encoders to learn embeddings of each node, rather than a single embedding for the entire graph. GCNs are ideal for this, as they naturally learn node embeddings. For TreeLSTMs, we build node embeddings by extracting the hidden states of each node in the tree.
+
+% We experimented with a combination of TreeLSTM and GCN obtained by concatenating the GCN embeddings with the TreeLSTM embeddings. In order to achieve better performance, we further concatenate them with the original embeddings, as shown in Figure~\ref{fig:arch}.
+% \begin{figure}[!t]
+%  \centering
+%   \begin{tikzpicture}
+%   \draw (3,-0) node(x) [draw, rectangle, minimum width=2.8cm, minimum height=0.6cm, fill=yellow!15, rounded corners=0.1cm] {$x_1 \hspace{0.2cm} \dots \hspace{0.2cm} x_N$};
+%   \draw (1,1.8) node(gcn) [draw, rectangle, minimum width=3cm, minimum height=2cm, fill=yellow!15, rounded corners=0.1cm] {
+%       \scalebox{0.4}{\begin{tikzpicture}
+%         \draw (0,12.5) node(beg) {\Huge{GCN}};
+%         \draw (-1,11.2) node(n)[ellipse,draw, ultra thick, minimum width=0.2cm, minimum height=0.2cm] {};
+%         \draw (1,11.2) node(n2)[ellipse,draw, ultra thick,minimum width=0.2cm, minimum height=0.2cm] {};
+%         \draw (0,10) node(beg)[ellipse,draw, ultra thick, red,fill=red, minimum width=0.2cm, minimum height=0.2cm] {};
+%         \draw (-2,8.5) node(i)[ellipse,draw, ultra thick, minimum width=0.2cm, minimum height=0.2cm] {};
+%         \draw (0,8.5) node(you)[ellipse,draw, ultra thick, minimum width=0.2cm, minimum height=0.2cm] {};
+%         \draw (2,8.5) node(you2)[ellipse,draw, ultra thick, minimum width=0.2cm, minimum height=0.2cm] {};
+%         \draw [->,ultra thick, red] (beg) -- node[left]{\emph{}} (i);
+%         \draw [->,ultra thick, red] (beg) -- node[right]{\emph{}} (you);
+%         \draw [->,ultra thick, red] (beg) -- node[right]{\emph{}} (you2);
+%         \draw [->,ultra thick, red] (n) -- node[right]{\emph{}} (beg);
+%         \draw [->,ultra thick, red] (n2) -- node[right]{\emph{}} (beg);
+%         \end{tikzpicture}}
+%   };
+%   \draw (5,1.8) node(tree) [draw, rectangle, minimum width=3cm, minimum height=2cm, fill=yellow!15, rounded corners=0.1cm] {
+%       \scalebox{0.4}{\begin{tikzpicture}  
+%         \draw (0,12.5) node(beg) {\Huge{TreeLSTM}};
+%         \draw (-1,11.2) node(n)[ellipse,draw, ultra thick,, minimum width=0.2cm, minimum height=0.2cm] {};
+%         \draw (1,11.2) node(n2)[ellipse,draw, ultra thick, minimum width=0.2cm, minimum height=0.2cm] {};
+%         \draw (0,10) node(beg)[ellipse,draw, ultra thick,red,fill=red, minimum width=0.2cm, minimum height=0.2cm] {};
+%         \draw (-2,8.5) node(i)[ellipse,draw, ultra thick, minimum width=0.2cm, minimum height=0.2cm] {};
+%         \draw (0,8.5) node(you)[ellipse,draw, ultra thick, minimum width=0.2cm, minimum height=0.2cm] {};
+%         \draw (2,8.5) node(you2)[ellipse,draw, ultra thick, minimum width=0.2cm, minimum height=0.2cm] {};
+%         \draw [->,ultra thick, red] (beg) -- node[left]{\emph{}} (i);
+%         \draw [->,ultra thick, red] (beg) -- node[right]{\emph{}} (you);
+%         \draw [->,ultra thick, red] (beg) -- node[right]{\emph{}} (you2);
+%         \draw [->,ultra thick] (n) -- node[right]{\emph{}} (beg);
+%         \draw [->,ultra thick] (n2) -- node[right]{\emph{}} (beg);
+%         \end{tikzpicture}}        
+%   };
+%   \draw (1,3.6) node(g) [draw, rectangle, minimum width=2.8cm, minimum height=0.6cm, fill=yellow!15, rounded corners=0.1cm] {$g_1 \hspace{0.2cm} \dots \hspace{0.2cm} g_N$};
+%   \draw (5,3.6) node(t) [draw, rectangle, minimum width=2.8cm, minimum height=0.6cm, fill=yellow!15, rounded corners=0.1cm] {$t_1 \hspace{0.2cm} \dots \hspace{0.2cm} t_N$};
+%   \draw (3,4.5) node(c) [draw, rectangle, minimum width=5cm, minimum height=0.6cm, fill=yellow!15, rounded corners=0.1cm] {$x_1;g_1;t_1 \hspace{0.3cm} \dots \hspace{0.3cm} x_N;g_N;t_N$};
+%   \draw (3,5.8) node(bilstm) [draw, rectangle, minimum width=1cm, minimum height=0.6cm, fill=yellow!15, rounded corners=0.1cm] {
+%       \begin{tikzpicture}  
+%           \draw (0,0) node(x1) [draw, rectangle, minimum width=0.4cm, minimum height=0.8cm, fill=white] {};
+%           \draw (1,0) node(x2) [draw, rectangle, minimum width=0.4cm, minimum height=0.8cm, fill=white] {};
+%           \draw (2,0) node(x3) [minimum width=0.4cm, minimum height=0.8cm, fill=yellow!15] {$\dots$};
+%           \draw (3,0) node(x4) [draw, rectangle, minimum width=0.4cm, minimum height=0.8cm, fill=white] {};
+%           \draw [<-, thick] (0.25,0.25) -- (0.75,0.25) node {};
+%           \draw [->, thick] (0.25,-0.25) -- (0.75,-0.25) node {};
+%           \draw [<-, thick] (1.25,0.25) -- (1.75,0.25) node {};
+%           \draw [->, thick] (1.25,-0.25) -- (1.75,-0.25) node {};
+%           \draw [<-, thick] (2.25,0.25) -- (2.75,0.25) node {};
+%           \draw [->, thick] (2.25,-0.25) -- (2.75,-0.25) node {};               
+%         \end{tikzpicture}    
+%   };
+%   \draw (3,7.1) node(e) [draw, rectangle, minimum width=4cm, minimum height=0.6cm, fill=yellow!15, rounded corners=0.1cm] {$e_1 \dots e_N$};
+%   \draw [->,>=stealth, ultra thick] (c.north) -- (bilstm); 
+%   \draw [->,>=stealth, ultra thick] (bilstm.north) -- (e); 
+%   \draw [->,>=stealth, ultra thick] (g.north) -- (c); 
+%   \draw [->,>=stealth, ultra thick] (t.north) -- (c); 
+%   \draw [->,>=stealth, ultra thick] (x.north) -- (c); 
+%   \draw [->,>=stealth, ultra thick] (x.north) -- (tree);
+%   \draw [->,>=stealth, ultra thick] (x.north) -- (gcn);
+%   \draw [->,>=stealth, ultra thick] (gcn.north) -- (g);
+%   \draw [->,>=stealth, ultra thick] (tree.north) -- (t);
+
+%   \end{tikzpicture}
+%  \caption{BiLSTM encoder on top of both GCN and TreeLSTM. The original embeddings, the GCN embeddings and the TreeLSTM embeddings are concatenated element-wise and fed into the BiLSTM. While TreeLSTM proceeds bottom-up, the GCN looks at entire node neighborhoods.}
+%  \label{fig:arch}
+% \end{figure}
+
+\section{Experiments}
+\label{sec:experiments}
+
+% We compare the baseline sequential encoder with the stacked encoders of Section~\ref{sec:stack}. 
+We use both BLEU \cite{papineni2002bleu} and Meteor \cite{banerjee2005meteor} as evaluation metrics.\footnote{We used the evaluation script available at \url{https://github.com/sinantie/NeuralAmr}.} We report results on the AMR dataset LDC2015E86 and LDC2017T10.
+% , which contains manually annotated AMR graphs of English sentences. 
+All systems are implemented in PyTorch \cite{paszke2017automatic} using the framework OpenNMT-py \cite{opennmt}.
+Hyperparameters of each model were tuned on the development set of LDC2015E86. For the GCN components, we use two layers, $\mathrm{ReLU}$ activations, and $\mathrm{tanh}$ highway layers. We use single layer LSTMs. We train with SGD with the initial learning rate set to 1 and decay to 0.8. Batch size is set to 100.\footnote{Our code is available at \url{https://github.com/mdtux89/OpenNMT-py-AMR-to-text}.} 
+% For the {\sc GCNSeq} models, we use ReLU \cite{nair2010rectified} activations, $\mathrm{tanh}$ highway connections, two GCN layers, dropout probability set to 0.2 between GCN layers and randomly initialized embeddings with 600 dimensions. Tree and graph variant of the model share the same hyperparameters. 
+
+We first evaluate the overall performance of the models, after which we focus on two phenomena that we expect to benefit most from structural encoders: reentrancies and long-range dependencies. Table~\ref{tab:dev_results} shows the comparison on the development split of the LDC2015E86 dataset between sequential, tree and graph encoders. The sequential encoder ({\sc Seq}) is a re-implementation of \newcite{konstas2017neural}. We test both approaches of stacking structural and sequential components: structure on top of sequence ({\sc SeqTreeLSTM} and {\sc SeqGCN}), and sequence on top of structure ({\sc TreeLSTMSeq} and {\sc GCNSeq}). To inspect the effect of the sequential component, we run ablation tests by removing the RNNs altogether ({\sc TreeLSTM} and {\sc GCN}). GCN-based models are used both as tree encoders (reentrancies are removed) and graph encoders (reentrancies are maintained).
+\begin{table}
+\centering
+\begin{tabular}{llcc}
+\toprule
+\textbf{Input} & \textbf{Model} & \textbf{BLEU} & \textbf{Meteor}\\
+\midrule
+Seq & {\sc Seq} & 21.40 & 22.00 \\
+\midrule
+\multirow{6}{*}{Tree} 
+ & {\sc SeqTreeLSTM} & 21.84 & 22.34 \\
+ & {\sc TreeLSTMSeq} & 22.26 & 22.87 \\
+ & {\sc TreeLSTM} & 22.07 & 22.57 \\
+ & {\sc SeqGCN} & 21.84 & 22.21 \\
+ & {\sc GCNSeq} & \textbf{23.62} & \textbf{23.77} \\
+ & {\sc GCN} & 15.83 & 17.76 \\
+\midrule
+\multirow{3}{*}{Graph} 
+ & {\sc SeqGCN} & 22.06 & 22.18 \\
+ & {\sc GCNSeq} & \textbf{23.95} & \textbf{24.00} \\
+ & {\sc GCN} & 15.94 & 17.76 \\
+\bottomrule
+\end{tabular}
+\caption{BLEU and Meteor (\%) scores on the development split of LDC2015E86.}
+\label{tab:dev_results}
+\end{table}
+
+For both TreeLSTM-based and GCN-based models, our proposed approach of applying the structural encoder before the RNN achieves better scores. This is especially true for GCN-based models, for which we also note a drastic drop in performance when the RNN is removed, highlighting the importance of a sequential component. On the other hand, RNN layers seem to have less impact on TreeLSTM-based models. This outcome is not unexpected, as TreeLSTMs already use LSTM gates in their computation. 
+
+The results show a clear advantage of tree and graph encoders over the sequential encoder. The best performing model is {\sc GCNSeq}, both as a tree and as a graph encoder, with the latter obtaining the highest results.
+
+% 2015
+% Seq: 21.40 20.83 20.95 21.51 21.19 => 21.43
+% Tree: 23.62 23.43 23.55 23.49 22.98 => 23.93
+% Graph: 23.95 23.58 24.15 23.90 23.65 => 24.40
+% 2017
+% Seq: 22.57 21.80 22.10 22.00 22.45 => 22.19
+% Tree: 24.14 23.56 23.57 24.06 23.72 ==> 24.06
+% Graph: 23.98 23.92 24.09 24.57 24.06 => 24.54
+
+\begin{table}
+\centering
+\begin{tabular}{p{4cm}cc}
+\toprule
+\textbf{Model} & \textbf{BLEU} & \textbf{Meteor}\\
+\midrule    
+\multicolumn{3}{c}{LDC2015E86}\\
+\midrule
+{\sc Seq} & 21.43 & 21.53\\
+{\sc Tree} & 23.93 & 23.32\\
+{\sc Graph} & \textbf{24.40} & \textbf{23.60}\\
+% \midrule
+\newcite{konstas2017neural} & 22.00 & - \\
+\newcite{song} & 23.30 & - \\
+\midrule
+\multicolumn{3}{c}{LDC2017T10}\\
+\midrule
+{\sc Seq} & 22.19 & 22.68 \\
+{\sc Tree} & 24.06 & 23.62\\
+{\sc Graph} & \textbf{24.54} & \textbf{24.07} \\
+% \midrule
+\newcite{beck} & 23.30 & - \\
+\bottomrule
+\end{tabular}
+\caption{Scores on the test split of LDC2015E86 and LDC2017T10. {\sc Tree} is the tree-based {\sc GCNSeq} and {\sc Graph} is the graph-based {\sc GCNSeq}.}
+\label{tab:test_results}
+\end{table}
+
+Table~\ref{tab:test_results} shows the comparison between our best sequential ({\sc Seq}), tree ({\sc GCNSeq} without reentrancies, henceforth called {\sc Tree}) and graph encoders ({\sc GCNSeq} with reentrancies, henceforth called {\sc Graph}) on the test set of LDC2015E86 and LDC2017T10. We also include state-of-the-art results reported on these datasets for sequential encoding \citep{konstas2017neural} and graph encoding \citep{song,beck}.\footnote{We run comparisons on systems without ensembling nor additional data.} 
+In order to mitigate the effects of random seeds, we train five models with different random seeds and report the results of the median model, according to their BLEU score on the development set \cite{beck}. We achieve state-of-the-art results with both tree and graph encoders, demonstrating the efficacy of our GCNSeq approach. The graph encoder outperforms the other systems and previous work on both datasets. These results demonstrate the benefit of structural encoders over purely sequential ones as well as the advantage of explicitly including reentrancies. The differences between our graph encoder and that of \newcite{song} and \newcite{beck} were discussed in Section~\ref{sec:graph_encoders}.
+
+\begin{table}
+\centering
+\begin{tabular}{lcc}
+\toprule
+\textbf{\# reentrancies} & \textbf{\# dev sents.} & \textbf{\# test sents.}\\
+\midrule
+% 0 & 668 & 623 \\
+% 1-5 & 666 & 680\\  
+% 6-20 & 34 & 68\\
+0 & 619 & 622 \\
+1-5 & 679 & 679 \\
+6-20 & 70 & 70 \\
+% 1368 - 1371
+\bottomrule
+\end{tabular}
+\caption{Counts of reentrancies for the development and test split of LDC2017T10}
+\label{tab:stats_reentrancies}
+\end{table}
+
+\subsection{Reentrancies}
+\label{sec:reentrancies}
+% \input{plot}
+\begin{table}
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{Model} & \multicolumn{3}{c}{\textbf{Number of reentrancies}}\\
+ % \midrule
+ & 0 & 1-5 & 6-20\\
+\midrule
+{\sc Seq} & 42.94 & 31.64 & 23.33 \\
+{\sc Tree} & +0.63 & +1.41 & +0.76 \\ 
+{\sc Graph} & \textbf{+1.67} & \textbf{+1.54} & \textbf{+3.08} \\
+% {\sc Seq} & 42.94 & 31.64 & 23.33 \\
+% {\sc Tree} & 43.57 & 33.05 & 24.09 \\ 
+% {\sc Graph} & 44.61 & 33.18 & 26.41 \\
+\bottomrule
+\end{tabular}
+\caption{Differences, with respect to the sequential baseline, in the Meteor score of the test split of LDC2017T10 as a function of the number of reentrancies.}
+\label{tab:diff_reentr}
+\end{table}
+
+Overall scores show an advantage of graph encoder over tree and sequential encoders, but they do not shed light into how this is achieved. Because graph encoders are the only ones to model reentrancies explicitly, we expect them to deal better with these structures. It is, however, possible that the other models are capable of handling these structures implicitly. Moreover, the dataset contains a large number of examples that do not involve any reentrancies, as shown in Table~\ref{tab:stats_reentrancies}, so that the overall scores may not be representative of the ability of models to capture reentrancies.
+It is expected that the benefit of the graph models will be more evident for those examples containing more reentrancies. To test this hypothesis, we evaluate the various scenarios as a function of the number of reentrancies in each example, using the Meteor score as a metric.\footnote{For this analysis we use Meteor instead of BLEU because it is a sentence-level metric, unlike BLEU, which is a corpus-level metric.}
+
+Table~\ref{tab:diff_reentr} shows that the gap between the graph encoder and the other encoders is widest for examples with more than six reentrancies. The Meteor score of the graph encoder for these cases is 3.1\% higher than the one for the sequential encoder and 2.3\% higher than the score achieved by the tree encoder, demonstrating that explicitly encoding reentrancies is more beneficial than the overall scores suggest. Interestingly, it can also be observed that the graph model outperforms the tree model also for examples with no reentrancies, where tree and graph structures are identical. This suggests that preserving reentrancies in the training data has other beneficial effects. In Section~\ref{sec:deps} we explore one: better handling of long-range dependencies.
+% Graph encoder performs better than tree encoder for the 1-5 range, suggesting that, for these examples, the graph encoder can successfully exploit the additional source of information. Our analysis shows no difference between tree and graph encoders for examples with no reentrancies, which is expected, but also for examples with more than six reentrancies. When too many reentrancies are present, it is possible that the added complexity of the input may outbalance the information provided by the reentrancies.
+
+% The highest accuracy is obtained by the graph encoder, with 96.98\%. The sequential encoder, with 95.63\%, performs better than the tree encoder, which scores at 94.05\%. These results further confirm that reentrancies are dealt with more effectively when using the graph encoder. The comparison between the tree and sequential encoders is in contrast with the results of Figure~\ref{fig:plots_reentrancies}, suggesting that the sequential encoder can better deal with co-references implicitly, even though producing overall less accurate sentences.
+
+\subsubsection{Manual Inspection}
+
+In order to further explore how the graph model handles reentrancies differently from the other models, we performed a manual inspection of the models' output. We selected examples containing reentrancies, where the graph model performs better than the other models. These are shown in Table~\ref{tab:example_reentrancies}. In Example (1), we note that the graph model is the only one that correctly predicts the phrase \emph{he finds out}. The wrong verb tense is due to the lack of tense information in AMR graphs. In the sequential model, the pronoun is chosen correctly, but the wrong verb is predicted, while in the tree model the pronoun is missing. In Example (2), only the graph model correctly generates the phrase \emph{you tell them}, while none of the models use \emph{people} as the subject of the predicate \emph{can}. In Example (3), both the graph and the sequential models deal well with the control structure caused by the \emph{recommend} predicate. The sequential model, however, overgenerates a wh-clause. Finally, in Example (4) the tree and graph models deal correctly with the possessive pronoun to generate the phrase \emph{tell your ex}, while the sequential model does not. Overall, we note that the graph model produces a more accurate output than sequential and tree models by generating the correct pronouns and mentions when control verbs and co-references are involved. 
+
+\begin{table*}
+\centering
+\begin{tabular}{lll}
+\toprule
+(1)
+& {\sc REF} & i dont tell him but \textbf{he finds out} ,\\
+& {\sc Seq} & i did n't tell him but \textbf{he was out} .\\
+& {\sc Tree} & i do n't tell him but \textbf{found out} .\\
+& {\sc Graph} & i do n't tell him but \textbf{he found out} .\\
+\midrule
+(2)
+& {\sc REF} & if \textbf{you tell people} they can help you ,\\
+& {\sc Seq} & if \textbf{you tell him} , you can help you !\\
+& {\sc Tree} & if \textbf{you tell person\_name\_0 you} , you can help you .\\
+& {\sc Graph} & if \textbf{you tell them} , you can help you .\\
+\midrule
+(3)
+& {\sc REF} & \textbf{i 'd recommend} you go and see your doctor too .\\
+& {\sc Seq} & \textbf{i recommend} you go to see your doctor who is going to see your doctor .\\
+& {\sc Tree} & \textbf{you recommend} going to see your doctor too .\\
+& {\sc Graph} & \textbf{i recommend} you going to see your doctor too .\\
+\midrule
+(4) 
+& {\sc REF} & (you) \textbf{tell your ex} that all communication needs to go through the lawyer .\\
+& {\sc Seq} & (you) \textbf{tell} that all the communication go through lawyer .\\
+& {\sc Tree} & (you) \textbf{tell your ex} , tell your ex , the need for all the communication .\\
+& {\sc Graph} & (you) \textbf{tell your ex} the need to go through a lawyer .\\
+\bottomrule
+\end{tabular}
+\caption{Examples of generation from AMR graphs containing reentrancies. {\sc REF} is the reference sentence.}
+\label{tab:example_reentrancies}
+\end{table*}
+% The examples confirm the intuitions hinted by the contrastive error analysis on co-reference: graph models are overall better at dealing with multiple mentions and pronouns, while tree models are better than sequential models only in certain cases.
+
+\subsubsection{Contrastive Pairs}
+
+For a quantitative analysis of how the different models handle pronouns, we use a method to inspect NMT output for specific linguistic analysis based on contrastive pairs \cite{sennrich2017grammatical}. Given a reference output sentence, a contrastive sentence is generated by introducing a mistake related to the phenomenon we are interested in evaluating. The probability that the model assigns to the reference sentence is then compared to that of the contrastive sentence. The accuracy of a model is determined by the percentage of examples in which the reference sentence has a higher probability than the contrastive sentence. 
+
+We produce contrastive examples by running CoreNLP \cite{corenlp} to identify co-references, which are the primary cause of reentrancies, and introducing a mistake. 
+%reason for coref only: 51 V + to + V structures only, even less if I had to find the nouns so that I can swap them or remove them
+When an expression has multiple mentions, the antecedent is repeated in the linearized AMR. For instance, the linearization of Figure~\ref{fig:example}(b) contains the token \emph{he} twice, which instead appears only once in the sentence. This repetition may result in generating the token \emph{he} twice, rather than using a pronoun to refer back to it. To investigate this possible mistake, we replace one of the mentions with the antecedent (e.g., \emph{John ate the pizza with his fingers} is replaced with \emph{John ate the pizza with John fingers}, which is ungrammatical and as such should be less likely). 
+
+An alternative hypothesis is that even when the generation system correctly decides to predict a pronoun, it selects the wrong one. To test for this, we produce contrastive examples where a pronoun is replaced by either a different type of pronoun (e.g., \emph{John ate the pizza with his fingers} is replaced with \emph{John ate the pizza with him fingers}) or by the same type of pronoun but for a different number (\emph{John ate the pizza with their fingers}) or different gender (\emph{John ate the pizza with her fingers}). Note from Figure~\ref{fig:example} that the graph-structured AMR is the one that more directly captures the relation between \emph{finger} and \emph{he}, and as such it is expected to deal better with this type of mistakes.
+% For control structures, we look for phrases such as \emph{want to start}, where a control verb is followed by the particle \emph{to} and another verb. We break these structures by replacing the particle with punctuation. For instance, from the sentence \emph{when they start to realize that} we generate the contrastive example \emph{when they start, realize that}. 
+
+From the test split of LDC2017T10, we generated 251 contrastive examples due to antecedent replacements, 912 due to pronoun type replacements, 1840 due to number replacements and 95 due to gender replacements.\footnote{The generated contrastive examples are available at \url{https://github.com/mdtux89/OpenNMT-py}.}
+The results are shown in Table~\ref{tab:contrastive}. The sequential encoder performs surprisingly well at this task, with better or on par performance with respect to the tree encoder. The graph encoder outperforms the sequential encoder only for pronoun number and gender replacements. 
+% The difference between the different models are however too small to draw conclusions. 
+Future work is required to more precisely analyze if the different models cope with pronomial mentions in significantly different ways. Other approaches to inspect phenomena of co-reference and control verbs can also be explored, for instance by devising specific training objectives \cite{linzen2016assessing}.
+% For all error types, the graph model outperforms the other models. The sequential model performs better than the tree model for antecedent replacements but worse for pronoun replacements. This suggests that the structural information helps in discriminating between the correct pronoun to choose, but reentrancies are necessary to determine whether to use a pronoun in the first place.
+
+\begin{table}
+\centering
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Model} & \textbf{Antec.} & \textbf{Type} & \textbf{Num.} & \textbf{Gender}\\
+\midrule
+{\sc Seq} & 96.02 & 97.70 & 94.89 & 94.74\\
+{\sc Tree} & 96.02 & 96.38 & 93.70 & 92.63\\ 
+{\sc Graph} & 96.02 & 96.49 & 95.11 & 95.79\\
+\bottomrule
+\end{tabular}
+\caption{Accuracy (\%) of models, on the test split of LDC201T10, for different categories of contrastive errors: antecedent (Antec.), pronoun type (Type), number (Num.), and gender (Gender).}
+% \begin{table}
+% \centering
+% \begin{tabular}{lccc}
+% \toprule
+% \textbf{Model} & \textbf{Antec.} & \textbf{Type} & \textbf{Num.}\\
+% \midrule
+% {\sc Seq} & 96.02 & 97.70 & 94.88 \\
+% {\sc Tree} & 96.02 & 96.38 & 93.64 \\ 
+% {\sc Graph} & 96.02 & 96.49 & 95.14\\
+% \bottomrule
+% \end{tabular}
+% \caption{Accuracy (\%) of models, on the test split of LDC201T10, for different categories of contrastive errors: antecedent replacements (Antec.), pronoun type replacements (Type), and number replacements (Num.).}
+\label{tab:contrastive}
+\end{table}
+
+\subsection{Long-range Dependencies}
+\label{sec:deps}
+\begin{table}
+\centering
+\begin{tabular}{lcc}
+\toprule
+\textbf{\# max length} & \textbf{\# dev sents.} & \textbf{\# test sents.}\\
+\midrule
+% 0-10 & 366 & 367\\
+% 11-50 & 817 & 818\\
+% 51-250 & 185 & 186\\
+0-10 & 292 & 307\\
+11-50 & 350 & 297\\
+51-250 & 21 & 18\\
+\bottomrule
+\end{tabular}
+\caption{Counts of longest dependencies for the development and test split of LDC2017T10}
+\label{tab:stats_dependencies}
+\end{table}
+% \input{plot_deps}
+\begin{table}
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{Model} & \multicolumn{3}{c}{\textbf{Max dependency length}}\\
+ % \midrule
+ & 0-10 & 11-50 & 51-200\\
+\midrule
+{\sc Seq} & 50.49 & 36.28 & 24.14 \\
+{\sc Tree} & -0.48 & +1.66 & +2.37 \\ 
+{\sc Graph} & \textbf{+1.22} & \textbf{+2.05} & \textbf{+3.04} \\
+% {\sc Seq} & 50.488 & 36.276 & 24.140 \\
+% {\sc Tree} & 50.006 & 37.941 & 26.506 \\ 
+% {\sc Graph} & \textbf{51.708} & \textbf{38.330} & \textbf{27.178} \\
+\bottomrule
+\end{tabular}
+\caption{Differences, with respect to the sequential baseline, in the Meteor score of the test split of LDC2017T10 as a function of the maximum dependency length.}
+\label{tab:diff_deps}
+\end{table}
+
+When we encode a long sequence, interactions between items that appear distant from each other in the sequence are difficult to capture. The problem of long-range dependencies in natural language is well known for RNN architectures \cite{bengio1994learning}. Indeed, the need to solve this problem motivated the introduction of LSTM models, which are known to model long-range dependencies better than traditional RNNs.
+
+Because the nodes in the graphs are not aligned with words in the sentence, AMR has no notion of distance between the nodes taking part in an edge. In order to define the length of an AMR edge, we resort to the AMR linearization discussed in Section~\ref{sec:input}. Given the linearization of the AMR $x_1, \dots, x_N$, as discussed in Section~\ref{sec:input}, and an edge between two nodes $x_i$ and $x_j$, the length of the edge is defined as $\vert j - i \vert$. 
+For instance, in the AMR of Figure~\ref{fig:example}, the edge between \emph{eat-01} and \emph{:instrument} is a dependency of length five, because of the distance between the two words in the linearization \emph{eat-01 :arg0 he :arg1 pizza :instrument}. 
+We then compute the maximum dependency length for each AMR graph.
+
+To verify the hypothesis that long-range dependencies contribute to the improvements of graph models, we compare the models as a function of the maximum dependency length in each example. Longer dependencies are sometimes caused by reentrancies, as in the dependency between \emph{:part-of} and \emph{he} in Figure~\ref{fig:example}. To verify that the contribution in terms of longer dependencies is complementary to that of reentrancies, we exclude sentences with reentrancies from this analysis. Table~\ref{tab:stats_dependencies} shows the statistics for this measure. Results are shown in Table~\ref{tab:diff_deps}. The graph encoder always outperforms both the sequential and the tree encoder. The gap with the sequential encoder increases for longer dependencies. This indicates that longer dependencies are an important factor in improving results for both tree and graph encoders, especially for the latter.
+% The results indicate that better handling of long-range dependencies in structural encoders does contribute to improvements.
+
+% Both GCN models are consistently better than the sequential models, regardless of the maximum dependency length. As hypothesized, structural encoders deal better with long-range dependencies in AMR than sequential encoders purely based on LSTMs. The graph model appears to perform slightly worse than the tree model for sentences with shorter dependencies (the 0-10 range) but better for sentences with longer dependencies. 
+% While the graph encoder always outperformsReentrancies sometimes result in long backward dependencies, as in the \emph{part-of} edge of Figure~\ref{fig:example}(d), which explains the higher results for the graph model. Indeed, if we consider only examples with no reentrancies, the difference between tree and graph models becomes marginal (42.93\% Meteor for tree and 43.03\% Meteor for graph), with the sequential encoder scoring 40.97\% Meteor.
+
+
+\section{Conclusions}
+We introduced models for AMR-to-text generation with the purpose of investigating the difference between sequential, tree and graph encoders. We showed that encoding reentrancies improves overall performance. We observed bigger benefits when the input AMR graphs have a larger number of reentrant structures and longer dependencies. Our best graph encoder, which consists of a GCN wired to a BiLSTM network, improves over the state of the art on all tested datasets. 
+% We raised the question of which mistakes are made by the different models, especially in terms of co-reference and control verb structures. 
+We inspected the differences between the models, especially in terms of co-references and control structures. 
+% Using contrastive pairs, we found the largest gaps for mistakes due to gender.
+Further exploration of graph encoders is left to future work, which may result crucial to improve performance further.
+
+\section*{Acknowledgments}
+
+The authors would like to thank the three anonymous reviewers and Adam Lopez, Ioannis Konstas, Diego Marcheggiani, Sorcha Gilroy, Sameer Bansal, Ida Szubert and Clara Vania for their help and comments. This research was supported by a grant from Bloomberg and by the H2020 project SUMMA, under grant agreement 688139.
+% % \section*{Acknowledgments}
+% % Adam, Sorcha, Ioannis, Diego, Ida, Sameer, Nick, Clara
+
+\bibliography{naaclhlt2019}
+\bibliographystyle{acl_natbib}
+
+\end{document}

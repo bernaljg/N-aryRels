@@ -1,0 +1,75 @@
+ \input{figure-architecture2}
+
+In this section we introduce our \emph{weakly supervised deep detection network} (WSDDN) method. The overall idea consists of three steps. First, we obtain a CNN pre-trained on a large-scale image classification task (\cref{s:pretrained}). Second, we construct the WSDDN as an architectural modification of this CNN (\cref{s:WSDDN}). Third, we train/fine-tune the WSDDN on a target dataset, once more using only image-level annotations (\cref{s:training}). The remainder of this section discusses these three steps in detail.
+ 
+% --------------------------------------------------------------------------------------
+\subsection{Pre-trained network}\label{s:pretrained}
+% --------------------------------------------------------------------------------------
+We build our method on a pre-trained CNN that has been pre-trained on the ImageNet ILSVRC 2012 data \cite{Russakovsky15} with only image-level supervision (\ie no bounding box annotations). We give the details of the used CNN architectures in \cref{s:experiments}. 
+% --------------------------------------------------------------------------------------
+\subsection{Weakly supervised deep detection network}\label{s:WSDDN}
+% --------------------------------------------------------------------------------------
+
+Given the pre-trained CNN, we transform it into a WSDDN by introducing three modifications (see also \cref{f:WSDDN}). First, we replace the last pooling layer immediately following the ReLU layer in the last convolutional block (also known as \textit{relu5} and \textit{pool5}, respectively) with a layer implementing \emph{spatial pyramid pooling} (SPP)~\cite{Lazebnik06,He14}. This results in a function that takes as input an image $\bx$ and a region (bounding box) $R$ and produces as output a feature vector or representation $\phi(\bx;R)$. Importantly, the function decomposes as
+\[
+\phi(\bx;R) = \phi_{\text{SPP}}(\cdot ; R) \circ \phi_{\text{relu5}}(\bx)
+\]
+where $\phi_{\text{relu5}}(\bx)$ needs to be computed only once for the whole image and $\phi_{\text{SPP}}(\cdot ; R)$ is fast to compute for any given region $R$. In practice, SPP is configured to be compatible to the first fully connected layers of networks (\ie fc6). Note that SPP is implemented as a network layer as in~\cite{Girshick15} to allow to train the system end-to-end (and for efficiency).
+
+Given an image $\bx$, a shortlist of candidate object regions $\mathcal{R} = (R_1,\dots,R_n)$ are obtained by a region proposal mechanism. Here we experiment with two methods, Selective Search Windows (SSW)~\cite{Sande11} and Edge Boxes (EB)~\cite{Zitnick14}. As in~\cite{Girshick15}, we then modify the SPP layer to take as input not a single region, but rather the full list $\mathcal{R}$; in particular, $\phi(\bx;\mathcal{R})$ is defined as the concatenation of $\phi(\bx;R_1), \dots, \phi(\bx;R_n)$ along the fourth dimension (since each individual $\phi(\bx;R)$ is a 3D tensor).
+
+At this point in the architecture, region-level features are further processed by two fully connected layers $\phi_\text{fc6}$ and $\phi_\text{fc7}$, each comprising a linear map followed by a ReLU. Out of the output of the last such layer, we branch off two data streams, described next.
+
+\paragraph{Classification data stream.} The first data stream performs \emph{classification} of the individual regions, by mapping each of them to a $C$-dimensional vector of class scores, assuming that the system is trained to detect $C$ different classes. This is achieved by evaluating a linear map $\phi_{fc8c}$ and results in a matrix of data $\bx^c \in \mathbb{R}^{C \times |\mathcal{R}|}$, containing the class prediction scores for each region. The latter is then passed through a \emph{softmax} operator, defined as follows:
+\begin{equation}\label{e:softmaxc}
+  [\sigma_\text{class}(\bx^c)]_{ij}
+  = 
+  \frac{e^{x^c_{ij}}}{\sum_{k=1}^{C} e^{x^c_{kj}}}.
+\end{equation}
+
+\paragraph{Detection data stream.} The second data stream performs instead \emph{detection}, by scoring regions relative to one another. This is done on a class-specific basis by using a second linear map $\phi_{fc8d}$, also resulting in a matrix of scores $\bx^d \in \mathbb{R}^{C \times |\mathcal{R}|}$. It is then passed through another softmax operator, but this time defined as follows:
+\begin{equation}\label{e:softmaxd}
+  [\sigma_\text{det}(\bx^d)]_{ij}
+  = 
+  \frac{e^{x^d_{ij}}}{\sum_{k=1}^{|\mathcal{R}|} e^{x^d_{ik}}}.
+\end{equation}
+
+While the two streams are remarkably similar, the introduction of the $\sigma_\text{class}$ and $\sigma_\text{det}$ non-linearities in the classification and detection streams is a key difference which allows to interpret them as performing classification and detection, respectively. In the first case, in fact, the softmax operator compares, for each region independently, class scores, whereas in the second case the softmax operator compares, for each class independently, the scores of different regions. Hence, the first branch predicts which class to associate to a region, whereas the second branch selects which regions are more likely to contain an informative image fragment.
+
+\paragraph{Combined region scores and detection.} The final score of each region is obtained by taking the element-wise (Hadamard) product $\bx^\mathcal{R} = \sigma_\text{class}(\bx^c) \odot \sigma_\text{det}(\bx^d)$ of the two scoring matrices. The region scores are then used to rank image regions by likelihood of centring an object (for each class independently); standard non-maxima suppression is then performed (by iteratively removing regions with Intersection over Union (IoU) larger than 40\% with regions already selected) to obtain the final list of class-specific detections in an image.
+
+The way the two streams' scores are combined is reminiscent of the bilinear networks of~\cite{Lin15}, but there are three key differences. The first difference is that the introduction of the different softmax operators explicitly breaks the symmetry of the two streams. The second one is that, instead of computing the outer product of the two feature vectors $\sigma_\text{class}(\bx^c_r) \otimes \sigma_\text{det}(\bx^d_r)$, we compute the element-wise product $\sigma_\text{class}(\bx^c_r) \odot \sigma_\text{det}(\bx^d_r)$ (generating quadratically less parameters). The third difference is that scores $\sigma_\text{class}(\bx^c_r) \otimes \sigma_\text{det}(\bx^d_r)$ are computed for specific image regions $r$ rather than a fixed set of image locations on a grid. Together, these three differences mean that we can interpret $\sigma_\text{det}(\bx^d)$ as a term that ranks regions, whereas $\sigma_\text{class}(\bx^c)$ ranks classes. It is more difficult to clearly assess the nature of the two streams in~\cite{Lin15}.
+
+\paragraph{Image-level classification scores.} So far, WSDDN has computed region-level scores $\bx^\mathcal{R}$. This is transformed in an image-level class prediction score by summation over regions:
+\[
+   y_c = \sum_{r=1}^{|\mathcal{R}|} x^{\mathcal{R}}_{cr}.
+\] 
+Note that both $y_c$ is a sum of element-wise product of softmax normalised scores over $|\mathcal{R}|$ regions and thus it is in the range of $(0,1)$. Softmax is not performed at this stage as images are allowed to contain more than one object class (whereas regions should contain a single class).
+
+% --------------------------------------------------------------------------------------
+\subsection{Training WSDDN}\label{s:training}
+% --------------------------------------------------------------------------------------
+
+Having discussed the WSDDN architecture in the previous section, here we explain how the model is trained. The data is a collection of images $\bx_i, i=1,\dots, n$ with \emph{image level labels} $\by_i \in \{-1,1\}^C$. We denote by $\phi^{\by}(\bx|\bw)$ the complete architecture, mapping an image $\bx$ to a vector of class scores $\by\in\mathbb{R}^C$. The parameters $\bw$ of the model lump together the coefficients of all the filters and biases in the convolutional and fully-connected layers. Then, stochastic gradient descent with momentum is used to optimise the energy function
+\begin{equation}
+E(\bw)
+=
+\frac{\lambda}{2}\|\bw\|^2
++
+\sum_{i=1}^n
+\sum_{k=1}^C
+\log(y_{ki} (\phi^{\by}_k(\bx_i|\bw)-\frac{1}{2}) + \frac{1}{2}),
+\label{eq:energy}
+\end{equation} hence optimising a sum of $C$ binary-log-loss terms, one per class. As $\phi^{\by}_k(\bx_i|\bw)$ is in range of $(0,1)$, it can be considered as a probability of class $k$ being present in image $\bx_i$, \ie $p(y_{ki}=1)$. When the ground-truth label is positive, the binary log loss becomes $\log(p(y_{ki}=1))$, $\log(1-p(y_{ki}=1))$ otherwise.
+
+% --------------------------------------------------------------------------------------
+\subsection{Spatial Regulariser}
+% --------------------------------------------------------------------------------------
+As WSDDN is optimised for image-level class labels, it does not guarantee any spatial smoothness such that if a region obtains a high score for an object class, the neighbouring regions with high overlap will also have high scores. In the supervised detection case, Fast-RCNN~\cite{Girshick15} takes the region proposals that have at least $50 \%$ IoU with a ground truth box as positive samples and learns to regress them into their corresponding ground truth bounding box. As our method does not have access to ground truth boxes, we follow a soft regularisation strategy that penalises the feature map discrepancies at the second fully connected layer~\texttt{fc7} between the highest scoring region and the regions with at least $60 \%$ IoU (\ie\; $r\in|\bar{R}|$) during training:
+\[
+\frac{1}{nC}
+\sum_{k=1}^C
+\sum_{i=1}^{N_{k}^+}
+\sum_{r=1}^{|\bar{R}|}
+\frac{1}{2}(\phi^{\by}_{k*i})^2(\phi^{\text{fc7}}_{k*i}-\phi^{\text{fc7}}_{kri})^{^\mathrm{T}}(\phi^{\text{fc7}}_{k*i}-\phi^{\text{fc7}}_{kri})
+\] where $N_{k}^+$ is the number of positive images for the class $k$ and $*=\arg\max_r \phi^{\by}_{kri}$ is the highest scoring region in image $i$ for the class $k$. We add this regularisation term to the cost function in~\cref{eq:energy}. 

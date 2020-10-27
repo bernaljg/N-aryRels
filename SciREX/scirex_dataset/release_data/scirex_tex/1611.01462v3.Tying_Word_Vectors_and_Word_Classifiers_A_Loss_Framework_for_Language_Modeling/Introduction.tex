@@ -1,0 +1,31 @@
+% !TEX root = ./notes.tex
+\section{Introduction}
+%Language modeling aims to model a probability distribution over sequences of words.% by learning high order statistics of words in a language.  
+%It is a core NLP task due to its many uses such as speech recognition or machine translation. 
+Neural network models have recently made tremendous progress in a variety of NLP applications such as speech recognition \citep{irie2016lstm}, sentiment analysis \citep{socher2013recursive},
+text summarization \citep{rush2015neural,nallapatiabstractive}, and machine translation \citep{firat2016multi}.
+
+Despite the overwhelming success achieved by recurrent neural networks in modeling long range dependencies between words, current recurrent neural network language models (RNNLM) are based on the conventional classification framework, which has two major drawbacks:
+First, there is no assumed metric on the output classes, whereas there is evidence suggesting that learning is improved when one can define a natural metric on the output space \citep{frogner2015learning}.
+In language modeling, there is a well established metric space for the outputs (words in the language) based on word embeddings, with meaningful distances between words \citep{mikolov2013distributed,pennington2014glove}.
+Second, in the classical framework, inputs and outputs are considered as isolated entities with no semantic link between them. This is clearly not the case for language modeling, where inputs and outputs in fact live in identical spaces.
+Therefore, even for models with moderately sized vocabularies, the classical framework could be a vast source of inefficiency in terms of the number of variables in the model, and in terms of utilizing the information gathered by different parts of the model (e.g. inputs and outputs).
+
+In this work, we introduce a novel loss framework for language modeling to remedy the above two problems.
+Our framework is comprised of two closely linked improvements.
+First, we augment the classical cross-entropy loss with an additional term which minimizes the KL-divergence between the model's prediction and an estimated target distribution based on the word embeddings space.
+This estimated distribution uses knowledge of word vector similarity.
+We then theoretically analyze this loss, and this leads to a second and synergistic improvement: tying together two large matrices by reusing the input word embedding matrix as the output classification matrix.
+We empirically validate our theory in a practical setting, with much milder assumptions than those in theory. 
+We also find empirically that for large networks, most of the improvement could be achieved by only reusing the word embeddings.
+
+We test our framework by performing extensive experiments on the Penn Treebank corpus, a dataset widely used for benchmarking language models \citep{mikolov2010recurrent,merity2016pointer}.
+We demonstrate that models trained using our proposed framework significantly outperform models trained using the conventional framework.
+We also perform experiments on the newly introduced Wikitext-2 dataset \citep{merity2016pointer}, and verify that the empirical performance of our proposed framework is consistent across different datasets.
+% demonstrate that models trained using our proposed framework significantly outperform models trained using the conventional framework.
+%We test our framework by performing extensive experiments on the Penn Treebank corpus, a dataset widely used for benchmarking language models \citep{mikolov2010recurrent,merity2016pointer}.
+% We demonstrate that models trained using our proposed framework significantly outperform models trained using the conventional framework.
+%Specifically, a 2-layer LSTM language model which uses both our proposed improvements achieves a word level perplexity of $\mathbf{68.5}$, outperforming all the previously reported single models as well as ensembles.
+%The newly proposed recurrent highway network model \citep{zilly2016recurrent} which uses reuses the word embeddings achieves the state-of-the-art performance with a perplexity of $66.0$.
+
+

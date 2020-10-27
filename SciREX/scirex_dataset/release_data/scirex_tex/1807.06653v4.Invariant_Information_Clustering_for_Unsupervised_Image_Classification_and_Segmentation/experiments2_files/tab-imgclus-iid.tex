@@ -1,0 +1,158 @@
+% \begin{table*}[h]
+% \TopFloatBoxes
+% \thisfloatsetup{subfloatrowsep=none}
+% \setlength{\tabcolsep}{2.5pt}
+% \begin{floatrow}
+% \floatbox[\nocapbeside]{table}[\FBwidth]
+% {
+% \caption{\textbf{Unsupervised image clustering (IID).} $\dagger$: method based on k-means. $\ddagger$: method that does not directly learn a clustering function and requires further application of k-means to be used for image clustering. $\star$: results obtained using our experiments with authors' original code.}\label{t:img_clus_iid}
+% }
+% {
+% \setlength{\tabcolsep}{2.5pt}
+% \fontsize{8}{9}\selectfont 
+% \begin{tabular}{lcccc}
+% \toprule
+% & STL10 & CIFAR10 & CIFAR100-20 & MNIST \\
+% \midrule
+% Random network & 13.5 & 13.1 & 5.93 & 26.1 \\
+% K-means~\cite{zelnik2005self}$\dagger$  & 19.2 & 22.9 & 13.0 & 57.2 \\
+% Spectral clustering~\cite{wang2015optimized} & 15.9 & 24.7 & 13.6 & 69.6\\
+% AE~\cite{bengio2007greedy}$\ddagger$ & 30.3 & 31.4 & 16.5 & 81.2 \\
+% Sparse AE~\cite{ng2011sparse}$\ddagger$ & 32.0 & 29.7 & 15.7 & 82.7\\
+% Denoising AE~\cite{vincent2010stacked}$\ddagger$ & 30.2 & 29.7 & 15.1 & 83.2\\
+% Variational Bayes AE~\cite{kingma2013auto}$\ddagger$ & 28.2 & 29.1 & 15.2 & 83.2\\
+% SWWAE 2015~\cite{zhao1506stacked}$\ddagger$ & 27.0 & 28.4 & 14.7 & 82.5 \\
+% GAN 2015~\cite{radford2015unsupervised}$\ddagger$ & 29.8 & 31.5 & 15.1 & 82.8\\
+% JULE 2016~\cite{yang2016joint}$\ddagger$ & 27.7 & 27.2 & 13.7 & 96.4 \\
+% DEC 2016~\cite{xie2016unsupervised}$\dagger$ $\ddagger$ & 35.9 & 30.1 & 18.5 & 84.3 \\
+% DAC 2017~\cite{chang2017deep} & 47.0 & 52.2 & 23.8 & 97.8 \\
+% %(IMSAT 2017) & - & - & - & 98.4 \\
+% DeepCluster 2018~\cite{caron2018deep}$\dagger$ $\ddagger$ & 33.4$\star$ & 37.4$\star$ & 18.9$\star$ & 65.6 $\star$ \\
+% ADC 2018~\cite{haeusser18associative} & 53.0 & 32.5 & 16.0$\star$ & 99.2 \\
+% IID (best sub-head) & \textbf{60.4} \cmt{247} & \textbf{61.3} \cmt{256} &\textbf{24.4} \cmt{269} & \textbf{99.3} \cmt{258} \\
+% IID (avg sub-head $\pm$ std) & \textbf{56.7 $\pm$ 3.03} \cmt{247} & \textbf{61.3 $\pm$ 0.010} \cmt{256} &\textbf{24.0 $\pm$ 0.311} \cmt{269} & \textbf{99.3 $\pm$ 0.003} \cmt{258} \\
+% \midrule
+% IID+ (overclustering) & 61.4 & 62.9 & 33.6 & 98.9 \\
+% \bottomrule
+% \end{tabular}}%
+% \floatbox[\nocapbeside]{table}[\FBwidth]
+% {
+% \caption{\textbf{Ablation} for IID. Each row contains one change from the full setting with all else equal. Full setting: with auxiliary overclustering, 5 initialisation heads, 5 sample repeats, unlabelled data segment used.}
+% }
+% {
+% \footnotesize    
+% \begin{tabular}{lc}
+% \toprule
+% & STL10 \\
+% \midrule
+% No auxiliary overclustering & 39.9 \cmt{418}\\
+% Single sub-head ($h=1$) & 50.7\cmt{419}\\
+% No sample repeats ($r=1$) & 51.4\cmt{420}\\
+% Unlabelled data segment ignored & 50.5\cmt{421}\\
+% \midrule
+% Full setting & \textbf{60.4} \cmt{247}\\
+% \bottomrule
+% \end{tabular}
+% }
+% \end{floatrow}
+% \end{table*}
+
+
+% \begin{table*}
+% \TopFloatBoxes
+% \thisfloatsetup{subfloatrowsep=none}
+% \begin{floatrow}
+% \floatbox[\nocapbeside]{table}[\FBwidth]
+% {
+% \caption{\textbf{Unsupervised image clustering (IID).} $\dagger$: method based on k-means. $\ddagger$: method that does not directly learn a clustering function and requires further application of k-means to be used for image clustering. $\star$: results obtained using our experiments with authors' original code.}\label{t:img_clus_iid}
+% }
+% {
+% \setlength{\tabcolsep}{2.5pt}
+% \fontsize{8}{9}\selectfont 
+% \begin{tabular}{lcccc}
+% \toprule
+% & STL10 & CIFAR10 & CFR100-20 & MNIST \\
+% \midrule
+% Random network & 13.5 & 13.1 & 5.93 & 26.1 \\
+% K-means~\cite{zelnik2005self}$\dagger$  & 19.2 & 22.9 & 13.0 & 57.2 \\
+% Spectral clustering~\cite{wang2015optimized} & 15.9 & 24.7 & 13.6 & 69.6\\
+% AE~\cite{bengio2007greedy}$\ddagger$ & 30.3 & 31.4 & 16.5 & 81.2 \\
+% Sparse AE~\cite{ng2011sparse}$\ddagger$ & 32.0 & 29.7 & 15.7 & 82.7\\
+% Denoising AE~\cite{vincent2010stacked}$\ddagger$ & 30.2 & 29.7 & 15.1 & 83.2\\
+% Variational Bayes AE~\cite{kingma2013auto}$\ddagger$ & 28.2 & 29.1 & 15.2 & 83.2\\
+% SWWAE 2015~\cite{zhao1506stacked}$\ddagger$ & 27.0 & 28.4 & 14.7 & 82.5 \\
+% GAN 2015~\cite{radford2015unsupervised}$\ddagger$ & 29.8 & 31.5 & 15.1 & 82.8\\
+% JULE 2016~\cite{yang2016joint}$\ddagger$ & 27.7 & 27.2 & 13.7 & 96.4 \\
+% DEC 2016~\cite{xie2016unsupervised}$\dagger$ $\ddagger$ & 35.9 & 30.1 & 18.5 & 84.3 \\
+% DAC 2017~\cite{chang2017deep} & 47.0 & 52.2 & 23.8 & 97.8 \\
+% %(IMSAT 2017) & - & - & - & 98.4 \\
+% DeepCluster 2018~\cite{caron2018deep}$\dagger$ $\ddagger$ & 33.4$\star$ & 37.4$\star$ & 18.9$\star$ & 65.6 $\star$ \\
+% ADC 2018~\cite{haeusser18associative} & 53.0 & 32.5 & 16.0$\star$ & 99.2 \\
+% IID (best sub-head) & \textbf{60.4} \cmt{247} & \textbf{61.3} \cmt{256} &\textbf{24.4} \cmt{269} & \textbf{99.3} \cmt{258} \\
+% IID (avg sub-head $\pm$ std. dev.) & \textbf{56.7} \cmt{247} & \textbf{61.3} \cmt{256} &\textbf{24.0} \cmt{269} & \textbf{99.3} \cmt{258} \\[-0.2em]
+%  & ~~\scriptsize\textbf{$\pm$ 3.03} \cmt{247} & \scriptsize\textbf{$\pm$ 0.010} \cmt{256} & \scriptsize\textbf{$\pm$ 0.311} \cmt{269} & \scriptsize\textbf{$\pm$ 0.003} \cmt{258} \\
+% \midrule
+% IID+ (overclustering) & 61.4 & 62.9 & 33.6 & 98.9 \\
+% \bottomrule
+% \end{tabular}}%
+% \floatbox[\nocapbeside]{table}[\FBwidth]
+% {
+% \caption{\textbf{Ablation} for IID. Each row contains one change from the full setting with all else equal. Full setting: with auxiliary overclustering, 5 initialisation heads, 5 sample repeats, unlabelled data segment used.}
+% }
+% {
+% \footnotesize    
+% \begin{tabular}{lc}
+% \toprule
+% & STL10 \\
+% \midrule
+% No auxiliary overclustering & 39.9 \cmt{418}\\
+% Single sub-head ($h=1$) & 50.7\cmt{419}\\
+% No sample repeats ($r=1$) & 51.4\cmt{420}\\
+% Unlabelled data segment ignored & 50.5\cmt{421}\\
+% \midrule
+% Full setting & \textbf{60.4} \cmt{247}\\
+% \bottomrule
+% \end{tabular}
+% }
+% \end{floatrow}
+% \end{table*}
+
+\begin{table}[t]
+\setlength{\tabcolsep}{2.5pt}
+\fontsize{8}{9}\selectfont 
+\begin{tabular}{lcccc}
+\toprule
+& STL10 & CIFAR10 & CFR100-20 & MNIST \\
+\midrule
+Random network & 13.5 & 13.1 & 5.93 & 26.1 \\
+K-means~\cite{zelnik2005self}$\dagger$  & 19.2 & 22.9 & 13.0 & 57.2 \\
+Spectral clustering~\cite{wang2015optimized} & 15.9 & 24.7 & 13.6 & 69.6\\
+Triplets~\cite{schultz2004learning}$\ddagger$ & 24.4 & 20.5 & 9.94 & 52.5 \\
+AE~\cite{bengio2007greedy}$\ddagger$ & 30.3 & 31.4 & 16.5 & 81.2 \\
+Sparse AE~\cite{ng2011sparse}$\ddagger$ & 32.0 & 29.7 & 15.7 & 82.7\\
+Denoising AE~\cite{vincent2010stacked}$\ddagger$ & 30.2 & 29.7 & 15.1 & 83.2\\
+Variational Bayes AE~\cite{kingma2013auto}$\ddagger$ & 28.2 & 29.1 & 15.2 & 83.2\\
+SWWAE 2015~\cite{zhao2015stacked}$\ddagger$ & 27.0 & 28.4 & 14.7 & 82.5 \\
+GAN 2015~\cite{radford2015unsupervised}$\ddagger$ & 29.8 & 31.5 & 15.1 & 82.8\\
+JULE 2016~\cite{yang2016joint} & 27.7 & 27.2 & 13.7 & 96.4 \\
+DEC 2016~\cite{xie2016unsupervised}$\dagger$ & 35.9 & 30.1 & 18.5 & 84.3 \\
+DAC 2017~\cite{chang2017deep} & 47.0 & 52.2 & 23.8 & 97.8 \\
+%(IMSAT 2017) & - & - & - & 98.4 \\
+DeepCluster 2018~\cite{caron2018deep}$\dagger$ $\ddagger$ & 33.4$\star$ & 37.4$\star$ & 18.9$\star$ & 65.6 $\star$ \\
+ADC 2018~\cite{haeusser2018associative} & 53.0 & 32.5 & 16.0$\star$ & 99.2 \\
+\midrule
+  \methodnameshort (lowest loss sub-head) & \textbf{59.6} \cmt{569} & \textbf{61.7} \cmt{640} &\textbf{25.7} \cmt{579} & \textbf{99.2} \cmt{685} \\
+\methodnameshort (avg sub-head $\pm$ STD) & 59.8 & 57.6 & 25.5 & 98.4 \\[-0.2em]
+  & ~~\scriptsize$\pm$ 0.844 & \scriptsize$\pm$ 5.01 & \scriptsize$\pm$ 0.462 & \scriptsize$\pm$ 0.652 \\
+\bottomrule
+\end{tabular}
+\caption{\textbf{Unsupervised image clustering.} Legend: $\dagger$Method based on k-means. $\ddagger$Method that does not directly learn a clustering function and requires further application of k-means to be used for image clustering. $\star$Results obtained using our experiments with authors' original code.}\label{t:img_clus_iid}
+\end{table}
+
+
+\begin{comment}
+  \methodnameshort (best sub-head) & \textbf{61.0} \cmt{569} & \textbf{61.7} \cmt{640} &\textbf{25.7} \cmt{579} & \textbf{99.3} \cmt{685} \\
+\methodnameshort (avg sub-head $\pm$ STD) & 59.8 & 57.6 & 25.5 & 98.4 \\[-0.2em]
+  & ~~\scriptsize$\pm$ 0.844 & \scriptsize$\pm$ 5.01 & \scriptsize$\pm$ 0.462 & \scriptsize$\pm$ 0.652 \\
+\end{comment}
+  

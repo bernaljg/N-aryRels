@@ -1,0 +1,22 @@
+\section{Introduction}
+Deep neural networks have been proven to be a powerful framework for natural language processing, and have demonstrated strong performance on a number of challenging tasks, ranging from machine translation \cite{cho2014learning,cho2014properties}, to text categorisation \cite{zhang2015character, joulin2017bag, Liu+:2018b}. 
+Not only do such deep models outperform traditional machine learning methods, they also come with the benefit of not requiring difficult feature engineering. 
+For instance, both \newcite{lample2016neural} and \newcite{ma2016end} propose end-to-end models for sequence labelling task and achieve state-of-the-art results. 
+
+Orthogonal to the advances in deep learning is the effort spent on feature engineering. 
+A representative example is the task of named entity recognition (NER), one that requires both lexical and syntactic knowledge, where, until recently, most models heavily rely on statistical sequential labelling models taking in manually engineered features \cite{florian2003named,chieu2002named,ando2005framework}. 
+Typical features include POS and chunk tags, prefixes and suffixes, and external gazetteers, all of which represent years of accumulated knowledge in the field of computational linguistics.
+
+The work of \newcite{collobert2011natural} started the trend of feature engineering-free modelling by learning internal representations of compositional components of text (e.g., word embeddings). 
+Subsequent work has shown impressive progress through capturing syntactic and semantic knowledge with dense real-valued vectors trained on large unannotated corpora \cite{Mikolov+:2013a,Mikolov+:2013b,pennington2014glove}.
+Enabled by the powerful representational capacity of such embeddings and neural networks, feature engineering has largely been replaced with taking off-the-shelf pre-trained word embeddings as input, thereby making models fully end-to-end and the research focus has shifted to neural network architecture engineering.
+
+More recently, there has been increasing recognition of the utility of linguistic features \cite{Li+:2017,Chen+:2017,Wu+:2017,Liu+:2018} where such features are integrated to improve model performance. 
+Inspired by this, taking NER as a case study, we investigate the utility of hand-crafted features in deep learning models, challenging conventional wisdom in an attempt to refute the utility of manually-engineered features.
+Of particular interest to this paper is the work by \newcite{ma2016end} where they introduce a strong end-to-end model combining a
+bi-directional Long Short-Term Memory (Bi-LSTM) network with Convolutional Neural Network (CNN) character encoding in a Conditional Random Field (CRF).
+Their model is highly capable of capturing not only word- but also character-level features. 
+We extend this model by integrating an auto-encoder loss, allowing the model to take hand-crafted features as input and re-construct them as output, and show that, even with such a highly competitive model, incorporating linguistic features is still beneficial.
+Perhaps the closest to this study is the works by \newcite{Ammar+:2014} and \newcite{Zhang+:2017}, who show how CRFs can be framed as auto-encoders in unsupervised or semi-supervised settings. 
+
+With our proposed model, we achieve strong performance on the CoNLL 2003 English NER shared task with an $F_1$ of $91.89$, significantly outperforming an array of competitive baselines. We conduct an ablation study to better understand the impacts of each manually-crafted feature. Finally, we further provide an in-depth analysis of model performance when trained with varying amount of data and show that the proposed model is highly competent with only 60\% of the training set.

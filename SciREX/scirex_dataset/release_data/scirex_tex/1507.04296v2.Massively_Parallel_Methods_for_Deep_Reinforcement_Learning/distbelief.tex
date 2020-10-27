@@ -1,0 +1,11 @@
+%!TEX root = gorila_paper.tex
+\section{Background}
+\subsection{DistBelief}
+DistBelief~\cite{dean2012distbelief} is a distributed system for training large neural networks on massive amounts of data efficiently by using two types of parallelism.
+Model parallelism, where different machines are responsible for storing and training different parts of the model, is used to allow efficient training of models much larger than what is feasible on a single machine or GPU.
+Data parallelism, where multiple copies or replicas of each model are trained on different parts of the data in parallel, allows for more efficient training on massive datasets than a single process.
+We briefly discuss the two main components of the DistBelief architecture -- the central parameter server and the model replicas.
+
+The central parameter server holds the master copy of the model. The job of the parameter server is to apply the incoming gradients from the replicas to the model and, when requested, to send its latest copy of the model to the replicas. The parameter server can be sharded across many machines and different shards apply gradients independently of other shards.
+
+Each replica maintains a copy of the model being trained. This copy could be sharded across multiple machines if, for example, the model is too big to fit on a single machine. The job of the replicas is to calculate the gradients given a mini-batch, send them to the parameter server, and to periodically query the parameter server for an updated version of the model. The replicas send gradients and request updated parameters independently of each other and hence may not be synced to the same parameters at any given time.

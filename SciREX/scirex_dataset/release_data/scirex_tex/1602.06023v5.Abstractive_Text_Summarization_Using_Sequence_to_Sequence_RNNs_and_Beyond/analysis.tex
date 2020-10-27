@@ -1,0 +1,86 @@
+\section{Qualitative Analysis}\label{sec:analysis}
+
+%In this section, we present representative output from our models and discuss them qualitatively. 
+Table \ref{fig:example_outputs} presents a few high quality and poor quality output on the validation set from {\it feats-lvt2k-2sent}, one of our best performing models. Even when the model differs from the target summary, its summaries tend to be very meaningful and relevant, a phenomenon not captured by word/phrase matching evaluation metrics such as Rouge. On the other hand, the model sometimes `misinterprets' the semantics of the text and generates a summary with a comical interpretation as shown in the poor quality examples in the table. Clearly, capturing the `meaning' of complex sentences remains a weakness of these models.
+
+\begin{table}
+\begin{center}
+{\small
+\begin{tabular}{|p{7.5cm}|}
+\hline
+{\bf Good quality summary output} \\
+\hline
+{\bf S}: a man charged with the murder last year of a british backpacker confessed to the slaying on the night he was charged with her killing , according to police evidence presented at a court hearing tuesday .  ian douglas previte , \#\# , is charged with murdering caroline stuttle , \#\# , of yorkshire , england\\ 
+{\bf T}: man charged with british backpacker 's death confessed to crime police officer claims \\
+{\bf O}: man charged with murdering british backpacker confessed to murder \\
+ \hline
+{\bf S}: following are the leading scorers in the english premier league after saturday 's matches : \#\# - alan shearer -lrb- newcastle united -rrb- , james beattie .\\
+{\bf T}: leading scorers in english premier league \\
+{\bf O}: english premier league leading scorers \\
+\hline
+{\bf S}: volume of transactions at the nigerian stock exchange has continued its decline since last week , a nse official said thursday .  the latest statistics showed that a total of \#\#.\#\#\# million shares valued at \#\#\#.\#\#\# million naira -lrb- about \#.\#\#\# million us dollars -rrb- were traded on wednesday in \#,\#\#\# deals .\\
+{\bf T}: transactions dip at nigerian stock exchange \\
+{\bf O}: transactions at nigerian stock exchange down \\
+\hline
+{\bf Poor quality summary output} \\
+\hline
+{\bf S}: broccoli and broccoli sprouts contain a chemical that kills the bacteria responsible for most stomach cancer , say researchers , confirming the dietary advice that moms have been handing out for years . in laboratory tests the chemical , $<$unk$>$ , killed helicobacter pylori , a bacteria that causes stomach ulcers and often fatal stomach cancers . \\
+{\bf T}:  for release at \#\#\#\# $<$unk$>$ mom was right broccoli is good for you say cancer researchers \\
+{\bf O}: broccoli sprouts contain deadly bacteria \\
+\hline
+{\bf S}: norway delivered a diplomatic protest to russia on monday after three norwegian fisheries research expeditions were barred from russian waters . the norwegian research ships were to continue an annual program of charting fish resources shared by the two countries in the barents sea region .\\
+{\bf T}: norway protests russia barring fisheries research ships \\
+{\bf O}: norway grants diplomatic protest to russia\\
+\hline
+{\bf S}: j.p. morgan chase 's ability to recover from a slew of recent losses rests largely in the hands of two men , who are both looking to restore tarnished reputations and may be considered for the top job someday .  geoffrey <unk> , now the co-head of j.p. morgan 's investment bank , left goldman , sachs \& co. more than a decade ago after executives say he lost out in a bid to lead that firm .\\
+{\bf T}: \# executives to lead j.p. morgan chase on road to recovery \\
+{\bf O}: j.p. morgan chase may be considered for top job \\
+\hline
+\end{tabular}
+}
+\end{center}
+\caption{\label{fig:example_outputs} {\small Examples of generated summaries from our best model on the validation set of Gigaword corpus. {\bf S}: source document, {\bf T}: target summary, {\bf O}: system output. Although we displayed equal number of good quality and poor quality summaries in the table, the good ones are far more prevalent than the poor ones.}}
+\vspace{-2mm}
+\end{table}
+
+Our next example output, presented in Figure \ref{fig:example_pointers}, displays the sample output from the switching generator/pointer model on the Gigaword corpus. It is apparent from the examples that the model learns to use pointers very accurately not only for named entities, but also for multi-word phrases. Despite its accuracy, the performance improvement of the overall model is not significant. We believe the impact of this model may be more pronounced in other settings with a heavier tail distribution of rare words. We intend to carry out more experiments with this model in the future.
+
+% \begin{table*}
+% \begin{center}
+% \begin{tabular}{|p{7.4cm}|p{7.4cm}|}
+% \hline
+% {\bf Good Examples} & {\bf Bad Examples} \\
+% \hline
+% {\bf Source}: a man charged with the murder last year of a british backpacker confessed to the slaying on the night he was charged with her killing , according to police evidence presented at a court hearing tuesday . $<$s$>$ ian douglas previte , \#\# , is charged with murdering caroline stuttle , \#\# , of yorkshire , england .  &  {\bf Source}: broccoli and broccoli sprouts contain a chemical that kills the bacteria responsible for most stomach cancer , say researchers , confirming the dietary advice that moms have been handing out for years . $<$s$>$ in laboratory tests the chemical , $<$unk$>$ , killed helicobacter pylori , a bacteria that causes stomach ulcers and often fatal stomach cancers .\\
+% {\bf Target}: man charged with british backpacker 's death confessed to crime police officer claims & {\bf Target}: for release at \#\#\#\# $<$unk$>$ mom was right broccoli is good for you say cancer researchers \\
+% {\bf System}: man charged with murdering british backpacker confessed to murder & {\bf System}: broccoli sprouts contain deadly bacteria \\
+% \hline
+% {\bf Source}: following are the leading scorers in the english premier league after saturday 's matches : $<$s$>$ \#\# - alan shearer -lrb- newcastle united -rrb- , james beattie & {\bf Source}: norway delivered a diplomatic protest to russia on monday after three norwegian fisheries research expeditions were barred from russian waters . $<$s$>$ the norwegian research ships were to continue an annual program of charting fish resources shared by the two countries in the barents sea region .\\
+% {\bf Target}: leading scorers in english premier league & {\bf Target}: norway protests russia barring fisheries research ships\\
+% {\bf System}: english premier league leading scorers & {\bf System}: norway grants diplomatic protest to russia\\
+% \hline
+% {\bf Source}: \\
+% {\bf Target}:  \\
+% {\bf System}: \\
+% \hline
+% \end{tabular}
+% \end{center}
+% \label{tab:example_outputs}
+% \caption{ Representative good examples. \ramesh{Cicero, let's try to fit this in a single column table. Too much space is wasted because we are aligning good and bad examples}}
+% \vspace{-2mm}
+% \end{table*}
+
+%\vspace{-0.2in}
+
+
+On CNN/Daily Mail data, although our models are able to produce good quality multi-sentence summaries, we notice that the same sentence or phrase often gets repeated in the summary. We believe models that incorporate intra-attention such as \newcite{lstmn} can fix this problem by encouraging the model to `remember' the words it has already produced in the past.
+
+
+\begin{figure} 
+	\centering
+  \includegraphics[width=.5\textwidth]{example_pointers}
+ \vspace{-0.4in}
+\caption{{\small Sample output from switching generator/pointer networks. An arrow indicates that a pointer to the source position was used to generate the corresponding summary word.}}
+\label{fig:example_pointers}	
+\end{figure}
+

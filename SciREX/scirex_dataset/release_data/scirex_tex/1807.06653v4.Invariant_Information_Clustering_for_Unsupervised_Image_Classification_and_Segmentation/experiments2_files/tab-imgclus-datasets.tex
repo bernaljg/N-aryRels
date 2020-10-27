@@ -1,0 +1,18 @@
+\begin{table}[t]
+\fontsize{5.8}{8} \selectfont 
+\centering
+\begin{tabular}{l | c | c | c | c | c | c | c | c}
+\hline
+&  \multicolumn{2}{c}{STL10} 
+&  \multicolumn{2}{c}{CIFAR10}
+&  \multicolumn{2}{c}{CIFAR100-20}
+&  \multicolumn{2}{c}{MNIST}\\
+\hline 
+& Train & Test & Train & Test & Train & Test & Train & Test \\
+\hline
+IID & 113k & 13k & 60k & 60k & 60k & 60k & 70k & 70k \\
+IID+ and supervised & 105k & 8k & 50k & 10k & 50k & 10k & 60k & 10k\\
+\hline
+\end{tabular}
+\caption{Dataset sizes for image clustering.}\label{t:imgclus-datasets}
+\end{table}

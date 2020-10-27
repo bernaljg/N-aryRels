@@ -1,0 +1,20 @@
+\begin{tabular}{@{}lcccccccccc@{}}
+\toprule
+ & \multicolumn{2}{c}{original evaluation} &
+ \multicolumn{2}{c}{$s^* = 350$} & \multicolumn{2}{c}{$s^* = 400$} &
+ \multicolumn{2}{c}{$s^* = 450$} &
+ \multicolumn{2}{c}{$s^* = 500$} \\ 
+ \cmidrule(rl){2-3}\cmidrule(rl){4-5} \cmidrule(rl){6-7}\cmidrule(rl){8-9}
+ \cmidrule(rl){10-11}
+ Architecture & \multicolumn{1}{c}{$s$} & acc. (\%) & 
+ $p^*$ &
+ acc. (\%) & 
+ $p^*$ &
+ acc. (\%) & $p^*$ & acc. (\%) & $p^*$ & acc. (\%) \\ \midrule
+NASNet-A-Mobile~\citesuppl{zoph2018learning}%
+& 224 & $74.1$/$91.7$ & $1.7$ & $\bm{75.1}/\bm{92.5}$ & $2.1$ & $74.2$/$92.1$ & $2.4$ & $71.8$/$90.9$ & $2.6$ & $68.4/89.0$ \\
+SENet154~\cite{hu2018squeeze} & $224$ &$81.3$/$95.5$ & $1.6$ & $82.6/96.2$ & $1.6$ & $83.0$/$96.5$ & $1.6$ & $\bm{83.1}/\bm{96.5}$ & $1.7$ & $82.7$/$96.3$ \\
+PNASNet-5-Large~\citesuppl{liu2018progressive}%
+& $331$ & $82.7$/$96.0$ & $1.0$ & $81.3$/$85.4$ & $1.4$ & $82.6$/$96.1$ & $1.5$ & $83.2$/$96.4$ & $1.7$ & $\bm{83.6}/\bm{96.7}$ \\
+\bottomrule
+\end{tabular}

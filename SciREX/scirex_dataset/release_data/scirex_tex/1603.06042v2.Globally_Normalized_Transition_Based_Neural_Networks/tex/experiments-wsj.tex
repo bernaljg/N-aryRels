@@ -1,0 +1,42 @@
+\begin{table*}
+  \centering
+%  \hspace*{-0.7em}
+  \scalebox{0.9}{
+%    \renewcommand{\arraystretch}{1.0}%
+    \setlength\tabcolsep{5pt}%
+    \begin{tabular}{l@{\hskip 0.6cm}ccc@{\hskip 0.7cm}ccc@{\hskip 0.7cm}cc@{\hskip 0.7cm}cc}
+      \toprule
+      &&\multicolumn{2}{c@{\hskip 0.7cm}}{WSJ} && \multicolumn{2}{c@{\hskip 0.7cm}}{Union-News} & \multicolumn{2}{c@{\hskip 0.9cm}}{Union-Web} & \multicolumn{2}{c@{\hskip 0.0cm}}{Union-QTB\hspace*{0.5cm}}\\
+      Method && UAS & LAS && UAS & LAS & UAS & LAS & UAS & LAS\\
+      \midrule
+      %\quad {\em Supervised} \\
+      %\newcite{bohnet:2010:COLING} & 93.29 & 91.38 & 88.22 &  85.22 & 94.01 &  91.49 \\
+      \newcite{martins-etAl:2013:ACL}$^\star$ && 92.89 & 90.55 && 93.10 &  91.13 & 88.23 &  85.04 & 94.21 &  91.54 \\
+      \newcite{zhang-mcdonald:2014:ACL}$^\star$ && 93.22 & 91.02 && 93.32 & 91.48 & 88.65 &  85.59 & 93.37 &  90.69 \\
+      \newcite{weiss-etAl:2015:ACL} && 93.99 & 92.05 && 93.91 &  92.25 & 89.29 &  86.44 & 94.17 &  92.06 \\
+      \newcite{alberti-EtAl:2015:EMNLP} && 94.23 & 92.36 && 94.10 & 92.55 & 89.55 & 86.85 & 94.74 & 93.04 \\
+      \midrule
+      Our Local (B=1) && 92.95 & 91.02 && 93.11 & 91.46 & 88.42 & 85.58 & 92.49 & 90.38 \\
+      Our Local (B=32) && 93.59 & 91.70 && 93.65 & 92.03 & 88.96 & 86.17 & 93.22 & 91.17 \\
+      Our Global (B=32) && {\bf 94.61} & {\bf 92.79} && {\bf 94.44} & {\bf 92.93} & {\bf 90.17} & {\bf 87.54} & {\bf 95.40} & {\bf 93.64}  \\
+      \midrule
+      Parsey McParseface (B=8) && - & - && 94.15 & 92.51 & 89.08 & 86.29 & 94.77 & 93.17 \\
+      %      \midrule
+%      \quad {\em Semi-supervised} \\
+      %\newcite{weiss-etAl:2015:ACL} tri-training && 94.16 & 92.41 && 94.16 &  92.62 & 89.72 &  87.00 & {\bf 95.58} &  93.05 \
+%      \newcite{weiss-etAl:2015:ACL} && 94.26 & 92.41 \\
+%      Our structured && {\bf 94.54} & {\bf 92.70} \\
+      \bottomrule
+    \end{tabular}
+  }
+  \caption{\label{tab:english_parsing}
+    Final English dependency parsing test set results. We note that
+    training our system using only the WSJ corpus (i.e. no pre-trained embeddings or other external resources) 
+    yields 94.08\% UAS and 92.15\% LAS for our global model with beam 32.
+  }
+\end{table*}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% End:

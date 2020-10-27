@@ -1,0 +1,46 @@
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinelanguage{mypython}{morekeywords={def, return}}
+
+\lstdefinestyle{mystyle}{
+    language=mypython,
+    %backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codegreen},
+    numberstyle=\color{codegray},
+    stringstyle=\color{magenta},
+    basicstyle=\ttfamily\fontsize{6.6pt}{7.92pt}\selectfont,
+    breakatwhitespace=true,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=none,                    
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=single,
+}
+%\lstset{style=mystyle, deletekeywords=sum}
+
+
+\begin{figure}[t]
+%\begin{minted}[fontsize=\fontsize{6.6pt}{7.92pt}\selectfont,frame=single]{python}
+
+\begin{lstlisting}[style=mystyle]
+def IIC(z, zt, C=10):
+  P = (z.unsqueeze(2) * zt.unsqueeze(1)).sum(dim=0)
+  P = ((P + P.t()) / 2) / P.sum()
+  P[(P < EPS).data] = EPS
+  Pi = P.sum(dim=1).view(C, 1).expand(C, C)
+  Pj = P.sum(dim=0).view(1, C).expand(C, C)
+  return (P * (log(Pi) + log(Pj) - log(P))).sum()
+\end{lstlisting}
+%\end{minted}
+
+%  return (- P * (torch.log(P) - lamb * torch.log(Pi) - lamb * torch.log(Pj))).sum()  
+\caption{\label{f:code} \methodnameshort objective in PyTorch. Inputs \texttt{z} and \texttt{zt} are $n \times C$ matrices, with $C$ predicted cluster probabilities for $n$ sampled pairs (i.e. CNN softmaxed predictions). For example, the prediction for each image in a dataset and its transformed version (e.g. using standard data augmentation).}
+\end{figure}

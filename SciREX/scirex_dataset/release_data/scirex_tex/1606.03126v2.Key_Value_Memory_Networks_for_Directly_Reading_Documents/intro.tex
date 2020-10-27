@@ -1,0 +1,84 @@
+
+%\cite{burger2001issues}
+%\cite{fader2014open}
+%\cite{voorhees1999trec}
+
+
+%A huge leap forward in artificial intelligence will be achieved when
+%machines will be able to answer any question expressed in natural
+%language. As such, q
+
+Question answering (QA) has been a long standing research problem in
+natural language processing, with the first systems attempting to
+answer questions by directly reading
+documents \citep{voorhees2000building}. The development of large-scale Knowledge Bases (KBs) such as Freebase  \citep{bollacker2008freebase}
+helped organize information into structured forms, prompting recent progress to focus on answering questions by converting them into logical forms that can be used to query such databases \citep{berant2013semantic,kwiatkowski-EtAl:2013:EMNLP,fader2014open}.
+
+Unfortunately, KBs have intrinsic limitations such as their inevitable incompleteness and fixed schemas that cannot support all varieties of answers.
+%
+Since information extraction (IE) \citep{craven2000learning}, intended to
+fill in missing information in KBs, is neither accurate nor
+reliable enough, collections of raw textual resources and
+documents such as Wikipedia will always contain more information.
+%than KBs.
+%
+As a result, even if KBs can be satisfactory for closed-domain problems, they are unlikely
+to scale up to answer general questions on any
+topic.
+%
+Starting from this observation,
+%here we propose  to study the problem
+in this work we study the problem
+of answering by directly reading documents.
+
+
+Retrieving answers directly from text is harder than
+from KBs because information is far less structured, is
+indirectly and ambiguously expressed, and is usually scattered across multiple documents.
+%
+%This explains why, when a satisfactory KB is
+%available -- which is typically only the case in closed domains --
+%using it instead of raw text is preferred. %, because performance is better.
+%
+This explains why using a satisfactory KB---typically only available in closed domains---is preferred over raw text.
+%
+We postulate that before trying to provide answers that are not in
+KBs, document-based QA systems should first reach KB-based systems'
+performance in such closed domains, where clear comparison and
+evaluation is possible.
+%
+To this end, this paper introduces {\sc WikiMovies}, a new
+analysis tool that allows for measuring the performance of %loss induced on
+QA systems when the knowledge source is switched from a KB to unstructured documents.
+%
+{\sc WikiMovies} contains $\sim$100k questions in the movie domain, and was designed
+to be answerable by using either a perfect KB
+(based on OMDb\footnote{\url{http://www.omdbapi.com}}), Wikipedia pages or an imperfect KB obtained through
+running %a standard IE pipeline on those pages.
+an engineered IE pipeline on those pages.
+
+To bridge the gap between using a KB and reading documents directly,
+we still lack appropriate machine learning algorithms. In this
+work we propose the Key-Value Memory Network (KV-MemNN), a new neural network
+architecture that generalizes the original Memory Network
+\citep{sukhbaatar2015end} and can work with either knowledge source.
+%
+The KV-MemNN performs QA by first storing facts in a key-value
+structured memory before reasoning on them in order to predict an
+answer. The memory is designed so that the model learns to use keys to
+address relevant memories with respect to the question, whose corresponding values are subsequently returned.
+%
+This structure allows the model to encode prior knowledge for the considered task
+and to leverage possibly complex transforms between keys and values,
+while still being trained using standard backpropagation via
+stochastic gradient descent.
+
+Our experiments on {\sc WikiMovies} indicate that, thanks to its key-value memory,
+the KV-MemNN consistently outperforms the
+original Memory Network, and reduces the gap between answering from a human-annotated KB,
+from an automatically extracted KB or from directly reading Wikipedia.
+%
+We confirm our findings on  {\sc WikiQA} \citep{yang2015wikiqa},
+another Wikipedia-based QA benchmark where no KB is available,
+where we demonstrate that KV-MemNN can reach state-of-the-art results---surpassing
+the most recent attention-based neural network models.

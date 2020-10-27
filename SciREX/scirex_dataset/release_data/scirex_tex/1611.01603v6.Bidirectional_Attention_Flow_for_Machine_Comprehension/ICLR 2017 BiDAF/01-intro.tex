@@ -1,0 +1,30 @@
+The tasks of machine comprehension (MC) and question answering (QA) have gained significant popularity over the past few years within the natural language processing and computer vision communities. Systems trained end-to-end now achieve promising results on a variety of tasks in the text and image domains. 
+%The two significant contributors towards this progress are the advent of deep neural architectures and the availability of massive datasets.
+% questions~\citep{rajpurkar2016squad,Hermann2015TeachingMT}.
+% Recently, the addition of attention mechanisms to neural architectures (e.g., in machine translation~\citep{Bahdanau2014NeuralMT}) has led to a significant improvement in their performance. %The attention mechanism was first proposed by \cite{Bahdanau2014NeuralMT} for the task of machine translation. %Neural architectures for machine translation typically use encoder-decoder architectures, which require the source sentence to be completely encoded in a single vector, rendering them less effective at encoding sentences with long range dependencies. 
+%The attention mechanism allows the decoder to ``attend'' to different parts of the source sentence while producing the target sentence, leading to an improvement in the task, especially for long sentences. 
+One of the key factors to the advancement has been the use of neural attention mechanism, which enables the system to focus on a targeted area within a context paragraph (for MC) or within an image (for Visual QA), that is most relevant to answer the question~\citep{memnn,antol2015vqa,xiong2016dynamic}. 
+% Attention mechanisms have been also successfully extended to % machine comprehension (attention between the query and the context paragraph) and visual question answering (attention between the query and image). 
+Attention mechanisms in previous works typically have one or more of the following characteristics. 
+First, the computed attention weights are often used to extract the most relevant information from the context for answering the question by summarizing the context into a fixed-size vector.
+Second, in the text domain, they are often temporally dynamic, whereby the attention weights at the current time step are a function of the attended vector at the previous time step. 
+Third, they are usually uni-directional, wherein the query attends on the context paragraph or the image. 
+
+In this paper, we introduce the \sys\  (\sysshort) network, a hierarchical multi-stage architecture for modeling the representations of the context paragraph at different levels of granularity (Figure~\ref{fig:model}). 
+\sysshort\ includes character-level, word-level, and contextual embeddings, and uses bi-directional attention flow to obtain a query-aware context representation. 
+Our attention mechanism offers following improvements to the previously popular attention paradigms. 
+First, our attention layer is not used to summarize the context paragraph into a fixed-size vector. 
+Instead, the attention is computed for every time step, and the attended vector at each time step, along with the representations from previous layers, is allowed to \emph{flow} through to the subsequent modeling layer.
+This reduces the information loss caused by early summarization. 
+Second, we use a memory-\emph{less} attention mechanism.
+That is, while we iteratively compute attention through time as in~\cite{Bahdanau2014NeuralMT}, the attention at each time step is a function of only the query and the context paragraph at the current time step and does not directly depend on the attention at the previous time step.
+We hypothesize that this simplification leads to the division of labor between the attention layer and the modeling layer.
+It forces the attention layer to focus on learning the attention between the query and the  context, and enables the modeling layer to focus on learning the interaction within the query-aware context representation (the output of the attention layer).
+It also allows the attention at each time step to be unaffected from incorrect attendances at previous time steps. 
+Our experiments show that memory-less attention gives a clear advantage over dynamic attention. 
+Third, we use attention mechanisms in both directions, query-to-context and context-to-query, which provide complimentary information to each other.
+
+Our \sysshort\ model\footnote{Our code and interactive demo are available at: \url{allenai.github.io/bi-att-flow/}}  outperforms all previous approaches on the highly-competitive Stanford Question Answering Dataset (SQuAD) test set leaderboard at the time of submission.
+With a modification to only the output layer, \sysshort\ achieves the state-of-the-art results on the CNN/DailyMail cloze test. 
+% On the CNN dataset, our single run model outperforms the previous best single run model by 2.2\% and our ensemble model beats the previous best ensemble by 0.7\%. When applied to the Daily Mail dataset our single run model outperforms both the previous best single run as well as ensemble models by 2.8\% and 1.3\% percent respectively.
+We also provide an in-depth ablation study of our model on the SQuAD development set, visualize the intermediate feature spaces in our model, and analyse its performance as compared to a more traditional language model for machine comprehension~\citep{rajpurkar2016squad}.

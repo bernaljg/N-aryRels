@@ -1,0 +1,32 @@
+
+\begin{algorithm}
+\caption{Meta-transfer learning (MTL)}
+\label{alg_overall}
+\SetAlgoLined
+\SetKwInput{KwData}{Input}
+\SetKwInput{KwResult}{Output}
+ \KwData{Task distribution $p(\mathcal{T})$ and corresponding dataset $\mathcal{D}$, learning rates $\alpha$, $ \beta$ and $\gamma$}
+ \KwResult{Feature extractor $\Theta$, base learner $\theta$, \emph{SS} parameters $\Phi_{S_{\{1,2\}}}$}
+ Randomly initialize $\Theta$ and $\theta$\;
+ \For{samples in $\mathcal{D}$}{
+ Evaluate $\mathcal{L}_{\mathcal{D}}([\Theta; \theta])$ by Eq.~\ref{eq_large_scale_loss}\;
+ Optimize $\Theta$ and $\theta$ by Eq.~\ref{eq_large_scale_update}\;
+ }
+  Initialize $\Phi_{S_1}$ by ones, initialize $\Phi_{S_2}$ by zeros\;
+  Reset and re-initialize $\theta$ for few-shot tasks\;
+%   Randomly initialize $\theta$\;
+ \For{meta-batches}{
+ Randomly sample tasks $\{\mathcal{T}\}$ from $p(\mathcal{T})$\;
+ \While{not done}{
+ Sample task $\mathcal{T}_i \in \{\mathcal{T}$\}\;
+ Optimize $\Phi_{S_{\{1,2\}}}$ and $\theta$ with $\mathcal{T}_i$ by \textbf{Algorithm}~\ref{alg_Meta}\;
+ Get the returned class-$m$ then add it to $\{m\}$\;
+ }
+ Sample hard tasks $\{\mathcal{T}^{hard}\}$ from $\subseteq p(\mathcal{T}|\{m\})$\;
+  \While{not done}{
+ Sample task $\mathcal{T}^{hard}_j \in \{\mathcal{T}^{hard}$\} \;
+ Optimize $\Phi_{S_{\{1,2\}}}$ and $\theta$ with $\mathcal{T}^{hard}_j$ by \textbf{Algorithm}~\ref{alg_Meta} \;
+ }
+ Empty $\{m\}$.
+ }
+\end{algorithm}

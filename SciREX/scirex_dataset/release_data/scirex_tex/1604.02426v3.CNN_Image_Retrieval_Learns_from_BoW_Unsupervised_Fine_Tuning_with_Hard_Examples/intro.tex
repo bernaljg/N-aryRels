@@ -1,0 +1,45 @@
+\section{Introduction}
+%
+\lettrine{I}{mage} retrieval has received a lot of attention since the advent of invariant local features, such as SIFT~\cite{L04}, and since the seminal work of Sivic and Zisserman~\cite{SZ03} based on Bag-of-Words (BoW). 
+Retrieval systems have reached a higher level of maturity by incorporating large visual codebooks~\cite{PCISZ07,AK12}, spatial verification~\cite{PCISZ07,SLBW14} and query expansion~\cite{CMPM11,DGBQG11,TJ14}. 
+These ingredients constitute the state of the art on particular object retrieval.
+Another line of research focuses on compact image representations in order to decrease memory requirements and increase the search efficiency. 
+Representative approaches are Fisher vectors~\cite{PLSP10}, VLAD~\cite{JPDSPS11} and alternatives~\cite{RJC15,AZ13,TFJ14}.
+Recent advances~\cite{BSCL14,RSMC14} show that Convolutional Neural Networks (CNN) offer an attractive alternative for image search representations with small memory footprint.
+
+CNNs attracted a lot of attention after the work of Krizhevsky \etal~\cite{KSH12}. Their success is mainly due to the computational power of GPUs and the use of very large annotated datasets~\cite{RDSK+15}. 
+Generation of the latter comes at the expense of costly manual annotation. Using CNN layer activations as off-the-shelf image descriptors~\cite{DJVO+13,RASC14} appears very effective and is adopted in many tasks~\cite{GDDM14,IMKG+14,GWGL14}. 
+In particular for image retrieval, Babenko \etal~\cite{BSCL14} and Gong \etal~\cite{GWGL14} concurrently propose the use of Fully Connected (FC) layer activations as descriptors, while convolutional layer activations are later shown to have superior performance~\cite{RSMC14,BL15,KMO15,TSJ16}. 
+
+Generalization to other tasks \cite{ARSM+14} is attained by CNN activations, at least up to some extent.
+However, initialization by a pre-trained network and re-training for another task, a process called \emph{fine-tuning}, significantly improves the adaptation ability~\cite{ZDGD14,OBLS14}. 
+Fine-tuning by training with classes of particular objects, \eg building classes in the work of Babenko \etal~\cite{BSCL14}, is known to improve retrieval accuracy. 
+This formulation is much closer to classification than to the desired properties of instance retrieval. 
+Typical architectures for metric learning, such as siamese~\cite{CHL05,HCL06,HLT14} or triplet networks~\cite{WSLT+14,SKP15,HA15} employ \emph{matching} and \emph{non-matching} pairs to perform the training and better suit to this task.
+%In a recent work, Arandjelovic \etal~\cite{AGTPS15} follow such an architecture in order to perform fine-tuning based on geo-tagged databases.
+%Our work bears resemblance to their work because, in contrast to prior work, during fine-tuning we directly optimize the similarity measure to be used in the final task. 
+%The major difference is that we dispense with the need of annotated data or any assumptions on the training dataset and that we enforce hard matching and hard non-matching examples through the SfM information.
+In this fashion, Arandjelovic \etal~\cite{AGTPS15} perform fine-tuning based on geo-tagged databases and, similar to our work, they directly optimize the the similarity measure to be used in the final task. 
+In contrast to them, we dispense with the need of annotated data or any assumptions on the training dataset. 
+A concurrent work~\cite{GARL16} bears resemblance to ours but their focus is on boosting performance through end-to-end learning of a more sophisticated representation, while we target to reveal the importance of hard examples and of training data variation. 
+
+A number of image clustering methods based on local features have been introduced~\cite{CM10a,WL13,PSZ11}. 
+Due to the spatial verification, the \emph{clusters} discovered by these methods are reliable. 
+In fact, the methods provide not only clusters, but also a matching graph or sub-graph on the cluster images. 
+%
+These graphs are further used as an input to a Structure-from-Motion (SfM) pipeline to build a 3D model~\cite{SRCF15}. 
+The SfM filters out virtually all mismatched images, and also provides camera positions for all matched images in the cluster. 
+The whole process from unordered collection of images to 3D reconstructions is fully automatic.
+
+In this paper, we address an unsupervised fine-tuning of CNN for image retrieval. 
+We propose to exploit 3D reconstructions to select the training data for CNN. We show that compared to previous supervised approaches, the variability in the training data from 3D reconstructions delivers superior performance in the image retrieval task. 
+During the training process the CNN is trained to learn what a state-of-the-art retrieval system based on local features and spatial verification would match. 
+Such a system  has large memory requirements and high query times, while our goal is to mimic this via CNN-based representation.
+We derive a short image representation and achieve similar performance to such state-of-the-art systems.
+
+In particular we make the following contributions.
+(1) We exploit SfM information and enforce not only hard non-matching (\emph{negative}) but also hard matching (\emph{positive}) examples to be learned by the CNN. This is shown to enhance the derived image representation.
+(2) We show that the whitening traditionally performed on short representations~\cite{JC12} is, in some cases, unstable and we rather propose to learn the whitening through the same training data. Its effect is complementary to fine-tuning and it further boosts performance. 
+(3) Finally, we set a new state-of-the-art based on compact representations for Oxford Buildings and Paris datasets by re-training well known CNNs, such as AlexNet~\cite{KSH12} and VGG~\cite{SZ14}.
+Remarkably, we are on par with existing 256D compact representations even by using 32D image vectors.
+

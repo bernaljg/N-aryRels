@@ -1,0 +1,97 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%% ICML 2014 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Use the following line _only_ if you're still using LaTeX 2.09.
+%\documentstyle[icml2014,epsf,natbib]{article}
+% If you rely on Latex2e packages, like most moden people use this:
+\documentclass{article}
+
+% use Times
+\usepackage{times}
+% For figures
+\usepackage{graphicx} % more modern
+%\usepackage{epsfig} % less modern
+\usepackage{subfigure} 
+\graphicspath{{figures/}}
+
+% For citations
+\usepackage{natbib}
+
+% For algorithms
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+% As of 2011, we use the hyperref package to produce hyperlinks in the
+% resulting PDF.  If this breaks your system, please commend out the
+% following usepackage line and replace \usepackage{icml2014} with
+% \usepackage[nohyperref]{icml2014} above.
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{soul}
+\usepackage{multicol}
+
+% Packages hyperref and algorithmic misbehave sometimes.  We can fix
+% this with the following command.
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Employ the following version of the ``usepackage'' statement for
+% submitting the draft version of the paper for review.  This will set
+% the note in the first column to ``Under review.  Do not distribute.''
+%\usepackage{icml2015} 
+% Employ this version of the ``usepackage'' statement after the paper has
+% been accepted, when creating the final version.  This will set the
+% note in the first column to ``Proceedings of the...''
+\usepackage[accepted]{icml2015}
+
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+\icmltitlerunning{Massively Parallel Methods for Deep Reinforcement Learning}
+
+\begin{document} 
+
+\twocolumn[
+\icmltitle{Massively Parallel Methods for Deep Reinforcement Learning}
+
+% It is OKAY to include author information, even for blind
+% submissions: the style file will automatically remove it for you
+% unless you've provided the [accepted] option to the icml2014
+% package.
+\icmlauthor{Arun Nair, Praveen Srinivasan, Sam Blackwell, Cagdas Alcicek, Rory Fearon, Alessandro De Maria, Vedavyas Panneershelvam, Mustafa Suleyman, Charles Beattie, Stig Petersen, Shane Legg, Volodymyr Mnih, Koray Kavukcuoglu, David Silver}
+{  \\ \{arunsnair, prav, blackwells, cagdasalcicek, roryf, ademaria, darthveda, mustafasul, cbeattie, svp, legg, vmnih, korayk, davidsilver @google.com \}}
+\icmladdress{Google DeepMind, London}
+
+% You may provide any keywords that you 
+% find helpful for describing your paper; these are used to populate 
+% the "keywords" metadata in the PDF but will not be shown in the document
+\icmlkeywords{reinforcement learning, deep learning}
+
+\vskip 0.3in
+]
+
+\newcommand{\argmax}[1]{\underset{#1}{\operatorname{argmax}}\;}
+\newcommand{\argmin}[1]{\underset{#1}{\operatorname{argmin}}\;}
+\renewcommand{\max}[1]{\underset{#1}{\operatorname{max}}\;}
+\renewcommand{\min}[1]{\underset{#1}{\operatorname{min}}\;}
+\newcommand{\expect}[2]{\mathbb{E}_{#1} \left[ #2 \right]}
+\newcommand{\TODO}[1]{\hl{TODO: #1}}
+
+\begin{abstract} 
+We present the first massively distributed architecture for deep reinforcement learning. This architecture uses four main components: parallel actors that generate new behaviour; parallel learners that are trained from stored experience; a distributed neural network to represent the value function or behaviour policy; and a distributed store of experience. We used our architecture to implement the Deep Q-Network algorithm (DQN)~\cite{mnih2013atari}. Our distributed algorithm was applied to 49 games from Atari 2600 games from the Arcade Learning Environment, using identical hyperparameters. Our performance surpassed non-distributed DQN in 41 of the 49 games and also reduced the wall-time required to achieve these results by an order of magnitude on most games.
+\end{abstract} 
+
+
+\input{intro.tex}
+\input{related.tex}
+\input{distbelief.tex}
+\input{DQN.tex}
+\input{gorila.tex}
+\input{experiments.tex}
+\input{results.tex}
+\input{conclusion.tex}
+\bibliographystyle{icml2015}
+\bibliography{gorilabib}
+\input{appendix.tex}
+\end{document} 

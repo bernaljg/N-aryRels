@@ -1,0 +1,27 @@
+\section{Related work}
+%
+A variety of previous methods apply CNN activations on the task of image retrieval~\cite{GWGL14,RSMC14,BL15,KMO15,TSJ16,ZZWWT16}.
+The achieved accuracy on retrieval is evidence for the generalization properties of CNNs. 
+The employed networks were trained for image classification using ImageNet dataset, optimizing classification error.
+Babenko \etal~\cite{BSCL14} go one step further and re-train such networks with a dataset that is closer to the target task.
+They perform training with object classes that correspond to particular landmarks/buildings. 
+Performance is improved on standard retrieval benchmarks.
+Despite the achievement, still, the final metric and utilized layers are different to the ones actually optimized during learning.
+
+Constructing such training datasets requires manual effort. 
+The same stands for attempts on different tasks~\cite{RASC14,TSJ16} that perform fine-tuning and achieve increase of performance.
+In a recent work, geo-tagged datasets with timestamps offer the ground for weakly supervised fine-tuning of a triplet network~\cite{AGTPS15}. 
+Two images taken far from each other can be easily considered as non-matching, while matching examples are picked by the most similar nearby images. 
+In the latter case, similarity is defined by the current representation of the CNN.
+This is the first approach that performs end-to-end fine-tuning for image retrieval and in particular for the task of geo-localization.
+The employed training data are now much closer to the final task.
+We differentiate by discovering matching and non-matching image pairs in an unsupervised way.
+Moreover, we derive matching examples based on 3D reconstruction which allows for harder examples, compared to the ones that the current network identifies. 
+Even though hard negative mining is a standard process~\cite{GDDM14,AGTPS15}, this is not the case with hard positive examples. 
+Large intra-class variation in classification tasks requires the positive pairs to be sampled carefully;  forcing the model to learn  extremely hard positives may result in over-fitting.
+Another exception is the work Simo-Serra \etal~\cite{STFKM14} where they mine hard positive patches for descriptor learning. 
+They are also guided by 3D reconstruction but only at patch level.
+
+Despite the fact that one of the recent advances is the triplet loss~\cite{WSLT+14,SKP15,HA15}, note that also Arandjelovic \etal~\cite{AGTPS15} use it, there are no extenstive and direct comparisons to siamese networks and the contrastive loss. 
+One exception is the work of Hoffer and Ailon~\cite{HA15}, where triplet loss is shown to be marginally better only on MNIST dataset.
+We rather employ a siamese architecture with the contrastive loss and find it to generalize better and to converge at higher performance than the triplet loss.

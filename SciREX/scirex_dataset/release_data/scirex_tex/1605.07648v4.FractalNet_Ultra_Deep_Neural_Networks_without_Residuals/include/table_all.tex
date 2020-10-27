@@ -1,0 +1,40 @@
+\def\dash{-\phantom{00}}
+\begin{small}
+\begin{tabular}{@{}l|r:rr|r:rr|r}
+Method                                                   & C100  & C100+ & C100++ & C10   & C10+  & C10++ & SVHN \\
+\toprule
+Network in Network~\citep{nin}                           & 35.68 & \dash & \dash  & 10.41 & 8.81  & \dash & 2.35 \\
+Generalized Pooling~\citep{lee2016generalizing}          & 32.37 & \dash & \dash  & 7.62  & 6.05  & \dash & 1.69 \\ % Aug: a bunch of stuff: hue, scaling, etc.
+Recurrent CNN~\citep{liang2015recurrent}                 & 31.75 & \dash & \dash  & 8.69  & 7.09  & \dash & 1.77 \\ % Aug: "translations and horizontal (sic) reflections"
+Multi-scale~\citep{liao2015competitive}                  & 27.56 & \dash & \dash  & 6.87  & \dash & \dash & 1.76 \\
+FitNet~\cite{romero2014fitnets}                          & \dash & 35.04 & \dash  & \dash & 8.39  & \dash & 2.42 \\ % Aug: Uses only flipping, no translation!
+Deeply Supervised~\citep{lee2014deeply}                  & \dash & 34.57 & \dash  & 9.69  & 7.97  & \dash & 1.92 \\
+All-CNN~\citep{springenberg2014striving}                 & \dash & 33.71 & \dash  & 9.08  & 7.25  & 4.41  & \dash\\ % Aug: mirroring and shifts {-5, ..., 5}, whitening
+Highway Net~\citep{srivastava2015highway}                & \dash & 32.39 & \dash  & \dash & 7.72  & \dash & \dash\\ % Aug: Just says "random translations"
+ELU~\citep{elu}                                          & \dash & 24.28 & \dash  & \dash & 6.55  & \dash & \dash\\ % Aug: Standard
+Scalable BO~\citep{snoek2015scalable}                    & \dash & \dash & 27.04  & \dash & \dash & 6.37  & 1.77 \\ % Aug: a bunch of stuff: hue, scaling, etc.
+Fractional Max-Pool~\citep{graham2014fractional}         & \dash & \dash & 26.32  & \dash & \dash & 3.47  & \dash\\ % Aug: built-in
+\midrule
+FitResNet~\citep{mishkin2015all}                         & \dash & 27.66 & \dash  & \dash & 5.84  & \dash & \dash\\ % Aug: mirroring and shifts
+{\Resnet}~\citep{he2015deep}                             & \dash & \dash & \dash  & \dash & 6.61  & \dash & \dash\\ % Aug: mirroring and shifts {-4, ..., 4}
+{\Resnet} by~\citep{huang2016stochasticdepth}            & 44.76 & 27.22 & \dash  & 13.63 & 6.41  & \dash & 2.01 \\ % Aug:
+Stochastic Depth~\citep{huang2016stochasticdepth}        & 37.80 & 24.58 & \dash  & 11.66 & 5.23  & \dash & 1.75 \\
+Identity Mapping~\citep{he2016identity}                  & \dash & 22.68 & \dash  & \dash & 4.69  & \dash & \dash\\
+{\Resnet} in {\Resnet}~\citep{rir}                       & \dash & 22.90 & \dash  & \dash & 5.01  & \dash & \dash\\    %  v might swap f195 for f221
+Wide~\citep{wideresnet}                                  & \dash & 20.50 & \dash  & \dash & 4.17  & \dash & \dash\\ % They have SVHN too! Not sure which number to report. Need to double-check the CIFAR numbers too, since they report many different numbers.
+DenseNet-BC~\citep{densenet}\footnotemark                & 19.64 & 17.60 & \dash  &  5.19 & 3.62  & \dash & 1.74 \\
+\midrule
+{\Fracnet} (20 layers, 38.6M params)                     & 35.34 & 23.30 & 22.85  & 10.18 & 5.22  & 5.11  & 2.01 \\ % 100:f200/f199/f201 10:f223/f224/f232 S:f233
+~+~\droppath~+~\dropout                                  & 28.20 & 23.73 & 23.36  & 7.33  & 4.60  & 4.59  & 1.87 \\ % 100:f221/f234/f235 10:f226/f236/f237 S:f227
+\quad\quad%
+\raisebox{0.06cm}{$\drsh$} deepest column alone          & 29.05 & 24.32 & 23.60  & 7.27  & 4.68  & 4.63  & 1.89 \\
+{\Fracnet} (40 layers, 22.9M params)\footnotemark        & \dash & 22.49 & 21.49  & \dash & 5.24  & 5.21  & \dash\\ % 100:TODO/f277/f296 10:TODO/f295/f297 S:TODO
+\bottomrule
+\end{tabular}
+\end{small}
+% experiments there were updated
+% f195 -> f221
+% f225 -> f233
+% f197 -> f234
+%
+% parens: results and updated job id is not the same - new results are coming

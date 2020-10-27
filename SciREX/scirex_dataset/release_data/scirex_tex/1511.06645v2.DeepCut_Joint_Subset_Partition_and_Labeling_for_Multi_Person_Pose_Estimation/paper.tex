@@ -1,0 +1,115 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{microtype} % legal way to save space
+
+% Include other packages here, before hyperref.
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{rotating}
+\usepackage{authblk}
+\usepackage[toc,page]{appendix}
+
+\newcommand{\myparagraph}[1]{\vspace{0.1em}\noindent\textbf{#1}}
+\newcommand{\todo}[1]{\textcolor{red}{TODO: #1}}
+\newcommand{\etad}[1]{\textcolor{red}{ETA: #1}}
+\newcommand{\lp}[1]{\textcolor{red}{LP: #1}}
+\newcommand{\pg}[1]{\textcolor{red}{PG: #1}}
+\newcommand{\ei}[1]{\textcolor{red}{EI: #1}}
+\newcommand{\myurl}{\url{http://pose.mpi-inf.mpg.de}}
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+\input{shortcuts}
+\cvprfinalcopy % *** Uncomment this line for the final submission
+
+\def\cvprPaperID{538} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+\ifcvprfinal\pagestyle{empty}\fi
+\begin{document}
+
+%%%%%%%%% TITLE
+\title{DeepCut: Joint Subset Partition and Labeling for Multi Person Pose Estimation}
+
+%% \author{First Author\\
+%% Institution1\\
+%% Institution1 address\\
+%% {\tt\small firstauthor@i1.org}
+% For a paper whose authors are all at the same institution,
+% omit the following lines up until the closing ``}''.
+% Additional authors and addresses can be added with ``\and'',
+% just like the second author.
+% To save space, use either the email address or home page, not both
+%% \and
+%% Second Author\\
+%% Institution2\\
+%% First line of institution2 address\\
+%% {\tt\small secondauthor@i2.org}
+%% }
+
+\author[1]{Leonid Pishchulin}
+\author[1]{Eldar Insafutdinov}
+\author[1]{Siyu Tang}
+\author[1]{Bjoern Andres}
+\author[1,3]{\\Mykhaylo Andriluka}
+\author[2]{Peter Gehler}
+\author[1]{Bernt Schiele}
+
+\affil[1]{Max Planck Institute for Informatics, Germany}
+\affil[2]{Max Planck Institute for Intelligent Systems, Germany}
+\affil[3]{Stanford University, USA}
+
+\maketitle
+%\thispagestyle{empty}
+
+%%%%%%%%% ABSTRACT
+\begin{abstract}
+  This paper considers the task of articulated human pose estimation
+  of multiple people in real world images. We propose an approach that
+  jointly solves the tasks of detection and pose estimation: it infers
+  the number of persons in a scene, identifies occluded body parts,
+  and disambiguates body parts between people in close proximity of
+  each other. This joint formulation is in contrast to previous
+  strategies, that address the problem by first detecting people and
+  subsequently estimating their body pose. We propose a partitioning
+  and labeling formulation of a set of body-part hypotheses generated
+  with CNN-based part detectors. Our formulation, an instance of an
+  integer linear program, implicitly performs non-maximum suppression
+  on the set of part candidates and groups them to form configurations
+  of body parts respecting geometric and appearance constraints.
+  Experiments on four different datasets demonstrate state-of-the-art
+  results for both single person and multi person pose
+  estimation\footnote{Models and code available at \myurl}.
+  %the single person only ``LSP'' benchmark, and
+  %on scenes with multiple people from ``MPII Human Pose''.
+\end{abstract}
+
+%%%%%%%%% BODY TEXT
+\input{section_intro}
+\input{section_related_work}
+\input{section_model_bjoern}
+\input{section_spatial}
+\input{section_unary}
+\input{section_experiments}
+\input{section_conclusion}
+\begin{appendices}
+\input{section_supplemental_lsp.tex}
+\input{section_supplemental_waf.tex}
+\input{section_supplemental_mpii_multi.tex}
+\end{appendices}
+{\small
+\bibliographystyle{ieee}
+\bibliography{biblio}
+}
+
+\end{document}

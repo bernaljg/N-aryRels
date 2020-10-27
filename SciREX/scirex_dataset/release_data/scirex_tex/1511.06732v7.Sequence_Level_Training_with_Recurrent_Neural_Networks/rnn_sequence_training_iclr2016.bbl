@@ -1,0 +1,198 @@
+\begin{thebibliography}{33}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Auli \& Gao(2014)Auli and Gao]{auli2014}
+Auli, M. and Gao, J.
+\newblock Decoder integration and expected bleu training for recurrent neural
+  network language models.
+\newblock In \emph{Proc. of ACL}, June 2014.
+
+\bibitem[Ba et~al.()Ba, Mnih, and Kavukcuoglu]{ba_iclr15}
+Ba, J.L., Mnih, V., and Kavukcuoglu, K.
+\newblock Multiple object recognition with visual attention.
+
+\bibitem[Bahdanau et~al.(2015)Bahdanau, Cho, and Bengio]{bahdanau-iclr2015}
+Bahdanau, D., Cho, K., and Bengio, Y.
+\newblock Neural machine translation by jointly learning to align and
+  translate.
+\newblock In \emph{ICLR}, 2015.
+
+\bibitem[Bengio et~al.(2015)Bengio, Vinyals, Jaitly, and
+  Shazeer]{sbengio-nips2015}
+Bengio, S., Vinyals, O., Jaitly, N., and Shazeer, N.
+\newblock Scheduled sampling for sequence prediction with recurrent neural
+  networks.
+\newblock In \emph{NIPS}, 2015.
+
+\bibitem[Cettolo et~al.(2014)Cettolo, Niehues, St{\"u}ker, Bentivogli, , and
+  Federico]{cettolo2014}
+Cettolo, M., Niehues, J., St{\"u}ker, S., Bentivogli, L., , and Federico, M.
+\newblock Report on the 11th iwslt evaluation campaign.
+\newblock In \emph{Proc. of IWSLT}, 2014.
+
+\bibitem[Daume~III et~al.(2009)Daume~III, Langford, and Marcu]{searn}
+Daume~III, H., Langford, J., and Marcu, D.
+\newblock Search-based structured prediction as classification.
+\newblock \emph{Machine Learning Journal}, 2009.
+
+\bibitem[Deng et~al.(2009)Deng, Dong, Socher, Li, Li, and
+  Fei-Fei]{imagenet_cvpr09}
+Deng, J., Dong, W., Socher, R., Li, L.J., Li, K., and Fei-Fei, L.
+\newblock Imagenet: a large-scale hierarchical image database.
+\newblock In \emph{IEEE Conference on Computer Vision and Pattern Recognition},
+  2009.
+
+\bibitem[Elman(1990)]{elman1990}
+Elman, Jeffrey~L.
+\newblock Finding structure in time.
+\newblock \emph{Cognitive Science}, 14\penalty0 (2):\penalty0 179--211, 1990.
+
+\bibitem[Graff et~al.(2003)Graff, Kong, Chen, and Maeda]{gigaword}
+Graff, D., Kong, J., Chen, K., and Maeda, K.
+\newblock English gigaword.
+\newblock Technical report, 2003.
+
+\bibitem[Graves \& Jaitly(2014)Graves and Jaitly]{graves_icml14}
+Graves, A. and Jaitly, N.
+\newblock Towards end-to-end speech recognition with recurrent neural networks.
+\newblock In \emph{ICML}, 2014.
+
+\bibitem[He \& Deng(2012)He and Deng]{he12}
+He, X. and Deng, L.
+\newblock Maximum expected bleu training of phrase and lexicon translation
+  models.
+\newblock In \emph{ACL}, 2012.
+
+\bibitem[Hochreiter \& Schmidhuber(1997)Hochreiter and Schmidhuber]{lstm}
+Hochreiter, S. and Schmidhuber, J.
+\newblock Long short-term memory.
+\newblock \emph{Neural Computation}, 9\penalty0 (8):\penalty0 1735--1780, 1997.
+
+\bibitem[Kneser \& Ney(1995)Kneser and Ney]{kneser+ney1995}
+Kneser, Reinhard and Ney, Hermann.
+\newblock Improved backing-off for {M}-gram language modeling.
+\newblock In \emph{Proc. of the International Conference on Acoustics, Speech,
+  and Signal Processing}, pp.\  181--184, May 1995.
+
+\bibitem[Koehn et~al.(2007)Koehn, Hoang, Birch, Callison-Burch, Federico,
+  Bertoldi, Cowan, Shen, Moran, Zens, Dyer, Bojar, Constantin, and
+  Herbst]{koehn2007}
+Koehn, Philipp, Hoang, Hieu, Birch, Alexandra, Callison-Burch, Chris, Federico,
+  Marcello, Bertoldi, Nicola, Cowan, Brooke, Shen, Wade, Moran, Christine,
+  Zens, Richard, Dyer, Chris, Bojar, Ondrej, Constantin, Alexandra, and Herbst,
+  Evan.
+\newblock Moses: Open source toolkit for statistical machine translation.
+\newblock In \emph{Proc. of ACL Demo and Poster Sessions}, Jun 2007.
+
+\bibitem[Liang et~al.(2006)Liang, Bouchard-C{\^o}t{\'e}, Taskar, and
+  Klein]{liang2006}
+Liang, Percy, Bouchard-C{\^o}t{\'e}, Alexandre, Taskar, Ben, and Klein, Dan.
+\newblock An end-to-end discriminative approach to machine translation.
+\newblock In \emph{acl-coling2006}, pp.\  761--768, Jul 2006.
+
+\bibitem[Lin \& Hovy(2003)Lin and Hovy]{rouge}
+Lin, C.Y. and Hovy, E.H.
+\newblock Automatic evaluation of summaries using n-gram co-occurrence
+  statistics.
+\newblock In \emph{HLT-NAACL}, 2003.
+
+\bibitem[Lin et~al.(2014)Lin, Maire, Belongie, Hays, Perona, Ramanan, Dollar,
+  and Zitnick]{mscoco}
+Lin, T.Y., Maire, M., Belongie, S., Hays, J., Perona, P., Ramanan, D., Dollar,
+  P., and Zitnick, C.L.
+\newblock Microsoft coco: Common objects in context.
+\newblock Technical report, 2014.
+
+\bibitem[McAllester et~al.(2010)McAllester, Hazan, and Keshet]{mcallister2010}
+McAllester, D., Hazan, T., and Keshet, J.
+\newblock Direct loss minimization for structured prediction.
+\newblock In \emph{NIPS}, 2010.
+
+\bibitem[Mikolov et~al.(2010)Mikolov, Karafiát, Burget, Cernocký, and
+  Khudanpur]{mikolov-2010}
+Mikolov, T., Karafiát, M., Burget, L., Cernocký, J., and Khudanpur, S.
+\newblock Recurrent neural network based language model.
+\newblock In \emph{INTERSPEECH}, 2010.
+
+\bibitem[Mnih et~al.(2014)Mnih, Graves, and Kavukcuoglu]{vmnih-nips2014}
+Mnih, V., Heess~N., Graves, A., and Kavukcuoglu, K.
+\newblock Recurrent models of visual attention.
+\newblock In \emph{NIPS}, 2014.
+
+\bibitem[Morin \& Bengio(2005)Morin and Bengio]{nlm}
+Morin, F. and Bengio, Y.
+\newblock Hierarchical probabilistic neural network language model.
+\newblock In \emph{AISTATS}, 2005.
+
+\bibitem[Papineni et~al.(2002)Papineni, Roukos, Ward, and Zhu]{bleu}
+Papineni, K., Roukos, S., Ward, T., and Zhu, W.J.
+\newblock Bleu: a method for automatic evaluation of machine translation.
+\newblock In \emph{ACL}, 2002.
+
+\bibitem[Reiter \& Dale(2000)Reiter and Dale]{textgen}
+Reiter, E. and Dale, R.
+\newblock \emph{Building natural language generation systems}.
+\newblock Cambridge university press, 2000.
+
+\bibitem[Ross et~al.(2011)Ross, Gordon, and Bagnell]{dagger}
+Ross, S., Gordon, G.J., and Bagnell, J.A.
+\newblock A reduction of imitation learning and structured prediction to
+  no-regret online learning.
+\newblock In \emph{AISTATS}, 2011.
+
+\bibitem[Rosti et~al.(2011)Rosti, Zhang, Matsoukas, and Schwartz]{rosti2011}
+Rosti, Antti-Veikko~I, Zhang, Bing, Matsoukas, Spyros, and Schwartz, Richard.
+\newblock Expected bleu training for graphs: Bbn system description for wmt11
+  system combination task.
+\newblock In \emph{Proc. of WMT}, pp.\  159--165. Association for Computational
+  Linguistics, July 2011.
+
+\bibitem[Rumelhart et~al.(1986)Rumelhart, Hinton, and Williams]{bptt}
+Rumelhart, D.E., Hinton, G.E., and Williams, R.J.
+\newblock Learning internal representations by back-propagating errors.
+\newblock \emph{Nature}, 323:\penalty0 533--536, 1986.
+
+\bibitem[Rush et~al.(2015)Rush, Chopra, and Weston]{rush-2015}
+Rush, A.M., Chopra, S., and Weston, J.
+\newblock A neural attention model for abstractive sentence summarization.
+\newblock In \emph{EMNLP}, 2015.
+
+\bibitem[Sutskever et~al.(2014)Sutskever, Vinyals, and Le]{sutskever2014}
+Sutskever, Ilya, Vinyals, Oriol, and Le, Quoc.
+\newblock Sequence to sequence learning with neural networks.
+\newblock In \emph{Proc. of NIPS}, 2014.
+
+\bibitem[Sutton \& Barto(1988)Sutton and Barto]{sutton-rl}
+Sutton, R.S. and Barto, A.G.
+\newblock \emph{Reinforcement learning: An introduction}.
+\newblock MIT Press, 1988.
+
+\bibitem[Venkatraman et~al.(2015)Venkatraman, Hebert, and Bagnell]{dad}
+Venkatraman, A., Hebert, M., and Bagnell, J.A.
+\newblock Improving multi-step prediction of learned time series models.
+\newblock In \emph{AAAI}, 2015.
+
+\bibitem[Williams(1992)]{reinforce}
+Williams, R.~J.
+\newblock Simple statistical gradient-following algorithms for connectionist
+  reinforcement learning.
+\newblock \emph{Machine Learning}, 8:\penalty0 229–--256, 1992.
+
+\bibitem[Xu et~al.(2015)Xu, Ba, Kiros, Courville, Salakhutdinov, Zemel, and
+  Bengio]{xu-icml2015}
+Xu, X., Ba, J., Kiros, R., Courville, A., Salakhutdinov, R., Zemel, R., and
+  Bengio, Y.
+\newblock Show, attend and tell: Neural image caption generation with visual
+  attention.
+\newblock In \emph{ICML}, 2015.
+
+\bibitem[Zaremba \& Sutskever(2015)Zaremba and Sutskever]{zaremba-arxiv2015}
+Zaremba, W. and Sutskever, I.
+\newblock Reinforcement learning neural turing machines.
+\newblock Technical report, 2015.
+
+\end{thebibliography}

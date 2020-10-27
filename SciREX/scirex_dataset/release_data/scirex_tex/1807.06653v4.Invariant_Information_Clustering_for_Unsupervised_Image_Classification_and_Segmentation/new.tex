@@ -1,0 +1,63 @@
+\section{Summary of possible figures}
+Pre-results section
+\begin{itemize}
+\item Splash image
+\item How-it-works pipeline overview, with spatial proximity as convolution and twohead architecture.
+\end{itemize}
+
+\noindent Results section 
+\begin{itemize}
+
+\item (Table) Accuracy for IID on image clustering, vs baselines - sota
+\item (Table) Accuracy for IID on segmentation datasets, vs baselines - sota
+\item (Table) semisupervised learning on STL10, vs baselines - sota
+
+\item (Table or image) Variation study for number of output clusters for IID+
+\item (Table) Ablation study for IID
+\item (Table) Variation study for effect of lambda.
+\item *(Image) Cluster mass equalisation speed for varying lambda.
+\item *(Table) Per class IOUs - some are harder than others.
+
+\item *(Table or image) runtime for spatial proximity as convolution, vs brute force - e.g.graph for cumulative runtime.
+
+\item *(Image) Example input images with their rendered output predictions, with failure cases, for both IID+ and IID, and compare between them (IID+ better, boundaries). Also, some cases where our preds are better than ground truth (513: 86), (which would not be captured in acc stats, evaluated against ground truth)
+\item *(Image) Before-and-after-training projections (of point clouds and/or images)
+\item *(Image) Show STL interpolates images belonging to unknown classes between known GT ones
+\item (Table) experiment dataset sizes for train, mapping assignment, mapping test, for each dataset.
+
+
+\item *(Image) Progression of segmentation getting more and more accurate.
+\end{itemize}
+
+\section{Points to be included or emphasized in the writing}
+\begin{itemize}
+
+\item \textbf{Benefits compared to other methods:}
+\begin{enumerate}
+\item Simplicity: a single network loss with no moving parts, unlike multi-part losses that need weights.
+\item Network directly outputs the clustering function, with no use of k-means at any stage in any form. (Unlike all unsupervised baselines except DAC.)
+\item Training from random initialisation i.e. no pre-training (unlike DEC), no warmup stages (unlike Hauesser), no explicit feature normalisation or PCA or whitening (unlike Deepcluster), random data sampling for each batch so no data resampling schemes (unlike DAC). 
+\item Use of mutual information means resistance to degenerate solutions by design, with no need for separate measures to prevent cluster masses shrinking to 0. (Unlike Deepcluster)
+\item Equipartitioning is robust enough to deal with datasets that have extra unknown classes that are not in test set (STL10). This is further helped by using 2 heads. (Unlike all other baselines, unsupervised or not.)
+\end{enumerate}
+
+\item \textbf{Data splits for integrity of the study.} IID+ is the version of IID what produces an overclustering (so the difference is output\_k > gt\_k), so network training proceeds completely unsupervised just like IID, but at evaluation time a many-to-one mapping needs to be found using labels instead, which constitutes a minimal amount of supervision. So we had to be careful the training and test sets had to be separate, unlike for IID, where output\_k = gt\_k so the assignment is just a permutation. (For IID, training set being the same or overlap with testing set is something done by a couple of other works.)
+
+\item \textbf{IID is purely unsupervised (exact clustering) but IID+ (overclustering) sometimes makes more sense.} Only by increasing the expressivity can you hope to distinguish between apples and tennis balls; otherwise unreasonable. (Some supervision is usually needed in practice, as the fundamental problem with unsupervised learning is often detached from the task at hand - indeed the more “unsupervised” the setup, the more this is be true.) Also, in true unsupervised context you don't know the number of classes (like in STL10) and overestimation would make sense.
+
+\item \textbf{Two output heads for IID allows us to have our cake and eat it: attain full comparability with other fully unsupervised baselines, whilst benefiting from the increased expressivity of IID+}. The final output of the network is taken from a gt\_k sized output layer that still benefits from the increased expressiveness in the learned representation that results from having more fine grained outputs on the auxiliary head. This is especially important for STL10 which has unknown classes in the unlabelled segment; we are able to learn an overestimate of the number of potential classes on the auxiliary head, learning from the full dataset, while the official output head picks up on the 10 of interest, being trained on the part of the dataset known to contain only them.
+
+\item Moving the average over different local shifts outside of the computation of MI improves performance \textbf{(so we're not exactly doing eq. 8)}.
+
+\item \textbf{Explain what STL10 is} (as it's not very famous) and that it's specifically designed for semi/unsupervised learning, and nobody's method is robust enough to use the unlabelled segment except us.
+
+\item \textbf{Explain why we do MI between labels not image and label} (conditional entropy and tractability).
+
+\item \textbf{Include 5 line Pytorch code snippet} showing how easy it is to write the image clustering loss. Say the code will be made available. \\ \url{https://gist.github.com/xu-ji/6a0e7e469bcb1986ece2ed916b22cf70}
+
+\item Supp mat: all baseline implementation details, two forms of loss don't produce massively different results but uncollapsed one inches ahead (Coco: 456 463 464 465, Satellite: 511 497), output vector sparsity getting more sparse.
+
+\item and look at notes doc
+
+\end{itemize}
+

@@ -1,0 +1,241 @@
+\section{Method}\label{s:method}
+
+First we introduce a generic objective, \methodname, which can be used to cluster any kind of unlabelled paired data by training a network to predict cluster identities~(\cref{s:generic_clustering}).
+We then apply it to image clustering~(\cref{s:image_clustering}, \cref{f:overview} and \cref{f:mnist_dots}) and segmentation~(\cref{s:image_segmentation}), by generating the required paired data using random transformations and spatial proximity. 
+
+% \begin{figure}[t]
+% \addtolength{\tabcolsep}{2pt}
+% \centering\small
+% \begin{tabular}{cccc}
+% \multicolumn{2}{c}{Before training} & \multicolumn{2}{c}{After training}\\
+% $P(z=c,z'=c')$ & $P(z=c)P(z'=c')$ & $P(z=c,z'=c')$ & $P(z=c)P(z'=c')$\\
+% \includegraphics[width=0.18\textwidth]{paper_imgs/images/p-initial} & \includegraphics[width=0.18\textwidth]{paper_imgs/images/p2-initial} & \includegraphics[width=0.18\textwidth]{paper_imgs/images/p-final} & \includegraphics[width=0.18\textwidth]{paper_imgs/images/p2-final}\\
+% \end{tabular}
+% \addtolength{\tabcolsep}{-2pt}
+% \caption{Joint probability and product of marginal probabilities of 10 clusters, measured both before and after training. Cluster $z$ is indexed along the rows, and $z'$ along the columns; brighter values indicate higher probability. Our mutual information objective (eq.~\cref{e:info}) can be interpreted as maximising the KL-divergence between the joint probabilities (left) and product of marginals (right).
+% }\label{f:mi}
+% \end{figure}
+
+\subsection{\methodname}\label{s:generic_clustering}
+
+Let $\bx,\bx' \in \mathcal{X}$ be a paired data sample from a joint probability distribution $P(\bx,\bx')$.
+For example, $\bx$ and $\bx'$ could be different images containing the same object.
+The goal of \methodname (\methodnameshort) is to learn a representation $\Phi:\mathcal{X}\rightarrow\mathcal{Y}$ that preserves what is in common between $\bx$ and $\bx'$ while discarding instance-specific details.
+The former can be achieved by maximizing the mutual information between encoded variables:
+\begin{equation}\label{e:info_orig}
+\max_\Phi I(\Phi(\bx),\Phi(\bx')),
+\end{equation}
+which is equivalent to maximising the predictability of $\Phi(\bx)$ from $\Phi(\bx')$ and vice versa. 
+
+An effect of equation~\cref{e:info_orig}, in general, is to make representations of paired samples the same.
+However, it is not the same as merely minimising representation distance, as done for example in methods based on k-means~\cite{caron2018deep,haeusser2018associative}: the presence of entropy within $I$ allows us to avoid degeneracy, as discussed in detail below.
+
+%\Cref{e:info_orig} has the effect of making the representations of paired samples the same;
+%however, this is not the same as minimising the representation distance, as done for example in methods based on k-means~\cite{caron2018deep,haeusser18associative}:
+%the latter tends to make all samples look the same, not just the paired ones, a degenracy avoided by the entropy term within $I$.
+
+%as we show below, this is not equivalent to simply minimising the representation distance, a mechanism used in many other methods including all that utilise k-means~\cite{caron2018deep,haeusser18associative}, due to the presence of entropy maximisation within $I$.
+
+If $\Phi$ is a neural network with a small output capacity (often called a ``bottleneck''), \cref{e:info_orig} also has the effect of discarding instance-specific details from the data.
+Clustering imposes a natural bottleneck, since the representation space is $\mathcal{Y}=\{1,\dots,C\}$, a finite set of class indices (as opposed to an infinite vector space). 
+Without a bottleneck, i.e. assuming unbounded capacity, \cref{e:info_orig} is trivially solved by setting $\Phi$ to the identity function because of the data processing inequality~\cite{cover2012elements}, i.e. $I(\bx, \bx') \geq I(\Phi(\bx), \Phi(\bx'))$.
+
+\newcommand{\bPhi}{\Phi}
+
+Since our goal is to learn the representation with a deep neural network, we consider soft rather than hard clustering, meaning the neural network $\bPhi$ is terminated by a (differentiable) softmax layer.
+Then the output $\bPhi(\bx) \in [0,1]^C$ can be interpreted as the distribution of a discrete random variable $z$ over $C$ classes, formally given by $P(z = c|\bx) = \bPhi_c(\bx)$. Making the output probabilistic amounts to allowing for uncertainty in the cluster assigned to an input.
+
+Consider now a pair of such cluster assignment variables $z$ and $z'$ for two inputs $\bx$ and $\bx'$ respectively.
+Their conditional joint distribution is given by
+$
+P(z=c,z'=c'|\bx,\bx')
+=  \bPhi_c(\bx) \cdot \bPhi_{c'}(\bx').
+$
+This equation states that $z$ and $z'$ are independent
+%\footnote{Meaning the probability factorizes; as we will see, the probabilities tend to become deterministic, so that in practice we can have $z=z'$ given $x, x'$ in spite of being modelled as statistically independent.}
+when conditioned on specific inputs $\bx$ and $\bx'$; however, in general they are \emph{not} independent after marginalization over a dataset of input pairs $(\bx_i,\bx'_i)$, $i=1,\dots,n$.
+For example, for a trained classification network $\Phi$ and a dataset of image pairs where each image contains the same object of its pair but in a randomly different position, the random variable constituted by the class of the first of each pair, $z$, will have a strong statistical relationship with the random variable for the class of the second of each pair, $z'$; one is predictive of the other (in fact identical to it, in this case) so they are highly dependent. 
+After marginalization over the dataset (or batch, in practice), the joint probability distribution is given by the $C\times C$ matrix $\matP$, where each element at row $c$ and column $c'$ constitutes $\matP_{cc'} = P(z=c,z'=c')$:
+\begin{equation}\label{e:joint}
+\matP
+=
+\frac{1}{n} 
+\sum_{i=1}^n \bPhi(\bx_i) \cdot\bPhi(\bx'_i)^\top.
+\end{equation}
+The marginals $\matP_c=P(z=c)$ and $\matP_{c'}=P(z'=c')$ can be obtained by summing over the rows and columns of this matrix. 
+As we generally consider symmetric problems, where for each $(\bx_i,\bx'_i)$ we also have $(\bx'_i,\bx_i)$, $\matP$ is symmetrized using $(\matP+\matP^\top)/2$.
+%\footnote{Furthermore, we generally consider symmetric problems, where for each $(\bx_i,\bx'_i)$ we also have $(\bx'_i,\bx_i)$, and hence symmetrize $\matP$ by using $(\matP+\matP^\top)/2$.}
+%\footnote{Furthermore, we generally consider symmetric problems, where for each sample pair $(\bx_i,\bx'_i)$ we also have a symmetric pair $(\bx'_i,\bx_i)$; instead of summing over such pairs explicitly, we equivalently symmetrize matrix $\matP$ by using the formula $(\matP+\matP^\top)/2$.}
+
+Now the objective function~\cref{e:info_orig} can be computed by plugging the matrix $\matP$ into the expression for mutual information~\cite{learned2013entropy}, which results in the formula:
+\begin{equation}\label{e:loss_expanded}
+I(z,z') =
+I(\matP) =
+\sum_{c=1}^C
+\sum_{c'=1}^C
+\matP_{cc'} \cdot 
+\ln\frac{\matP_{cc'}}{\matP_c \cdot \matP_{c'}}.
+\end{equation}
+
+%Note the introduction of equalization parameter $\lambda$; for $\lambda=1$, \cref{e:loss_expanded} reduces to the standard definition.
+
+%Note that informatiaon is the KL-divergence between the joint probabilities $P_{ck}$ and the product of marginal probabilities $P_c\cdot P_k$.
+%These two distributions are equal when variables $z$ and $w$ are independent; instead, maximizing \cref{e:loss_expanded} makes them as \emph{different} as possible, causing random variables $z$ and $w$ to become as dependent as possible.
+% (illustrated in \cref{f:mi}).
+  
+\paragraph{Why degenerate solutions are avoided.}\label{s:equalization}
+
+Mutual information~\eqref{e:loss_expanded} expands to
+%~\cref{e:loss_expanded}
+%\begin{equation}\label{e:mi1}
+$
+I(z,z')
+=
+H(z) - H(z|z')
+$.
+%\end{equation}
+Hence, maximizing this quantity trades-off minimizing the conditional cluster assignment entropy $H(z|z')$ and maximising individual cluster assignments entropy $H(z)$.
+The smallest value of $H(z|z')$ is 0, obtained when the cluster assignments are exactly predictable from each other.
+The largest value of $H(z)$ is $\ln C$, obtained when all clusters are equally likely to be picked. This occurs when the data is assigned evenly between the clusters, equalizing their mass. Therefore the loss is not minimised if all samples are assigned to a single cluster (i.e. output class is identical for all samples).
+Thus as maximising mutual information naturally balances reinforcement of predictions with mass equalization, it avoids the tendency for degenerate solutions that algorithms which combine k-means with representation learning are susceptible to~\cite{caron2018deep}.
+For further discussion of entropy maximisation, and optionally how to prioritise it with an entropy coefficient, see supplementary material.
+
+\begin{comment}
+Equalization is controlled via the parameter $\lambda$, as can be seen by expanding~\eqref{e:loss_expanded}:
+\begin{equation}\label{e:mi2}
+  I_\lambda(z,z') = I_1(z,z') + (\lambda - 1) \cdot (H(z) + H(z')).
+\end{equation} 
+Whilst the default value of 1 usually works well, setting $\lambda > 1$ places more emphasis on equalization and in some cases provides a boost of 10\% accuracy~(\cref{t:iid_seg_lambda}).
+\end{comment}
+
+\paragraph{Meaning of mutual information.}
+
+The reader may now wonder what are the benefits of maximising mutual information, as opposed to merely maximising entropy.
+Firstly, due to the soft clustering, entropy alone could be maximised trivially by setting all prediction vectors $\Phi(\bx)$ to uniform distributions, resulting in no clustering.
+This is corrected by the conditional entropy component, which encourages deterministic one-hot predictions.
+For example, even for the degenerate case of identical pairs $\bx = \bx'$, the \methodnameshort objective encourages a deterministic clustering function (i.e.~$\Phi(\bx)$ is a one-hot vector) as this results in null conditional entropy $H(z|z')=0$. 
+%Among such functions, it selects one that partitions data evenly, thus maximizing $H(z)$.
+Secondly, the objective of \methodnameshort is to find what is common between two data points that share redundancy, such as different images of the same object, explicitly encouraging distillation of the common part while ignoring the rest, i.e.~instance details specific to one of the samples. This would not be possible without pairing samples.
+
+% Since the highest value for cluster entropy, $\ln C$, is obtained when all clusters are equally likely to be picked, this is equivalent to optimising for even cluster allocation with high mutual predictivity, which means degenerate cluster assignments (clusters either disappearing or becoming all-consuming) are avoided whilst the network is optimised to predict one variable from the other with certainty and thus progresses from soft towards hard clustering (i.e. one-hot prediction vectors). 
+% This inbuilt avoidance of degeneracy is the biggest advantage of our method over other clustering algorithms such as k-means (\cref{s:related}).
+
+% Why then should we maximise mutual information of cluster assignment pairs, rather than, say, the entropy of individual cluster assignments? 
+% Firstly, as mentioned, the conditional entropy component encourages deterministic and thus one-hot predictions. Merely maximising entropy would ensure even cluster mass, but this would not be very useful if all prediction vectors were just uniform distributions. 
+% Secondly, from an information theoretic perspective, the objective of finding what is common between two data points that share redundancy, such as different images of the same object, allows for greater distillation as the function is explicitly trained to ignore what is not useful, i.e. instance details specific to one of the samples, which would not be possible without the pairing\footnote{Of course, due to the finite number of parameters in neural networks, in practice the function would be encouraged to discard image specific details anyway, but this would be a dependency on architecture, whereas with pairing it is explicitly made part of the optimisation objective.}.
+
+\subsection{Image clustering}\label{s:image_clustering}
+
+\methodnameshort requires a source of paired samples $(\bx,\bx')$, which are often unavailable in unsupervised image clustering applications. In this case, we propose to use \emph{generated} image pairs, consisting of image $\bx$ and its \emph{randomly perturbed} version $\bx' = g\bx$. The objective~\cref{e:info_orig} can thus be written as:
+%
+\begin{equation}\label{e:info_clustering}
+\max_\Phi I(\Phi(\bx),\Phi(g\bx)),
+\end{equation}
+%
+where both image $\bx$ and transformation $g$ are random variables.
+Useful $g$ could include scaling, skewing, rotation or flipping (geometric), changing contrast and colour saturation (photometric), or any other perturbation that is likely to leave the content of the image intact.
+\methodnameshort can then be used to recover the factor which is \emph{invariant} to which of the pair is picked. 
+The effect is to learn a function that partitions the data such that clusters are closed to the perturbations, without dropping clusters. 
+The objective is simple enough to be written in six lines of PyTorch code ~(\cref{f:code}).
+
+% AV: Temporarily disable as it does not compile for me
+ \input{fig-code}
+
+%\input{fig-aux-overcluster}
+
+\paragraph{Auxiliary overclustering.}\label{s:overcluster}
+
+For certain datasets (e.g. STL10), training data comes in two types: one known to contain only relevant classes and the other known to contain irrelevant or distractor classes. It is desirable to train a clusterer specialised for the relevant classes, that still benefits from the context provided by the distractor classes, since the latter is often much larger (for example 100K compared to 13K for STL10).
+Our solution is to add an auxiliary overclustering head to the network~(\cref{f:overview}) that is trained with the full dataset, whilst the main output head is trained with the subset containing only relevant classes.
+This allows us to make use of the noisy unlabelled subset despite being an unsupervised clustering method. 
+Other methods are generally not robust enough to do so and thus avoid the 100k-samples unlabelled subset of STL10 when training for unsupervised clustering~(\cite{chang2017deep, haeusser2018associative,xie2016unsupervised}).
+Since the auxiliary overclustering head outputs predictions over a larger number of clusters than the ground truth, whilst still maintaining a predictor that is matched to ground truth number of clusters (the main head), it can be useful in general for increasing expressivity in the learned feature representation, even for datasets where there are no distractor classes~\cite{caron2018deep}.
+
+\subsection{Image segmentation}\label{s:image_segmentation}
+
+\methodnameshort can be applied to image segmentation identically to image clustering, except for two modifications.
+Firstly, since predictions are made for each pixel densely, clustering is applied to image patches (defined by the receptive field of the neural network for each output pixel) rather than whole images.
+Secondly, unlike with whole images, one has access to the spatial relationships between patches.
+Thus, we can add \emph{local spatial invariance} to the list of geometric and photometric invariances in~\cref{s:image_clustering}, meaning we form pairs of patches not only via synthetic perturbations, but also by extracting pairs of adjacent patches in the image.
+
+%meaning we maximise mutual information between the predictions of pairs of patches where the pairing relationship is not only synthetically generated via random transformations, but also naturally existing in the data as pairs of adjacent patches in the image.\footnote{Note that spatial proximity is not strictly a transform, because adjacent patches are not functions of each other, but it is justified as an invariance property since pairs of adjacent patches are likely to capture the same abstract content.}.
+
+%\paragraph{Local spatial invariance.}
+
+In detail, let the RGB image $\bx\in\mathbb{R}^{3\times H\times W}$ be a tensor, $u \in \Omega = \{1,\dots,H\}\times\{1,\dots,W\}$ a pixel location, and $\bx_u$ a patch centered at $u$.
+We can form a pair of patches $(\bx_u,\bx_{u+t})$ by looking at location $u$ and its neighbour $u+t$ at some small displacement $t\in T \subset\mathbb{Z}^2$.
+The cluster probability vectors for all patches $\bx_u$ can be read off as the column vectors $\Phi(\bx_u) = \Phi_u(\bx) \in [0,1]^C$ of the tensor $\Phi(\bx)\in [0,1]^{C\times H\times W}$, computed by a single application of the convolutional network $\Phi$.
+Then, to apply \methodnameshort, one simply substitutes pairs $(\Phi_u(\bx)$, $\Phi_{u + t}(\bx))$ in the calculation of the joint probability matrix~\eqref{e:joint}.
+
+%\todo{AV: If space, clarify why the convnet computes a field of probability vectors; not quite heatmaps.}
+
+%There is no need for subsampling as instead of explicitly cropping and computing the representation $\Phi(\bx_u) \in \mathbb{R}^C$ for each individual patch, these can be computed at all locations $u$ in parallel by a single  application $\Phi(\bx)\in\mathbb{R}^{C\times H\times W}$ of the convolutional network to the full image $\bx$. 
+%The clustering assignment of patch $\bx_u$ can be recovered at location $u$ in the resulting heatmap tensor $\Phi(\bx)$, namely $\Phi(\bx_u) = \Phi_u(\bx)$. 
+%Since $\Phi(t^{-1}\bx) = t^{-1}\Phi(\bx)$, the cluster assignment of patch $\bx_{u + t} = (t^{-1}\bx)_u$ can be read from tensor $\Phi(\bx)$ at location $t^{-1}(u) = u - t$. 
+%Thus, the cluster assignment pairs across which mutual information is maximised are $(\Phi_u(\bx)$, $\Phi_{u - t}(\bx))$ for all image locations $u$ and local displacements $t$. 
+
+%\paragraph{Other invariances.}
+
+The geometric and photometric perturbations used before for whole image clustering can be applied to individual patches too.
+Rather than transforming patches individually, however, it is much more efficient to transform all of them in parallel by perturbing the entire image.
+Any number or combination of these invariances can be chained and learned simultaneously; the only detail is to ensure indices of the original image and transformed image class probability tensors line up, meaning that predictions from patches which are intended to be paired together do so.
+
+Formally, if the image transformation $g$ is a geometric transformation, the vector of cluster probabilities $\Phi_u(\bx)$ will not correspond to $\Phi_u(g\bx)$; rather, it will correspond to $\Phi_{g(u)}(g\bx)$ because patch $\bx_u$ is sent to patch $\bx_{g(u)}$ by the transformation.
+All vectors can be paired at once by applying the reverse transformation $g^{-1}$ to the tensor $\Phi(g\bx)$, as
+$
+[g^{-1}\Phi(g\bx)]_u = \Phi_{g(u)}(g\bx).
+$
+For example, flipping the input image will require flipping the resulting probability tensor back. In general, the perturbation $g$ can incorporate geometric and photometric transformations, and $g^{-1}$ only needs to undo geometric ones. The segmentation objective is thus:
+\begin{flalign}\label{e:info_seg}
+\max_{\Phi}&
+%\mathbb{E}_{t\in T}
+\frac{1}{|T|}\sum_{t \in T} I(\matP_t),
+\\[-1.5em]
+\matP_t &=
+\frac{1}{n|G||\Omega|}
+\sum_{i=1}^n \sum_{g\in G}
+\overbrace{
+  \sum_{u\in \Omega}
+ \Phi_{u}(\bx_i) \cdot [g^{-1}\Phi(g\bx_i)]_{u+t}^\top.
+}^{\text{Convolution}}\nonumber
+\end{flalign}
+Hence the goal is to maximize the information between each patch label $\Phi_{u}(\bx_i)$  and the patch label $[g^{-1}\Phi(g\bx_i)]_{u+t}$ of its transformed neighbour patch, in expectation over images $i=1,\dots,n$, patches $u\in\Omega$ within each image, and perturbations $g\in G$.
+Information is in turn averaged over all neighbour displacements $t\in T$ (which was found to perform slightly better than averaging over $t$ before computing information; see supplementary material).
+
+\paragraph{Implementation.}
+The joint distribution of~\cref{e:info_seg} for all displacements $t \in T$ can be computed in a simple and highly efficient way.
+Given two network outputs for one batch of image pairs $\by = \Phi(\bx), \by' = \Phi(g\bx)$ where $\by, \by' \in\mathbb{R}^{n\times C\times H\times W}$, we first bring $\by'$ back into the coordinate-space of $\by$ by using a bilinear resampler\footnote{The core differentiable operator in spatial transformer networks~\cite{jaderberg2015spatial}.}~\cite{jaderberg2015spatial}, which inverts any geometrical transforms in $g$, $\by' \leftarrow g^{-1}\by'$.
+Then, the inner summation in \cref{e:info_seg} reduces to the convolution of the two tensors. Using any standard deep learning framework, this can be achieved by swapping the first two dimensions of each of $y$ and $y'$, computing $\matP = y \ast y'$ (a 2D convolution with padding $d$ in both dimensions), and normalising the result to produce $\matP \in [0,1]^{C\times C\times (2d+1)\times (2d+1)}$.
+
+% Once the heatmaps are lined up, the joint distribution matrix $P$, which is the only input needed to find $I_\lambda^*$ (via ~\cref{e:loss_expanded}), is easy to compute:
+
+%It is simple to bring back other invariances to be learned by $\Phi$, namely the aforementioned geometric and photometric perturbations. Any number or combination of these invariances can be chained up and learned simultaneously. The only implementation detail is determining what transforms to apply to the input image and how to transform the output heatmap accordingly, so that indices of the two heatmaps (of the original image and transformed image) line up, meaning patch results which are intended to be paired together do so.
+%There were no transforms to be applied to the input image in the case of local spatial invariance since the heatmap for a shifted image is just the shifted heatmap, but this is not the case for all other invariances we consider.
+%The original image $\bx$ must be copied and transformed via transform(s) $g$ to give $g\bx$, before both are fed in siamese fashion into $\Phi$, as in~\cref{s:image_clustering}. Unlike in image clustering, the result is a heatmap of cluster assignments for each patch, and $\Phi_u(\bx)$ will not correspond to $\Phi_u(g\bx)$ if $g$ involves a geometric transformation; thus, any geometric transformation in $g$ must be reversed. For example, horizontally flipping the input image will require flipping the resulting heatmap back, in order for clustering assignments for the same patches to line up with the heatmap for the original, unflipped image. Thus can write the objective function~\cref{e:info_orig} for segmentation function $\Phi$ as:
+%
+%\begin{equation}\label{e:info_seg}
+% \max_{\Phi}\mathbb{E}_{t\in T}[I_\lambda^*(\Phi(\bx),t^{-1}g^{-1}\Phi(g\bx))],
+%\end{equation}
+%
+%where $*$ is used to indicate that information is computed as an expectation over heatmap pixels (i.e. all locations $u$), and as before there is an implicit expectation over random transforms $g$. 
+
+% This notation clarifies that the goal is to maximize the information between each patch label and the patch label of its transformed neighbour, over the expectation of all patches within each image, over the expectation of all neighbours within the box given by $T$. 
+% Once the heatmaps are lined up, the joint distribution matrix $P$, which is the only input needed to find $I_\lambda^*$ (via ~\cref{e:loss_expanded}), is easy to compute:
+% %
+% \begin{equation}\label{e:seg_joint1}
+% P_{cc'} = P(z = c, z' = c' | t)
+% \end{equation}
+% \begin{equation}\label{e:seg_joint2}
+% P = \sum_{i=1}^n\sum_{u\in \Omega}
+% \Phi_{u}(\bx_i) \cdot \Phi_{g^{-1}u-t}(g\bx_i)^\top.
+% \end{equation}
+% %
+% As with the image clustering version in ~\cref{e:joint}, this is simply a standard co-occurrence probability estimation: for each pair of classes, to estimate $P(class(\bx) = c, class(\bx') = c')$ from paired data $(\bx, \bx')$, it counts the number of times $\bx_i$ is clustered as class $c$ and $\bx'_i$ is clustered as class $c'$. 
+
+
+%\paragraph{Computation as a convolution.}
+
+%There exists a simple and highly efficient method for computing the joint distribution~(\cref{e:seg_joint2}) over all displacements $t$ for all pixels $u$ and all batch images $I$ in parallel, and once it is computed, applying~\cref{e:loss_expanded} to obtain objective function~\cref{e:info_seg} is trivial. Given siamese network outputs for one batch, $y = \Phi(x), y' = \Phi(gx)$ where $y, y' \in\mathbb{R}^{+N\times C\times H\times W}$, first we bring $y'$ back into the indexing of $y$ by using a spatial transformer~\cite{jaderberg2015spatial} to invert any geometrical transforms in $g$, $y' \leftarrow g^{-1}y'$. Now they are lined up, $t$ notwithstanding, we can compute an uncollapsed matrix $m \in \mathbb{R}^{+D\times D \times C\times C}$ containing the joint distribution $P(z = c, z' = c' | t)$ for each displacement $t \in T = [-d, d]^2$ where $D = 2d + 1$. This is computed simply by convolving one heatmap with the other with padding equal to $d$. That is, one of the heatmaps is used as a convolutional filter - either $y$ or $y'$ can be selected as the operation is symmetric. As the expectation is external in~\cref{e:info_seg}, information is computed in parallel over the $D\times D$ joint distributions in $m$, before being summed.
+
+
+

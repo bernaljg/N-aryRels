@@ -1,0 +1,31 @@
+\begin{table}[t!]
+% \vspace{20pt}
+\caption{Performance comparison of CNN vector post-processing: no post-processing, PCA-whitening~\cite{JC12} (\pcawhiten) and our learned whitening (\cpl2). No dimensionality reduction is performed. Fine-tuned AlexNet produces a 256D vector and fine-tuned VGG a 512D vector. The best performance highlighted in \b{bold}, the worst in \ww{blue}. The proposed method consistently performs either the best (18 out of 24 cases) or on par with the best method. On the contrary, \pcawhiten~\cite{JC12} often hurts the performance significantly. Best viewed in color.
+\label{tab:postproc}}
+\vspace{-10pt}
+\footnotesize
+\begin{center}
+\setlength{\tabcolsep}{0.6mm}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    \hline
+    \multirow{2}{*}{Net} & \multirow{2}{*}{Post} & 
+    \multicolumn{2}{c|}{Oxf5k} & \multicolumn{2}{c|}{Oxf105k} &
+    \multicolumn{2}{c|}{Par6k}  & \multicolumn{2}{c|}{Par106k} & 
+    \multicolumn{2}{c|}{Hol} & \multicolumn{2}{c|}{Hol101k} \\ 
+    \cline{3-14}
+    & & \tiny{MAC} & \tiny{R-MAC} & \tiny{MAC} & \tiny{R-MAC} & \tiny{MAC} & \tiny{R-MAC} & \tiny{MAC} 
+    & \tiny{R-MAC} & \tiny{MAC} & \tiny{R-MAC} & \tiny{MAC} & \tiny{R-MAC}\\
+    \hline\hline
+    \multirow{3}{*}{Alex} 
+    & --        	& 60.2 			& \ww{53.9}		& \b{54.2}      & \ww{46.4}		& 67.5 			& \ww{70.2}		& \b{54.9}      & \ww{58.4}		& 73.1 			& \ww{77.3}		& 61.6 			& \ww{67.1}	\\ 
+	& \pcawhiten    & \ww{56.9}		& 60.0 			& \ww{44.1} 	& 48.4 			& \ww{64.3}		& \b{75.1}      & \ww{46.8}		& 61.7 			& \ww{73.0}		& \b{81.7}      & \ww{59.4}		& 70.4 		\\ 
+	& \cpl2      	& \b{62.2}      & \b{62.5}      & 52.8 			& \b{53.2}      & \b{68.9}      & 74.4 		    & 54.7 			& \b{61.8}      & \b{76.2}      & 81.5 			& \b{63.8}      & \b{70.8}      \\ 
+	\hline\hline
+	\multirow{3}{*}{VGG} 
+    & --        	& 78.7 			& \ww{70.1}		& 72.7 			& \ww{63.1}		& \ww{77.1}		& \ww{78.1}      & 69.6 			& \ww{70.4}		& \ww{76.9}		& \ww{80.0}		& 65.3 			& \ww{68.8} 	     \\ 
+	& \pcawhiten    & \ww{76.1}		& 76.3 			& \ww{68.9}		& 68.5 			& 79.0 	        & \b{84.5}      & \ww{69.1}		& \b{77.1}      & 77.1 			& 82.3 			& \ww{63.6}		& 71.0 		 \\ 
+	& \cpl2      	& \b{79.7}      & \b{77.0}      & \b{73.9}      & \b{69.2}	    & \b{82.4}      & 83.8          & \b{74.6}      & 76.4 	        & \b{79.5}      & \b{82.5}	    & \b{67.0}      & \b{71.5}      \\ 
+	\hline
+\end{tabular}
+\end{center}
+\end{table}

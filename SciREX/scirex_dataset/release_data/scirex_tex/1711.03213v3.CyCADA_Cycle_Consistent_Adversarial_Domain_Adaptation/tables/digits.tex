@@ -1,0 +1,28 @@
+\begin{table}
+  \centering
+  \scriptsize
+  \setlength{\tabcolsep}{1.35pt}
+  \begin{tabular}{lccc}
+    \toprule
+	Model & 		MNIST $\rightarrow$ USPS & USPS $\rightarrow$ MNIST & SVHN $\rightarrow$ MNIST \\
+	\midrule \midrule
+	Source only & 	82.2 $\pm$ 0.8 &  69.6 $\pm$ 3.8 &	67.1 $\pm$ 0.6\\
+	DANN~\citep{dann}&	-	&	-	&73.6\\
+	DTN~\citep{dtn} &	-&		-&	84.4\\
+	CoGAN~\citep{cogan} &	91.2 &	89.1 &	-\\
+	ADDA~\citep{tzeng_cvpr17} & 	89.4 $\pm$ 0.2 &	90.1 $\pm$ 0.8 &	76.0 $\pm$ 1.8\\
+	
+        %PixelDA~\citep{bousmalis_cvpr17} & \bf 95.9 & - & -  \\
+        CyCADA pixel only & 	 \bf 95.6 $\pm$ 0.2 &	96.4 $\pm$ 0.1&	70.3 $\pm$ 0.2\\
+	%CyCADA pixel only w/ $\mathcal{L}_{\text{sem}}$ & 	-	&	-	&	71.15 $\pm$ 0.4\\
+	CyCADA pixel+feat & 	\bf  95.6 $\pm$ 0.2 & 	\bf	96.5 $\pm$ 0.1 &	\bf	90.4 $\pm$ 0.4\\
+	\midrule
+	Target only & 	96.3 $\pm$ 0.1 & 	99.2 $\pm$ 0.1&	99.2 $\pm 0.1$\\
+    \bottomrule
+  \end{tabular}
+  \caption{
+    %\small
+    \textbf{Unsupervised domain adaptation across digit datasets.} Our model is competitive with or outperforms state-of-the-art models for each shift. For the difficult shift of SVHN to MNIST we also note that feature space adaptation provides additional benefit beyond the pixel-only adaptation. 
+    }
+  \label{table:digits}
+\end{table}

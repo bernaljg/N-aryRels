@@ -1,0 +1,59 @@
+\usepackage{hyperref,comment}
+\usepackage{url}
+\usepackage{amssymb,amsfonts,amsmath,amsthm,amscd,dsfont,pifont,mathrsfs}
+\usepackage{eqsection,graphicx,float,epsfig,color,url}
+\usepackage{algorithm,algcompatible,algpseudocode,bbm,mathtools}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{subcaption}
+\usepackage{multirow}
+\usepackage{accents}
+\usepackage[font=small]{caption}
+\usepackage[font=small,justification=centering]{subcaption}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%***********************  COMMANDS
+%
+\def\reals{{\mathbb R}}
+\def\naturals{{\mathbb N}}
+\def\<{\langle}
+\def\>{\rangle}
+\def\E{{\mathbb E}}
+\def\P{{\mathbb P}}
+
+
+\makeatletter
+\def\ystar{\@ifnextchar_{\@ystar} {\@ystar_{}} }
+\def\@ystar_#1{y^*_{#1} }
+
+\def\Jaug{\@ifnextchar_{\@Jaug} {\@Jaug_{}} }
+\def\@Jaug_#1{J^\emph{aug}_{#1} }
+\makeatother
+
+\def\ytilde{{\tilde{y}}}
+\def\yplain{y}
+\def\yhat{{\hat{y}}}
+
+
+\DeclarePairedDelimiterX{\preKL}[2]{(}{)}{%
+  #1\;\delimsize\|\;#2%
+}
+\newcommand{\KL}{\text{D}_{KL}\preKL}
+\newcommand{\CE}{\text{CE}\preKL}
+\newcommand{\deldel}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\ith}[2]{\left(#1\right)_#2}
+\newcommand{\xp}[1]{\exp\left(#1\right)}
+\newcommand{\symtext}[2]{\stackrel{#2}{#1}}
+\newcommand{\softmax}[1]{\text{softmax}\left(#1\right)}
+\newcommand{\entropy}[1]{\text{H}\left(#1\right)}
+
+\newcommand{\eq}[1]{\begin{alignat}{3}#1\end{alignat}}
+\newcommand{\eqn}[1]{\begin{alignat*}{3}#1\end{alignat*}}
+
+%%%%%%%%%end my commands
+
+
+
+

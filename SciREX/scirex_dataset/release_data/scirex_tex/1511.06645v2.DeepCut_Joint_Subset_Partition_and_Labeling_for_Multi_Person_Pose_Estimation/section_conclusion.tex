@@ -1,0 +1,35 @@
+\section{Conclusion}
+Articulated pose estimation of multiple people in uncontrolled real
+world images is challenging but of real world interest. In this work,
+we proposed a new formulation as a joint subset partitioning and
+labeling problem (SPLP). Different to previous two-stage strategies
+that separate the detection and pose estimation steps, the SPLP model
+jointly infers the number of people, their poses, spatial proximity,
+and part level occlusions. Empirical results on four diverse and
+challenging datasets show significant improvements over all previous
+methods not only for the multi person, but also for the single person
+pose estimation problem. On multi person WAF dataset we improve by
+$30$\% PCP over the traditional two-stage approach. This shows that a
+joint formulation is crucial to disambiguate multiple and potentially
+overlapping persons. Models and code available at \myurl.
+
+%% \pg{which
+%%   is
+%% \pg{exclude:
+%%   ,which shows the effectiveness of our model.}  \pg{include the
+%%   message of the paper, for example: This paper finds that single
+%%   person approaches can be used for the multi-person case only to some
+%%   extend. A joint formulation of the problem is crucial to disambiguate
+%%   multiple and potential overlapping persons.  We have demonstrated
+%%   that the SPLP model, by integrating meaningful constraints severely
+%%   improves on this important task.}
+
+
+%% For example on the upper body pose estimation our
+%% approach improves by $9.3$ percent points of mAP over the strong
+%% CNN-based part detector, which is more than 30\% relative
+%% improvement. In the future we plan to improve the performance of our
+%% approach by employing more powerful unary and pairwise terms.
+%% \pg{That is probably the weakest sentence to end this paper
+%%   with. Nobody will ask for future extensions, especially not the most
+%%   boring ones.}

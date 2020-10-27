@@ -1,0 +1,102 @@
+\begin{tikzpicture} [scale = 1.0]
+  \begin{scope}[every node/.style={circle,draw}]
+      \node[draw=red] (x01) at (0,-1.25) {$x_1$};
+      \node[draw=red] (x02) at (0,2.75) {$x_2$};
+      \node[draw=red] (x03) at (0,6.75) {$x_3$};
+
+      \node[draw=red] (x11) at (5,-1.25) {$x_1$};
+      \node[draw=red] (x12) at (5,2.75) {$x_2$};
+      \node[draw=red] (x13) at (5,6.75) {$x_3$};
+
+      \node[draw=red] (x21) at (10,-1.25) {$x_1$};
+      \node[draw=red] (x22) at (10,2.75) {$x_2$};
+      \node[draw=red] (x23) at (10,6.75) {$x_3$};
+
+      % step 0
+      \node[very thick, draw=green] (01) at (0,0) {$h_1^0$};
+      \node[draw=blue] (o01) at (0,1.25) {$o_1^0$};
+
+      \node[very thick, draw=green] (02) at (0,4) {$h_2^0$};
+      \node[draw=blue] (o02) at (0,5.25) {$o_2^0$};
+
+      \node[very thick, draw=green] (03) at (0,8) {$h_3^0$};
+      \node[draw=blue] (o03) at (0,9.25) {$o_3^0$};
+
+      % step 1
+      \node[very thick, draw=green] (11) at (5,0) {$h_1^1$};
+      \node[draw=blue] (o11) at (5,1.25) {$o_1^1$};
+
+      \node[very thick, draw=green] (12) at (5,4) {$h_2^1$};
+      \node[draw=blue] (o12) at (5,5.25) {$o_2^1$};
+
+      \node[very thick, draw=green] (13) at (5,8) {$h_3^1$};
+      \node[draw=blue] (o13) at (5,9.25) {$o_3^1$};
+
+      % step 2
+      \node[very thick, draw=green] (21) at (10,0) {$h_1^2$};
+      \node[draw=blue] (o21) at (10,1.25) {$o_1^2$};
+
+      \node[very thick, draw=green] (22) at (10,4) {$h_2^2$};
+      \node[draw=blue] (o22) at (10,5.25) {$o_2^2$};
+
+      \node[very thick, draw=green] (23) at (10,8) {$h_3^2$};
+      \node[draw=blue] (o23) at (10,9.25) {$o_3^2$};
+  \end{scope}
+
+  \begin{scope}[>={Stealth[black]},
+                every node/.style={fill=white, circle, pos=0.80,inner sep=1},
+                every edge/.style={draw=black}]
+
+      %STEP 0
+      \path [->] (x01) edge (01);
+      \path [->] (x02) edge (02);
+      \path [->] (x03) edge (03);
+
+      \path [->] (01) edge (o01);
+      \path [->] (02) edge (o02);
+      \path [->] (03) edge (o03);
+
+
+      %STEP 1
+      \path [->] (x11) edge (11);
+      \path [->] (x12) edge (12);
+      \path [->] (x13) edge (13);
+
+      \path [->] (11) edge (o11);
+      \path [->] (12) edge (o12);
+      \path [->] (13) edge (o13);  
+
+      \path [->] (01) edge[bend left=0, dashed] (11);
+      \path [->] (01) edge node {$m_{12}^1$} (12);
+      \path [->] (01) edge node {$m_{13}^1$} (13);
+
+      \path [->] (02) edge node {$m_{21}^1$} (11);
+      \path [->] (02) edge[bend left=0, dashed] (12);
+      \path [->] (02) edge node {$m_{23}^1$} (13);
+
+      \path [->] (03) edge node {$m_{31}^1$} (11);
+      \path [->] (03) edge node {$m_{32}^1$} (12);
+      \path [->] (03) edge[bend left=0, dashed] (13);
+
+      %STEP 2
+      \path [->] (x21) edge (21);
+      \path [->] (x22) edge (22);
+      \path [->] (x23) edge (23);
+
+      \path [->] (21) edge (o21);
+      \path [->] (22) edge (o22);
+      \path [->] (23) edge (o23);
+
+      \path [->] (11) edge[bend left=0, dashed] (21);
+      \path [->] (11) edge node {$m_{12}^2$} (22);
+      \path [->] (11) edge node {$m_{13}^2$} (23);
+
+      \path [->] (12) edge node {$m_{21}^2$} (21);
+      \path [->] (12) edge[bend left=0, dashed] (22);
+      \path [->] (12) edge node {$m_{23}^2$} (23);
+
+      \path [->] (13) edge node {$m_{31}^2$} (21);
+      \path [->] (13) edge node {$m_{32}^2$} (22);
+      \path [->] (13) edge[bend left=0, dashed] (23);
+  \end{scope}
+  \end{tikzpicture}

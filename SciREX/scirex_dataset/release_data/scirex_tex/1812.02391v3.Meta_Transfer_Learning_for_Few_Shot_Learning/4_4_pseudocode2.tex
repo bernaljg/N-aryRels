@@ -1,0 +1,23 @@
+
+\begin{algorithm}
+\caption{Detail learning steps within a task $\mathcal{T}$}
+\label{alg_Meta}
+\SetAlgoLined
+\SetKwInput{KwData}{Input}
+\SetKwInput{KwResult}{Output}
+ \KwData{$\mathcal{T}$, learning rates $ \beta$ and $\gamma$, feature extractor $\Theta$, base learner $\theta$, \emph{SS} parameters $\Phi_{S_{\{1,2\}}}$}
+ \KwResult{Updated $\theta$ and $\Phi_{S_{\{1,2\}}}$, 
+ the worst classified class-$m$ in $\mathcal{T}$}
+ Sample $\mathcal{T}^{(tr)}$ and $\mathcal{T}^{(te)}$ from $\mathcal{T}$ \;
+ \For{samples in $\mathcal{T}^{(tr)}$}{
+ Evaluate $\mathcal{L}_{\mathcal{T}^{(tr)}}$\;
+ Optimize $\theta'$ by Eq.~\ref{eq_base_classifier}\;
+ }
+ Optimize $\Phi_{S_{\{1,2\}}}$ and $\theta$ by Eq.~\ref{eq_ss_update} and Eq.~\ref{eq_meta_classifier}\;
+ \While{not done}{
+ Sample class-$k$ in $\mathcal{T}^{(te)}$\;
+ Compute $Acc_k$ for $\mathcal{T}^{(te)}$\;
+ }
+ Return class-$m$ with the lowest accuracy $Acc_m$.
+\end{algorithm}
+\vspace{-6mm}

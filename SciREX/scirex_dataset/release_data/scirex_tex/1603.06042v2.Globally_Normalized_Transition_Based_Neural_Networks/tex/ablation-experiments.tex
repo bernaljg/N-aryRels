@@ -1,0 +1,179 @@
+\section{Discussion}
+\label{sec:discussion}
+
+We derived a 
+proof for the label bias problem
+and the advantages of global models.
+We then emprirically verified this theoretical superiority
+by demonstrating state-of-the-art performance on three
+different tasks.
+%Our experiments showed globally normalized models consistently improving on locally normalized ones.
+In this section we situate and compare our model to
+previous work and provide two examples of the label bias problem
+in practice.
+
+\subsection{Related Neural CRF Work}
+
+Neural network models have been been combined with 
+conditional random fields and globally normalized models before.
+\newcite{bottou-97} and \newcite{lecun-98h} describe global training of
+neural network models for structured prediction problems.
+\newcite{conditional_neural_fields} add a non-linear neural
+network layer to a linear-chain CRF and
+\newcite{neural_crf} apply a similar approach
+to more general Markov network structures.
+\newcite{recurrentCRF} and \newcite{Zheng_2015_ICCV}
+introduce recurrence into the model and
+\newcite{huang2015bidirectional} finally combine
+CRFs and LSTMs.
+These neural CRF models are limited to
+sequence labeling tasks where exact inference is possible,
+while our model works well when exact inference is intractable.
+%In fact, we obtain our strongest results on dependency parsing
+%where beam search is necessary because of the large
+%tree structured output space.
+
+\subsection{Related Transition-Based Parsing Work}
+
+For early work on neural-networks for transition-based parsing,
+see Henderson \shortcite{henderson:2003:NAACL,henderson:2004:ACL}.
+Our work is closest to the work of
+\newcite{weiss-etAl:2015:ACL}, \newcite{zhou-etAl:2015:ACL}
+and \newcite{watanabe-sumita:2015:ACL};
+in these approaches global normalization is added to the
+local model of \newcite{chen-manning:2014:EMNLP}.
+Empirically, \newcite{weiss-etAl:2015:ACL}
+achieves the best performance, even though
+their model keeps the parameters of the locally
+normalized neural network fixed and only
+trains a perceptron that uses the activations as features.
+Their model is therefore limited in its ability to
+revise the predictions of the locally normalized model.
+In Table~\ref{tab:depth} we show that full backpropagation
+training all the way to the word embeddings
+is very important and significantly contributes
+to the performance of our model.
+We also compared training under the CRF objective with a 
+Perceptron-like hinge loss between the gold and best elements of the beam.
+When we limited the backpropagation depth to training only the top layer $\theta^{(d)}$,
+we found negligible differences in accuracy:
+93.20\% and 93.28\% for the CRF objective and hinge loss respectively.
+However, when training with full backpropagation the CRF accuracy 
+is 0.2\% higher and training converged more than 4$\times$
+faster.
+
+\begin{table}[t]
+  \centering
+  \scalebox{0.95}{%
+    \renewcommand{\arraystretch}{1.0}%
+    \setlength\tabcolsep{6pt}%
+    \begin{tabular}[h]{lcc}
+      \toprule
+       Method & UAS & LAS \\
+      \midrule
+      Local (B=1)         & 92.85 & 90.59 \\
+      Local (B=16)        & 93.32 & 91.09 \\
+      \midrule
+      Global (B=16) $\{\theta^{(d)}\}$    & 93.45 & 91.21 \\
+      Global (B=16) $\{W_2, \theta^{(d)}\}$& 94.01 & 91.77 \\
+      Global (B=16) $\{W_1, W_2, \theta^{(d)}\}$& 94.09 & 91.81 \\
+      Global (B=16) (full)                 & 94.38 & 92.17 \\
+      \bottomrule
+    \end{tabular}
+  }
+  \caption{WSJ dev set scores for successively deeper levels of backpropagation.
+    The {\em full} parameter set corresponds to backpropagation all the way to the embeddings.
+    $W_i$: hidden layer $i$ weights.
+  }
+  \label{tab:depth}
+\end{table}
+
+
+\begin{table*}[t]
+  \centering%
+  \small
+  \scalebox{0.95}{%
+    \setlength{\tabcolsep}{2pt}%
+    %\begin{tabular}{p{7.5cm}cl}
+    \begin{tabular}{llcl}
+      \toprule
+      Method & Predicted compression & $p_L$ & $p_G$ \\
+      \midrule
+      Local (B=1) & \textcolor{gray}{In Pakistan, former leader} Pervez Musharraf has appeared in court \textcolor{gray}{for the first time, on treason charges}. & $0.13$ & $0.05$\\
+      Local (B=8) &\textcolor{gray}{In Pakistan, former leader Pervez Musharraf has appeared in court for the first time, on treason charges}. & {\bf $0.16$} &% $e^{-9}$ 
+$<$$10^{-4}$\\
+      Global (B=8) & \textcolor{gray}{In Pakistan, former leader} Pervez Musharraf has appeared \textcolor{gray}{in court for the first time,} on treason charges. & $0.06$  & {\bf $0.07$} \\
+      \bottomrule
+    \end{tabular}
+  }
+  \caption{\label{tab:sent-compression-label-bias-example}
+    Example sentence compressions where the label bias of the locally normalized 
+    model leads to a breakdown during beam search.
+    The probability of each compression under the local ($p_L$) and global ($p_G$) models shows that only the global model can properly represent zero probability for the empty compression.
+  }
+\end{table*}
+
+
+\newcite{zhou-etAl:2015:ACL} perform full 
+backpropagation training like us, 
+but even with a much larger beam, their performance is significantly
+lower than ours. We also apply our model to two additional tasks,
+while they experiment only with dependency parsing.
+Finally, \newcite{watanabe-sumita:2015:ACL} introduce recurrent
+components and additional techniques like max-violation updates
+for a corresponding constituency parsing model.
+In contrast, our model does not require any recurrence
+or specialized training.
+
+\subsection{Label Bias in Practice}
+
+We observed several instances of severe label bias in the sentence
+compression task.  Although using beam search with the local model
+outperforms greedy inference on average, beam search leads the local
+model to occasionally produce empty compressions
+(Table~\ref{tab:sent-compression-label-bias-example}).  It is important to
+note that these are {\em not} search errors: the empty compression has
+higher probability under $p_L$ than the prediction from greedy
+inference. However, the more expressive globally normalized model
+does not suffer from this limitation, and correctly gives the empty
+compression almost zero probability.
+
+We also present some
+empirical evidence that the label bias problem is severe in
+parsing. We trained models where the scoring functions in parsing
+at position $i$ in the sentence are limited to considering only tokens
+$x_{1:i}$; hence unlike the full parsing model, there is no
+ability to look ahead in the sentence when making a
+decision.\footnote{This setting may be important in some applications,
+  where for example parse structures for sentence prefixes are
+  required, or where the input is received one word at a time and
+  online processing is beneficial.} The result for a greedy model
+under this constraint is 76.96\% UAS; for a locally normalized model
+with beam search is 81.35\%; and for a globally normalized model
+is 93.60\%. Thus the globally normalized model gets very close to the
+performance of a model with full lookahead, while the locally
+normalized model with a beam gives dramatically lower performance.  In
+our final experiments with full lookahead, the globally normalized
+model achieves 94.01\% accuracy, compared to 93.07\% accuracy for a
+local model with beam search. Thus adding lookahead allows the local
+model to close the gap in performance to the global model; however
+there is still a significant difference in accuracy, which may in
+large part be due to the label bias problem.
+
+A number of authors have considered modified training procedures for
+greedy models, or for locally normalized models.
+\newcite{daume09searn} introduce Searn, an algorithm that allows a
+classifier making greedy decisions to become more robust to errors
+made in previous decisions. \newcite{goldberg2013training} describe
+improvements to a greedy parsing approach that makes use of methods
+from imitation learning \cite{bagnell2011imitation} to augment the
+training set. Note that these methods are focused on greedy
+models: they are unlikely to solve the label bias problem when used in
+conjunction with beam search, given that the problem is one of
+expressivity of the underlying model. More recent work
+\cite{henderson2015,vaswani2016} has augmented locally normalized
+models with {\em correctness probabilities} or {\em error states},
+effectively adding a step after every decision where the probability
+of correctness of the resulting structure is evaluated. This gives
+considerable gains over a locally normalized model, although
+performance is lower than our full globally normalized approach.

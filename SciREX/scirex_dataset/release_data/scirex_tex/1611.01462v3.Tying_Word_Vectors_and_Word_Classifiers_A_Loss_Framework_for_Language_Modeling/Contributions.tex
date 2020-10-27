@@ -1,0 +1,98 @@
+% !TEX root = ./notes.tex
+\section{Augmenting the Cross-Entropy Loss}
+
+We propose to augment the conventional cross-entropy loss with an additional loss term as follows:
+\eq{
+\yhat_t&=\softmax{Wh_t/\tau}, \\
+\Jaug_t &=\KL{\ytilde_t}{\yhat_t}, \\
+J^{tot}_t &= J_t + \alpha \Jaug_t.
+}
+In above, $\alpha$ is a hyperparameter to be adjusted, and $\yhat_t$ is almost identical to the regular model prediction distribution $\yplain_t$ with the exception that the logits are divided by a temperature parameter $\tau$.
+We define $\ytilde_t$ as some probability distribution that estimates the true data distribution (conditioned on the word history) which satisfies $\E{\ytilde_t}=\E{\ystar_t}$.
+The goal of this framework is to minimize the distribution distance between the prediction distribution and a more accurate estimate of the true data distribution.
+
+To understand the effect of optimizing in this setting, let's focus on an ideal case in which we are given the true data distribution so that $\ytilde_t=\E{\ystar_t}$, and we only use the augmented loss, $\Jaug$.
+We will carry out our investigation through stochastic gradient descent, which is the technique dominantly used for training neural networks.
+The gradient of $\Jaug_t$ with respect to the logits $Wh_t$ is  
+\eq{
+\label{eqn:diff_aug_loss}
+\mathop{\nabla}\Jaug_t
+&=\frac{1}{\tau}(\yhat_t-\ytilde_t).
+}
+Let's denote by $e_j\in \reals^{|V|}$ the vector whose $j^\text{th}$ entry is 1, and others are zero. We can then rewrite
+\eqref{eqn:diff_aug_loss} as
+\eq{
+\label{eqn:aug_loss_effect}
+\tau\mathop{\nabla}\Jaug_t 
+= \yhat_t-\left[e_1,\ldots,e_{|V|}\right]\ytilde_t
+=\sum_{i\in V} \ytilde_{t,i}(\yhat_t-e_i).
+}
+Implication of \eqref{eqn:aug_loss_effect} is the following: Every time the optimizer sees one training example, it takes a step not only on account of the label seen, but it proceeds taking into account all the class labels for which the conditional probability is not zero, and the relative step size for each step is given by the conditional probability for that label, $\ytilde_{t,i}$.
+Furthermore, this is a much less noisy update since the target distribution is exact and deterministic.
+Therefore, unless all the examples exclusively belong to a specific class with probability $1$, the optimization will act much differently and train with greatly improved supervision.
+
+The idea proposed in the recent work by \citet{hinton2015distilling} might be considered as an application of this framework, where they try to obtain a good set of $\ytilde$'s by training very large models and using the model prediction distributions of those.
+
+Although finding a good $\ytilde$  in general is rather nontrivial, in the context of language modeling we can hope to achieve this by exploiting the inherent metric space of classes encoded into the model, namely the space of word embeddings.
+Specifically, we propose the following for $\ytilde$:
+\eq{
+u_t &= L \ystar_t, \\
+\ytilde_t &= \softmax{\frac{L^Tu_t}{\tau}}. 
+}
+In words, we first find the target word vector which corresponds to the target word token (resulting in $u_t$), and then take the inner product of the target word vector with all the other word vectors to get an unnormalized probability distribution.
+We adjust this with the same temperature parameter $\tau$ used for obtaining $\yhat_t$ and apply softmax.
+The target distribution estimate, $\ytilde$, therefore measures the similarity between the word vectors and assigns similar probability masses to words that the language model deems close.
+Note that the estimation of $\ytilde$ with this procedure is iterative, and the estimates of $\ytilde$ in the initial phase of the training are not necessarily informative.
+However, as training procedes, we expect $\ytilde$ to capture the word statistics better and yield a consistently more accurate estimate of the true data distribution.
+
+\section{Theoretically Driven Reuse of Word Embeddings}
+\label{section:RE}
+We now theoretically motivate and introduce a second modification to improve learning in the language model.
+We do this by analyzing the proposed augmented loss in a particular setting, and observe an implicit core mechanism of this loss.
+We then make our proposition by making this mechanism explicit.
+
+We start by introducing our setting for the analysis.
+We restrict our attention to the case where the input embedding dimension is equal to the dimension of the RNN hidden state, i.e. $d\triangleq d_x=d_h$.
+We also set $b=0$ in \eqref{eqn:rnn_out_proj} so that $y_t = Wh_t$. We only use the augmented loss, i.e. $J^{tot}=\Jaug$, and we assume that we can achieve zero training loss.
+Finally, we set the temperature parameter $\tau$ to be large.
+ 
+We first show that when the temperature parameter, $\tau$, is high enough, $\Jaug_t$ acts to match the logits of the prediction distribution to the logits of the the more informative labels, $\ytilde$.
+ We proceed in the same way as was done in \citet{hinton2015distilling} to make an identical argument.
+Particularly, we consider the derivative of $\Jaug_t$ with respect to the entries of the logits produced by the neural network.
+
+Let's denote by $l_i$ the $i^\text{th}$ column of L. Using the first order approximation of exponential function around zero ($\xp{x}\approx 1+x$), we can approximate $\ytilde_t$ (same holds for $\yhat_t$) at high temperatures as follows:
+\eq{
+\label{eqn:highT_ytilde}
+\ytilde_{t,i} = \frac{\xp{\<u_t,l_i\>/\tau} }{\sum_{j\in V}\xp{\<u_t,l_j\>/\tau}} \approx \frac{1+\<u_t,l_i\>/\tau}{|V|+\sum_{j\in V}\<u_t,l_j\>/\tau}.
+}
+We can further simplify \eqref{eqn:highT_ytilde} if we assume that $\<u_t,l_j\>=0$ on average:
+\eq{
+\label{eqn:highT_zeromean_ytilde}
+\ytilde_{t,i} \approx \frac{1+\<u_t,l_i\>/\tau}{|V|}.
+}
+By replacing $\ytilde_t$ and $\yhat_t$ in \eqref{eqn:diff_aug_loss} with their simplified forms according to \eqref{eqn:highT_zeromean_ytilde}, we get
+\eq{
+\label{eqn:Jaug_matching_logits}
+\deldel{\Jaug_t}{\ith{Wh_t}{i}}\rightarrow \frac{1}{\tau^2|V|}\ith{Wh_t-L^Tu_t}{i} \ \ \  \text{as  } \tau\rightarrow \infty,
+}
+which is the desired result that augmented loss tries to match the logits of the model to the logits of $\ytilde$'s.
+Since the training loss is zero by assumption, we necessarily have
+\eq{
+Wh_t=L^Tu_t
+}
+for each training example, i.e., gradient contributed by each example is zero.
+Provided that $W$ and $L$ are full rank matrices and there are more linearly independent examples of $h_t$'s than the embedding dimension $d$, we get that the space spanned by the columns of $L^T$ is equivalent to that spanned by the columns of $W$.
+Let's now introduce a square matrix $A$ such that $W=L^TA$. (We know $A$ exists since $L^T$ and $W$ span the same column space).
+In this case, we can rewrite 
+\eq{
+Wh_t = L^TAh_t \triangleq L^T\tilde{h}_t.
+}
+In other words, by reusing the embedding matrix in the output projection layer (with a transpose) and letting the neural network do the necessary linear mapping $h\rightarrow Ah$, we get the same result as we would have in the first place.
+
+Although the above scenario could be difficult to exactly replicate in practice, it uncovers a mechanism through which our proposed loss augmentation acts, which is trying to constrain the output (unnormalized) probability space to a small subspace governed by the embedding matrix.
+ This suggests that we can make this mechanism explicit and constrain $W=L^T$ during training while setting the output bias, $b$, to zero.
+  Doing so would not only eliminate a big matrix which dominates the network size for models with even moderately sized vocabularies, but it would also be optimal in our setting of loss augmentation as it would eliminate much work to be done by the augmented loss.
+
+
+
+

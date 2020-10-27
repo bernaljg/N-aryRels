@@ -1,0 +1,66 @@
+%\renewcommand{\tabcolsep}{0.15cm}
+\tabcolsep 1.5pt
+\begin{table}[tbp]
+ \scriptsize
+  \centering
+  \begin{tabular}{@{} l c ccc ccc cc@{}}
+    \toprule
+    Setting& Head   & Sho  & Elb & Wri & Hip & Knee & Ank & UBody & FBody \\
+    \midrule
+    %% \input{experiments/ap-det-roi-0.5-0.2-expidx485.tex}
+%%     \input{experiments/ap-expidx485.tex}
+%%     \input{experiments/ap-det-roi-0.5-0.2-expidx486.tex}
+%%     \input{experiments/ap-expidx486.tex}
+%%     \midrule
+%%     \input{experiments/ap-gt-roi-expidx485.tex}
+%%     \input{experiments/ap-gt-roi-expidx486.tex}
+%%     \midrule
+%%     \input{experiments_dense/ap-expidx695-det.tex}
+%%     \input{experiments_dense/ap-expidx695.tex}
+%%     \input{experiments_dense/ap-expidx699.tex}
+%%     \midrule
+%%     \input{experiments_dense/ap-expidx695-GT.tex}
+
+%%     \textcolor{red}{103 images}\\
+%%     \input{experiments/ap-det-roi-0.5-0.2-nimg103-expidx485.tex}
+%%     \input{experiments/ap-nimg103-expidx485.tex}
+%%     \input{experiments/ap-nimg103-expidx486.tex}
+%%     \midrule
+%%     \input{experiments/ap-det-roi-0.5-0.2-nimg103-expidx498.tex}
+%%     \input{experiments/ap-nimg103-expidx498.tex}
+%%     \input{experiments/ap-nimg103-expidx500.tex}
+%%     \midrule
+%%     \input{experiments/ap-gt-roi-nimg103-expidx485.tex}
+%%     \input{experiments/ap-gt-roi-nimg103-expidx498.tex} 
+
+%%    \textcolor{red}{162 images}\\
+%%     \input{experiments/ap-det-roi-0.5-0.2-nimg162-expidx485.tex}
+%%     \input{experiments/ap-nimg162-expidx485.tex}
+%%     \input{experiments/ap-nimg162-expidx486.tex}
+%%     \midrule
+%%     \input{experiments/ap-det-roi-0.5-0.2-nimg162-expidx498.tex}
+%%     \input{experiments/ap-nimg162-expidx498.tex}
+%%     \input{experiments/ap-nimg162-expidx500.tex}
+%%     \midrule
+%%     \input{experiments/ap-gt-roi-nimg162-expidx485.tex}
+%%     \input{experiments/ap-gt-roi-nimg162-expidx498.tex} 
+
+    \input{ap-det-roi-0.5-0.2-nimg288-expidx485.tex}
+    \input{ap-nimg288-expidx485.tex}
+    \input{ap-nimg288-expidx486.tex}
+    \midrule
+    \input{ap-det-roi-0.5-0.2-nimg288-expidx498.tex}
+    \input{ap-nimg288-expidx498.tex}
+    \input{ap-nimg288-expidx500.tex}
+    \midrule
+    \input{ap-gt-roi-nimg288-expidx485.tex}
+    \input{ap-gt-roi-nimg288-expidx498.tex} 
+
+    \input{ap-expidx618.tex}
+    \bottomrule
+  \end{tabular}
+  \vspace{0.1em}
+\caption[]{Pose estimation results (AP) on MPII Multi-Person.}
+    \vspace{-1.5em}
+  \label{tab:multicut:mpii-multi}
+\end{table}

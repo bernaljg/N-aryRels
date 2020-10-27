@@ -1,0 +1,11 @@
+\section{Conclusion and Future Work}
+\label{sec:conclusion}
+
+In this article DeXpression is presented which works fully automatically. It is a neural network which has little computational effort compared to current state of the art CNN architectures. In order to create it the new composed structure FeatEx has been introduced. It consists of several Convolutional layers of different sizes, as well as Max Pooling and ReLU layers. FeatEx creates a rich feature representation of the input. \\
+The results of the 10-fold cross-validation yield, in average, a recognition accuracy of 99.6\% on the CKP dataset and 98.36\% on the MMI dataset. This shows that the proposed architecture is capable of competing with current state of the art approaches in the field of emotion recognition.\\
+In Section~\ref{sec:discussion} the analysis has shown, that DeXpression works without major mistakes. Most misclassifications have occurred during the first few images of an emotion sequence. Often in these images emotions are not yet displayed.
+
+\paraV
+\paragraph{\textit{Future Work}}
+
+An application built on DeXpression which is used in a real environment could benefit from distinguishing between more emotions such as \textit{Nervousness} and \textit{Panic}. Such a scenario could be large events where an early detection of \textit{Panic} could help to prevent mass panics. Other approaches to enhance emotion recognition could be to allow for composed emotions. For example frustration can be accompanied by anger, therefore not only showing one emotion, but also the reason. Thus complex emotions could be more valuable than basic ones. Besides distinguishing between different emotions, also the strength of an emotion could be considered. Being able to distinguish between different levels could improve applications, like evaluating reactions to new products. In this example it could predict the amount of orders that will be made, therefore enabling producing the right amount of products.

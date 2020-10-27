@@ -1,0 +1,129 @@
+% The following packages must be included:
+% - amsmath
+% - amsfonts
+% - amsopn
+
+
+% Using macros from Matthias, boldface for matrices and vectors:
+\newcommand{\vect}[1]{\boldsymbol{#1}} % boldface for vectors
+\newcommand{\mat}[1]{\boldsymbol{#1}} % boldface for matrices
+\newcommand{\tvect}[1]{\tilde{\boldsymbol{#1}}} % boldface for vectors
+\newcommand{\tmat}[1]{\tilde{\boldsymbol{#1}}} % boldface for matrices
+\newcommand{\hvect}[1]{\hat{\boldsymbol{#1}}} % boldface for vectors
+\newcommand{\hmat}[1]{\hat{\boldsymbol{#1}}} % boldface for matrices
+\newcommand{\bvect}[1]{\bar{\boldsymbol{#1}}} % boldface for vectors
+\newcommand{\bmat}[1]{\bar{\boldsymbol{#1}}} % boldface for matrices
+\newcommand{\vzero}{\vect{0}}
+\newcommand{\vone}{\vect{1}}
+\newcommand{\mxzero}{\mat{0}}
+
+
+\newcommand{\dummystring}{QWERTYU}
+\newcommand{\vci}[3][\dummystr]{\ifthenelse{\equal{#1}{\dummystring}}{\vect{#2}_{#3}}{\vect{#2}_{#3}^{(#1)}}}
+\newcommand{\mx}[3][\dummystr]{\ifthenelse{\equal{#1}{\dummystring}}{\mat{#2}_{#3}}{\mat{#2}_{#3}^{(#1)}}}
+\newcommand{\tvci}[3][\dummystr]{\ifthenelse{\equal{#1}{\dummystring}}{\tvect{#2}_{#3}}{\tvect{#2}_{#3}^{(#1)}}}
+\newcommand{\tmx}[3][\dummystr]{\ifthenelse{\equal{#1}{\dummystring}}{\tmat{#2}_{#3}}{\tmat{#2}_{#3}^{(#1)}}}
+\newcommand{\hvci}[3][\dummystr]{\ifthenelse{\equal{#1}{\dummystring}}{\hvect{#2}_{#3}}{\hvect{#2}_{#3}^{(#1)}}}
+\newcommand{\hmx}[3][\dummystr]{\ifthenelse{\equal{#1}{\dummystring}}{\hmat{#2}_{#3}}{\hmat{#2}_{#3}^{(#1)}}}
+\newcommand{\bvci}[3][\dummystr]{\ifthenelse{\equal{#1}{\dummystring}}{\bvect{#2}_{#3}}{\bvect{#2}_{#3}^{(#1)}}}
+\newcommand{\bmx}[3][\dummystr]{\ifthenelse{\equal{#1}{\dummystring}}{\bmat{#2}_{#3}}{\bmat{#2}_{#3}^{(#1)}}}
+
+
+% Math operators
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator*{\argmax}{arg max}
+\DeclareMathOperator*{\argmin}{arg min}
+\DeclareMathOperator*{\spann}{span}
+\DeclareMathOperator*{\sgn}{sgn}
+\DeclareMathOperator*{\supp}{supp}
+\DeclareMathOperator{\ran}{ran}
+\DeclareMathOperator{\sym}{sym}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\vech}{vec}
+
+
+
+
+
+
+
+
+
+
+
+% Vectors
+% - \v?  : normal
+% - \tv? : tilde
+% - \hv? : hat
+% - \bv? : bar
+\newcommand{\va}[2][\dummystring]{\vci[#1]{a}{#2}}
+\newcommand{\vb}[2][\dummystring]{\vci[#1]{b}{#2}}
+\newcommand{\vc}[2][\dummystring]{\vci[#1]{c}{#2}}
+\newcommand{\vd}[2][\dummystring]{\vci[#1]{d}{#2}}
+\newcommand{\ve}[2][\dummystring]{\vci[#1]{e}{#2}}
+\newcommand{\vf}[2][\dummystring]{\vci[#1]{f}{#2}}
+\newcommand{\vg}[2][\dummystring]{\vci[#1]{g}{#2}}
+\newcommand{\vh}[2][\dummystring]{\vci[#1]{h}{#2}}
+\newcommand{\vi}[2][\dummystring]{\vci[#1]{i}{#2}}
+\newcommand{\vj}[2][\dummystring]{\vci[#1]{j}{#2}}
+\newcommand{\vk}[2][\dummystring]{\vci[#1]{k}{#2}}
+\newcommand{\vl}[2][\dummystring]{\vci[#1]{l}{#2}}
+\newcommand{\vm}[2][\dummystring]{\vci[#1]{m}{#2}}
+\newcommand{\vn}[2][\dummystring]{\vci[#1]{n}{#2}}
+\newcommand{\vnn}[2][\dummystring]{\vci[#1]{N}{#2}}
+\newcommand{\vo}[2][\dummystring]{\vci[#1]{o}{#2}}
+\newcommand{\vp}[2][\dummystring]{\vci[#1]{p}{#2}}
+\newcommand{\vq}[2][\dummystring]{\vci[#1]{q}{#2}}
+\newcommand{\vr}[2][\dummystring]{\vci[#1]{r}{#2}}
+\newcommand{\vs}[2][\dummystring]{\vci[#1]{s}{#2}}
+\newcommand{\vt}[2][\dummystring]{\vci[#1]{t}{#2}}
+\newcommand{\vu}[2][\dummystring]{\vci[#1]{u}{#2}}
+\newcommand{\vv}[2][\dummystring]{\vci[#1]{v}{#2}}
+\newcommand{\vw}[2][\dummystring]{\vci[#1]{w}{#2}}
+\newcommand{\vx}[2][\dummystring]{\vci[#1]{x}{#2}}
+\newcommand{\vy}[2][\dummystring]{\vci[#1]{y}{#2}}
+\newcommand{\vz}[2][\dummystring]{\vci[#1]{z}{#2}}
+\newcommand{\valpha}[2][\dummystring]{\vci[#1]{\alpha}{#2}}
+\newcommand{\vbeta}[2][\dummystring]{\vci[#1]{\beta}{#2}}
+\newcommand{\vgamma}[2][\dummystring]{\vci[#1]{\gamma}{#2}}
+\newcommand{\vdelta}[2][\dummystring]{\vci[#1]{\delta}{#2}}
+\newcommand{\veps}[2][\dummystring]{\vci[#1]{\eps}{#2}}
+\newcommand{\vth}[2][\dummystring]{\vci[#1]{\theta}{#2}}
+\newcommand{\vmu}[2][\dummystring]{\vci[#1]{\mu}{#2}}
+\newcommand{\vtau}[2][\dummystring]{\vci[#1]{\tau}{#2}}
+\newcommand{\vpi}[2][\dummystring]{\vci[#1]{\pi}{#2}}
+\newcommand{\veta}[2][\dummystring]{\vci[#1]{\eta}{#2}}
+\newcommand{\vnu}[2][\dummystring]{\vci[#1]{\nu}{#2}}
+\newcommand{\vlam}[2][\dummystring]{\vci[#1]{\lambda}{#2}}
+\newcommand{\vphi}[2][\dummystring]{\vci[#1]{\phi}{#2}}
+\newcommand{\vvphi}[2][\dummystring]{\vci[#1]{\varphi}{#2}}
+\newcommand{\vkappa}[2][\dummystring]{\vci[#1]{\kappa}{#2}}
+\newcommand{\vxi}[2][\dummystring]{\vci[#1]{\xi}{#2}}
+\newcommand{\vomega}[2][\dummystring]{\vci[#1]{\omega}{#2}}
+\newcommand{\vsigma}[2][\dummystring]{\vci[#1]{\sigma}{#2}}
+\newcommand{\vrho}[2][\dummystring]{\vci[#1]{\rho}{#2}}
+\newcommand{\vpsi}[2][\dummystring]{\vci[#1]{\psi}{#2}}
+\newcommand{\vzeta}[2][\dummystring]{\vci[#1]{\zeta}{#2}}
+
+
+
+
+
+% To compress References: Edit the .bbl file and append \denselistbib
+% to the first line, then compile again.
+\newcommand{\denselistbib}{
+    \itemsep 3pt\topsep-6pt\partopsep-6pt
+}
+
+\newcommand{\denserlistbib}{
+    \itemsep 0pt\topsep-6pt\partopsep-6pt
+}
+
+\newcommand{\denserrlistbib}{
+    \itemsep -1pt\topsep-6pt\partopsep-6pt
+}
+
+\newcommand{\verydenselistbib}{
+    \itemsep -3pt\topsep-6pt\partopsep-6pt
+}

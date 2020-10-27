@@ -1,0 +1,94 @@
+\section{Samples and Labeled Categories from the \ti{CNN} Dataset}
+\label{appendix:samples}
+For the analysis in Section \ref{sec:data-analysis}, we uniformly sampled 100 examples from the development set of the \ti{CNN} dataset.  Table \ref{table:index} provides a full index list of our samples and Table \ref{table:categories} presents our labeled categories.
+
+\begin{table}[htp]
+    \centering
+    \begin{tabular}{p{5cm}|p{8cm}}
+    \toprule
+    Category & Sample IDs \\
+    \midrule
+    Exact match (13) & 8, 11, 23, 27, 28, 32, 43, 57, 63, 72, 86, 87, 99 \\
+    \midrule
+    Sentence-level paraphrasing (41) & 0, 2, 7, 9, 12, 14, 16, 18, 19, 20, 29, 30, 31, 34, 36, 37, 39, 41, 42, 44, 47, 48, 52,
+54, 58, 64, 65, 66, 69, 73, 74, 78, 80, 81, 82, 84, 85, 90, 92, 95, 96 \\
+    \midrule
+    Partial clues (19) & 4, 17, 21, 24, 35, 38, 45, 53, 55, 56, 61, 62, 75, 83, 88, 89, 91, 97, 98 \\
+    \midrule
+    Multiple sentences (2) & 5, 76 \\
+    \midrule
+    Coreference errors (8) & 6, 22, 40, 46, 51, 60, 68, 94 \\
+    \midrule
+    Ambiguous or very hard (17) & 1, 3, 10, 13, 15, 25, 26, 33, 49, 50, 59, 67, 70, 71, 77, 79, 93 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Our labeled categories of the 100 samples.}
+    \label{table:categories}
+\end{table}
+
+\clearpage
+\begin{table*}[!ht]
+    \tinyweeny
+    \centering
+    \scalebox{1.3}{%
+    \begin{tabular}{@{}l@{\quad}l|l@{\quad}l@{}}
+    \toprule
+    ID & Filename & ID & Filename \\
+    \midrule
+    0 & ddb1e746f88a22fee654ecde8f018e7586595045.question &  1 & 2bef8ec21b10a3294b1496d9a86f29f0592d2300.question \\
+2 & 38c702812a874f983e9890c32ba832841a327351.question &  3 & 636857045cf266dd69b67b1e53617bed5253dc33.question \\
+4 & 417cbffd5e6275b3c42cb88be222a9f6c7d415f1.question &  5 & ef96409c707a699e4055a1d0684eecdb6e115c16.question \\
+6 & b4e157a6a34bf11a03e0b5cd55065c0f39ac8d60.question &  7 & 1d75e7c59978c7c06f3aecaf52bc35b8919eee17.question \\
+8 & 223c8e3aeddc3f65fee1964df17bb72f89b723e4.question &  9 & 13d33b8c86375b0f5fdc856116e91a7355c6fc5a.question \\
+10 & 378fd418b8ec18dff406be07ec225e6bf53659f5.question &  11 & d8253b7f22662911c19ec4468f81b9db29df1746.question \\
+12 & 80529c792d3a368861b404c1ce4d7ad3c12e552a.question &  13 & 728e7b365e941d814676168c78c9c4f38892a550.question \\
+14 & 3cf6fb2c0d09927a12add82b4a3f248da740d0de.question &  15 & 04b827f84e60659258e19806afe9f8d10b764db1.question \\
+16 & f0abf359d71f7896abd09ff7b3319c70f2ded81e.question &  17 & b6696e0f2166a75fcefbe4f28d0ad06e420eef23.question \\
+18 & 881ab3139c34e9d9f29eb11601321a234d096272.question &  19 & 66f5208d62b543ee41accb7a560d63ff40413bac.question \\
+20 & f83a70d469fa667f0952959346b496fbf3cdb35c.question &  21 & 1853813a80f83a1661dd3f6695559674c749525e.question \\
+22 & 02664d5e3af321afbaf4ee351ba1f24643746451.question &  23 & 20417b5efb836530846ddf677d1bd0bbc831643c.question \\
+24 & 42c25a01801228a863c508f9d9e95399ea5f37a4.question &  25 & 70a3ba822770abcaf64dd131c85ec964d172c312.question \\
+26 & b6636e525ad58ffdc9a7c18187fb3412660d2cdd.question &  27 & 6147c9f2b3d1cc6fbc57c2137f0356513f49bf46.question \\
+28 & 262b855e2f24e1b2e4e0ba01ace81a1f214d729e.question &  29 & d7211f4d21f40461bb59954e53360eeb4bb6c664.question \\
+30 & be813e58ae9387a9fdaf771656c8e1122794e515.question &  31 & ad39c5217042f36e4c1458e9397b4a588bbf8cf9.question \\
+32 & 9534c3907f1cd917d24a9e4f2afc5b38b82d9fca.question &  33 & 3fbe4bfb721a6e1aa60502089c46240d5c332c05.question \\
+34 & 6efa2d6bad587bde65ca22d10eca83cf0176d84f.question &  35 & 436aa25e28d3a026c4fcd658a852b6a24fc6935e.question \\
+36 & 0c44d6ef109d33543cfbd26c95c9c3f6fe33a995.question &  37 & 8472b859c5a8d18454644d9acdb5edd1db175eb5.question \\
+38 & fb4dd20e0f464423b6407fd0d21cc4384905cf26.question &  39 & a192ddbcecf2b00260ae4c7c3c20df4d5ce47a85.question \\
+40 & f7133f844967483519dbf632e2f3fb90c5625a4c.question &  41 & 29b274958eb057e8f1688f02ef8dbc1c6d06c954.question \\
+42 & 8ea6ad57c1c5eb1950f50ea47231a5b3f32dd639.question &  43 & 1e43f2349b17dac6d1b3143f8c5556e2257be92c.question \\
+44 & 7f11f0b4f6bb9aaa3bdc74bffaed5c869b26be97.question &  45 & 8e6d8d984e51adb5071aad22680419854185eaea.question \\
+46 & 57fc2b7ffcfbd1068fbc33b95d5786e2bff24698.question &  47 & 57b773478955811a8077c98840d85af03e1b4f05.question \\
+48 & d857700721b5835c3472ba73ef7abfad0c9c499f.question &  49 & f8eedded53c96e0cb98e2e95623714d2737f29da.question \\
+50 & 4c488f41622ad48977a60c2283910f15a736417e.question &  51 & 39680fd0bff53f2ca02f632eabbc024d698f979e.question \\
+52 & addd9cebe24c96b4a3c8e9a50cd2a57905b6defb.question &  53 & 50317f7a626e23628e4bfd190e987ad5af7d283e.question \\
+54 & 3f7ac912a75e4ef7a56987bff37440ffa14770c6.question &  55 & 610012ef561027623f4b4e3b8310c1c41dc819cc.question \\
+56 & d9c2e9bfc71045be2ecd959676016599e4637ed1.question &  57 & 848c068db210e0b255f83c4f8b01d2d421fb9c94.question \\
+58 & f5c2753703b66d26f43bafe7f157803dc96eedbc.question &  59 & 4f76379f1c7b1d4acc5a4c82ced64af6313698dd.question \\
+60 & e5bb1c27d07f1591929bf0283075ad1bc1fc0b50.question &  61 & 33b911f9074c80eb18a57f657ad01393582059be.question \\
+62 & 58c4c046654af52a3cb8f6890411a41c0dd0063b.question &  63 & 7b03f730fda1b247e9f124b692e3298859785ef3.question \\
+64 & ece6f4e047856d5a84811a67ac9780d48044e69a.question &  65 & 35565dc6aecc0f1203842ef13aede0a14a8cf075.question \\
+66 & ddf3f2b06353fe8a9b50043f926eb3ab318e91b2.question &  67 & e248e59739c9c013a2b1b7385d881e0f879b341d.question \\
+68 & e86d3fa2a74625620bcae0003dfbe13416ee29cf.question &  69 & 176bf03c9c19951a8ae5197505a568454a6d4526.question \\
+70 & ee694cb968ae99aea36f910355bf73da417274c0.question &  71 & 7a666f78590edbaf7c4d73c4ea641c545295a513.question \\
+72 & 91e3cdd46a70d6dfbe917c6241eab907da4b1562.question &  73 & e54d9bdcb478ecc490608459d3405571979ef3f2.question \\
+74 & f3737e4de9864f083d6697293be650e02505768c.question &  75 & 1fc7488755d24696a4ed1aabc0a21b8b9755d8c6.question \\
+76 & fb3eadd07b9f1df1f8a7a6b136ad6d06f4981442.question &  77 & 1406bdad74b3f932342718d5d5d0946a906d73e2.question \\
+78 & 54b6396669bdb2e30715085745d4f98d058269ef.question &  79 & 0a53102673f2bebc36ce74bf71db1b42a0187052.question \\
+80 & d5eb4f98551d23810bfeb0e5b8a94037bcf58b0d.question &  81 & 370de4ffe0f2f9691e4bd456ff344a6a337e0edf.question \\
+82 & 12f32c770c86083ff21b25de7626505c06440018.question &  83 & 9f6b5cff3ce146e21e323a1462c3eff8fca3d4a0.question \\
+84 & 1c2a14f525fa3802b8da52aebaa9abd2091f9215.question &  85 & f2416e14d89d40562284ba2d15f7d5cc59c7e602.question \\
+86 & adcf5881856bcbaf1ad93d06a3c5431f6a0319ba.question &  87 & 097d34b804c4c052591984d51444c4a97a3c41ac.question \\
+88 & 773066c39bb3b593f676caf03f7e7370a8cd2a43.question &  89 & 598cf5ff08ea75dcedda31ac1300e49cdf90893a.question \\
+90 & b66ebaaefb844f1216fd3d28eb160b08f42cde62.question &  91 & 535a44842decdc23c11bae50d9393b923897187e.question \\
+92 & e27ca3104a596171940db8501c4868ed2fbc8cea.question &  93 & bb07799b4193cffa90792f92a8c14d591754a7f3.question \\
+94 & 83ff109c6ccd512abdf317220337b98ef551d94a.question &  95 & 5ede07a1e4ac56a0155d852df0f5bb6bde3cb507.question \\
+96 & 7a2a9a7fbb44b0e51512c61502ce2292170400c1.question &  97 & 9dcdc052682b041cdbf2fadc8e55f1bafc88fe61.question \\
+98 & 0c2e28b7f373f29f3796d29047556766cc1dd709.question &  99 & 2bdf1696bfd2579bb719402e9a6fa99cb8dbf587.question \\
+	\bottomrule
+	\end{tabular}
+	} % end \scalebox
+	\caption{A full index list of our samples.}
+	\label{table:index}
+\end{table*}
+

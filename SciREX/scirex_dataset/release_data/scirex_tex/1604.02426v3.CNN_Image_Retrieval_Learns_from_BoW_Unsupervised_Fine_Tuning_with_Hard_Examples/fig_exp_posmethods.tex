@@ -1,0 +1,83 @@
+\begin{figure}[t]
+\centering
+\extdata{fig/data/sample}
+\begin{tabular}{cc}
+\extfig{posnegoxf}{ 
+\begin{tikzpicture}
+\begin{axis}[%
+	width=0.5\linewidth,
+	height=0.45\linewidth,
+	xlabel={Epoch},
+	ylabel={mAP},
+	title={Oxford105k},
+	legend pos=south east,
+    legend style={cells={anchor=east}, font =\tiny, fill opacity=0.8, row sep=-2.5pt},	
+    ymax = 56,
+    ymin = 38,
+    xmin = 0,
+    xmax = 30,
+    grid=both,
+    xtick={0,5,...,30},    
+    xticklabels={0,5,...,30},
+    ytick={40, 45, ..., 55},
+ 	 y label style={at={(axis description cs:.1,.5)}},
+ 	 x label style={at={(axis description cs:.5,.05)}} 	
+]
+
+	\addplot[color=red,     solid, mark=*,  mark size=1.5, line width=1.0] table[x=epoch, y expr={100*\thisrow{siamrelaxed}}]       \posnegoxf;\leg{$m_3,\cN_2$};
+	\addplot[color=blue,    solid, mark=*,  mark size=1.5, line width=1.0] table[x=epoch, y expr={100*\thisrow{siamninl}}]          \posnegoxf;\leg{$m_2,\cN_2$};
+	\addplot[color=green,   solid, mark=*,  mark size=1.5, line width=1.0] table[x=epoch, y expr={100*\thisrow{siammac}}]           \posnegoxf;\leg{$m_1,\cN_2$};
+	\addplot[color=magenta, solid, mark=*,  mark size=1.5, line width=1.0] table[x=epoch, y expr={100*\thisrow{siammacnegoff}}]     \posnegoxf;\leg{$m_1,\cN_1$};
+	\addplot[color=cyan,    solid, mark=*,  mark size=1.5, line width=1.0] table[x=epoch, y expr={100*\thisrow{tripletmacnegoff}}]  \posnegoxf;\leg{\texttt{triplet}, $m_1,\cN_1$};
+	\addplot[color=black, mark=star, only marks, mark size = 2.5, line width = 1] coordinates {(30,54.16)}; \leg{best validated};
+	\addplot[color=black, mark=star, only marks, mark size = 2.5, line width = 1] coordinates {(27,53.56)};
+	\addplot[color=black, mark=star, only marks, mark size = 2.5, line width = 1] coordinates {(17,50.27)};
+	\addplot[color=black, mark=star, only marks, mark size = 2.5, line width = 1] coordinates {(20,50.05)};
+	\addplot[color=black, mark=star, only marks, mark size = 2.5, line width = 1] coordinates {(19,48.88)};
+
+\end{axis}
+\end{tikzpicture}
+}
+&
+\extfig{posnegpar}{ 
+\begin{tikzpicture}
+\begin{axis}[%
+	width=0.5\linewidth,
+	height=0.45\linewidth,
+	xlabel={Epoch},
+	ylabel={mAP},
+	title={Paris106k},
+	legend pos=south east,
+    legend style={cells={anchor=east}, font =\tiny, fill opacity=0.8, row sep=-2.5pt},	
+    ymax = 56,
+    ymin = 38,
+    xmin = 0,
+    xmax = 30,
+    grid=both,
+    xtick={0,5,...,30},    
+    xticklabels={0,5,...,30},
+    ytick={40,45,...,55},
+ 	 y label style={at={(axis description cs:.1,.5)}},
+ 	 x label style={at={(axis description cs:.5,.05)}} 	    
+]
+	\addplot[color=red,     solid, mark=*,  mark size=1.5, line width=1.0] table[x=epoch, y expr={100*\thisrow{siamrelaxed}}]       \posnegpar;\leg{$m_3,\cN_2$};
+	\addplot[color=blue,    solid, mark=*,  mark size=1.5, line width=1.0] table[x=epoch, y expr={100*\thisrow{siamninl}}]          \posnegpar;\leg{$m_2,\cN_2$};
+	\addplot[color=green,   solid, mark=*,  mark size=1.5, line width=1.0] table[x=epoch, y expr={100*\thisrow{siammac}}]           \posnegpar;\leg{$m_1,\cN_2$};
+	\addplot[color=magenta, solid, mark=*,  mark size=1.5, line width=1.0] table[x=epoch, y expr={100*\thisrow{siammacnegoff}}]     \posnegpar;\leg{$m_1,\cN_1$};
+	\addplot[color=cyan,    solid, mark=*,  mark size=1.5, line width=1.0] table[x=epoch, y expr={100*\thisrow{tripletmacnegoff}}]  \posnegpar;\leg{\texttt{triplet}, $m_1,\cN_1$};
+	\addplot[color=black, mark=star, only marks, mark size = 2.5, line width = 1] coordinates {(30,54.92)}; \leg{best validated};
+	\addplot[color=black, mark=star, only marks, mark size = 2.5, line width = 1] coordinates {(27,54.54)};
+	\addplot[color=black, mark=star, only marks, mark size = 2.5, line width = 1] coordinates {(17,50.34)};
+	\addplot[color=black, mark=star, only marks, mark size = 2.5, line width = 1] coordinates {(20,49.67)};
+	\addplot[color=black, mark=star, only marks, mark size = 2.5, line width = 1] coordinates {(19,46.17)};
+	
+\end{axis}
+\end{tikzpicture}
+}
+\end{tabular}
+%
+\vspace{-15pt}
+\caption{Performance comparison of methods for positive and negative example selection. Evaluation is performed on AlexNet MAC 
+on Oxford105k and Paris106k datasets. The plot shows the evolution of mAP with the number of training epochs. Epoch 0 corresponds to the off-the-shelf network. All approaches use contrastive loss, except if otherwise stated. The network with the best performance on the validation set is marked with $\star$.
+\label{fig:posnegmethod}}
+\end{figure}

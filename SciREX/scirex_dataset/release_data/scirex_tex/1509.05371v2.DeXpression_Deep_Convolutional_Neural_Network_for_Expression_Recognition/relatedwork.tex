@@ -1,0 +1,28 @@
+\section{Related Work}
+\label{sec:related}
+A detailed overview for expression recognition was given by C\u{a}leanu~\cite{caleanu2013face} and Bettadapura~\cite{bettadapura2012face}. In this Section mainly work which similar to the proposed method is presented as well as few selected articles which give a broad overview over the different methodologies.\\
+
+
+
+Recently Szegedy et al.\cite{DBLP:journals/corr/SzegedyLJSRAEVR14} have proposed an architecture called GoogLeNet. This is a 27 layer deep network, mostly composed of CNNs. The network is trained using stochastic gradient descent. In the ILSVRC 2014 Classification Challenge this network achieved a top-5 error rate of 6.67\% winning the first place. \\
+% 2015
+Using the the Extended Cohn-Kanade Dataset (Section~\ref{sec:ckp}), Happy and Routray~\cite{6998925} classify between six basic emotions. Given an input image, their solution localizes the face region. From this region, facial patches e.g. the eyes or lips are detected and points of interest are marked. From the patches which have the most variance between two images, features are extracted. The dimensionality of the features is reduced and then given to a Support Vector Machine (SVM). To evaluate the method, a 10-fold cross-validation is applied. 
+The average accuracy is 94.09\%.\\
+%2014
+Video based emotion recognition has been proposed by Byeon and Kwak~\cite{byeonfacial}. They have developed a three dimensional CNN which uses groups of 5 consecutive frames as input. A database containing 10 persons has been used to achieve an accuracy of 95\%.\\
+%2014
+Song et al.~\cite{song2014deep} have used a deep convolutional neural network for learning facial expressions. The created network consists of five layers with a total of 65k neurons. Convolutional, pooling, local filter layers and one fully connected layer are used to achieve an accuracy of 99.2\% on the CKP set. To avoid overfitting the dropout method was used.\\
+% 2010
+Luecy et al.~\cite{5543262} have created the Extended Cohn-Kanade dataset. This dataset contains emotion annotations as well as Action Unit annotations. In regards to classification, they also have evaluated the datasets using Active Appearance Models (AAMs) in combination with SVMs. To find the position and track the face over different images, they have employed AAM which generates a Mesh out of the face. From this mesh they have extracted two feature vectors. First, the normalized vertices with respect to rotation, translation, and scale. Second a gray-scale image from the mesh data, and the input images has been extracted. They have chosen a cross-validation strategy, where one subject is left out in the training process, achieving an accuracy of over 80\%.\\
+% 2006
+Anderson et al.~\cite{Anderson06areal-time} have developed a face expression system, which is capable of recognizing the six basic emotions. Their system is built upon three components. The first one is a face tracker (derivative of ratio template) to detect the location of the face. The second component is an optical flow algorithm to track the motion within the face. The last component is the recognition engine itself. It is based upon Support Vector Machines and Multilayer Perceptrons. This approach has been implemented in EmotiChat. They achieve a recognition accuracy of 81.82\%.\\
+Kotsia and Pitas~\cite{4032815} detect emotions by mapping a Candide grid, a face mask with a low number of polygons, onto a person's face. The grid is initially placed randomly on the image, then it has to be manually placed on the persons face. 
+Throughout the emotion, the grid is tracked using a Kanade–Lucas–Tomasi tracker. The geometric displacement information provided by the grid is used as feature vector for multiclass SVMs. The emotions are anger, disgust, fear, happiness, sadness, and surprise. They evaluate the model on the Cohn-Kanade dataset and an accuracy of 99.7\% has been achieved.\\
+% 2009
+Shan et al.~\cite{Shan2009803} have created an emotion recognition system based on Local Binary Patterns (LBP). The LBPs are calculated over the facial region. From the extracted LBPs a feature vector is derived. The features depend on the position and size of the sub-regions over witch the LBP is calculated. AdaBoost is used to find the sub-regions of the images which contain the most discriminative information. Different classification algorithms have been evaluated of which an SVM with Boosted-LBP features performs the best with a recognition accuracy of 95.1\% on the CKP set.\\
+%2013
+In 2013 Zafar et al.~\cite{6743520} proposed an emotion recognition system using Robust Normalized Cross Correlation (NCC). The used NCC is the "Correlation as a Rescaled Variance of the Difference between Standardized Scores". Outlier pixels which influence the template matching too strong or too weak are excluded and not considered. This approach has been evaluated on different databases including AR FaceDB (85\% Recognition Accuracy) and the Extended Cohn Kanade Database (100\% Recognition Accuracy).\\
+
+
+
+

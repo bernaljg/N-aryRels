@@ -1,0 +1,187 @@
+\begin{figure}[!h]
+  \centering
+  \begin{minipage}{0.05\linewidth}
+  	\includegraphics[width=2.5\linewidth]{time.pdf}\\
+  \end{minipage}
+  \begin{minipage}{0.46\linewidth}
+  	\centering
+    \scalebox{0.75}{
+    \tiny
+    \begingroup\makeatletter\def\f@size{1}\check@mathfonts
+    \begin{tikzpicture}
+      \node [draw, circle] (w) at (0,0) {$w$};
+      \node [draw, circle] (w0) at (-0.5,1) {$w_0$};
+      \node [draw, circle] (w1) at (0.5,1) {$w_1$};
+      \node [draw, circle] (w00) at (-1.5,2) {$w_{00}$};
+      \node [draw, circle] (w01) at (-0.5,2) {$w_{01}$};
+      \node [draw, circle] (w10) at (0.5,2) {$w_{10}$};
+      \node [draw, circle] (w11) at (1.5,2) {$w_{11}$};
+      \node [draw, circle] (w000) at (-3.5,3) {$w_{000}$};
+      \node [draw, circle] (w001) at (-2.5,3) {$w_{001}$};
+      \node [draw, circle] (w010) at (-1.5,3) {$w_{010}$};
+      \node [draw, circle] (w011) at (-0.5,3) {$w_{011}$};
+      \node [draw, circle] (w100) at (0.5,3) {$w_{100}$};
+      \node [draw, circle] (w101) at (1.5,3) {$w_{101}$};
+      \node [draw, circle] (w110) at (2.5,3) {$w_{110}$};
+      \node [draw, circle] (w111) at (3.5,3) {$w_{111}$};
+      \node [draw, circle] (w0000) at (-3.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w0001) at (-3.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w0010) at (-2.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w0011) at (-2.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w0100) at (-1.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w0101) at (-1.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w0110) at (-0.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w0111) at (-0.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w1000) at (0.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w1001) at (0.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w1010) at (1.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w1011) at (1.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w1100) at (2.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w1101) at (2.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w1110) at (3.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w1111) at (3.75,4) {$w_{\dots}$};
+      \draw [thick] [->] (w) to (w0);
+      \draw [thick] [dashed] [green] [->] (w) to (w1);
+      \draw [thick] [dashed] [green] [->] (w0) to (w00);
+      \draw [thick] [->] (w0) to (w01);
+      \draw [dotted] [->] (w1) to (w10);
+      \draw [dotted] [->] (w1) to (w11);
+      \draw [dotted] [->] (w00) to (w000);
+      \draw [dotted] [->] (w00) to (w001);
+      \draw [thick] [dashed] [green] [->] (w01) to (w010);
+      \draw [thick] [->] (w01) to (w011);
+      \draw [dotted] [->] (w10) to (w100);
+      \draw [dotted] [->] (w10) to (w101);
+      \draw [dotted] [->] (w11) to (w110);
+      \draw [dotted] [->] (w11) to (w111);
+      \draw [dotted] [->] (w000) to (w0000);
+      \draw [dotted] [->] (w000) to (w0001);
+      \draw [dotted] [->] (w001) to (w0010);
+      \draw [dotted] [->] (w001) to (w0011);
+      \draw [dotted] [->] (w010) to (w0100);
+      \draw [dotted] [->] (w010) to (w0101);
+      \draw [thick] [->] (w011) to (w0110);
+      \draw [thick] [dashed] [green] [->] (w011) to (w0111);
+      \draw [dotted] [->] (w100) to (w1000);
+      \draw [dotted] [->] (w100) to (w1001);
+      \draw [dotted] [->] (w101) to (w1010);
+      \draw [dotted] [->] (w101) to (w1011);
+      \draw [dotted] [->] (w110) to (w1100);
+      \draw [dotted] [->] (w110) to (w1101);
+      \draw [dotted] [->] (w111) to (w1110);
+      \draw [dotted] [->] (w111) to (w1111);
+      \end{tikzpicture}
+      \endgroup
+    }\\
+    Training with exposure bias
+  \end{minipage}
+  \begin{minipage}{0.46\linewidth}
+  	\centering
+    \scalebox{0.75}{
+    \tiny
+    \begingroup\makeatletter\def\f@size{1}\check@mathfonts
+    \begin{tikzpicture}
+      \node [draw, circle] (w) at (0,0) {$w$};
+      \node [draw, circle] (w0) at (-0.5,1) {$w_0$};
+      \node [draw, circle] (w1) at (0.5,1) {$w_1$};
+      \node [draw, circle] (w00) at (-1.5,2) {$w_{00}$};
+      \node [draw, circle] (w01) at (-0.5,2) {$w_{01}$};
+      \node [draw, circle] (w10) at (0.5,2) {$w_{10}$};
+      \node [draw, circle] (w11) at (1.5,2) {$w_{11}$};
+      \node [draw, circle] (w000) at (-3.5,3) {$w_{000}$};
+      \node [draw, circle] (w001) at (-2.5,3) {$w_{001}$};
+      \node [draw, circle] (w010) at (-1.5,3) {$w_{010}$};
+      \node [draw, circle] (w011) at (-0.5,3) {$w_{011}$};
+      \node [draw, circle] (w100) at (0.5,3) {$w_{100}$};
+      \node [draw, circle] (w101) at (1.5,3) {$w_{101}$};
+      \node [draw, circle] (w110) at (2.5,3) {$w_{110}$};
+      \node [draw, circle] (w111) at (3.5,3) {$w_{111}$};
+      \node [draw, circle] (w0000) at (-3.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w0001) at (-3.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w0010) at (-2.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w0011) at (-2.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w0100) at (-1.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w0101) at (-1.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w0110) at (-0.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w0111) at (-0.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w1000) at (0.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w1001) at (0.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w1010) at (1.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w1011) at (1.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w1100) at (2.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w1101) at (2.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w1110) at (3.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w1111) at (3.75,4) {$w_{\dots}$};
+
+      \draw [thick] [->] (w) to (w0);
+      \draw [thick] [blue] [->] (w) to (w1);
+      \draw [thick] [dashed] [green] [->] (w0) to (w00);
+      \draw [thick] [->] (w0) to (w01);
+      \draw [thick] [blue] [->] (w1) to (w10);
+      \draw [thick] [dashed] [green] [->] (w1) to (w11);
+      \draw [thick] [dashed] [green] [->] (w00) to (w000);
+      \draw [thick] [dashed] [green] [->] (w00) to (w001);
+      \draw [thick] [dashed] [green] [->] (w01) to (w010);
+      \draw [thick] [->] (w01) to (w011);
+      \draw [thick] [dashed] [green] [->] (w10) to (w100);
+      \draw [thick] [blue] [->] (w10) to (w101);
+      \draw [thick] [dashed] [green] [->] (w11) to (w110);
+      \node [draw, circle] (w000) at (-3.5,3) {$w_{000}$};
+      \node [draw, circle] (w001) at (-2.5,3) {$w_{001}$};
+      \node [draw, circle] (w010) at (-1.5,3) {$w_{010}$};
+      \node [draw, circle] (w011) at (-0.5,3) {$w_{011}$};
+      \node [draw, circle] (w100) at (0.5,3) {$w_{100}$};
+      \node [draw, circle] (w101) at (1.5,3) {$w_{101}$};
+      \node [draw, circle] (w110) at (2.5,3) {$w_{110}$};
+      \node [draw, circle] (w111) at (3.5,3) {$w_{111}$};
+      \node [draw, circle] (w0000) at (-3.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w0001) at (-3.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w0010) at (-2.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w0011) at (-2.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w0100) at (-1.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w0101) at (-1.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w0110) at (-0.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w0111) at (-0.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w1000) at (0.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w1001) at (0.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w1010) at (1.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w1011) at (1.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w1100) at (2.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w1101) at (2.75,4) {$w_{\dots}$};
+      \node [draw, circle] (w1110) at (3.25,4) {$w_{\dots}$};
+      \node [draw, circle] (w1111) at (3.75,4) {$w_{\dots}$};
+      \draw [thick] [dashed] [green] [->] (w000) to (w0000);
+      \draw [thick] [dashed] [green] [->] (w000) to (w0001);
+      \draw [thick] [dashed] [green] [->] (w001) to (w0010);
+      \draw [thick] [dashed] [green] [->] (w001) to (w0011);
+      \draw [thick] [dashed] [green] [->] (w010) to (w0100);
+      \draw [thick] [dashed] [green] [->] (w010) to (w0101);
+      \draw [thick] [->] (w011) to (w0110);
+      \draw [thick] [dashed] [green] [->] (w011) to (w0111);
+      \draw [thick] [dashed] [green] [->] (w100) to (w1000);
+      \draw [thick] [dashed] [green] [->] (w100) to (w1001);
+      \draw [thick] [dashed] [green] [->] (w101) to (w1010);
+      \draw [thick] [blue] [->] (w101) to (w1011);
+      \draw [thick] [dashed] [green] [->] (w110) to (w1100);
+      \draw [thick] [dashed] [green] [->] (w110) to (w1101);
+      \draw [thick] [dashed] [green] [->] (w111) to (w1110);
+      \draw [thick] [dashed] [green] [->] (w111) to (w1111);
+      \end{tikzpicture}
+      \endgroup
+    }
+	Training in expectation (Reinforce)
+  \end{minipage}
+  \caption{Search space for the toy case of a binary vocabulary and sequences of length 4.  
+    The trees represent all the $2^4$ possible sequences.
+  The solid black line is the ground truth sequence. 
+  \textbf{(Left)} Greedy training such as XENT optimizes only the probability 
+  of the next word. The model may consider choices indicated by the green arrows, but it starts off from words taken from the ground truth sequence. The model experiences exposure bias, since it sees only words branching off the ground truth path;
+  \textbf{(Right)} REINFORCE and MIXER optimize over all possible sequences, using the predictions made by the model itself.  
+  In practice, the model samples only a single path indicated by the blue solid line. The model does not suffer from exposure bias; the model is trained as it is tested.}
+  \label{fig:plan}
+\end{figure}
+
+  
+
+
+    

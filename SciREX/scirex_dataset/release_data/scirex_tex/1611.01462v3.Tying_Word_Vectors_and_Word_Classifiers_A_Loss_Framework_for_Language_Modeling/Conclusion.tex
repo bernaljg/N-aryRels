@@ -1,0 +1,11 @@
+% !TEX root = ./notes.tex
+\section{Conclusion}
+In this work, we introduced a novel loss framework for language modeling.
+Particularly, we showed that the metric encoded into the space of word embeddings could be used to generate a more informed data distribution than the one-hot targets, and that additionally training against this distribution improves learning.
+We also showed theoretically that this approach lends itself to a second improvement, which is simply reusing the input embedding matrix in the output projection layer.
+This has an additional benefit of reducing the number of trainable variables in the model.
+We empirically validated the theoretical link, and verified that both proposed changes do in fact belong to the same framework.
+In our experiments on the Penn Treebank corpus and Wikitext-2, we showed that our framework  outperforms the conventional one, and that even the simple modification of reusing the word embedding in the output projection layer is sufficient for large networks.
+
+The improvements achieved by our framework are not unique to vanilla language modeling, and are readily applicable to other tasks which utilize language models such as neural machine translation, speech recognition, and text summarization.
+This could lead to significant improvements in such models especially with large vocabularies, with the additional benefit of greatly reducing the number of parameters to be trained.

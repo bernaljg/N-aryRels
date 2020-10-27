@@ -1,0 +1,33 @@
+%\renewcommand{\tabcolsep}{0.15cm}
+\tabcolsep 1.5pt
+\begin{table}[tbp]
+ \scriptsize
+  \centering
+  \begin{tabular}{@{} l cc ccc ccc@{}}
+    \toprule
+    &Torso & Upper & Lower & Upper & Fore- & Head  & PCP \\
+    &   & Leg   & Leg& Arm   & arm   &       &       \\
+    \midrule
+    \input{pcp-torso-expidx201-2.tex}
+    \input{pcp-torso-expidx276.tex}
+    \input{pcp-torso-expidx266.tex}
+    \input{pcp-torso-expidx480.tex} 
+    \midrule
+    $\dense$ (unary)          & 96.2  & 87.8  & 81.8  & 81.6  & \textbf{72.3}  & 95.6 & 83.9 \\
+    \quad + $\deepcut~\singb$ & \textbf{97.0}  & \textbf{88.8}  & \textbf{82.0}  & \textbf{82.4}  & 71.8  & \textbf{95.8} & \textbf{84.3} \\
+    \input{pcp-torso-expidx511.tex} 
+    \midrule
+    Tompson et al.~\cite{tompson14nips}& 90.3  & 70.4  & 61.1  & 63.0  & 51.2  & 83.7 & 66.6 \\
+    Chen\&Yuille~\cite{chen14nips}& 96.0  & 77.2  & 72.2  & 69.7  & 58.1  & 85.6 & 73.6 \\
+    Fan et al.~\cite{fan15cvpr}$^*$
+    & 95.4  & 77.7  & 69.8  & 62.8  & 49.1  & 86.6 & 70.1 \\
+    Pishchulin et al.~\cite{pishchulin13iccv}& 88.7  & 63.6  & 58.4  & 46.0  & 35.2  & 85.1 & 58.0 \\
+    Wang\&Li~\cite{wang13cvpr}& 87.5  & 56.0  & 55.8  & 43.1  & 32.1  & 79.1 & 54.1 \\
+    \bottomrule
+  \end{tabular}
+  
+  $^*$ re-evaluated using the standard protocol, for details see project page of~\cite{fan15cvpr}
+  \caption[]{Pose estimation results (PCP) on LSP (PC) dataset.}
+    \vspace{-1.5em}
+  \label{tab:multicut:lsp-pc-pcp}
+\end{table}

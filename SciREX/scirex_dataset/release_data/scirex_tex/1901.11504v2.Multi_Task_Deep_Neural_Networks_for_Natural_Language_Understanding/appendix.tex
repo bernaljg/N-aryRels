@@ -1,0 +1,135 @@
+%
+% File acl2019.tex
+%
+%% Based on the style files for ACL 2018, NAACL 2018/19, which were
+%% Based on the style files for ACL-2015, with some improvements
+%%  taken from the NAACL-2016 style
+%% Based on the style files for ACL-2014, which were, in turn,
+%% based on ACL-2013, ACL-2012, ACL-2011, ACL-2010, ACL-IJCNLP-2009,
+%% EACL-2009, IJCNLP-2008...
+%% Based on the style files for EACL 2006 by 
+%%e.agirre@ehu.es or Sergi.Balari@uab.es
+%% and that of ACL 08 by Joakim Nivre and Noah Smith
+
+\documentclass[11pt,a4paper]{article}
+\usepackage[hyperref]{acl2019}
+\usepackage{times}
+\usepackage{latexsym}
+
+\usepackage{url}
+
+% figure
+\usepackage{graphicx}
+\usepackage{subcaption}
+% bold math
+\usepackage{amsmath}
+\usepackage{bm}
+% phonetic
+\usepackage[tone]{tipa}
+% clever ref
+\usepackage{cleveref}
+\crefname{section}{§}{§§}
+\Crefname{section}{Section}{}
+\Crefname{figure}{Figure}{}
+\Crefname{algorithm}{Algorithm}{}
+\Crefname{equation}{Equation}{}
+% ReCoRD name
+\usepackage{shadowtext}
+\usepackage{xspace}
+\newcommand{\ReCoRD}{{\fontfamily{fla}\fontseries{m}\selectfont Re}{\fontfamily{fla}\fontseries{b}\selectfont{Co}}{\fontfamily{fla}\fontseries{m}\selectfont RD}\xspace}
+% argmax
+\DeclareMathOperator*{\argmax}{arg\,max}
+% booktabs
+\usepackage{booktabs}
+% multirow
+\usepackage{multirow}
+% special cells
+\newcommand{\specialcell}[2][c]{%
+  \begin{tabular}[#1]{@{}l@{}}#2\end{tabular}}
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+% itemize spacing
+\usepackage{enumitem}% http://ctan.org/pkg/enumitem
+
+
+% \aclfinalcopy % Uncomment this line for the final submission
+\def\aclpaperid{1963} %  Enter the acl Paper ID here
+
+%\setlength\titlebox{5cm}
+% You can expand the titlebox if you need extra space
+% to show all the authors. Please do not make the titlebox
+% smaller than 5cm (the original size); we will check this
+% in the camera-ready version and ask you to change it back.
+
+\newcommand\BibTeX{B{\sc ib}\TeX}
+\newcommand\MNAME{MT-DNN}
+
+
+\title{Multi-Task Deep Neural Networks for Natural Language Understanding}
+
+\author{Sheng Zhang$^\dagger$\thanks{~~Work done when Sheng Zhang was visiting Microsoft.}, Xiaodong Liu$^\ddagger$, Jingjing Liu$^\ddagger$, Jianfeng Gao$^\ddagger$, \\ 
+{\bf Kevin Duh$^\dagger$ \and Benjamin Van Durme$^\dagger$} \\
+$^\dagger${Johns Hopkins University}\\
+$^\ddagger${Microsoft Research}\\
+}
+
+\date{}
+
+\begin{document}
+%\maketitle
+\onecolumn
+%{\centering {\BIG Multi-Task Deep Neural Networks for Natural Language Understanding}}
+
+
+
+\section{Appendices}
+\label{sec:appendix}
+%\subsection{Detailed results on the GLUE dev set}
+% \begin{table*}[h!]
+% 	\begin{center}
+% 		\begin{tabular}{l|c@{\hskip1pt}|c@{\hskip1pt}|c@{\hskip1pt}|c@{\hskip1pt}|c@{\hskip1pt}|@{\hskip1pt}c @{\hskip1pt}|c @{\hskip1pt}|c@{\hskip1pt}}
+% 			\hline \bf Model &MNLI-{m/mm} & QQP & RTE & QNLI (v1/v2)  &MRPC & CoLa &SST-2  & STS-B \\ \hline \hline
+% 			BERT$_{\text{LARGE}}$& 86.3/86.2 &91.1/88.0 &71.1 &90.5/92.4 &89.5/85.8 &61.8 &93.5 &89.6/89.3\\
+% 			\hline
+% 			ST-DNN &86.6/86.3 & 91.3/88.4 &  72.0& 96.1/- & 89.7/86.4 &- &- &-\\ \hline
+%             {\MNAME}_{wft}  &\textbf{87.1/86.6}& 91.5/88.6& \textbf{83.4} & \textbf{97.3/92.9} & 90.5/87.1& 62.4& 94.1  &90.1/89.5\\ \hline
+%             {\MNAME}  &\textbf{87.1/86.7} &\textbf{91.9/89.2} &\textbf{83.4}&\textbf{97.4/92.9} &\textbf{91.0/87.5} &\textbf{63.5}& \textbf{94.3}&\textbf{90.7/90.6} \\ \hline
+
+% 		\end{tabular}
+% 	\end{center}
+% 	%\lgspace
+% 	\caption{GLUE dev set results. The best result on each task is in \textbf{bold}. BERT\textsubscript{LARGE} is the large BERT model released by the authors, and is fine-tuned for each single task. % The Single-Task DNN (ST-DNN) uses the same model architecture as MT-DNN. But instead of fine-tuning one model for all tasks using MTL, we create multiple ST-DNNs, one for each task using only in-domain data for fine-tuning. ST-DNNs and 
+% 	MT-DNN use BERT\textsubscript{LARGE} as their inital shared layers. %Note that - denotes the same model structure of BERT\textsubscript{LARGE} and ST-DNN, and thus they produce the same results.
+% 	}
+% 	\label{tab:glue_dev}
+% %\lgspace
+% \end{table*}
+
+\subsection{Test results on the \textit{old} GLUE test set}
+\label{sec:glue_old}
+\begin{table*}[h!]
+\small
+	\begin{center}
+		\begin{tabular}{l|@{\hskip1pt}l@{\hskip1pt}|@{\hskip1pt}c@{\hskip1pt}|@{\hskip1pt}c@{\hskip1pt}|@{\hskip1pt}c@{\hskip1pt}|@{\hskip1pt}c@{\hskip1pt}|@{\hskip1pt}c|@{\hskip1pt}c|@{\hskip1pt}c |@{\hskip1pt} c |@{\hskip1pt} c|@{\hskip1pt} c}
+			\hline \bf Model &CoLA&	SST-2 &MRPC& STS-B&QQP&MNLI-m/mm&QNLI&RTE&WNLI&AX &\textbf{Score}\\ 
+			% &MCC &Acc &Acc/F1&P/S Corr&Acc/F1 &Acc &Acc &Acc &Acc &Acc & \\ 
+			& 8.5k &67k &3.7k &7k &364k &393k &108k &2.5k &634 & & \\ \hline \hline
+			BiLSTM+ELMo+Attn $^1$ &36.0 &90.4 &84.9/77.9 &75.1/73.3 &64.8/84.7 &76.4/76.1 &79.9 &56.8 &65.1 &26.5 &70.5 \\ \hline
+			\begin{tabular}{@{}c@{}}Singletask Pretrain \\Transformer $^2$  \end{tabular}
+			 &45.4 &91.3 &82.3/75.7&82.0/80.0 &70.3/88.5 &82.1/81.4 &88.1 &56.0 &53.4  &29.8 &72.8 \\ \hline
+			GPT on STILTs $^3$ &47.2 &93.1 &87.7/83.7 &85.3/84.8 &70.1/88.1 &80.8/80.6 &87.2 &69.1 &65.1 &29.4 &76.9 \\ \hline
+			BERT$_{\text{LARGE}}$ $^4$ & 60.5 &94.9 &89.3/85.4 &87.6/86.5 &72.1/89.3 &86.7/85.9 &91.1 &70.1 &65.1	&39.6 & 80.4\\ \hline
+MT-DNN &\textbf{61.5} &\textbf{95.6} &\textbf{90.0/86.7} &\textbf{88.3/87.7} &\textbf{72.4/89.6} &\textbf{86.7/86.0}	&\textbf{98.0} &\textbf{75.5} &65.1	&\textbf{40.3} &\textbf{82.2} \\ \hline
+		\end{tabular}
+	\end{center}
+	%\lgspace
+	\caption{GLUE test set results, which are scored by the GLUE evaluation server. The numbers below each task denote the size of training examples. The state-of-the-art results are in \textbf{bold}. All the results are obtained from \href{https://gluebenchmark.com/leaderboard}{https://gluebenchmark.com/leaderboard} on January 15, 2019. Note that the \textit{old} version of GLUE test set expired on January 30, 2019. Model references: $^1$:\protect\cite{wang2018glue} ; $^2$:\protect\cite{gpt2018}; $^3$: \protect\cite{phang2018sentence};  $^4$:\protect\cite{bert2018}.
+	}
+	\label{tab:glue_test}
+%\lgspace
+\end{table*}
+\bibliography{acl_snli}
+\bibliographystyle{acl_natbib}
+\end{document}

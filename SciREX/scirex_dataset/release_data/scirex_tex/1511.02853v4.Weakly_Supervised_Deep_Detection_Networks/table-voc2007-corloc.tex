@@ -1,0 +1,22 @@
+\begin{table*}[t!]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\renewcommand{\tabcolsep}{1.2mm}
+\resizebox{\linewidth}{!}{
+  \begin{tabular}{@{}L{3.5cm}|*{20}{x}|x@{}}
+    method & aero      & bike      & bird      & boat      & bottle     & bus        & car        & cat        & chair      & cow        & table      & dog        & horse      & mbike      & persn     & plant      & sheep      & sofa       & train      & tv         & mean       \\
+    \midrule
+    WSDDN \bf{S} & 68.5 & 67.5 & 56.7 & 34.3 & 32.8 & 69.9 & 75.0 & 45.7 & 17.1 & 68.1 & 30.5 & 40.6 & 67.2 & 82.9 & 28.8 & 43.7 & 71.9 & 62.0 & 62.8 & 58.2 & 54.2\\
+    WSDDN \bf{M} & 65.1 & 63.4 & 59.7 & {45.9} & 38.5 & 69.4 & 77.0 & 50.7 & 30.1 & \bf{68.8} & 34.0 & 37.3 & 61.0 & 82.9 & 25.1 & 42.9 & \bf{79.2} & 59.4 & \bf{68.2} & 64.1 & 56.1\\
+    WSDDN \bf{L} & 65.1 & 58.8 & 58.5 & 33.1 & 39.8 & 68.3 & 60.2 & \bf{59.6} & \bf{34.8} & 64.5 & 30.5 & 43.0 & 56.8 & 82.4 & 25.5 & 41.6 & 61.5 & 55.9 & 65.9 & 63.7 & 53.5\\
+    WSDDN Ensemble & 68.9 & \bf{68.7} & \bf{65.2} & 42.5 & \bf{40.6} & \bf{72.6} & {75.2} & {53.7} & {29.7} & {68.1} & {33.5} & {45.6} & {65.9} & \bf{86.1} & {27.5} & \bf{44.9} & {76.0} & \bf{62.4} & {66.3} & \bf{66.8} &\bf{58.0}\\
+    \midrule
+    Bilen \etal \cite{Bilen15}    & 66.4 & 59.3 & 42.7 & 20.4 & {21.3} & {63.4} & {74.3} & \bf{59.6} & 21.1 & {58.2} & 14.0 & 38.5 & 49.5 & 60.0 & 19.8 & {39.2} & 41.7 & 30.1 & 50.2 & 44.1 & 43.7\\
+    Cinbis \etal \cite{Cinbis15} & 65.3 & 55.0 & 52.4 & \bf{48.3} & 18.2 & 66.4 & \bf{77.8} & 35.6 & 26.5 & 67.0 & \bf{46.9} & \bf{48.4} & \bf{70.5} & 69.1 & \bf{35.2} & 35.2 & 69.6 & 43.4 & 64.6 & 43.7 & 52.0 \\
+    Wang \etal \cite{Wang14a}     & \bf{80.1} & {63.9} & {51.5} & 14.9 & 21.0 & 55.7 & 74.2 & 43.5 & {26.2} & 53.4 & 16.3 & 56.7 & {58.3} & {69.5} & 14.1 & 38.3 & {58.8} & {47.2} & 49.1 & {60.9} & {48.5}\\
+  \end{tabular}
+  }
+  \vspace{0.2em}
+  \caption{{\bf VOC 2007 trainval} correct localization (CorLoc \cite{Deselaers12}) on positive \textit{trainval} images (\%).}
+  \label{tab:voc2007corloc}
+\end{table*}

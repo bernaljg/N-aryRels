@@ -1,0 +1,190 @@
+\documentclass{article} % For LaTeX2e
+
+% Recommended, but optional, packages for figures and better typesetting:
+\usepackage{microtype}
+\usepackage{subfigure}
+\usepackage{booktabs} % for professional tables
+
+\usepackage[colorlinks=true, linkcolor=black, citecolor=black, filecolor=black, urlcolor=black]{hyperref}
+\usepackage{enumerate}
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage[draft]{fixme}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{multicol}
+\usepackage[utf8]{inputenc}
+% \usepackage{bbm}
+
+% \usepackage{longtable}
+% Helpful commands.
+\newcommand\sigmoid{\sigma}
+\newcommand\argmax{\mathrm{argmax}}
+\newcommand\gru{\ensuremath{\mathrm{GRU}}}
+\newcommand\cgru{\ensuremath{\mathrm{CGRU}}}
+\newcommand\dcgru{\ensuremath{\mathrm{CGRU}^d}}
+\newcommand\sfin{s_\mathrm{fin}}
+\newcommand\floor[1]{\left \lfloor{#1}\right \rfloor}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\height}{h}
+\newcommand{\width}{w}
+\newcommand{\modeldim}{d}
+\newcommand{\query}{q}
+\newcommand{\memory}{m}
+\newcommand{\val}{v}
+\newcommand{\key}{k}
+\newcommand{\vect}[1]{\boldsymbol{\mathbf{#1}}}
+% Custom Commands:
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+% USE THIS FOR COMMENTS ON THE PAPER'S MARGIN.
+% \sidenote{trandustin: my comments here which don't block text}
+% \usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{ragged2e}
+\DeclareRobustCommand{\sidenote}[1]{\marginpar{
+                                    \RaggedRight
+                                    \textcolor{red}{\textsf{#1}}}}
+\setlength{\marginparwidth}{0.5in} % For sidenotes on two-column papers
+% \title{Image Transformer}
+
+
+% Attempt to make hyperref and algorithmic work together better:
+% \newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Use the following line for the initial blind version submitted for review:
+% \usepackage{icml2018}
+% If accepted, instead use the following line for the camera-ready submission:
+\usepackage[accepted]{icml2018}
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+% \icmltitlerunning{Submission and Formatting Instructions for ICML 2018}
+
+\begin{document}
+
+\twocolumn[
+\icmltitle{Image Transformer}
+
+% It is OKAY to include author information, even for blind
+% submissions: the style file will automatically remove it for you
+% unless you've provided the [accepted] option to the icml2018
+% package.
+
+% List of affiliations: The first argument should be a (short)
+% identifier you will use later to specify author affiliations
+% Academic affiliations should list Department, University, City, Region, Country
+% Industry affiliations should list Company, City, Region, Country
+
+% You can specify symbols, otherwise they are numbered in order.
+% Ideally, you should not use this facility. Affiliations will be numbered
+% in order of appearance and this is the preferred way.
+\icmlsetsymbol{equal}{*}
+
+\begin{icmlauthorlist}
+\icmlauthor{Niki Parmar *}{g}
+\icmlauthor{Ashish Vaswani *}{g}
+\icmlauthor{Jakob Uszkoreit}{g}
+
+
+
+\icmlauthor{\L{}ukasz Kaiser}{g}
+\icmlauthor{Noam Shazeer}{g}
+\icmlauthor{Alexander Ku }{b,i}
+\icmlauthor{Dustin Tran}{a}
+\icmlaffiliation{g}{Google Brain, Mountain View, USA}
+\icmlaffiliation{a}{Google AI, Mountain View, USA}
+\icmlaffiliation{b}{Department of Electrical Engineering and Computer Sciences, University of California, Berkeley}
+\icmlaffiliation{i}{Work done during an internship at Google Brain}
+\end{icmlauthorlist}
+
+
+\icmlcorrespondingauthor{Ashish Vaswani, Niki Parmar, Jakob Uszkoreit}{avaswani@google.com, nikip@google.com, usz@google.com}
+
+% You may provide any keywords that you
+% find helpful for describing your paper; these are used to populate
+% the "keywords" metadata in the PDF but will not be shown in the document
+\icmlkeywords{Machine Learning, ICML}
+
+\vskip 0.3in
+]
+%\icmlEqualContribution
+
+% this must go after the closing bracket ] following \twocolumn[ ...
+
+% This command actually creates the footnote in the first column
+% listing the affiliations and the copyright notice.
+% The command takes one argument, which is text to display at the start of the footnote.
+% The \icmlEqualContribution command is standard text for equal contribution.
+% Remove it (just {}) if you do not need this facility.
+%\footnote{\icmlEqualContribution}
+%\footnote{\icmlcorrespondingauthor}
+%\printAffiliationsAndNotice{}  % leave blank if no need to mention equal contribution
+\printAffiliationsAndNotice{\icmlEqualContribution} % otherwise use the standard text.
+
+% \begin{document}
+% \maketitle
+% \vspace{2cm}
+\begin{abstract}
+Image generation has been successfully cast as an autoregressive sequence generation or transformation problem. Recent work has shown that self-attention is an effective way of modeling textual sequences.
+In this work, we generalize a recently proposed model architecture based on self-attention, the Transformer, to a sequence modeling formulation of image generation with a tractable likelihood. By restricting the self-attention mechanism to attend to local neighborhoods we significantly increase the size of images the model can process in practice, despite maintaining significantly larger receptive fields per layer than typical convolutional neural networks. While conceptually simple, our generative models significantly outperform the current state of the art in image generation on ImageNet, improving the best published negative log-likelihood on ImageNet from 3.83 to 3.77.
+We also present results on image super-resolution with a large magnification ratio, applying an encoder-decoder configuration of our architecture. In a human evaluation study, we find that images generated by our super-resolution model fool human observers three times more often than the previous state of the art.
+
+% TODO: Add back after open sourcing
+%\blfootnote{Code available at \url{anonymized}}
+\end{abstract}
+
+\input{front_page}
+\section{Introduction}
+\input{introduction}
+
+\section{Background}
+\input{background}
+\input{completions}
+\section{Model Architecture}
+\input{model}
+
+\section{Inference}
+\input{inference}
+
+\section{Experiments}
+\input{experiments}
+
+% \input{cifar10_303_cond_img}
+% % \input{cifar10_299_cond_img}
+% \input{celeba_superres_images}
+% \input{cifar_superres_completion}
+
+\section{Conclusion}
+
+In this work we demonstrate that models based on self-attention can operate effectively on modalities other than text, and through local self-attention scale to significantly larger structures than sentences. With fewer layers, its larger receptive fields allow the Image Transformer to significantly improve over the state of the art in unconditional, probabilistic image modeling of comparatively complex images from ImageNet as well as super-resolution.
+
+We further hope to have provided additional evidence that even in the light of generative adversarial networks, likelihood-based models of images is very much a promising area for further research - as is using network architectures such as the Image Transformer in GANs.
+
+In future work we would like to explore a broader variety of conditioning information including free-form text, as previously proposed \citep{Mansimov15}, and tasks combining modalities such as language-driven editing of images.
+
+Fundamentally, we aim to move beyond still images to video \citep{Kalchbrenner16} and towards applications in model-based reinforcement learning.
+
+%who has done superresolution with seq2seq?
+
+
+%- Density modeling for images with and without conditioning
+
+%RNNs and CNNs have been shown to work
+%- Slow: TFLOP estimates for PixelCNN/PixelRNN
+%- Complicated
+
+%Comparison with GANs?
+%- with GANs unclear (still?) how to do conditioning
+
+\bibliography{deeplearn}
+\bibliographystyle{icml2018}
+
+% \appendix
+% \newpage
+% \input{appendix}
+\end{document}

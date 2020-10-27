@@ -1,0 +1,20 @@
+\begin{table}
+\setlength{\tabcolsep}{1pt}
+\fontsize{8}{9}\selectfont 
+\begin{tabular}{lcccc}
+\toprule
+& COCO-Stuff-3  & COCO-Stuff & Potsdam-3 & Potsdam  \\
+\midrule
+Random CNN & 37.3 \cmt{509} & 19.4 \cmt{512} & 38.2 \cmt{497} & 28.3 \cmt{500} \\
+K-means~\cite{scikit-learn}$\dagger$ & 52.2 \cmt{527} & 14.1 \cmt{528} & 45.7 \cmt{501} & 35.3 \cmt{503} \\
+SIFT~\cite{lowe2004distinctive}$\ddagger$& 38.1 \cmt{529} & 20.2 \cmt{530} & 38.2 \cmt{517} & 28.5 \cmt{518} \\
+Doersch 2015~\cite{doersch2015unsupervised}$\ddagger$ & 47.5 \cmt{550} & 23.1 \cmt{551} & 49.6 \cmt{542} & 37.2 \cmt{546}\\
+Isola 2016~\cite{isola2015learning}$\ddagger$ & 54.0 \cmt{534} & 24.3 \cmt{535} & 63.9 \cmt{532} & 44.9 \cmt{537}\\
+DeepCluster 2018~\cite{caron2018deep}$\dagger$ $\ddagger$ & 41.6 \cmt{524} & 19.9 \cmt{553} & 41.7 \cmt{523} & 29.2 \cmt{525}\\
+\midrule
+\methodnameshort & \textbf{72.3} \cmt{555} & \textbf{27.7} \cmt{512} & \textbf{65.1} \cmt{545} & \textbf{45.4} \cmt{544} \\
+\bottomrule
+\end{tabular}
+\caption{\textbf{Unsupervised segmentation.} \methodnameshort experiments use a single sub-head. Legend: $\dagger$Method based on k-means. $\ddagger$Method that does not directly learn a clustering function and requires further application of k-means to be used for image clustering.}\label{t:iid_seg}
+\end{table}
+

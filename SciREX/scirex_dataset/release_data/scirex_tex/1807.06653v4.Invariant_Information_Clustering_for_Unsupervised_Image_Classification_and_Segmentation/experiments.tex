@@ -1,0 +1,125 @@
+\section{Experiments}\label{s:experiments}
+\input{experiments2_files/tab-imgclus-iid}
+\input{experiments2_files/tab-imgclus-iid-ablation}
+
+We apply \methodnameshort to fully unsupervised image clustering and segmentation, as well as two semi-supervised settings. Existing baselines are outperformed in all cases.
+We also conduct an analysis of our method via ablation studies. For minor details see supplementary material.
+
+\subsection{Image clustering}\label{s:exp_img_clus}
+\input{experiments2_files/fig-imgclus-images}
+\input{experiments2_files/fig-imgclus-merged}
+%\input{experiments2_files/fig-imgclus-num-clusters}
+%\input{experiments2_files/fig-imgclus-num-labels}
+%\input{experiments2_files/fig-imgclus-num-labels-stl}
+%\input{experiments2_files/tab-imgclus-iid-semisup}
+%\input{experiments2_files/tab-imgclus-datasets}
+
+\paragraph{Datasets.}
+
+We test on STL10, which is ImageNet adapted for unsupervised classification, as well as CIFAR10, CIFAR100-20 and MNIST. The main setting is pure unsupervised clustering (\methodnameshort) but we also test two semi-supervised settings: \emph{finetuning} and \emph{overclustering}.
+For unsupervised clustering, following previous work~\cite{chang2017deep,xie2016unsupervised,yang2016joint}, we train on the full dataset and test on the labelled part; for the semi-supervised settings, train and test sets are separate.
+
+%Since STL10 is only partly labelled, testing is done on the labelled subset.
+%For semi-supervised learning, train and test sets are separate (provided by STL10). The same is true for IID+, as while overclustering is entirely unsupervised, evaluating it requires a many-to-one mapping found using ground-truth labels (as opposed to a one-to-one permutation for IID).
+
+As for DeepCluster~\cite{caron2018deep}, we found Sobel filtering to be beneficial, as it discourages clustering based on trivial cues such as colour and encourages using more meaningful cues such as shape.
+%All networks take either Sobel-filtered  or Sobel-filtered with RGB images.
+Additionally, for data augmentation, we repeat images within each batch $r$ times; this means that multiple image pairs within a batch contain the same original image, each paired with a different transformation, which encourages greater distillation since there are more examples of which visual details to ignore~(\cref{s:equalization}).
+We set $r\in[1,5]$ for all experiments. Images are rescaled and cropped for training (prior to applying transforms $g$, consisting of random additive and multiplicative colour transformations and horizontal flipping) and a single center crop is used at test time for all experiments except semi-supervised finetuning, where 10 crops are used.
+
+\paragraph{Architecture.}
+All networks are randomly initialised and consist of a ResNet or VGG11-like base $b$ (see sup.\ mat.), followed by one or more heads (linear predictors).
+Let the number of ground truth clusters be $k_{gt}$ and the output channels of a head be $k$.
+For \methodnameshort, there is a main output head with $k=k_{gt}$ and an auxiliary overclustering head~(\cref{f:overview}) with $k>k_{gt}$.
+For semi-supervised overclustering there is one output head with $k>k_{gt}$.
+For increased robustness, each head is duplicated $h=5$ times with a different random initialisation, and we call these concrete instantiations sub-heads.
+Each sub-head takes features from $b$ and outputs a probability distribution for each batch element over the relevant number of clusters.
+%$h=5$ for all IID and IID+ experiments.
+For semi-supervised finetuning~(\cref{t:iid_imgclus_semisup}), the base is copied from a semi-supervised overclustering network and combined with a single randomly initialised linear layer where $k=k_{gt}$.
+
+\paragraph{Training.}
+We use the Adam optimiser~\cite{kingma2014adam} with learning rate $10^{-4}$. For \methodnameshort, the main and auxiliary heads are trained by maximising ~\cref{e:loss_expanded} in alternate epochs.
+For semi-supervised overclustering, the single head is trained by maximising~\cref{e:loss_expanded}. Semi-supervised finetuning uses a standard logistic loss.
+
+\paragraph{Evaluation.}
+We evaluate based on accuracy (true positives divided by sample size). For \methodnameshort we follow the standard protocol of finding the best one-to-one permutation mapping between learned and ground-truth clusters (from the main output head; auxiliary overclustering head is ignored) using linear assignment~\cite{kuhn2010hungarian}. While this step uses labels, it does not constitute learning as it merely makes the metric invariant to the order of the clusters.
+For semi-supervised overclustering, each ground-truth cluster may correspond to the union of several predicted clusters.
+Evaluation thus requires a many-to-one discrete map from $k$ to $k_{gt}$, since $k > k_{gt}$. This extracts some information from the labels and thus requires separated training and test set. Note this mapping is found using the training set (accuracy is computed on the test set) and does not affect the network parameters as it is used for evaluation only.
+For semi-supervised finetuning, output channel order matches ground truth so no mapping is required.
+Each sub-head is assessed independently; we report average and best sub-head (as chosen by lowest IIC loss) performance.
+
+\paragraph{Unsupervised learning analysis.}
+\methodnameshort is highly capable of discovering clusters in unlabelled data that accurately correspond to the underlying semantic classes, and outperforms all competing baselines at this task~(\cref{t:img_clus_iid}), with significant margins of $6.6\%$ and $9.5\%$ in the case of STL10 and CIFAR10. As mentioned in~\cref{s:related}, this underlines the advantages of end-to-end optimisation instead of using a fixed external procedure like k-means as with many baselines. The clusters found by \methodnameshort are highly discriminative~(\cref{f:images_img_clus}), although note some failure cases; as \methodnameshort distills purely visual correspondences within images, it can be confused by instances that combine classes, such as a deer with the coat pattern of a cat. Our ablations~(\cref{t:iid_imgclus_ablation}) illustrate the contributions of various implementation details, and in particular the accuracy gain from using auxiliary overclustering.
+
+\paragraph{Semi-supervised learning analysis.}
+For semi-supervised learning, we establish a new state-of-the-art on STL10 out of all reported methods by finetuning a network trained in an entirely unsupervised fashion with the \methodnameshort objective (recall labels in semi-supervised overclustering are used for evaluation and do not influence the network parameters). This explicitly validates the quality of our unsupervised learning method, as we beat even the supervised state-of-the-art~(\cref{t:iid_imgclus_semisup}). Given that the bulk of parameters within semi-supervised overclustering are trained
+unsupervised (i.e. all network parameters), it is unsurprising that~\Cref{f:imgclus_variation} shows a 90\% drop in the number of available labels for STL10 (decreasing the amount of labelled data available from 5000 to 500 over 10 classes) barely impacts performance, costing just $\sim$10\% drop in accuracy. This setting has lower label requirements than finetuning because whereas the latter learns all network parameters, the former only needs to learn a discrete map between $k$ and $k_{gt}$, making it an important practical setting for applications with small amounts of labelled data.
+
+% \paragraph{Evaluation.}
+% We evaluate based on accuracy (true positives divided by sample size). For \methodnameshort we follow the standard protocol of finding the best one-to-one permutation mapping between learned and ground-truth clusters (from the main output head; auxiliary overclustering head is ignored) using linear assignment~\cite{kuhn2010hungarian}. While this step uses labels, it does not constitute learning as it merely makes the metric invariant to the order of the clusters.
+% For semi-supervised overclustering, evaluation requires a many-to-one discrete map from $k$ to $k_{gt}$, which extracts some information from the labels and thus requires separated training and test set. Note this mapping is found using the training set (accuracy is computed on the test set) and does not affect the network parameters as it is used for evaluation only.
+% For semi-supervised finetuning, output channel order matches ground truth so no mapping is required.
+% The performance of each sub-head is assessed independently, and best and average performances are reported.
+
+% %\paragraph{Baselines.}
+% We evaluate against a wide range of baselines up to the most recent state-of-the-art, using original code when possible and following the setup described above.
+% As discussed~(\cref{s:related}), DeepCluster~\cite{caron2018deep} is not necessarily intended to produce semantically meaningful clusters; however, it is included as a notable recent clustering method.
+
+% \paragraph{Analysis.}
+
+% \methodnameshort is highly capable of discovering clusters in unlabelled data that accurately correspond to the underlying semantic classes, and outperforms all competing baselines at this task~(\cref{t:img_clus_iid}), with significant margins of $8\%$ and $9.5\%$ in the case of STL10 and CIFAR10. As mentioned in~\cref{s:related}, this underlines the advantages of end-to-end optimisation instead of using a fixed external procedure like k-means as with many baselines. The clusters found by \methodnameshort are highly discriminative~(\cref{f:images_img_clus}), although note some failure cases; as \methodnameshort distills purely visual correspondences within images, it can be confused by instances that combine classes, such as a deer with the coat pattern of a cat. Our ablations~(\cref{t:iid_imgclus_ablation}) illustrate the contributions of various implementation details, and in particular the accuracy gain from using auxiliary overclustering.
+
+% For semi-supervised learning, we establish a new state-of-the-art on STL10 out of all reported methods by finetuning a network trained in an entirely unsupervised fashion with the \methodnameshort objective (recall labels in semi-supervised overclustering are used for evaluation and do not influence the network parameters). This explicitly validates the quality of our unsupervised learning method, as we beat even the supervised state-of-the-art~(\cref{t:iid_imgclus_semisup}). Given that the bulk of parameters within semi-supervised overclustering are trained
+% unsupervised (i.e. all network parameters), it is unsurprising that~\Cref{f:imgclus_variation} shows a 90\% drop in the number of available labels for STL10 (decreasing the amount of labelled data available from 5000 to 500 over 10 classes) barely impacts performance, costing just $\sim$10\% drop in accuracy. This setting has lower label requirements than finetuning because whereas the latter learns all network parameters, the former only needs to learn a discrete map between $k$ and $k_{gt}$, making it an important practical setting for applications with small amounts of labelled data.
+
+
+\subsection{Segmentation}
+\input{experiments2_files/fig-seg-images}
+
+%\input{experiments2_files/tab-seg-iid-lambda}
+%\input{experiments2_files/tab-seg-datasets}
+
+% Priority 2 figures.
+% Do them only if there is time and space.
+%\input{experiments2_files/fig-seg-equalisation}
+%\input{experiments2_files/fig-seg-progression}
+%\input{experiments2_files/fig-seg-runtime}
+
+\paragraph{Datasets.}
+%Sizes are reported in supplementary material.
+Large scale segmentation on real-world data using deep neural networks is extremely difficult without labels or heuristics, and has negligible precedent.
+We establish new baselines on scene and satellite images to highlight performance on textural classes, where the assumption of spatially proximal invariance~(\cref{s:image_segmentation}) is most valid.
+COCO-Stuff~\cite{caesar2016coco} is a challenging and diverse segmentation dataset containing ``stuff'' classes ranging from buildings to bodies of water.
+We use the 15 coarse labels and 164k images variant, reduced to 52k by taking only images with at least 75\% stuff pixels.
+COCO-Stuff-3 is a subset of COCO-Stuff with only sky, ground and plants labelled.
+For both COCO datasets, input images are shrunk by two thirds and cropped to $128\times128$ pixels, Sobel preprocessing is applied for data augmentation, and predictions for non-stuff pixels are ignored.
+Potsdam~\cite{potsdam} is divided into 8550 RGBIR $200\times200$ px satellite images, of which 3150 are unlabelled.
+We test both the 6-label variant (roads and cars, vegetation and trees, buildings and clutter) and a 3-label variant (Potsdam-3) formed by merging each of the 3 pairs.
+%We augment input channels for all 4 segmentation datasets with Sobel filtering~(\cref{s:exp_img_clus}).
+All segmentation training and testing sets have been released with our code.
+
+\input{experiments2_files/tab-seg-iid}
+
+\paragraph{Architecture.}
+All networks are randomly initialised and consist of a base CNN $b$ (see sup. mat.) followed by head{}(s), which are $1\times1$ convolution layers.
+Similar to~\cref{s:exp_img_clus}, overclustering uses $k$ 3-5 times higher than $k_{gt}$.
+Since segmentation is much more expensive than image clustering (e.g.\ a single $200\times200$ Potsdam image contains 40,000 predictions), all segmentation experiments were run with $h = 1$ and $r = 1$ (sec.~\ref{s:exp_img_clus}).
+
+\paragraph{Training.}
+The convolutional implementation of \methodnameshort (\cref{e:info_seg}) was used with $d=10$. For Potsdam-3 and COCO-Stuff-3, the optional entropy coefficient~(\cref{s:equalization} and sup. mat.) was used and set to 1.5. Using the coefficient made slight improvements of 1.2\%-3.2\% on performance. These two datasets are balanced in nature with very large sample volume (e.g. $40,000 \times 75$ predictions per batch for Potsdam-3) resulting in stable and balanced batches, justifying prioritisation of equalisation. Other training details are the same as~\cref{s:exp_img_clus}.
+
+\paragraph{Evaluation.}
+Evaluation uses accuracy as in~\cref{s:exp_img_clus}, computed per-pixel.
+For the baselines, the original authors' code was adapted from image clustering where available, and the architectures are shared with \methodnameshort for fairness. For baselines that required application of k-means to produce per-pixel predictions~(\cref{t:iid_seg}), k-means was trained with randomly sampled pixel features from the training set (10M for Potsdam, Potsdam-3; 50M for COCO-Stuff, COCO-Stuff-3) and tested on the full test set to obtain accuracy.
+
+\paragraph{Analysis.}
+ Without labels or heuristics to learn from, and given just the cluster cardinality (3), \methodnameshort automatically partitions COCO-Stuff-3 into clusters that are recognisable as sky, vegetation and ground, and learns to classify vegetation, roads and buildings for Potsdam-3~(\cref{f:images_img_seg}). The segmentations are notably intricate, capturing fine detail, but are at the same time locally consistent and coherent across all images. Since spatial smoothness is built into the loss~(\cref{s:image_segmentation}), all our results are able to use raw network outputs without post-processing (avoiding e.g. CRF smoothing~\cite{chen2018deeplab}). Quantitatively, we outperform all baselines~(\cref{t:iid_seg}), notably by $18.3\%$ in the case of COCO-Stuff-3. The efficient convolutional formulation of the loss~(\cref{e:info_seg}) allows us to optimise over all pixels in all batch images in parallel, converging in fewer epochs (passes of the dataset) without paying the price of reduced computational speed for dense sampling. This is in contrast to our baselines which, being not natively adapted for segmentation, required sampling a subset of pixels within each batch, resulting in increased loss volatility and training speeds that were up to 3.3$\times$ slower than \methodnameshort.
+
+\begin{comment}
+Note the disparity between \methodnameshort and semi-supervised overclustering for COCO-Stuff due to the lack of visual cohesion in its 15 classes, which for example puts plants and vegetables into disparate classes.
+Thus IID+, which learns a more fine-grained separation of images ($k = 45 > k_{gt} = 15$ clusters in this case) is unsurprisingly more suitable and sees a performance increase of 18\%.
+In contrast, COCO-Stuff-3 and Potsdam-3 contain classes with much higher visual consistency, allowing for easier separation.
+This can be seen in the low IID vs.\ IID+ disparity~(\cref{t:iid_seg}) as well as in the comparable quality of their rendered predictions~(\cref{f:images_img_seg}).
+\end{comment}
+
+

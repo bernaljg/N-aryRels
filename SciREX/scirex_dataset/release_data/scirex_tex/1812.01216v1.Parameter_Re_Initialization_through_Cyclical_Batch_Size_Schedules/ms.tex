@@ -1,0 +1,47 @@
+\documentclass{article}
+\pdfoutput=1
+\input packages.tex
+\input notation.tex
+\input macros.tex
+\newcommand\atsign{@}
+
+
+\title{Parameter Re-Initialization through Cyclical Batch Size Schedules}
+\renewcommand{\baselinestretch}{0.99}
+\newcommand*\samethanks[1][\value{footnote}]{\footnotemark[#1]}
+
+% The \author macro works with any number of authors. There are two
+% commands used to separate the names and addresses of multiple
+% authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to
+% break the lines. Using \AND forces a line break at that point. So,
+% if LaTeX puts 3 of 4 authors names on the first line, and the last
+% on the second line, try using \AND instead of \And before the third
+% author name.
+
+\author{Norman Mu\thanks{Equal contribution}~~~Zhewei Yao\samethanks~~~Amir Gholami~~~Kurt Keutzer~~~Michael W. Mahoney\\
+\{thenorm, zheweiy, amirgh, keutzer and mahoneymw\}\atsign berkeley.edu
+}
+
+
+\begin{document}
+% \nipsfinalcopy is no longer used
+
+
+\maketitle
+\input abstract.tex
+\input intro.tex
+\input methods.tex
+\input results.tex
+\input conclusions.tex
+
+
+\bibliographystyle{plainnat}
+\bibliography{ref}
+
+\clearpage
+\appendix
+\input appendix.tex
+
+\end{document}

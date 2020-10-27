@@ -1,0 +1,147 @@
+\pdfoutput=1
+\documentclass[10pt,journal,letterpaper,twoside,compsoc]{IEEEtran}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% paper size & margins
+\parindent=0pt
+\parskip=0pt
+
+% font management
+\usepackage{times}
+
+% figure management
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage[belowskip=-10pt,aboveskip=2pt,font=small]{caption}
+\usepackage{dblfloatfix}
+
+% math
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% table management
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{booktabs}
+\usepackage{slashbox} % Package to make a diagonal in a table entry
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+
+% list management
+\usepackage{enumerate}
+%\usepackage{enumitem}
+\usepackage[olditem,oldenum]{paralist}
+
+
+% useful shortcuts
+\usepackage{mysymbols}
+
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false,citecolor=blue,linkcolor=green]{hyperref}
+
+% assorted
+\usepackage{color}
+\usepackage{comment}
+% space saving
+\input{space_saver}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Shortcuts
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+\definecolor{orange}{RGB}{225, 90, 0}
+\definecolor{teal}{RGB}{5, 210, 150}
+\definecolor{yellow}{RGB}{220, 210, 10}
+\definecolor{purple}{RGB}{100, 0, 205}
+
+\newcommand{\larry}[1]{\textcolor{blue}{#1 --Larry}}
+\newcommand{\meg}[1]{\textcolor{orange}{#1 --M}}
+\newcommand{\devi}[1]{\textcolor{red}{#1 --Devi}}
+\newcommand{\change}{\textcolor{black}}
+\newcommand{\dhruv}[1]{\textcolor{teal}{#1 --Dhruv}}
+\newcommand{\aishwarya}[1]{\textcolor{green}{#1 --Aishwarya}}
+\newcommand{\stan}[1]{\textcolor{purple}{#1 --Stan}}
+\newcommand{\jiasen}[1]{\textcolor{yellow}{#1 --Jiasen}}
+\newcommand{\verify}{\textcolor{blue}}
+\newcommand{\changenew}{\textcolor{black}}
+\newcommand{\arxiv}{\textcolor{red}}
+
+\linespread{0.980}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+\setcounter{page}{1}
+\begin{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title / Author
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{VQA: Visual Question Answering\\
+\large{\url{www.visualqa.org}}}
+
+\author{Aishwarya Agrawal$^{*}$, Jiasen Lu$^{*}$, Stanislaw Antol$^{*}$, \\
+Margaret Mitchell, C.~Lawrence~Zitnick, Dhruv Batra, Devi Parikh
+%\footnote{$^*$ The first two authors contributed equally.}
+\IEEEcompsocitemizethanks{
+\IEEEcompsocthanksitem $^*$The first three authors contributed equally.
+\IEEEcompsocthanksitem A. Agrawal, J. Lu and S. Antol are with Virginia Tech.
+\IEEEcompsocthanksitem M. Mitchell is with Microsoft Research, Redmond. \IEEEcompsocthanksitem C.~L.~Zitnick is with Facebook AI Research.
+\IEEEcompsocthanksitem D. Batra and D. Parikh are with Georgia Institute of Technology.}
+}
+
+
+%\thispagestyle{empty}
+
+%\makeatletter
+%\def\blfootnote{\xdef\@thefnmark{}\@footnotetext}
+%\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Abstract
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\vspace{\abstractReduceTop}
+\IEEEcompsoctitleabstractindextext{\begin{abstract}
+%\vspace{\abstractReduceBot}
+
+%\dhruv{skipping for now; will do last}
+We propose the task of \emph{free-form} and \emph{open-ended} Visual Question Answering (VQA). Given an image and a natural language question about the image, the task is to provide an accurate natural language answer. Mirroring real-world scenarios, such as helping the visually impaired, both the questions and answers are open-ended. Visual questions selectively target different areas of an image, including background details and underlying context. As a result, a system that succeeds at VQA typically needs a more detailed understanding of the image and complex reasoning than a system producing generic image captions.
+%Mirroring many real-world scenarios, such as helping the visually impaired, both the questions and answers are open-ended. VQA is complementary to the task of image captioning, which focuses on producing a single description for the whole image. Visual questions selectively target different areas of an image, including background details and underlying context. As a result, a system that succeeds at VQA typically needs a more detailed understanding of the image than a system producing image captions in isolation.
+Moreover, VQA is amenable to automatic evaluation, since many open-ended answers contain only a few words or a closed set of answers
+that can be provided in a multiple-choice format. We provide a dataset containing $\sim$0.25M images, $\sim$0.76M questions, and $\sim$10M answers (\url{www.visualqa.org}), and discuss the information it provides. Numerous baselines and methods for VQA are provided and compared with human performance. Our VQA demo is available on CloudCV (\url{http://cloudcv.org/vqa}). 
+%\aishwarya{Add pointer to www.visualqa.org in abstract?}
+%\blfootnote{$^*$ The first two authors contributed equally.}
+\end{abstract}}
+
+\maketitle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Body
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{introduction}
+\input{related_work}
+\input{collection}
+\input{analysis}
+\input{baselines}
+\input{challenge}
+\input{discussion}
+
+%\clearpage
+%\columnbreak
+\input{vqa_supplement_v2}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% References
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+{\footnotesize
+\bibliographystyle{ieee}
+\bibliography{vqa_main}
+}
+
+\end{document}

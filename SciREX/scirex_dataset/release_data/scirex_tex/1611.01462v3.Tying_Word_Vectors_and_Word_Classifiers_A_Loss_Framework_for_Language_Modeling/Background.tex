@@ -1,0 +1,26 @@
+% !TEX root = ./notes.tex
+\section{Background: Recurrent neural network language model}
+In any variant of recurrent neural network language model (RNNLM), the goal is to predict the next word indexed by $t$ in a sequence of one-hot word tokens $(\ystar_1,\ldots \ystar_N)$ as follows:
+\eq{
+x_t &= L\ystar_{t-1}, \\
+h_t &= f(x_t,h_{t-1}), \\
+\label{eqn:rnn_out_proj}
+y_t &= \softmax{Wh_t+b}.
+}
+The matrix $L\in\reals^{d_x\times |V|}$ is the word embedding matrix, where $d_x$ is the word embedding dimension and $|V|$ is the size of the vocabulary. The function $f(.,.)$ represents the recurrent neural network which takes in the current input and the previous hidden state and produces the next hidden state. $W\in\reals^{|V| \times d_h}$ and $b\in\reals^{|V| }$ are the the output projection matrix and the bias, respectively, and $d_h$ is the size of the RNN hidden state. The $|V|$ dimensional $y_t$ models the discrete probability distribution for the next word.
+
+Note that the above formulation does not make any assumptions about the specifics of the recurrent neural units, and $f$ could be replaced with a standard recurrent unit, a gated recurrent unit (GRU) \citep{cho2014properties}, a long-short term memory (LSTM) unit \citep{hochreiter1997long}, etc. For our experiments, we use LSTM units with two layers.
+
+Given $\yplain_t$ for the $t^\text{th}$ example, a loss is calculated for that example. The loss used in the RNNLMs is almost exclusively the cross-entropy between  $\yplain_t$ and the observed one-hot word token, $\ystar_t$:
+\eq{
+J_t = \CE{\ystar_t}{\yplain_t}
+=-\sum_{i\in |V|}\ystar_{t,i} \log \yplain_{t,i}.
+}
+We shall refer to $\yplain_t$ as the model prediction distribution for the $t^\text{th}$ example, and $\ystar_t$ as the empirical target distribution (both are in fact conditional distributions given the history). Since cross-entropy and \emph{Kullback-Leibler} divergence
+are equivalent when the target distribution is one-hot, we can rewrite the loss for the $t^\text{th}$ example as
+\eq{
+J_t = \KL{\ystar_t}{\yplain_t}.
+}
+Therefore, we can think of the optimization of the conventional loss in an RNNLM as trying to minimize the distance\footnote{We note, however, that \emph{Kullback-Leibler} divergence is not a valid distance metric. } between the model prediction distribution ($\yplain$) and the empirical target distribution ($\ystar$), which, with many training examples, will get close to minimizing distance to the actual target distribution. In the framework which we will introduce, we utilize \emph{Kullback-Leibler} divergence as opposed to cross-entropy due to its intuitive interpretation as a distance between distributions, although the two are not equivalent in our framework.
+
+

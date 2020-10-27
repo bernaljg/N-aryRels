@@ -1,0 +1,41 @@
+\begin{abstract}
+%\boldmath
+
+
+We present an exhaustive investigation of recent Deep Learning architectures, algorithms, and strategies for the task of document image classification to finally reduce the error by more than half.
+%that finally leads to a reduction of error rate by more than half.
+Existing approaches, such as the DeepDocClassifier, apply standard Convolutional Network architectures with transfer learning from the object recognition domain.
+The contribution of the paper is threefold:
+First, it investigates recently introduced very deep neural network architectures (GoogLeNet, VGG, ResNet) using transfer learning (from real images). 
+Second, it proposes transfer learning from a huge set of document images, i.e. $400,000$ documents. 
+Third, it analyzes the impact of the amount of training data (document images) and other parameters to the classification abilities. 
+% We use two data sets, the Tobacco-3482 and the Tobacco-400000 (RVL-CDIP), both named after the total number of images.
+We use two datasets, the Tobacco-3482 and the large-scale RVL-CDIP dataset.
+We achieve an accuracy of $91.13\,\%$ for the Tobacco-3482 dataset while earlier approaches reach only $77.6\,\%$. Thus, a relative error reduction of more than $60\,\%$ is achieved. For the large dataset RVL-CDIP, an accuracy of $90.97\,\%$ is achieved, corresponding to a relative error reduction of $11.5\,\%$.
+
+
+
+%In this paper, we evaluate the performance of deeper CNN architectures for the task of document image classification and compare them to the previously reported performance of AlexNet.
+
+
+
+%Most of the traditional document image classification techniques concentrate on document segmentation and OCR analysis, in spite of so many complexities and limitations involved. Recently, many of the document image classification problems are easily solved just by adapting standard computer vision approaches for natural image retrieval and classification, that are referred as visual appearance based document classification techniques. These approaches have reported better results as compared to the traditional approaches on proprietary datasets. However, so far these approaches are not compared with each other and, despite having potential, they are not evaluated on distorted camera-captured documents, which is one of the challenging requirements in our present commercial document analysis projects. In this paper, we present simple and effective descriptions of different visual appearance based document image classification techniques. We compare their performance on various standard and publicly available datasets, that are differ in degree of image degradations and content variations. We also demonstrate their advantages and limitations. Additionally, we make the implemented versions of these method publicly available to research community for usage and further testing on other domains.
+
+
+
+
+
+
+\end{abstract}
+
+% Note that keywords are not normally used for peerreview papers.
+\begin{IEEEkeywords}
+Document Image Classification, Deep CNN, Convolutional Neural Network, Transfer Learning
+\end{IEEEkeywords}
+
+
+
+% This paper presents a deep Convolutional Neural Network (CNN) based approach for document image classification. One of the main requirement of deep CNN architecture is that they need huge number of samples for training. 
+% To overcome this problem we adopt a deep CNN which is pre-trained using big image dataset containing millions of samples i.e., ImageNet. 
+% The proposed work outperforms both the traditional structure similarity methods and the CNN based approaches proposed earlier. 
+% The accuracy of the proposed approach with merely $20$ images per class outperforms the state-of-the-art by achieving classification accuracy of $68.25$. The best results on Tobbacoo-3428 dataset show that our proposed method outperforms the state-of-the-art method by a significant margin and achieved a median accuracy of $77.6\%$ with $100$ samples per class used for training and validation.

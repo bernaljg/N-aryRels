@@ -1,0 +1,31 @@
+\section{Related Work}
+The problem of visual domain adaptation was introduced along with a pairwise metric transform solution by \citet{saenko_eccv10} and was further popularized by the broad study of visual dataset bias~\citep{efros_cvpr11}.
+Early deep adaptive works focused on feature space alignment through minimizing the distance between first or second order feature space statistics of the source and target~\citep{tzeng_arxiv15,long_icml15}. These latent distribution alignment approaches were further improved through the use of domain adversarial objectives whereby a domain classifier is trained to distinguish between the source and target representations while the domain representation is learned so as to maximize the error of the domain classifier. The representation is optimized using the standard minimax objective~\citep{ganin_icml15}, the symmetric confusion objective~\citep{tzeng_iccv15}, or the inverted label objective~\citep{tzeng_cvpr17}.
+Each of these objectives is related to the literature on generative adversarial networks~\citep{goodfellow_nips14} and follow-up work for improved training procedures for these networks~\citep{salimans_arxiv16, arjovsky_arxiv17}.
+
+
+The feature-space adaptation methods described above focus on modifications to the discriminative representation space. In contrast, other recent methods have sought adaptation in the pixel-space using various generative approaches. One advantage of pixel-space adaptation, as we have shown, is that the result may be more human interpretable, since an image from one domain can now be visualized in a new domain.
+CoGANs~\citep{liu_arxiv16} jointly learn a source and target representation through explicit weight sharing of certain layers while each source and target has a unique generative adversarial objective. \citet{ghifary_eccv16} uses an additional reconstruction objective in the target domain to encourage alignment in the unsupervised adaptation setting.
+
+In contrast, another approach is to directly convert the target image into a source style image (or visa versa), largely based on  Generative Adversarial Networks (GANs)~\citep{goodfellow_nips14}.
+Researchers have successfully applied GANs to various applications such as image generation~\citep{denton2015deep,radford2015unsupervised,zhao2016energy}, image editing~\citep{zhu2016generative} and feature learning~\citep{salimans2016improved,donahue2016adversarial}.   Recent work \citep{isola2016image, sangkloy2016scribbler,karacan2016learning} adopt conditional GANs~\citep{mirza_arxiv14} for these image-to-image translation problems~\citep{isola2016image}, but they require input-output image pairs for training, which is in general not available in domain adaptation problems.
+
+There also exist lines of work where such training pairs are not given.
+\citet{yoo_eccv16} learns a source to target encoder-decoder along with a generative adversarial objective on the reconstruction which is is applied for predicting the clothing people are wearing.
+The Domain Transfer Network~\citep{taigman_iclr17} trains a generator to transform a source image into a target image by enforcing consistency in the embedding space.
+\citet{shrivastava_cvpr17} instead uses an L1 reconstruction loss to force the generated target images to be similar to their original source images.%
+This works well for limited domain shifts where the domains are similar in pixel-space, but can be too limiting for settings with larger domain shifts.
+\citet{bousmalis_cvpr17} use a content similarity loss to ensure the generated target image is similar to the original source image; however, this requires prior knowledge about which parts of the image stay the same across domains (e.g. foreground).
+Our method does not require pre-defining what content is shared between domains and instead simply translates images back to their original domains while ensuring that they remain identical to their original versions.
+BiGAN~\citep{donahue2016adversarial} and ALI~\citep{dumoulin2016adversarially} take an approach of simultaneously learning the transformations between the pixel and the latent space.
+More recently, Cycle-consistent Adversarial Networks (CycleGAN)~\citep{zhu_arxiv17} produced compelling image translation results such as generating photorealistic images from impressionism paintings or transforming horses into zebras at high resolution using the cycle-consistency loss.
+This loss was simultaneously proposed by ~\cite{yi2017dualgan} and ~\cite{kim_arxiv17} to great effect as well.
+Our motivation comes from such findings about the effectiveness of the cycle-consistency loss. %from the perspective of dual learning.  
+
+
+Few works have explicitly studied visual domain adaptation for the semantic segmentation task. Adaptation across weather conditions in simple road scenes was first studied by \citet{levinkov_iccv13}. More recently, a convolutional domain adversarial based approached was proposed for more general drive cam scenes and for adaptation from simulated to real environments~\citep{hoffman_arxiv16}.
+\citet{ros_arxiv16} learns a multi-source model through concatenating all available labeled data and learning a single large model and then transfers to a sparsely labeled target domain through distillation~\citep{hinton_arxiv15}.
+\citet{chen_iccv17} use an adversarial objective to align both global and class-specific statistics, while mining additional temporal data from street view datasets to learn a static object prior.
+\citet{zhang_iccv17} instead perform segmentation adaptation by aligning label distributions both globally and across superpixels in an image.
+
+

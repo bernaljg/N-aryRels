@@ -1,0 +1,108 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{tikz}
+\usetikzlibrary{positioning,calc,matrix,arrows}
+\usepackage{pgfplots}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{mathtools}
+\usepackage[breaklinks=true,bookmarks=false]{hyperref}
+\usepackage{cleveref}
+
+\tikzstyle{block} = [draw, rectangle, minimum height=3em, minimum width=3em]
+\tikzstyle{data} = []
+\tikzstyle{datac} = [draw, circle, minimum height=1em, minimum width=1em,inner sep=3pt]
+\tikzstyle{par} = [draw, circle, minimum height=1em, minimum width=1em,fill=black!20,inner sep=3pt]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+\tikzstyle{to} = [->,>=stealth',shorten >=1pt,semithick]
+\tikzstyle{btwn} = [-,>=stealth',semithick]
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcommand{\ms}{ms\xspace}
+\newcolumntype{x}{>\small c}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bw}{\mathbf{w}}
+
+\setcounter{topnumber}{2}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.9}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.9}
+\setlength{\textfloatsep}{10pt}
+\setlength{\dbltextfloatsep}{10pt}
+\pdfoutput=1
+\cvprfinalcopy % *** Uncomment this line for the final submission
+
+\def\cvprPaperID{848} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+\ifcvprfinal\pagestyle{empty}\fi
+\setcounter{page}{1}
+
+% -----------------------------------------------------------------------------------------
+\begin{document}
+% -----------------------------------------------------------------------------------------
+
+
+\title{Weakly Supervised Deep Detection Networks}
+\author{Hakan Bilen\\
+University of Oxford\\
+{\tt\small hbilen@robots.ox.ac.uk}
+% For a paper whose authors are all at the same institution,
+% omit the following lines up until the closing ``}''.
+% Additional authors and addresses can be added with ``\and'',
+% just like the second author.
+% To save space, use either the email address or home page, not both
+\and
+Andrea Vedaldi\\
+University of Oxford\\
+{\tt\small vedaldi@robots.ox.ac.uk}
+}
+
+
+
+\maketitle
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+% -----------------------------------------------------------------------------------------
+\section{Introduction}\label{s:intro}
+\input{intro}
+
+\section{Related Work}\label{s:related}
+\input{related_work}
+
+\section{Method}\label{s:method}
+\input{model}
+
+\section{Experiments}\label{s:experiments}
+\input{experiments}
+
+\section{Conclusions}\label{s:conclusions}
+\input{conclusions}
+% -----------------------------------------------------------------------------------------
+
+{\small
+\textbf{Acknowledgments:} This work acknowledges the support of the EPSRC EP/L024683/1, EPSRC Seebibyte EP/M013774/1 and the ERC Starting Grant IDIU. 
+}
+
+\clearpage
+{
+\small
+\bibliographystyle{ieee}
+\bibliography{shortstrings,vgg_local,vgg_other,mybib}
+% \bibliography{bibl}
+}
+
+\end{document}

@@ -1,0 +1,50 @@
+\section{Empirical Evaluation}
+\label{experiments}
+
+
+Having described a number of models in the previous section, we next evaluate
+these models on our reading comprehension corpora. Our hypothesis is that neural models should in principle be well suited for this
+task. However, we argued that simple recurrent models such as the LSTM
+probably have insufficient expressive power for solving tasks that require
+complex inference. We expect that the attention-based models would therefore
+outperform the pure LSTM-based approaches.
+
+Considering the second dimension of our investigation, the comparison of
+traditional versus neural approaches to NLP, we do not have a strong prior
+favouring one approach over the other. While numerous publications in the past
+few years have demonstrated neural models outperforming classical methods, it
+remains unclear how much of that is a side-effect of the language modelling
+capabilities intrinsic to any neural model for NLP. The entity anonymisation and
+permutation aspect of the task presented here may end up levelling the playing
+field in that regard, favouring models capable of dealing with syntax rather
+than just semantics.
+
+With these considerations in mind, the experimental part of this paper is
+designed with a three-fold aim. First, we want to establish the difficulty of our
+machine reading task by applying a wide range of models to it. Second, we compare
+the performance of parse-based methods versus that of neural models. Third,
+within the group of neural models examined, we want to determine what each
+component contributes to the end performance; that is, we want to analyse the
+extent to which an LSTM can solve this task, and to what extent various
+attention mechanisms impact performance.
+
+\newcommand{\ee}[1][]{\text{\sc{e}#1}}
+
+ All model hyperparameters were tuned on the respective validation sets of the
+ two corpora.\footnote{For the Deep LSTM Reader, we consider hidden layer sizes
+   ${[64,128,\underline{256}]}$, depths ${[1,\underline{2},4]}$, initial
+   learning rates ${[1\ee{-}3,5\ee{-}4,\underline{1\ee{-}4},5\ee{-}5]}$, batch
+   sizes ${[16,\underline{32}]}$ and dropout $[0.0,\underline{0.1},0.2]$.  We
+   evaluate two types of feeds. In the \textit{cqa} setup we feed first the
+   context document and subsequently the question into the encoder, while the
+   \textit{qca} model starts by feeding in the question followed by the context
+   document. We report results on the best model (underlined hyperparameters,
+   \textit{qca} setup).  For the attention models we consider hidden layer sizes
+   $[64,128,256]$, single layer,  initial learning rates
+ $[1\ee{-}4,5\ee{-}5,2.5\ee{-}5,1\ee{-}5]$, batch sizes $[8,16,32]$ and dropout
+ $[0,0.1,0.2,0.5]$. For all models we used asynchronous RmsProp
+ \cite{Tieleman:2012:RMSPROP} with a momentum of $0.9$ and a decay of $0.95$.
+ See Appendix \ref{app:hyper} for more details of the experimental setup.}
+%
+Our experimental results are in Table \ref{tab:main_results}, with the
+Attentive and Impatient Readers performing best across both datasets.

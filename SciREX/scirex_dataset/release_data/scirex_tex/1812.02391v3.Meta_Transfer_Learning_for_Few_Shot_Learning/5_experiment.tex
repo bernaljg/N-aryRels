@@ -1,0 +1,90 @@
+\section{Experiments}
+\label{sec_exp}
+
+We evaluate the proposed \textbf{MTL} and \textbf{HT meta-batch} in terms of few-shot recognition accuracy and model convergence speed.
+%
+Below we describe the datasets and detailed settings, followed by an ablation study and a comparison to state-of-the-art methods.
+
+\subsection{Datasets and implementation details}
+\label{sec_dataset}
+
+We conduct few-shot learning experiments on two benchmarks, miniImageNet~\cite{VinyalsBLKW16} and Fewshot-CIFAR100 (FC100)~\cite{OreshkinNIPS18}. 
+%
+miniImageNet is widely used in related works~\cite{FinnAL17, RaviICLR2017, GrantICLR2018, FranceschiICML18, MunkhdalaiICML18}. FC100 is newly proposed in~\cite{OreshkinNIPS18} and is more challenging in terms of lower image resolution and stricter training-test splits than miniImageNet.
+
+\myparagraph{miniImageNet} was proposed by Vinyals \emph{et al}.~\cite{VinyalsBLKW16} for few-shot learning evaluation. 
+%
+Its complexity is high due to the use of ImageNet images, but requires less resource and infrastructure than running on the full ImageNet dataset~\cite{Russakovsky2015}. 
+%
+In total, there are $100$ classes with $600$ samples of $84 \times 84$ color images per class.
+%
+These $100$ classes are divided into $64$, $16$, and $20$ classes respectively for sampling tasks for meta-training, meta-validation and meta-test, following related works~\cite{FinnAL17, RaviICLR2017, GrantICLR2018, FranceschiICML18, MunkhdalaiICML18}.
+
+
+\myparagraph{Fewshot-CIFAR100 (FC100)}
+is based on the popular object classification dataset CIFAR100 \cite{CIFAR100}. The splits were proposed by~\cite{OreshkinNIPS18} (Please check details in the supplementary).
+%
+It offers a more challenging scenario with lower image resolution and more challenging meta-training/test splits that are separated according to object super-classes.
+%
+It contains $100$ object classes and each class has $600$ samples of $32 \times 32$ color images.
+%
+%
+The $100$ classes belong to $20$ super-classes. Meta-training data are from $60$ classes belonging to $12$ super-classes. Meta-validation and meta-test sets contain $20$ classes belonging to $4$ super-classes, respectively. 
+These splits accord to super-classes, thus minimize the information overlap between training and val/test tasks. 
+
+%%%%%%%%%%%%%%%%%%%%%% shared settings as follows,
+The following settings are used on both datasets.
+We train a large-scale DNN with all training datapoints (Section~\ref{sec_large_scale_pretrain}) and stop this training after $10k$ iterations.
+%
+We use the same task sampling method as related works~\cite{FinnAL17, RaviICLR2017}. Specifically, 1) we consider the 5-class classification and 2) we sample 5-class, 1-shot (5-shot or 10-shot) episodes to contain 1 (5 or 10) samples for train episode, and $15$ (uniform) samples for episode test.
+Note that in the state-of-the-art work~\cite{OreshkinNIPS18}, $32$ and $64$ samples are respectively used in 5-shot and 10-shot settings for episode test.
+%
+In total, we sample $8k$ tasks for meta-training (same for w/ and w/o HT meta-batch), and respectively sample $600$ random tasks for meta-validation and meta-test. 
+Please check the supplementary document (or \href{https://github.com/y2l/meta-transfer-learning-tensorflow}{GitHub repository}) for other implementation details, e.g. learning rate and dropout rate.
+
+
+\myparagraph{Network architecture.} 
+We present the details for
+the Feature Extractor $\Theta$, 
+MTL meta-learner with \emph{Scaling} $\Phi_{S_1}$ and \emph{Shifting} $\Phi_{S_2}$, 
+and MTL base-learner (classifier) $\theta$. 
+
+\myparagraph{The architecture of $\Theta$} have two options, ResNet-12 and 4CONV, commonly used in related works~\cite{FinnAL17, VinyalsBLKW16, RaviICLR2017, MunkhdalaiICML18, MishraICLR2018, OreshkinNIPS18}.
+%
+\myparagraph{4CONV} consists of $4$ layers with $3\times 3$ convolutions and $32$ filters, followed by batch normalization (BN)~\cite{IoffeICML15}, a ReLU nonlinearity, and $2\times 2$ max-pooling.
+%
+\myparagraph{ResNet-12} is more popular in recent works~\cite{OreshkinNIPS18, MishraICLR2018, FranceschiICML18, MunkhdalaiICML18}. It contains $4$ residual blocks and each block has $3$ CONV layers with $3\times 3$ kernels.
+%
+At the end of each residual block, a $2\times 2$ max-pooling layer is applied. The number of filters starts from $64$ and is doubled every next block. 
+%
+Following $4$ blocks, there is a mean-pooling layer to compress the output feature maps to a feature embedding.
+\myparagraph{The difference} between using 4CONV and using ResNet-12 in our methods is that ResNet-12 MTL sees the large-scale data training, but 4CONV MTL is learned from scratch because of its poor performance for large-scale data training (see results in the supplementary).
+%
+Therefore, we emphasize the experiments of using ResNet-12 MTL for its superior performance.
+%
+\myparagraph{The architectures of $\Phi_{S_1}$ and $\Phi_{S_2}$} are generated according to the architecture of $\Theta$, as introduced in Section~\ref{sec_meta_transfer}. That is when using ResNet-12 in MTL, $\Phi_{S_1}$ and $\Phi_{S_2}$ also have 12 layers, respectively.
+%%
+%
+\myparagraph{The architecture of $\theta$} is an FC layer. We empirically find that a single FC layer is faster to train and more effective for classification than multiple layers.
+(see comparisons in the supplementary).
+
+\input{5_2_exp_settings.tex}
+\input{5_3_exp_results.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+\section{Conclusions}
+
+In this paper, we show that our novel MTL trained with HT meta-batch learning curriculum achieves the top performance for tackling few-shot learning problems.
+%
+The key operations of MTL on pre-trained DNN neurons proved highly efficient for adapting learning experience to the unseen task.
+The superiority was particularly achieved in the extreme 1-shot cases on two challenging benchmarks -- miniImageNet and FC100. 
+%
+In terms of learning scheme, HT meta-batch showed consistently good performance for all baselines and ablative models.
+%
+On the more challenging FC100 benchmark, it showed to be particularly helpful for boosting convergence speed.
+%
+This design is independent from any specific model and could be generalized well whenever the hardness of task is easy to evaluate in online iterations.
+
+\section*{Acknowledgments}
+This research is part of NExT research which is supported by the National Research Foundation, Prime Minister's Office, Singapore under its IRC@SG Funding Initiative.
+It is also partially supported by German Research Foundation (DFG CRC 1223), and National Natural Science Foundation of China (61772359).

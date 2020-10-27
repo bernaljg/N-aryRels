@@ -1,0 +1,77 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage[nocompress]{cite}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{subfigure}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage[Algorithm]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{setspace}
+\usepackage{booktabs}
+\floatname{algorithm}{Procedure}
+\usepackage{color} 
+\usepackage[labelsep=period]{caption}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+% Include other packages here, before hyperref.
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+\cvprfinalcopy % *** Uncomment this line for the final submission
+
+\def\cvprPaperID{2493} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+\ifcvprfinal\pagestyle{empty}\fi
+\begin{document}
+
+%%%%%%%%% TITLE
+\title{Quality Aware Network for Set to Set Recognition}
+
+\author{Yu Liu\\
+SenseTime Group Limited\\
+{\tt\small liuyuisanai@gmail.com}
+% For a paper whose authors are all at the same institution,
+% omit the following lines up until the closing ``}''.
+% Additional authors and addresses can be added with ``\and'',
+% just like the second author.
+% To save space, use either the email address or home page, not both
+\and
+Junjie Yan\\
+SenseTime Group Limited\\
+{\tt\small yanjunjie@sensetime.com}
+\and
+Wanli Ouyang\\
+University of Sydney\\
+{\tt\small wanli.ouyang@gmail.com}
+}
+
+\maketitle
+%\thispagestyle{empty}
+%%%%%%%%% ABSTRACT
+\input{c1_abstract}
+
+%%%%%%%%% BODY TEXT
+\input{c2_introduction}
+\input{c3_related_work}
+\input{c4_algorithm}
+\input{c5_experiment}
+\input{c6_discussion}
+% ref
+\newpage
+\begin{spacing}{0.1}
+\input{reference}
+%-------------------------------------------------------------------------
+
+\end{spacing}
+\end{document}

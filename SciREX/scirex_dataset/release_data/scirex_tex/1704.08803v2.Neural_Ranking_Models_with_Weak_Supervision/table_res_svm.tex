@@ -1,0 +1,36 @@
+% !TEX root = main.tex
+\begin{table*}[tbp]
+\centering
+\caption{\label{tbl_svm}Performance of the linear RankSVM with different features.}
+\vspace{-10pt}
+%\begin{adjustbox}{max width=\columnwidth}
+%\begin{tabular}{@{}l@{~~~}c@{~~}c@{~~}c@{~~~}c@{~~}c@{~~}c@{}}
+\begin{adjustbox}{max width=0.8\textwidth}
+\begin{tabular}{l c c c c c c}
+\toprule
+\multirow{2}{*}{\textbf{Method}} &
+%\multicolumn{1}{l}{\textbf{Method}} & 
+\multicolumn{3}{c}{\textbf{Robust04}} & \multicolumn{3}{c}{\textbf{ClueWeb}}
+\\ \cmidrule(lr){2-4} \cmidrule(lr){5-7}
+& \textit{MAP} & \textit{P@20} & \textit{nDCG@20}  & \textit{MAP} & \textit{P@20} & \textit{nDCG@20}
+\\ \midrule
+\textbf{RankSVM + \fone} 
+& 0.1983\fs & 0.2841\fs & 0.3375\fs 
+& 0.0761\fs & 0.1840\fs & 0.1637\fs
+\\ 
+\textbf{RankSVM + \ftwo} 
+& 0.2307\fs & 0.3260\fs & 0.3794\fs 
+& 0.0862\fs & 0.2170\fs & 0.1939\fs
+\\ 
+\textbf{RankSVM + (Pretrained (external) + IDF weighting)} 
+& 0.1539\fs & 0.2121\fs & 0.1852\fs 
+& 0.0633\fs & 0.1572\fs & 0.1494\fs 
+\\ \midrule
+\textbf{\mone (one layer with no nonlinearity) + \fthree} 
+& 0.2103\fs & 0.3986\fs & 0.3160\fs 
+& 0.0645\fs & 0.1421\fs & 0.1322\fs
+\\ \bottomrule
+\end{tabular}
+\end{adjustbox}
+\vspace{-5pt}
+\end{table*}

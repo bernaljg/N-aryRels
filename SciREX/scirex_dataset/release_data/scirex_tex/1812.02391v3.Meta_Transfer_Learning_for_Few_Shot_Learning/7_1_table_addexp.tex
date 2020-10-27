@@ -1,0 +1,24 @@
+
+\begin{table*}[t]%\scriptsize
+  \small
+  \centering
+  \begin{tabular}{ ccclccccc}
+    \toprule
+      \multirow{2}{*}{Meta-learning} & \multirow{2}{*}{Base-learning} & \multirow{2}{*}{FC dim of $\theta$} &  \multirow{2}{*}{Feature extractor} & \multicolumn{2}{c}{miniImageNet} &  \multicolumn{3}{c}{FC100}\\
+       & & & &  1-shot & 5-shot & 1-shot & 5-shot & 10-shot \\
+    \midrule    
+
+     $\Phi_{S_1}$, $\Phi_{S_2}$ & $\theta$ & 5 & 4 CONV (pre) & 45.6 $\pm$ $1.8$ & 61.2 $\pm$ $0.9$ & 38.0 $\pm$ $1.6$ & 46.4 $\pm$ $0.9$ & 56.5 $\pm$ $0.8$ \\
+     \midrule
+     $\Phi_{S_1}$, $\Phi_{S_2}$ & $\theta$ (2-layer) & 512, 5 & ResNet-12 (pre) & 59.1 $\pm$ $1.9$ & 70.7 $\pm$ $0.9$ & 40.3 $\pm$ $1.9$ & 53.3 $\pm$ $0.9$ & 54.1 $\pm$ $0.8$ \\
+     $\Phi_{S_1}$, $\Phi_{S_2}$ & $\theta$ (3-layer) & 1024, 512, 5 & ResNet-12 (pre) & 56.2 $\pm$ $1.8$ & 68.7 $\pm$ $0.9$ & 40.0 $\pm$ $1.8$  & 52.3 $\pm$ $1.0$  & 53.8 $\pm$ $0.8$  \\
+     \midrule
+     $\Phi_{S_1}$, $\Phi_{S_2}$ & $\Theta$, $\theta$ & 5 & ResNet-12 (pre) & 59.6 $\pm$ $1.8$ & 71.6 $\pm$ $0.9$ & 43.3 $\pm$ $1.9$ & 54.6 $\pm$ $1.0$ & 60.7 $\pm$ $0.8$ \\     
+    \midrule
+    \redt{$\Phi_{S_1}$, $\Phi_{S_2}$} & \redt{$\theta$} & \redt{5} & \redt{ResNet-12 (pre)} & \redt{60.2 $\pm$ $1.8$} & \redt{74.3 $\pm$ $0.9$} & \redt{43.6 $\pm$ $1.8$} & \redt{55.4 $\pm$ $0.9$} & \redt{62.4 $\pm$ $0.8$} \\
+  \bottomrule
+\end{tabular}
+  \vspace{0.2cm}
+  \caption{Additional ablative study. On the last row, we show the red numbers which are reported in our main paper (corresponding to the MTL setting: \emph{SS} $[\Theta; \theta]$, meta-batch).}
+    \label{table}
+\end{table*}

@@ -1,0 +1,16 @@
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\begin{align}
+  &f^{l+1}_i = relu(f^l_i) = \max(f^l_i, 0) \\
+  &R^l_i = (f^l_i > 0) \cdot R^{l+1}_i \quad \text{, where } R^{l+1}_i =
+  \frac{\partial f^{out}}{\partial f^{l+1}_i} \\
+  &R^l_i = \left(R^{l+1}_i > 0 \right) \cdot R^{l+1}_i \\
+  &R^l_i = (f^l_i > 0) \cdot \left (R^{l+1}_i > 0 \right) \cdot
+  R^{l+1}_i \\
+\end{align}
+
+
+\end{document}

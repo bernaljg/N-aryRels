@@ -1,0 +1,69 @@
+\section{Conclusions}
+
+Our work is motivated by two major deficiencies in training the current generative models for text generation: exposure bias and a loss which does not operate at the sequence level.
+While Reinforcement learning can potentially address these issues, it struggles in settings when 
+there are very large action spaces, such as in text generation. Towards that end, 
+we propose the MIXER algorithm, which deals with these issues and enables successful training of reinforcement learning models for text generation. 
+We achieve this by replacing the initial random policy with the optimal policy of a cross-entropy trained model and by gradually exposing the model more and more to its own predictions in an incremental learning framework.
+
+
+
+
+%. First, the exposure bias affecting the commonly used cross-entropy loss. 
+%While the model sees only ground truth inputs at training time, at test time model predictions are fed back as input to generate a full sequence. 
+%Second, current text generation systems are often trained to predict the next word in the sequence without taking into account the quality of the % overall sequence. 
+% These discrepancies make the generation process brittle.
+%Reinforcement learning is a framework that can address these issues. 
+%First, at training time the model is used to generate an entire sequence of actions. 
+%Second, the reward does not need to factor over individual words nor does it need to be differentiable. 
+%Therefore, we can easily and directly operate at the sequence level, generate at training time and optimize our model towards any desired metric, such as BLEU and ROUGE. 
+%One challenge with reinforcement learning is that it struggles with very large action spaces such as for text generation.
+
+% Mixed Incremental Cross-Entropy Reinforce (MIXER) 
+%The algorithm we propose, MIXER, 
+%deals with this issue and enables successful training of reinforcement learning models for text generation. 
+%We achieve this by replacing the initial random policy with the optimal policy of a cross-entropy trained model and by gradually exposing the model more and more to its own predictions in an incremental learning framework.
+
+Our results show that MIXER outperforms three strong baselines for greedy generation and it is very competitive with beam search. 
+The approach we propose is agnostic to the underlying model or the form of the reward function. 
+% We are free to use any other metric as reward such as ROUGE or METEOR instead of BLEU. 
+% Similarly, we may use a different parametric model such as a feed- forward network or an LSTM \citep{lstm}.
+In future work we would like to design better estimation techniques for the average reward $\bar{r}_t$, because poor estimates can lead to slow convergence of both REINFORCE and MIXER. 
+Finally, our training algorithm relies on a single sample while it would be interesting to investigate the effect of more comprehensive search methods at training time.
+
+
+% Our work addresses two major deficiencies in training the current generative models for text generation. First, it addresses the {\it exposure bias} affecting the commonly used cross-entropy loss. 
+% %While the model sees only ground truth inputs at training 
+% %time, at test time model predictions are fed back as input to generate a full sequence. 
+% Second, it directly tries to optimize for the final evaluation metric, namely, BLEU. 
+% %current text generation systems are often trained to predict the next word in the sequence without taking into account the quality of the overall sequence. These discrepancies make the generation process brittle. 
+% Both these objectives are accomplished by the proposed Mixed Incremental Cross-Entropy Reinforce (MIXER) algorithm. 
+% %Reinforcement learning is a framework that can address these issues. First, at training time the model is used to generate an entire sequence of actions. Second, the reward does not need to factor over individual words nor does it need to be differentiable. Therefore, we can easily and directly operate at the sequence level, generate at training time and optimize our model towards BLEU, our test time evaluation metric. One challenge with reinforcement learning is that it struggles with very large action spaces such as for text generation.
+% MIXER is an extension of the REINFORCE algorithm applied to text generation, which 
+% %Mixed Incremental Cross-Entropy Reinforce (MIXER) deals with this issue and enables
+% %successful training of reinforcement learning models for text generation.
+% replaces the initial random policy with the optimal policy of
+% a cross-entropy trained model and it gradually exposes the model more and more to its own predictions in an incremental learning framework.
+
+% Our results show that MIXER outperforms three strong baselines for greedy generation and it is very competitive with beam search. 
+% The approach we propose is agnostic to the underlying model or the form of the reward function. 
+% We are free to use any other metric as reward such as ROUGE or METEOR instead of BLEU. 
+% Similarly, we may use a different parametric model such as a feed-forward network or an LSTM~\citep{lstm}.
+
+% For future we would like to design better estimation techniques for the average reward $\bar{r}_t$, because poor estimates can lead to slow convergence of both REINFORCE and MIXER.
+% Finally, our training algorithm relies on a single sample while it would be interesting to investigate the effect of more comprehensive search methods at training time.
+
+% In this study, we investigated sequence level training algorithms for RNNs with the goal to improve text generation.
+% Today, the dominant training protocol is cross-entropy loss, which optimizes the prediction of the next word in the sequence. However, at test time the model is asked to predict several words in the future by re-circulating its own prediction back to the input. 
+% The problem of predicting several steps in the future while obtaining delayed feedback, and to perform prediction via a discrete sequence of actions inspired us to apply reinforcement learning techniques. Unfortunately, reinforcement learning techniques do not usually handle well large action spaces, like those we encounter in typical language modeling applications.
+
+% MIXER addresses these limitations through pre-training and incremental learning. 
+
+% MIXER addresses these limitations by leveraging both the fact that we have access to the optimal policy and by using incremental learning.
+% Since we have examples of ground truth generation, we can "pre-train" the model for next step prediction via cross-entropy. This drastically reduces the actual search space. By using incremental learning, the model is then able to gradually produce stable sequences and to make effective use of its own predictions.
+
+% Our empirical validation shows that the model we propose achieves the best BLEU score compared to three strong baselines. Moreover, generations can be further improved by using beam search. Note that the approach we proposed is agnostic of the particular underlying model and metric. We can easily replace BLEU with ROUGE, METEOR, \etc by simply swapping the function that computes rewards within the training loop. Similarly, the training algorithm applies to any type of model and RNN, LSTM~\citep{lstm} included.
+
+
+
+% There are several avenues of future investigation. First, REINFORCE upon which we build, requires careful estimation of the average reward. Poor estimation of this value can yield very slow convergence. More generally, searching at training time is still an unsolved problem. In particular, it would be very powerful to include beam search also at training time. 

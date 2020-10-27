@@ -1,0 +1,97 @@
+\section{Data Analysis}
+\label{sec:data-analysis}
+So far, we have good results via either of our systems. In this section, we aim to conduct an in-depth analysis and answer the following questions: (i)~Since the dataset was created in an automatic and heuristic way, how many of the questions are trivial to answer, and how many are noisy and not answerable? (ii)~What have these models learned? What are the prospects for further improving them?
+%
+To study this, we randomly sampled 100 examples from the dev portion of the \ti{CNN} dataset for analysis (see more details in Appendix \ref{appendix:samples}).
+
+
+% In order to have a better sense and understanding about the task, we will conduct an initial data analysis in this section. Before proceeding to analysis, we will keep the following questions in mind: 1) How many questions can we infer the correct answer based on a \ti{local context} (for example, the left and right two words)? How many do we need a \ti{wider context}? 2) How many questions can be answered from only a \ti{single sentence}, and how many questions need \ti{multiple sentences} to answer? 3) How many questions require \ti{complex inference}, and how many are even \ti{not answerable}?
+
+\subsection{Breakdown of the Examples}
+
+\begin{table*}
+\centering
+\begin{tabular}{@{} p{1.45cm}  p{5.2cm} p{8.5cm} @{}}
+\toprule
+Category & Question & Passage \\
+\midrule
+Exact Match & \ti{it 's clear @entity0 is leaning toward} {\tf{@placeholder}} ,  says an expert who monitors @entity0 & \ldots @entity116 , who follows @entity0 's operations and propaganda closely , recently told @entity3 , \ti{it 's clear @entity0 is leaning toward} \tf{@entity60}  in terms of doctrine , ideology and an emphasis on holding territory after operations . \ldots  \\
+\midrule
+Para-phrase & {\tf{@placeholder} says he understands why @entity0 wo n't play at his tournament} &  \ldots @entity0 called me personally to let me know that he would n't be playing here at @entity23 , " \tf{@entity3} said on his @entity21 event 's website . \ldots \\
+\midrule
+Partial clue & a tv movie based on @entity2 's book \tf{@placeholder} casts a @entity76 actor as @entity5 & \ldots  to @entity12  @entity2 professed that his \tf{@entity11} is not a religious book . \ldots \\
+\midrule
+Multiple sent. &  he 's doing a his - and - her duet all by himself ,  @entity6 said of \tf{@placeholder} &  \ldots we got some groundbreaking performances , here too , tonight ,  @entity6 said . we got \tf{@entity17} , who will be doing some musical performances . he 's doing a his - and - her duet all by himself .  \ldots \\
+\midrule
+Coref. Error & rapper \tf{@placeholder} " disgusted , " cancels upcoming show for @entity280 & \ldots with hip - hop star \tf{@entity246} saying on @entity247 that he was canceling an upcoming show for the @entity249 . \ldots  (but @entity249 = @entity280 = SAEs)\\
+\midrule
+Hard & pilot error and snow were reasons stated for \tf{@placeholder} plane crash  & \ldots a small aircraft carrying \tf{@entity5} , @entity6 and @entity7 the @entity12  @entity3 crashed a few miles from @entity9 , near @entity10 , @entity11 . \ldots \\
+\bottomrule
+\end{tabular}
+\caption{Some representative examples from each category. }
+\label{table:category-examples}
+\end{table*}
+
+ After carefully analyzing these 100 examples,  we roughly classify them into the following categories (if an example satisfies more than one category, we classify it into the earliest one):
+\begin{description}
+    \item[\tf{Exact match}] The nearest words around the placeholder are also found in the passage surrounding an entity marker; the answer is self-evident.
+    \item[\tf{Sentence-level paraphrasing}] The question text is entailed\slash rephrased by \ti{exactly} one sentence in the passage, so the answer can definitely be identified from that sentence.
+    \item[\tf{Partial clue}] In many cases, even though we cannot find a complete semantic match between the question text and some sentence, we are still able to infer the answer through partial clues, such as some word/concept overlap.
+    \item[\tf{Multiple sentences}] It requires processing multiple sentences to infer the correct answer.
+    \item[\tf{Coreference errors}] It is unavoidable that there are many coreference errors in the dataset. This category includes those examples with critical coreference errors for the answer entity or key entities appearing in the question. Basically we treat this category as ``not answerable''.
+    \item[\tf{Ambiguous or very hard}] This category includes examples for which we think humans are not able to obtain the correct answer (confidently).
+\end{description}
+
+\begin{table}
+  \centering
+    \begin{tabular}{l  l  r}
+      \toprule
+    No. & Category &  (\%)  \\
+    \midrule
+    1 & Exact match & 13   \\
+    2 & Paraphrasing & 41 \\
+    3 & Partial clue & 19  \\
+    4 & Multiple sentences & 2  \\
+    \midrule
+    5 & Coreference errors & 8 \\
+    6 & Ambiguous / hard &  17 \\
+    \bottomrule
+    \end{tabular}
+    \caption{An estimate of the breakdown of the dataset into classes,
+      based on the analysis of our sampled 100 examples from the \ti{CNN} dataset.}
+    \label{table:example-breakdown}
+\end{table}
+
+Table~\ref{table:example-breakdown} provides our estimate of the percentage for each category, and Table \ref{table:category-examples} presents one representative example from each category.
+%
+To our surprise, ``coreference errors'' and ``ambiguous\slash hard'' cases account for $25\%$ of this sample set, based on our manual analysis, and this certainly will be a barrier  for training models with an accuracy much above 75\% (although, of course, a model can sometimes make a lucky guess). Additionally, only 2 examples require multiple sentences for inference -- this is a lower rate than  we expected and \newcite{hermann2015teaching} suggest. Therefore, we hypothesize that in most of the ``answerable'' cases, the goal is to identify the most relevant (single) sentence, and then to infer the answer based upon it.
+
+\subsection{Per-category Performance}
+
+Now,
+%In the following, 
+we further analyze the predictions of our two systems, based on the above categorization.
+
+\begin{table}
+   \centering
+    \begin{tabular}{@{} l  r @{\hspace*{0.25em}} r r @{\hspace*{0.25em}} r @{}}
+\toprule
+     {Category} &  \multicolumn{2}{c}{{Classifier}} & \multicolumn{2}{c}{{Neural net}} \\
+    \midrule
+     Exact match & 13 & (100.0\%) & 13 & (100.0\%) \\
+     Paraphrasing &  32 & (78.1\%) & 39 & (95.1\%) \\
+     Partial clue & 14 & (73.7\%) &  17 & (89.5\%) \\
+     Multiple sentences &  1 & (50.0\%) & 1 & (50.0\%) \\
+    \midrule
+     Coreference errors &  4 & (50.0\%) & 3 & (37.5\%)\\
+     Ambiguous / hard &  2 & (11.8\%) & 1 & (5.9\%)  \\
+     \midrule
+     All & 66 & (66.0\%) & 74 & (74.0\%) \\
+    \bottomrule
+    \end{tabular}
+    \caption{The per-category performance of our two systems.}
+    \label{table:category-performance}
+\end{table}
+
+As seen in Table \ref{table:category-performance}, we have the following observations: (i)~The exact-match cases are quite simple and both systems get 100\% correct. (ii)~For the ambiguous\slash hard and entity-linking-error cases, meeting our expectations, both of the systems perform poorly. (iii)~The two systems mainly differ in paraphrasing cases, and some of the ``partial clue'' cases. This clearly shows how neural networks are better capable of learning semantic matches involving paraphrasing or lexical variation between the two sentences. (iv)~We believe that the neural-net system already achieves near-optimal performance on all the single-sentence and unambiguous cases. There does not seem to be much useful headroom for exploring more sophisticated natural language understanding approaches on this dataset.
+

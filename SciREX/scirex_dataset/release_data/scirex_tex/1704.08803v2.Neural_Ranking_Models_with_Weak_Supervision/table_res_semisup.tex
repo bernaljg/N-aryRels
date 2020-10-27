@@ -1,0 +1,33 @@
+% !TEX root = main.tex
+\begin{table*}[tbp]
+\centering
+\caption{Performance of the \modelthree with \feedthree in fully supervised setting, weak supervised setting, and weak supervised plus supervision as fine tuning. \ps indicates that the improvements over all other models are statistically significant, at the 0.05 level using the paired two-tailed t-test, with Bonferroni correction.}
+\label{tbl_semisup}
+\vspace{-10pt}
+%\begin{adjustbox}{max width=\columnwidth}
+%\begin{tabular}{@{}l@{~~~}c@{~~}c@{~~}c@{~~~}c@{~~}c@{~~}c@{}}
+\begin{adjustbox}{max width=0.8\textwidth}
+\begin{tabular}{l c c c c c c}
+\toprule
+\multirow{2}{*}{\textbf{Method}} &
+%\multicolumn{1}{l}{\textbf{Method}} & 
+\multicolumn{3}{c}{\textbf{Robust04}} & \multicolumn{3}{c}{\textbf{ClueWeb}}
+\\ \cmidrule(lr){2-4} \cmidrule(lr){5-7}
+& \textit{MAP} & \textit{P@20} & \textit{nDCG@20}  & \textit{MAP} & \textit{P@20} & \textit{nDCG@20}
+\\ \midrule
+\textbf{Weakly supervised} 
+& 0.2837 \fs & 0.3802\fs & 0.4389\fs  
+& 0.1387 \fs & 0.2967\fs & 0.2330\fs
+\\
+\textbf{Fully supervised} 
+& 0.1790 \fs & 0.2863\fs & 0.3402\fs  
+& 0.0680 \fs & 0.1425\fs & 0.1652\fs
+\\
+\textbf{Weakly supervised + Fully supervised} 
+& \textbf{0.2912}\ps & \textbf{0.4126}\ps & \textbf{0.4509}\ps 
+& \textbf{0.1520}\ps & \textbf{0.3077}\ps & \textbf{0.2461}\ps
+\\ \bottomrule
+\end{tabular}
+\end{adjustbox}
+\vspace{-5pt}
+\end{table*}

@@ -1,0 +1,325 @@
+\documentclass[10pt,journal,compsoc]{IEEEtran}
+%
+%
+%
+\ifCLASSOPTIONcompsoc
+  %
+  %
+  \usepackage[nocompress]{cite}
+\else
+  %
+  \usepackage{cite}
+\fi
+%
+%
+\hyphenation{op-tical net-works semi-conduc-tor}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb, url}
+\urlstyle{sf}
+%
+\usepackage{bm}
+\usepackage[usenames]{color}
+\usepackage{icomma}
+%
+\usepackage[ruled,lined]{algorithm2e}
+\usepackage[svgnames,table]{xcolor}
+\usepackage{makecell}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage[bf,font=footnotesize]{caption}
+\usepackage{array}
+\usepackage{wrapfig}
+
+\newcommand{\etal}{\emph{et al.}}
+\newcommand{\eg}{\emph{e.g.}}
+\newcommand{\etc}{\emph{etc.}}
+\newcommand{\ie}{\emph{i.e.}}
+\newcommand{\cf}{\emph{c.f.}}
+\newcommand{\itm}{a}
+\renewcommand{\i}{{\itm}}
+\newcommand{\vs}{\emph{vs.}}
+%
+%
+\def\Att{{V_{att}}}
+\def\Cap{{V_{cap}}}
+\def\Know{{V_{know}}}
+\def\V2L{\textit{V2L}}
+\def\CNN{\mbox{CNN}}
+\def\ModParms{{\boldsymbol \theta}}
+
+
+
+\begin{document}
+%
+\title{Image Captioning and Visual Question Answering Based on Attributes
+%
+\\and External Knowledge}
+%
+%
+%
+\author{Qi Wu, Chunhua Shen,  Peng Wang, Anthony Dick, Anton van den Hengel
+\IEEEcompsocitemizethanks{\IEEEcompsocthanksitem
+  The authors are with the Australian Centre for Visual Technologies, and  School of Computer Science,
+  at The University of Adelaide, Australia.
+ %
+ %
+ %
+ %
+  E-mail: (\{qi.wu01, chunhua.shen, p.wang, anthony.dick, anton.vandenhengel\}@\-adelaide.\-edu.\-au).
+}
+}
+
+
+
+
+
+\markboth{Manuscript, 2016}%
+{}
+
+\IEEEtitleabstractindextext{%
+
+\begin{abstract}
+Much of the recent progress in Vision-to-Language problems has been achieved through a combination of Convolutional Neural Networks (CNNs)
+and Recurrent Neural Networks (RNNs). This approach does not explicitly represent high-level semantic concepts, but rather seeks to progress directly from image features to text. In this paper we first propose a method of incorporating high-level concepts into the successful CNN-RNN approach, and show that it achieves a significant improvement on the state-of-the-art in both image captioning and visual question answering.
+We further show that the same mechanism can be used to incorporate external knowledge,
+which is critically important for answering high level visual questions.
+Specifically, we design a visual question answering model that combines an internal representation of the content of an
+image with information extracted from a general knowledge base to answer a broad range of image-based questions.
+It particularly allows questions to be asked 
+%
+where the image alone does not contain the the information required to select the appropriate answer.
+%
+Our final model achieves the best reported results for both image captioning and visual question answering on several of the major benchmark datasets.
+\end{abstract}
+
+
+%
+\begin{IEEEkeywords}
+  Image Captioning, Visual Question Answering, Concepts Learning, Recurrent Neural Networks, LSTM.
+\end{IEEEkeywords}}
+%
+\maketitle
+
+\IEEEdisplaynontitleabstractindextext
+\IEEEpeerreviewmaketitle
+
+
+
+%
+\section{Introduction}
+\label{sec:introduction}
+\input{intro.tex}
+
+\section{Related work}
+\label{sec:related_work}
+\input{relate_work.tex}
+
+\section{Image Captioning using Attributes}
+\label{sec:image_captioning}
+\input{captioning.tex}
+
+\section{A VQA Model with External Knowledge}
+\label{sec:vqa}
+\input{vqa.tex}
+
+\section{Experiments}
+\label{sec:exp}
+\input{exp.tex}
+
+\vspace{-8pt}
+\section{Conclusions}
+
+
+
+In this paper, we first examined the importance of introducing an intermediate attribute prediction layer into the predominant CNN-LSTM framework,
+which was neglected by almost all previous work.
+We implemented an attribute-based model which can be applied to the task of image captioning. We have shown that an explicit representation of image content improves \V2L performance, in all cases. Indeed, at the time of submitting this paper,
+our image captioning model outperforms the state-of-the-art on several captioning datasets.
+
+
+
+Secondly, in this paper we have shown that it is possible to extend the state-of-the-art RNN-based VQA approach so as to incorporate the large volumes of information required to answer general, open-ended, questions about images. The knowledge bases which are currently available do not contain much of the information which would be beneficial to this process, but nonetheless can still be used to significantly improve performance on questions requiring external knowledge (such as 'Why' questions).  The approach that we propose is very general, however, and will be applicable to more informative knowledge bases should they become available. We further implement a knowledge selection scheme which reflects both of the content of the question and the image, in order to extract more specifically related information. Currently our system is the state-of-the-art on three VQA datasets and produces the best results on the VQA evaluation server.
+
+Further work includes generating knowledge-base queries which reflect the content of the question and the image, in order to extract more specifically related information. The Knowledge Base itself also can be improved. For instance, Open-IE provides more general common-sense knowledge such as `cats eat fish'. Such knowledge will help answer high-level questions.
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+\begin{table}[t!]
+\centering
+\scriptsize
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lccclc}
+\Xhline{2\arrayrulewidth}
+\multicolumn{1}{c}{VQA}& \multicolumn{3}{c}{Answer Type} &  & Overall \\ \cline{2-4}
+\multicolumn{1}{c}{Test-standard} & Yes/No & Other & Number &  &  \\ \hline
+LSTM Q \cite{antol2015vqa}& 78.12 & 26.99 & 34.94 &  & 48.89 \\
+LSTM Q+I \cite{antol2015vqa}& 79.01 & 36.80 & 35.55 &  & 54.06 \\
+IBOWING \cite{zhou2015simple}&76.76&42.62&34.98&&55.89\\
+NMN \cite{andreas2015deep}& 81.16 & 44.01 & 37.70 &  & 58.66\\
+DNMN \cite{andreas2016learning}&80.98&45.81&37.48&&59.44\\
+SMem \cite{xu2015ask}&80.80&43.48&37.53&&58.24\\
+SAN \cite{yang2015stacked}& 79.11 & 46.42 &36.41  &  & 58.85\\
+DDPnet\cite{Noh2015image}&80.28&42.24&36.92&&57.36\\
+Human \cite{antol2015vqa}&95.77&72.67&83.39&&83.30\\
+\hline
+Ours & 81.10 & 45.90 & 37.18 &  & \textbf{59.50} \\ \Xhline{2\arrayrulewidth}
+\end{tabular} }
+\vspace{-3pt}
+\caption{VQA Open-Ended evaluation server results. Accuracies for different answer types and overall performances on the test-standard. We only list the published results before this submission, the whole list of the leanding board can be found from http://www.visualqa.org/roe.html}
+\vspace{-12pt}
+\label{tab:server_results_2}
+\end{table}
+
+\vspace{-7pt}
+\section*{Acknowledgements}
+This research was in part supported by the Data to Decisions Cooperative Research Centre.
+Correspondence should be addressed to C. Shen.
+%
+
+
+
+\begin{figure*}[t]
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lcccc}
+ \multicolumn{2}{c}{\includegraphics[height=3cm]{img/results/001.jpg}}&\includegraphics[height=3cm]{img/results/003.jpg}&\includegraphics[height=3cm]{img/results/006.jpg}&\includegraphics[height=3cm]{img/results/008.jpg}\\
+ \multicolumn{2}{c}{What color is the tablecloth?}&How many people in the photo?&What is the red fruit?&What are these people doing?\\ \hline
+ \textit{Ours:} &\color{green}{white}&\color{green}{2}&\color{green}{apple}&\color{green}{eating}\\
+ \textit{Vgg+LSTM:} &\color{red}{red}&\color{red}{1}&\color{red}{banana}&\color{red}{playing}\\
+ \textit{Ground Truth:} &white&2&apple&eating\\ \Xhline{2\arrayrulewidth}
+ \vspace{1pt}
+\end{tabular}}
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lcccc}
+ \multicolumn{2}{c}{\includegraphics[height=3cm]{img/results/002.jpg}}&\includegraphics[height=3cm]{img/results/004.jpg}&\includegraphics[height=3cm]{img/results/005.jpg}&\includegraphics[height=3cm]{img/results/007.jpg}\\
+ \multicolumn{2}{c}{Why are his hands outstretched?}&Why are the zebras in water?&Is the dog standing or laying down?&Which sport is this?\\ \hline
+ \textit{Ours:} &\color{green}{balance}&\color{green}{drinking}&\color{green}{laying down}&\color{green}{baseball}\\
+ \textit{Vgg+LSTM:} &\color{red}{play}&\color{red}{water}&\color{red}{sitting}&\color{red}{tennis}\\
+ \textit{Ground Truth:} &balance&drinking&laying down&baseball\\ \Xhline{2\arrayrulewidth}
+ \vspace{-3pt}
+\end{tabular}}
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+\vspace{-7pt}
+\caption{Some example cases where our final model gives the correct answer while the base line model \textbf{VggNet-LSTM} generates the wrong answer. All results are from the VQA dataset. More results can be found in the supplementary material.}
+\label{results_examples}
+\vspace{-15pt}
+\end{figure*}
+\ifCLASSOPTIONcaptionsoff
+  \newpage
+\fi
+%
+%
+
+\bibliographystyle{IEEEtran}
+%
+\bibliography{IEEEabrv,./myref}
+
+%
+%
+%
+
+\vspace{-1cm}
+\begin{wrapfigure}{l}{7em}
+\vspace{-10pt}
+  \includegraphics[width=7em]{author-wu_bw.jpg}
+\end{wrapfigure}
+\begin{IEEEbiographynophoto}{Qi Wu}
+is a postdoctoral researcher at the Australian Centre for Visual Technologies (ACVT) of the University of Adelaide. His research interests include cross-depiction object detection and classification, attributes learning, neural networks, and image captioning. He received a Bachelor in mathematical sciences from China Jiliang University, a Masters in Computer Science, and a PhD in computer vision from the University of Bath (UK) in 2012 and 2015, respectively.
+\end{IEEEbiographynophoto}
+
+\vspace{-1cm}
+\begin{wrapfigure}{l}{7em}
+\vspace{-10pt}
+  \includegraphics[width=7em]{author-shen.jpg}
+\end{wrapfigure}
+\begin{IEEEbiographynophoto}{Chunhua Shen}
+is a Professor of computer science at the University of Adelaide. He was with the computer vision program at NICTA (National ICT Australia) in Canberra for six years before moving back to Adelaide. He studied at Nanjing University (China), at the Australian National University, and received his PhD degree from the University of Adelaide. In 2012, he was awarded the Australian Research Council Future Fellowship.
+\end{IEEEbiographynophoto}
+
+\vspace{-1cm}
+\begin{wrapfigure}{l}{7em}
+\vspace{-10pt}
+  \includegraphics[width=7em]{author-wang_bw.jpg}
+\end{wrapfigure}
+\begin{IEEEbiographynophoto}{Peng Wang}
+is a postdoctoral researcher at the Australian Centre for Visual Technologies (ACVT) of the University of Adelaide. He received a Bachelor in electrical engineering and automation, and a PhD in control science and engineering from Beihang University (China) in 2004 and 2011, respectively.
+\end{IEEEbiographynophoto}
+
+\vspace{-0.5cm}
+\begin{wrapfigure}{l}{7em}
+\vspace{-10pt}
+  \includegraphics[width=7em]{author-dick.png}
+\end{wrapfigure}
+\begin{IEEEbiographynophoto}{Anthony Dick}
+is an Associate Professor at the University of Adelaide. He
+received a PhD degree from the University of Cambridge in 2002, where he worked on 3D reconstruction of architecture from images. His research interests include image-based modeling, automated video surveillance, and image search.
+\end{IEEEbiographynophoto}
+
+\vspace{-0.5cm}
+\begin{wrapfigure}{l}{7em}
+\vspace{-10pt}
+  \includegraphics[width=7em]{author-hengel.png}
+\end{wrapfigure}
+\begin{IEEEbiographynophoto}{Anton van den Hengel}
+is a Professor at the University of Adelaide and the founding Director of The Australian Centre for Visual Technologies (ACVT). He received a PhD in Computer Vision in 2000, a Master Degree in Computer Science in 1994, a Bachelor of Laws in 1993, and a Bachelor of Mathematical Science in 1991, all from The University of Adelaide.
+\end{IEEEbiographynophoto}
+
+\end{document}
+
+
+
+
+
+%
+%
+%
+%

@@ -1,0 +1,37 @@
+There have been several attempts to build kernel-based methods that
+mimic deep neural networks; we only review here the ones that are most related to our
+approach. 
+
+\vs
+\paragraph{Arc-cosine kernels.}
+Kernels for building deep large-margin classifiers have been
+introduced in~\cite{cho2010}. The multilayer arc-cosine kernel 
+is built by successive kernel compositions, and each layer
+relies on an integral representation.
+Similarly, our kernels rely on an integral representation, and
+enjoy a multilayer construction. However, in contrast to arc-cosine kernels:
+(i) we build our sequence of kernels by \emph{convolutions}, using local
+information over spatial neighborhoods (as opposed to compositions, using
+global information); (ii) we propose a new training procedure for learning
+a compact representation of the kernel in a \emph{data-dependent} manner. 
+
+\vs
+\paragraph{Multilayer derived kernels.}
+Kernels with invariance properties for visual
+recognition have been proposed in~\cite{bou2009}. Such kernels are built with a 
+parameterized ``neural response'' function, which consists in computing the
+maximal response of a base kernel over a local neighborhood. 
+Multiple layers are then built by iteratively renormalizing the response kernels
+and pooling using neural response functions.  Learning is performed by plugging
+the obtained kernel in an SVM. In contrast to~\cite{bou2009}, we propagate
+information up, from lower to upper layers, by using sequences of convolutions.
+Furthermore, we propose a simple and effective data-dependent way to learn a
+compact representation of our kernels and show that we obtain near state-of-the-art
+performance on several benchmarks. 
+
+\paragraph{Hierarchical kernel descriptors.}
+The kernels proposed in~\cite{bo2011,bo2010} produce multilayer image
+representations for visual recognition tasks.  We discuss in details these kernels in the next
+section: our paper generalizes them and establishes a strong link with
+convolutional neural networks.
+

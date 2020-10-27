@@ -1,0 +1,334 @@
+\section{DeepCut Results}
+\label{sec:experiments:multicut}
+The aim of this paper is to tackle the multi person case. To that end,
+we evaluate the proposed $\deepcut$ models on four diverse
+benchmarks. We confirm that both single person ($\singb$) and
+multi person ($\multb$) variants (Sec.~\ref{section:problem}) are
+effective on standard $\singb$ pose estimation
+datasets~\cite{johnson10bmvc,andriluka14cvpr}.
+%% described in
+%%Sec.~\ref{section:unary}.
+%Both types of models
+%perform equally well, slightly improving over unaries only and
+%significantly outperforming state of the art.
+Then, we demonstrate superior performance of $\deepcut~\multb$ on the
+multi person pose estimation task.
+
+\input{figure_pck_curves}
+
+\subsection{Single Person Pose Estimation}
+\label{sec:multicut:single}
+We now evaluate single person (\textit{SP}) and more general
+multi person (\textit{MP}) $\deepcut$ models on LSP and MPII $\singb$
+benchmarks described in Sec.~\ref{section:unary}. Since this
+evaluation setting implicitly relies on the knowledge that all parts
+are present in the image we always output the full number of parts.
+% BERNT: I would not include the following sentence as such
+% if you want to totally clear we should rephrase this as to make this
+% more compelling
+%To that end we use
+%hypothesis with the highest unary score when the body part predicted
+%as occluded.
+\input{table_multicut_lsp.tex}
+
+\myparagraph{Results on LSP.} We report per-part PCK results
+(Tab.~\ref{tab:multicut:lsp}) and results for a variable distance
+threshold (Fig.~\ref{fig:pck-curves} (a)). $\deepcut~\singb~\rcnn$
+model using $100$ detections improves over unary only ($83.0$
+vs. $82.8$\%~PCK, $58.4$ vs. $57$\% AUC), as pairwise connections
+filter out some of the high-scoring detections on the background. The
+improvement is clear in Fig.~\ref{fig:pck-curves}~(a) for smaller
+thresholds. Using part appearance scores in addition to geometrical
+features in $c\neq c'$ pairwise terms only slightly improves AUC, as
+the appearance of neighboring parts is mostly captured by a relatively
+large region centered at each part. 
+%% As geometrical only pairwise lead
+%% to faster convergence, we use them in the rest of the
+%% experiments. 
+The performance of $\deepcut~\multb~\rcnn$ matches the
+$\singb$ and improves over $\rcnn$ alone: $\deepcut~\multb$ correctly
+handles the $\singb$ case. Performance of $\deepcut~\singb~\dense$ is
+almost identical to unary only, unlike the results for
+$\rcnn$. $\dense$ performance is noticeably higher compared to
+$\rcnn$, and ``easy'' cases that could have been corrected by a
+spatial model are resolved by stronger part detectors alone.
+
+\myparagraph{Comparison to the state of the art (LSP).}
+Tab.~\ref{tab:multicut:lsp} compares results of $\deepcut$ models to
+other deep learning methods specifically designed for single person
+pose estimation. All $\deepcuts$ significantly outperform the state of
+the art, with $\deepcut~\singb~\dense$ model improving by $13.7$\% PCK
+over the best known result~\cite{chen14nips}. The improvement is even
+more dramatic for lower thresholds (Fig.~\ref{fig:pck-curves}~(a)):
+for PCK @ $0.1$ the best model improves by $19.9$\% over Tompson et
+al.~\cite{tompson14nips}, by $26.7$\% over Fan et al.~\cite{fan15cvpr},
+and by $32.4$\%~PCK over Chen\&Yuille~\cite{chen14nips}. The latter is
+interesting, as~\cite{chen14nips} use a stronger spatial model that
+predicts the pairwise conditioned on the CNN features, whereas
+$\deepcuts$ use geometric-only pairwise connectivity. Including body
+part orientation information into $\deepcuts$ should further improve
+the results.
+
+\myparagraph{Results on MPII Single Person.} Results are shown in
+Tab.~\ref{tab:multicut:mpii} and Fig.~\ref{fig:pck-curves}
+(b). $\deepcut~\singb~\rcnn$ noticeably improves over $\rcnn$ alone
+($79.8$ vs. $78.8$\%~PCK, $51.1$ vs. $49.0$\% AUC). The improvement is
+stronger for smaller thresholds (c.f. Fig.~\ref{fig:pck-curves}), as
+spatial model improves part localization. $\dense$ alone trained on
+MPII outperforms $\rcnn$ ($81.6$ vs. $78.8$\% PCK), which shows the
+advantages of dense training and evaluation. As expected, $\dense$
+performs slightly better when trained on the larger
+MPII+LSPET. Finally, $\deepcut~\dense~\singb$ is slightly better than
+$\dense$ alone leading to the best result on MPII dataset ($82.4$\%
+PCK).
+
+\myparagraph{Comparison to the state of the art (MPII).} We compare
+the performance of $\deepcut$ models to the best deep learning
+approaches from the
+literature~\cite{tompson14nips,Tompson:2015:EOL}\footnote{\cite{tompson14nips}
+  was re-trained and evaluated on MPII dataset by the
+  authors.}.
+%% \cite{tompson14nips} is a fully-convolutional deep architecture
+%% relying on multi-resolution filter banks that have various receptive
+%% field sizes. In addition, this model jointly trains part detectors and
+%% spatial model in the same deep architecture. This model was kindly
+%% re-trained by the authors on the MPII dataset for fair
+%% comparison. \cite{Tompson:2015:EOL} is an extension of
+%% \cite{tompson14nips} and it specifically trains a separate deep
+%% full-convolutional model for location refinement. The results are
+%% shown in Tab.~\ref{tab:multicut:mpii}.
+$\deepcut~\singb~\dense$ outperforms
+both~\cite{tompson14nips,Tompson:2015:EOL} ($82.4$ vs $79.6$ and $82.0$\%
+PCK, respectively). Similar to them $\deepcuts$ rely on dense training
+and evaluation of part detectors, but unlike them use single size
+receptive field and do not include multi-resolution context
+information. Also, appearance and spatial components of $\deepcuts$
+are trained piece-wise, unlike~\cite{tompson14nips}. We observe that
+performance differences are higher for smaller thresholds
+(c.f. Fig.~\ref{fig:pck-curves}~(b)). This is remarkable, as a much
+simpler strategy for location refinement is used compared
+to~\cite{Tompson:2015:EOL}. Using multi-resolution filters and joint
+training should improve the performance.
+%% We believe that training a separate deep
+%% convolutional model for location refinement should further improve
+%% results.
+
+\input{table_multicut_mpii.tex}
+
+\subsection{Multi Person Pose Estimation}
+We now evaluate $\deepcut~\multb$ models on the challenging task of
+$\multb$ pose estimation with an unknown number of people per image
+and visible body parts per person.
+%% In this
+%% evaluation we use the variants $\mult$ and $\multu$ of our model since
+%% they demonstrated performance comparable to more costly variants in
+%% previous experiments.  \todo{I don't think "mlt" = MP60 and "mltu" =
+%%   MP60,UB are mentioned before?}
+
+\myparagraph{Datasets.} For evaluation we use two public $\multb$
+benchmarks: ``We Are Family'' (WAF)~\cite{eichner10eccv} with $350$
+training and $175$ testing group shots of people;
+%% staying close to each other and often occluding each other, the
+%% images contain six people on average;
+``MPII Human Pose'' (``Multi-Person'') ~\cite{andriluka14cvpr}
+consisting of $3844$ training
+%% images with $9687$ people
+and $1758$ testing groups
+%%  with $4484$ individuals involved into hundreds of every day
+%% activities.
+of multiple interacting individuals in highly articulated poses with
+variable number of parts. On MPII, we use a subset of $288$ testing
+images for evaluation.
+%% The number, location and scale of
+%% individuals is unknown.
+%% On average there are three people per image.
+%% Sample images are shown in Fig.~\ref{fig:teaserfig}.
+We first pre-finetune both $\rcnn$ and $\dense$ from ImageNet to MPII
+and MPII+LSPET, respectively, and further finetune each model to WAF
+and MPII Multi-Person. For WAF, we re-train the spatial model on WAF
+training set.
+%% : it leads to better results, as poses in
+%% WAF dataset are more constrained compared to MPII.
+
+\myparagraph{WAF evaluation measure.} Approaches are evaluated using
+the official toolkit~\cite{eichner10eccv}, thus results are directly
+comparable to prior work. The toolkit implements occlusion-aware
+``Percentage of Correct Parts ($m$PCP)'' metric. In addition, we
+report ``Accuracy of Occlusion Prediction
+(AOP)''~\cite{Chen:2015:POC}.
+
+\myparagraph{MPII Multi-Person evaluation measure.} PCK metric is
+suitable for $\singb$ pose estimation with known number of parts and
+does not penalize for false positives that are not a part of the
+ground truth.
+% due to occlusion or truncation.
+Thus, for $\multb$ pose estimation we use ``Mean Average Precision
+(mAP)'' measure, similar to \cite{Sun:2011:APM,yang12pami}. In
+contrast to~\cite{Sun:2011:APM,yang12pami} evaluating the detection of
+\emph{any} part instance in the image disrespecting inconsistent pose
+predictions, we evaluate consistent part configurations. First,
+multiple body pose predictions are generated and then assigned to the
+ground truth (GT) based on the highest
+PCK$_h$~\cite{andriluka14cvpr}. Only single pose can be assigned to
+GT. Unassigned predictions are counted as false positives. Finally, AP
+for each body part is computed and mAP is reported.
+
+\myparagraph{Baselines.} To assess the performance of $\rcnn$ and
+$\dense$ we follow a traditional route from the literature based on
+two stage approach: first a set of regions of interest (\emph{ROI}) is
+generated and then the $\singb$ pose estimation is performed in the
+\emph{ROIs}. This corresponds to unary only performance. \emph{ROI}
+are either based on a ground truth ($\gtroi$) or on the people
+detector output ($\detroi$).
+
+\input{table_multicut_waf.tex}
+
+\myparagraph{Results on WAF.} Results are shown in
+Tab.~\ref{tab:multicut:waf}. $\detroi$ is obtained by extending
+provided upper body detection boxes.
+%% by $2h$ towards the bottom of the
+%% image, and then by $0.1\times h$ in all directions, where $h$ is the
+%% height of the original bounding box.
+$\rcnn~\detroi$ achieves $57.6$\% $m$PCP and $73.9$\%
+AOP. $\deepcut~\multb~\rcnn$ significantly improves over
+\rcnn~\detroi~achieving $82.2$\% $m$PCP. This improvement is stronger
+compared to LSP and MPII due to several reasons. First, $m$PCP
+requires consistent prediction of body sticks as opposite to body
+joints, and including spatial model enforces consistency. Second,
+$m$PCP metric is occlusion-aware. $\deepcuts$ can deactivate
+detections for the occluded parts thus effectively reasoning about
+occlusion. This is supported by strong increase in AOP ($85.6$
+vs. $73.9$\%). Results by $\deepcut~\multb~\dense$ follow the same
+tendency achieving the best performance of $84.7$\% $m$PCP and $86.5$\%
+AOP. Both increase in $m$PCP and AOP show the advantages of
+$\deepcuts$ over traditional \detroi~approaches.
+
+Tab.~\ref{tab:multicut:waf} shows that 
+%comparison to prior
+%work. 
+$\deepcuts$ outperform all prior methods.
+%other
+%methods. 
+%$\deepcuts~\multb~\dense$ outperforms 
+Deep learning method~\cite{Chen:2015:POC} is outperformed both for
+$m$PCP (84.7 vs. 80.7\%) and AOP (86.5 vs. 84.9\%) measures. This is
+remarkable, as $\deepcuts$ reason about part interactions across
+several people, whereas~\cite{Chen:2015:POC} primarily focuses on the
+single-person case and handles multi-person scenes akin to
+\cite{yang12pami}. In contrast to~\cite{Chen:2015:POC}, $\deepcuts$
+are not limited by the number of possible occlusion patterns and cover
+person-person occlusions and other types as truncation and occlusion
+by objects in one formulation. $\deepcuts$ significantly
+outperform~\cite{eichner10eccv} while being more general:
+%% who achieve good
+%% performance considering much weaker part detectors based on
+%% handcrafted features.
+unlike~\cite{eichner10eccv} $\deepcuts$ do not require person detector
+and not limited by a number of occlusion states among people.
+
+Qualitative comparison to ~\cite{Chen:2015:POC} is provided in
+Fig.~\ref{fig:qualitative_waf_2}.
+
+\input{figure_qualitative_waf_2}
+%\input{figure_qualitative_waf}
+
+\myparagraph{Results on MPII Multi-Person.}
+%% We first describe the way
+%% we compute \detroi~and~\gtroi~and then present the results.
+%\noindent $\detroi$.
+Obtaining a strong detector of highly articulated people having strong
+occlusions and truncations is difficult. We employ a neck detector as
+a person detector as it turned out to be the most reliable part.
+%Optimal IoU-based non-maximum suppression and detection thresholds were
+%selected using the training set.
+%% , which results
+%% in detection performance of 76.7\% AP on the test set, the highest
+%% among the part detectors.
+Full body bounding box is created around a neck detection and used as~\detroi.
+%Then we non-uniformly extend detection bounding box while also taking
+%the scale into account
+%%  such that it has a size of
+%% the upright person. This region is then used
+%and use this box as \detroi. 
+\gtroi s were provided by the authors~\cite{andriluka14cvpr}.
+%% \noindent We now define four baselines based on the \emph{ROI}:
+%% \noindent\emph{Unaries from $\detroi$} ($\undetroi$).
+%% We extract a single highest scoring location for each body part
+%% falling inside the $\detroi$.
+%% \noindent\emph{Unaries from $\gtroi$} ($\ungtroi$).
+%% Same as above but using the $\gtroi$.
+%% \noindent\emph{Chen\&Yuille~\cite{chen14nips} on $\detroi$} ($\cydetroi$).
+%% We perform single person pose estimation using the state of the art method of~\cite{chen14nips} applied to $\detroi$
+%% crops.
+%$\cygtroi$).
+As the $\multb$ approach~\cite{Chen:2015:POC} is not public, we
+compare to $\singb$ state-of-the-art method~\cite{chen14nips} applied
+to $\gtroi$ image crops.
+
+Results are shown in
+Tab.~\ref{tab:multicut:mpii-multi}. 
+%% \rcnn~$\detroi$ achieves $47.1$\%
+%% AP. 
+$\deepcut~\multb~\rcnn$ improves over $\rcnn~\detroi$ by 4.3\%
+achieving 51.4\% AP. The largest differences are observed for the
+ankle, knee, elbow and wrist, as those parts benefit more from the
+connections to other parts. 
+%We evaluate the performance of the
+%$\multbu$ model that includes upper body parts
+%only. 
+$\deepcut~\multbu~\rcnn$ using upper body parts only slightly improves
+over the full body model when compared on common parts (60.5 vs 58.2\%
+AP). Similar tendencies are observed for $\dense$s, though improvements
+of $\multbu$ over $\multb$ are more significant.
+%% with two differences: 1) similar to the
+%% other datasets the performance by $\deepcut~\dense$ models is higher
+%% compared to $\deepcuts~\rcnn$; and 2) the performance of
+%% ($\deepcuts~\multbu~\rcnn$)~is much better compared to $\multb$.%, due
+%% %to better wrist estimation. %\todo{why?}
+
+All $\deepcuts$ outperform $\cygtroi$, partially due to stronger part
+detectors compared to~\cite{chen14nips}
+(c.f. Tab.~\ref{tab:multicut:lsp}). Another reason is that $\cygtroi$
+does not model body part occlusion and truncation always predicting
+the full set of parts, which is penalized by the AP measure. In
+contrast, our formulation allows to deactivate the part hypothesis in
+the initial set of part candidates thus effectively performing
+non-maximum suppression. In $\deepcuts$ part hypotheses are suppressed
+based on the evidence from all other body parts making this process
+more reliable.
+
+%% \myparagraph{Performance analysis by the number of people.}  In order
+%% to better understand the strengths and weaknesses of our multi-person
+%% models, we analyze their performance on as a function of the number of
+%% people in the image. We consider the images containing only $2$, $3$,
+%% $4$, or at least $5$ people and compare the results by multi-person
+%% models $\mult$ and $\multu$ to unaries only ($\undetroi$). The results
+%% are shown in Tab.~\ref{tab:number-of-people}. It shows that in
+%% each case the performance drops with the increased number of
+%% people. We observe that the overall performance drop by $\mult$ is
+%% much lower compared to $\undetroi$ for which performance is halved
+%% (-4.7 vs -13.3\% AP). The difference between both approaches increases
+%% with the increased number of people, reaching 10\% AP in case of $\ge$
+%% 5 people. This underlines the advantages of our model that jointly
+%% reasons about the number of people and part assignment. It can be seen
+%% that $\multu$ is even more robust to the increasing number of people
+%% (-2.6\% AP). In this case, the least performance drop is observed for
+%% the head and shoulders. Similar to the results on the full set,
+%% $\multu$ outperforms $\mult$ for all upper body parts. The difference
+%% is most pronounced in case of $\ge$ 5 people (37.0 vs 30.4\% AP). This
+%% suggests that less reliable detections of the frequently occluded
+%% lower body parts and their connections to other parts weaken the
+%% overall performance of the full body model. We envision that stronger
+%% spatial and appearance terms for the lower body parts, as well as
+%% larger number of initial detections should improve the performance the
+%% full body model.
+
+%\input{table_rcnn_unary_lsp.tex}
+\input{table_multicut_mpii_multi.tex}
+%\input{experiments/table_oracle_lsp.tex}
+%\input{experiments/table_overview_pck_multicut_lsp}
+%\input{experiments/table_rcnn.tex}
+%\input{experiments/table_reduced_states.tex}
+%\input{experiments/table_multi_people_new.tex}
+%\input{experiments/table_multi_people_vs_number_people.tex}
+%\input{figure_qualitative_small}

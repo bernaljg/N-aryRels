@@ -1,0 +1,137 @@
+\newcounter{magicrownumbers} 
+\newcommand\rownumber{\stepcounter{magicrownumbers}
+\arabic{magicrownumbers}}
+
+\begin{table*}[t!]
+\captionsetup{font=small}
+\begin{center}{\scalebox{0.80}{
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{c|c|c|c|c|c|c|c|c|c|c|c}
+\hline
+Row & Network & $D_F$ & $D$ & $K$ & $G$ & No.\ & Deg.\ & \multicolumn{4}{c}{1:1 Verification TAR (FAR=)} \\
+id & & & & & & faces &  & $1E-5$ & $1E-4$ & $1E-3$ &$1E-2$ \\
+\hline
+
+%
+\rownumber & Res~\cite{Cao18} & 2014 & 2048 & - & - & 1 & \xmark & $0.647$ & $0.784$ & $0.878$ &  $0.938$ \\
+%
+%
+%
+
+\rownumber & Res & 128 & 128 & - & - & 1 & \xmark & 0.646 & 0.785 & 0.890 & 0.954 \\
+\rownumber & SE & 128 & 128 & - & - & 1 & \xmark & 0.670 & 0.803 & 0.896 & 0.954 \\
+\rownumber & SE & 256 & 256 & - & - & 1 & \xmark & 0.677 & 0.807 & 0.892 & 0.955 \\ 
+\rownumber & SE-2 & 256 & 256 & - & - & 2 & \cmark & 0.679 & 0.810 & 0.902 & 0.958 \\ \hline 
+
+\rownumber  & Res-GV-2 & 128 & 128 & 8 & 0 & 2 & \cmark & 0.715 & 0.835 & 0.916 & 0.963 \\
+\rownumber & SE-GV-2 & 128 & 128 & 8 & 0 & 2 & \cmark & 0.721 & 0.835 & 0.916 & 0.963 \\ 
+\rownumber & SE-GV-2 & 256 & 128 & 8 & 0 & 2 & \xmark & 0.685 & 0.823 & 0.925 & 0.963 \\ 
+\rownumber & SE-GV-2 & 256 & 128 & 8 & 0 & 2 & \cmark & 0.738 & 0.850 & 0.923 & 0.964 \\ 
+\rownumber & SE-GV-2 & 256 & 128 & 4 & 0 & 2 & \cmark & 0.729 & 0.841 & 0.914 & 0.957 \\ 
+\rownumber & SE-GV-2 & 256 & 128 & 16 & 0 & 2 & \cmark & 0.722 & 0.848 & 0.921 & 0.964 \\ \hline 
+
+\rownumber & SE-GV-3 & 256 & 128 & 8 & 0 & 3 & \cmark & 0.741 & 0.853 & 0.925 & 0.963 \\
+\rownumber & SE-GV-4 & 256 & 128 & 8 & 0 & 4 & \cmark & 0.747 & 0.852 & 0.922 & 0.961 \\ 
+\rownumber & SE-GV-3-g1 & 256 & 128 & 8 & 1 & 3 & \cmark & 0.753 & 0.861 & $\mathbf{0.926}$ & 0.963 \\ 
+\rownumber & SE-GV-4-g1 & 256 & 128 & 8 & 1 & 4 & \cmark & $\mathbf{0.762}$ & $\mathbf{0.863}$ & $\mathbf{0.926}$ & 0.963 \\ 
+\rownumber & SE-GV-3-g2 & 256 & 128 & 8 & 2 & 3 & \cmark & 0.754 & 0.861 & 0.926 & $\mathbf{0.964}$  \\ 
+
+\rownumber & SE-GV-4 & 256 & 256 & 8 & 0 & 4 & \cmark & 0.713 & 0.838 & 0.919 & 0.963 \\ 
+\rownumber & SE-GV-4-g1 & 256 & 256 & 8 & 1 & 4 & \cmark & 0.739 & 0.853 & 0.924 & 0.963 \\ 
+
+
+
+%
+%
+\hline
+\end{tabular}}}
+\end{center}
+\vspace{-1.5mm}
+\caption{
+	\textbf{Verification performance
+on the IJB-B dataset.} 
+A higher value of TAR is better.
+$D_F$ is the face descriptor dimension before aggregation.
+$D$ is the dimensionality of the final template representation.
+$K$ and $G$ are the number of non-ghost and ghost clusters in GhostVLAD,
+respectively.
+`No.\ faces' is the number of 
+faces per set used during training. `Deg.' indicates whether 
+the training images are degraded.
+All training is done using the VGGFace2 dataset.
+%
+%
+%
+%
+%
+}
+\label{tab:ijbb-ver}
+\vspace{-5mm}
+\end{table*}
+
+
+
+
+
+\begin{table*}[t!]
+\captionsetup{font=small}
+\begin{center}{\scalebox{0.80}{
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{c|c|c|c|c|c|c|c|c|c|c|c|c}
+\hline
+Row & Network & $D_F$ & $D$ & $K$ & $G$ & No.\ & Deg.\ & \multicolumn{5}{c}{1:N Identification TPIR}\\
+id &	 & & & & & faces & & FPIR= & FPIR= & & & \\
+   & & & & & & & & $0.01$ & $0.1$ & Rank-$1$ & Rank-$5$& Rank-$10$ \\
+\hline
+
+%
+\rownumber & Res~\cite{Cao18} & 2048 & 2048 & - & - & 1 & \xmark & $0.701$& $0.824$ & $0.886$ & $0.936$ & $0.953$\\
+%
+%
+%
+%
+
+\rownumber & Res & 128 & 128 & - & - & 1 & \xmark & 0.688 & 0.833 & 0.901 & 0.950 & 0.963 \\
+\rownumber & SE & 128 & 128 & - & - & 1 & \xmark & 0.712 & 0.849 & 0.908 & 0.949 & 0.963 \\
+\rownumber & SE & 256 & 256 & - & - & 1 & \xmark & 0.718 & 0.854 & 0.908 & 0.948 & 0.962 \\ 
+\rownumber & SE-2 & 256 & 256 & - & - & 2 & \cmark & 0.717 & 0.857 & 0.909 & 0.949 & 0.962 \\  \hline
+
+\rownumber & Res-GV-2 & 128 & 128 & 8 & 0 & 2 & \cmark & 0.762 & 0.872 & 0.917 & 0.953 & 0.964 \\
+\rownumber & SE-GV-2 & 128 & 128 & 8 & 0 & 2 & \cmark & 0.753 & 0.880 & 0.917 & 0.953 & 0.964 \\ 
+\rownumber & SE-GV-2 & 256 & 128 & 8 & 0 & 2 & \xmark & 0.751 & 0.884 & 0.912 & 0.952 & 0.962 \\
+\rownumber & SE-GV-2 & 256 & 128 & 8 & 0 & 2 & \cmark & 0.760 & 0.879 & 0.918 & 0.955 & 0.964\\ 
+\rownumber & SE-GV-2 & 256 & 128 & 4 & 0 & 2 & \cmark & 0.749 & 0.868 & 0.914 & 0.953 & 0.963 \\ 
+\rownumber & SE-GV-2 & 256 & 128 & 16 & 0 & 2 & \cmark & 0.759 & 0.879 & 0.918 & 0.954 & $\mathbf{0.965}$ \\ \hline
+
+\rownumber & SE-GV-3 & 256 & 128 & 8 & 0 & 3 & \cmark & 0.764 & 0.885 & 0.921 & 0.955 & 0.962 \\
+\rownumber & SE-GV-4 & 256 & 128 & 8 & 0 & 4 & \cmark & 0.752 & 0.878 & 0.914 & 0.952 & 0.960 \\ 
+\rownumber & SE-GV-3-g1 & 256 & 128 & 8 & 1 & 3 & \cmark & 0.770 & $\mathbf{0.888}$ & $\mathbf{0.923}$ & $0.956$ & $\mathbf{0.965}$ \\ 
+\rownumber & SE-GV-4-g1 & 256 & 128 & 8 & 1 & 4 & \cmark & $\mathbf{0.776}$ & $\mathbf{0.888}$ & 0.921 & $\mathbf{0.957}$ & 0.964 \\
+\rownumber & SE-GV-3-g2 & 256 & 128 & 8 & 2 & 3 & \cmark & 0.772 & 0.886 & 0.922 & $\mathbf{0.957}$ & 0.964 \\ 
+\rownumber & SE-GV-4 & 256 & 256 & 8 & 0 & 4 & \cmark & 0.732 & 0.870 & 0.912 & 0.952 & 0.963 \\ 
+\rownumber & SE-GV-4-g1 & 256 & 256 & 8 & 1 & 4 & \cmark & $\mathbf{0.776}$ & 0.883 & 0.921 & $\mathbf{0.957}$ & $\mathbf{0.965}$ \\
+
+
+%
+%
+\hline
+\end{tabular}}}
+\end{center}
+\vspace{-1.5mm}
+\caption{\textbf{Identification performance on the IJB-B dataset.} 
+A higher value of TPIR is better.
+See caption of Tab.~\ref{tab:ijbb-ver} for the explanations of column titles.
+Note, for readability  standard 
+deviations are not included here, but are included in Tab.~\ref{tab:ijba-id}.
+%
+%
+%
+%
+%
+}
+\label{tab:ijbb-id}
+\vspace{-1cm}
+\end{table*}
+
+
+

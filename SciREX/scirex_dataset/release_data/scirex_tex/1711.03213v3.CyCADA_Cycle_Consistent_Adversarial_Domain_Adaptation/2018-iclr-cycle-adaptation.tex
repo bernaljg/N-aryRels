@@ -1,0 +1,93 @@
+\RequirePackage[log]{snapshot}
+\documentclass{article} % For LaTeX2e
+\usepackage{arxiv,times}
+%\usepackage{iclr2018_conference,times}
+\usepackage{hyperref}
+\usepackage{url}
+
+
+\usepackage{epsfig} 
+\usepackage{graphicx} 
+\usepackage{amsmath} 
+\usepackage{amssymb}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+
+\usepackage{bbm}
+\newcommand*\rot{\rotatebox{90}}
+\usepackage{colortbl}
+\definecolor{Gray}{gray}{0.85}
+\newcolumntype{g}{>{\columncolor{Gray}} c}
+\usepackage{caption}
+
+% todo setup
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny,disable]{todonotes}
+\usepackage{xargs}
+
+
+\newcommandx{\et}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!10,bordercolor=blue,#1]{Eric: #2}}
+\newcommandx{\jh}[2][1=]{\todo[linecolor=green,backgroundcolor=green!10,bordercolor=green,#1]{Judy: #2}}
+\newcommandx{\ks}[2][1=]{\todo[linecolor=red,backgroundcolor=red!10,bordercolor=red,#1]{Kate: #2}}
+\newcommandx{\tp}[2][1=]{\todo[linecolor=orange,backgroundcolor=orange!10,bordercolor=orange,#1]{Taesung: #2}}
+\newcommandx{\phil}[2][1=]{\todo[linecolor=blue,backgroundcolor=green!10,bordercolor=red,#1]{Phil: #2}}
+
+\newcommand{\jy}[1]{\textcolor{magenta}{#1}}
+
+%\newcommand{\etal}{\emph{et~al.}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+%\iclrfinalcopy
+
+\begin{document}
+
+\title{CyCADA: Cycle-Consistent Adversarial\\ Domain Adaptation}
+
+% The \author macro works with any number of authors. There are two
+% commands used to separate the names and addresses of multiple
+% authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to
+% break the lines. Using \AND forces a line break at that point. So,
+% if LaTeX puts 3 of 4 authors names on the first line, and the last
+% on the second line, try using \AND instead of \And before the third
+% author name.
+
+\author{%
+	Judy Hoffman, Eric Tzeng, Taesung Park, Jun-Yan Zhu\\
+	BAIR, UC Berkeley\\
+	\footnotesize{\texttt{\{jhoffman,etzeng,taesung\_park,junyanz\}@eecs.berkeley}}
+	\And
+	Phillip Isola\\
+	OpenAI\thanks{Work done while at UC Berkeley}\\
+	\small{\texttt{isola@eecs.berkeley}}
+	\And
+	Kate Saenko\\
+	CS, Boston University\\
+	\small{\texttt{saenko@bu}}\\ 
+	\And
+	Alexei A. Efros, Trevor Darrell\\
+	BAIR, UC Berkeley\\
+	\small{\texttt{\{efros,trevor\}@eecs.berkeley}}
+}
+
+\maketitle
+
+\input{variables}
+\input{abstract}
+\input{introduction}
+\input{related}
+\input{method}
+\input{experiments}
+
+\input{conclusion}
+\input{references}
+\input{appendix}
+
+\end{document}

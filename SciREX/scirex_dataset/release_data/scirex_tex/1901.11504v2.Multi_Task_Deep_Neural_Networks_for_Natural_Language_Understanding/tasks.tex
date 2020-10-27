@@ -1,0 +1,26 @@
+\section{Tasks}
+\label{sec:tasks}
+
+The MT-DNN model combines four types of NLU tasks: single-sentence classification, pairwise text classification, text similarity scoring, and relevance ranking. For concreteness, we describe them using the NLU tasks defined in the GLUE benchmark as examples. 
+%The GLUE tasks are summarized in Table 1.
+
+\paragraph{Single-Sentence Classification:} 
+Given a sentence\footnote{In this study, a sentence can be an arbitrary span of contiguous text or word sequence, rather than a linguistically plausible sentence.}, the model labels it using one of the pre-defined class labels. For example, the \textbf{CoLA} task  is to predict whether an English sentence is grammatically plausible. The \textbf{SST-2} task is to determine whether the sentiment of a sentence extracted from movie reviews is positive or negative.
+
+\paragraph{Text Similarity:}
+This is a regression task. Given a pair of sentences, the model predicts a real-value score indicating the semantic similarity of the two sentences. \textbf{STS-B} is the only example of the task in GLUE. 
+
+\paragraph{Pairwise Text Classification:} 
+Given a pair of sentences, the model determines the relationship of the two sentences based on a set of pre-defined labels. 
+For example, both \textbf{RTE} and \textbf{MNLI} are language inference tasks, where the goal is to predict whether a sentence is an \emph{entailment}, \emph{contradiction}, or \emph{neutral} with respect to the other. 
+% \textbf{WNLI} is a natural language inference task that requires commonsense reasoning. But as noted in the GLUE webpage \footnote{https://gluebenchmark.com/faq}, there are issues in the dataset, and every submitted system has performed same or worse than the majority voting baseline whose accuracy is 65.1. MT-DNN also achieves the accuracy of 65.1, making WNLI the only GLUE task where MT-DNN does not create a new state of the art result.
+\textbf{QQP} and \textbf{MRPC} are paraphrase datasets that consist of sentence pairs. The task is to predict whether the sentences in the pair are semantically equivalent.
+
+\paragraph{Relevance Ranking:}
+Given a query and a list of candidate answers, the model ranks all the candidates in the order of relevance to the query. 
+\textbf{QNLI} is a version of Stanford Question Answering Dataset \citep{rajpurkar2016squad}. 
+The task involves assessing whether a sentence contains the correct answer to a given query. 
+Although QNLI is defined as a binary classification task in GLUE, in this study we formulate it as a pairwise ranking task, where the model is expected to rank the candidate that contains the correct answer higher than the candidate that does not. 
+We will show that this formulation leads to a significant improvement in accuracy over binary classification.
+
+%is derive from the Stanford Question Answering Dataset \citep{rajpurkar2016squad}, and consists  which has been converted to a binary classification task in GLUE. A query-candidate-answer pair is labeled as positive if the candidate contains the correct answer to the query, and negative otherwise. In this study, however, we formulate QNLI as a pairwise ranking task, where the model is expected to rank the candidate that contains the correct answer higher than the candidate that does not. We will show that our formulation leads to a significant improvement in accuracy over binary classification. 

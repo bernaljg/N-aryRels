@@ -1,0 +1,137 @@
+\begin{table*}[t]
+\captionsetup{font=small}
+\begin{center}{\scalebox{0.80}{
+\begin{tabular}{c|c|c|c|c|c|c|c}
+\hline
+Network & Training & $D$ & \multicolumn{5}{c}{1:1 Verification TAR} \\
+%
+%
+	       &	dataset	  & & FAR=$1E-5$ &  FAR=$1E-4$ & FAR=$1E-3$ & FAR=$1E-2$ & FAR=$1E-1$\\
+\hline
+\multicolumn{8}{c}{IJB-A} \\ \hline
+%
+
+%
+
+Bin~\cite{Hassner16} & ImNet+CAS & 4096 & - & - & 0.631 & 0.819 & - \\
+NAN~\cite{Yang17} & priv1 & 128 & - & - & $0.881 \pm 0.011$ & $0.941 \pm 0.008$ & $0.978 \pm 0.003$ \\
+QAN~\cite{Liu17} & VF+priv2 & - & - & - & $0.893 \pm 0.039$ & $0.942 \pm 0.015$ & $0.980 \pm 0.006$ \\
+
+DREAM~\cite{Cao18a} & MS & - & - & - & $0.868 \pm 0.015$  & $0.944 \pm 0.009$ & - \\
+SF+R~\cite{Zheng18} & MS-clean & 512-pi & - & - & $0.932$ & - & - \\
+MN-vc~\cite{Xie18b} & VF2 & 2048 & - & - & $0.920 \pm 0.013$  & $0.962 \pm 0.005$ & $0.989 \pm 0.002$ \\
+
+SE~\cite{Cao18} & VF2 & 2048 & - & - & $0.904 \pm 0.020$ & $0.958 \pm 0.004$ & $0.985 \pm 0.002$ \\
+%
+SE~\cite{Cao18} & MS+VF2 & 2048  & - & - & $0.921\pm 0.014$ & $0.968 \pm 0.006$ & $0.990 \pm 0.002$ \\
+
+%
+SE-GV-3 & VF2 & 128 & - & - & $\mathbf{0.935 \pm 0.016}$ & $\mathbf{0.972 \pm 0.005}$ & $0.988 \pm 0.002$ \\
+SE-GV-4-g1 & VF2 & 128 & - & - & $\mathbf{0.935 \pm 0.015}$ & $\mathbf{0.972 \pm 0.003}$ & $\mathbf{0.990 \pm 0.002}$ \\ \hline
+
+\multicolumn{8}{c}{IJB-B} \\ \hline
+%
+SE~\cite{Cao18} & VF2 & 2048 &  $0.671$ & $0.800$ & $0.888$ & $0.949$ &  -\\
+%
+SE~\cite{Cao18}  & MS+VF2 & 2048 & 0.705 & 0.831 & 0.908 &0.956 & -\\
+
+MN-vc~\cite{Xie18b} & VF2 & 2048 & 0.708 & 0.831 & $0.909$  & $0.958$ & - \\
+SE+DCN~\cite{Xie18a} & VF2 & - & 0.730* & 0.849 & $\mathbf{0.937}$  & $\mathbf{0.975}$ & - \\
+
+SE-GV-3 & VF2 & 128 & 0.741 & 0.853 & 0.925 & 0.963 & - \\
+SE-GV-4-g1 & VF2  & 128 & $\mathbf{0.762}$ & $\mathbf{0.863}$ & $0.926$ & 0.963 & -\\
+
+%
+%
+%
+%
+%
+
+\hline
+\end{tabular}}}
+\end{center}
+\vspace{-1.5mm}
+\caption{\textbf{Comparison with state-of-the-art for
+{\em verification} on the IJB-A and IJB-B datasets.}
+A higher value of TAR is better.
+$D$ is the dimension of the 
+template representation.
+The training datasets abbreviations are VGGFace~\cite{Parkhi15} (VF), 
+VGGFace2~\cite{Cao18} (VF2), MS-Celeb-1M~\cite{Guo16} (MS),
+a cleaned subset of MS-Celeb-1M refined by~\cite{Zheng18} (MS-clean),
+ImageNet~\cite{Russakovsky15} and CASIA WebFace~\cite{Yi14} (ImNet+CAS),
+and private datasets used by~\cite{Yang17} (priv1) and~\cite{Liu17} (priv2).
+`512-pi' means that a 512-D descriptor 
+is used per image. `*' denotes the value given by the author.
+Our best network, SE-GV-4-g1, sets the state-of-the-art by a significant
+margin on both datasets (except for concurrent work~\cite{Xie18a}).
+}
+\label{tab:ijba-ver}
+\vspace{-5mm}
+\end{table*}
+
+
+
+
+\begin{table*}[t]
+\captionsetup{font=small}
+\begin{center}{\scalebox{0.80}{
+\begin{tabular}{c|c|c|c|c|c|c|c}
+\hline
+Network & Training & $D$ & \multicolumn{5}{c}{1:N Identification TPIR}\\
+	& dataset	  & & FPIR=$0.01$ & FPIR=$0.1$ & Rank-$1$ & Rank-$5$& Rank-$10$\\
+\hline
+\multicolumn{8}{c}{IJB-A} \\ \hline
+
+%
+
+%
+
+Bin~\cite{Hassner16} & ImNet+CAS & 4096 & 0.875 & - & 0.846 & 0.933 & 0.951 \\
+NAN~\cite{Yang17} & priv1 & 128 &  $0.817 \pm 0.041$ & $0.917 \pm 0.009$ & $0.958 \pm 0.005$ & $0.980 \pm 0.005$ & $0.986 \pm 0.003$ \\
+
+DREAM~\cite{Cao18a} & MS & - & - & - & $0.946 \pm 0.011$  & $0.968 \pm 0.010$ & - \\
+
+SE~\cite{Cao18} & VF2 & 2048 & $0.847 \pm 0.051$ & $0.930 \pm 0.007$ & $0.981\pm 0.003$ & $\mathbf{0.994 \pm 0.002}$  & $\mathbf{0.996 \pm 0.001}$ \\
+%
+SE~\cite{Cao18} & MS+VF2 & 2048  & $0.883 \pm 0.038$ & $0.946 \pm 0.004$ & $\mathbf{0.982 \pm 0.004}$ & $0.993 \pm 0.002$ & $0.994 \pm 0.001$\\
+
+%
+SE-GV-3 & VF2 & 128  & $0.872 \pm 0.066$ & $0.951 \pm 0.007$  & $0.979 \pm 0.005$ & $0.990 \pm 0.003$ & $0.992 \pm 0.003$ \\
+SE-GV-4-g1 & VF2 & 128  & $\mathbf{0.884 \pm 0.059}$ & $\mathbf{0.951 \pm 0.005}$ & $0.977 \pm 0.004$ & $0.991 \pm 0.003$  & $0.994 \pm 0.002$ \\ \hline
+
+\multicolumn{8}{c}{IJB-B} \\ \hline
+%
+SE~\cite{Cao18}  & VF2 &  2048 &   $0.706 \pm 0.047 $ & $0.839 \pm 0.035$ & $0.901 \pm 0.030$ & $0.945 \pm 0.016$ & $0.958 \pm 0.010$ \\ 
+%
+SE~\cite{Cao18}  & MS+VF2 &  2048  & $0.743 \pm 0.037$ & $0.863 \pm 0.032$ & $0.902 \pm 0.036$ & $0.946 \pm 0.022$ & $0.959 \pm 0.015$ \\
+
+SE-GV-3 & VF2 & 128  & $0.764 \pm 0.041$ & $0.885 \pm 0.032$ & $0.921 \pm 0.023$ & $0.955 \pm 0.013$ & $0.962 \pm 0.010$ \\
+SE-GV-4-g1 & VF2 & 128  & $\mathbf{0.776 \pm 0.030}$ & $\mathbf{0.888 \pm 0.029}$ & $\mathbf{0.921 \pm 0.020}$ & $\mathbf{0.956 \pm 0.013}$ & $\mathbf{0.964 \pm 0.010}$ \\
+
+%
+%
+%
+%
+%
+
+\hline
+\end{tabular}}}
+\end{center}
+\vspace{-1.5mm}
+\caption{\textbf{Comparison with state-of-the-art for
+{\em identification} on the IJB-A and IJB-B datasets.}
+A higher value of TPIR is better. 
+See caption of Tab.~\ref{tab:ijba-ver} for explanations of abbreviations.
+Our best network, SE-GV-4-g1, sets the state-of-the-art by a significant
+margin on both datasets.
+%
+%
+%
+}
+\label{tab:ijba-id}
+\vspace{-4mm}
+\end{table*}
+
+
+

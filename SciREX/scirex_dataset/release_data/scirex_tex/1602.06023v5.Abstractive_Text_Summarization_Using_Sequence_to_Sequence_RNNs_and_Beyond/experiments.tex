@@ -1,0 +1,278 @@
+\section{Experiments and Results}\label{sec:exp}
+
+\subsection{Gigaword Corpus}
+
+In this series of experiments\footnote{We used Kyunghyun Cho's code (\url{https://github.com/kyunghyuncho/dl4mt-material}) as the starting point.}, we used the annotated Gigaword corpus as described in \newcite{namas}. We used the scripts made available by the authors of this work\footnote{https://github.com/facebook/NAMAS} to preprocess the data, which resulted in about 3.8M training examples. The script also produces about 400K validation and test examples, but we created a randomly sampled subset of 2000 examples each for validation and testing purposes, on which we report our performance. Further, we also acquired the exact test sample used in \newcite{namas} to make precise comparison of our models with theirs.
+%In addition, the script also produces a filtered validation set where some of the noisy examples are filtered out, but we do not use it in our experiments. 
+We also made small modifications to the script to extract not only the tokenized words, but also system-generated parts-of-speech and named-entity tags. %This allows us to train our feature-rich encoder on this data.
+%\vspace{-0.3in}
+
+\noindent{\bf Training:} For all the models we discuss below, we used 200 dimensional word2vec vectors \cite{word2vec} trained on the same corpus to initialize the model embeddings, but we allowed them to be updated during training. 
+The hidden state dimension of the encoder and decoder was fixed at 400 in all our experiments. 
+%We kept the source and target vocabularies separate for computational efficiency, since the target vocabulary is much smaller. 
+When we used only the first sentence of the document as the source, as done in \newcite{namas}, the encoder vocabulary size was 119,505 and that of the decoder stood at 68,885. We used Adadelta \cite{adadelta} for training, with an initial learning rate of 0.001. We used a batch-size of 50 and randomly shuffled the training data at every epoch, while sorting every 10 batches according to their lengths to speed up training. We did not use any dropout or regularization, but applied gradient clipping. We used early stopping based on the validation set and used the best model on the validation set to report all test performance numbers. %Other than this, we did not do any task specific fine-tuning. 
+For all our models, we employ the large-vocabulary trick, where we restrict the decoder vocabulary size to 2,000\footnote{Larger values improved performance only marginally, but at the cost of much slower training.}, because it cuts down the training time per epoch by nearly three times, and helps this and all subsequent models converge in only 50\%-75\% of the epochs needed for the model based on full vocabulary.
+
+\noindent{\bf Decoding}: At decode-time, we used beam search of size 5 to generate the summary, and limited the size of summary to a maximum of 30 words, since this is the maximum size we noticed in the sampled validation set. We found that the average system summary length from all our models (7.8 to 8.3) agrees very closely with that of the ground truth on the validation set (about 8.7 words), without any specific tuning. 
+
+\noindent{\bf Computational costs}: We trained all our models on a single {\it Tesla K40} GPU. Most models took about 10 hours per epoch on an average except the hierarchical attention model, which took 12 hours per epoch. All models typically converged within 15 epochs using our early stopping criterion based on the validation cost. The wall-clock training time until convergence therefore varies between 6-8 days depending on the model. Generating summaries at test time is reasonably fast with a throughput of about 20 summaries per second on a single GPU, using a batch size of 1. 
+%We found that the average system summary length from all our models agrees very closely with that of the ground truth on the validation set (about 8 words) without any specific tuning. 
+
+\noindent{\bf Evaluation metrics}: Similar to \cite{nallapati} and \cite{chopra}, we use the full length F1 variant of Rouge\footnote{\url{http://www.berouge.com/Pages/default.aspx}} to evaluate our system.
+%their systems on the Gigaword corpus\footnote{confirmed from personal communication with the first-author of the paper.}. 
+%The reason is that the official 75 bytes ceiling in the limited-length Rouge recall metric is too long for Gigaword summaries, which tend to be much shorter than DUC ones. 
+Although limited length recall was the preferred metric for most previous work, one of its disadvantages is choosing the length limit which varies from corpus to corpus, making it difficult for researchers to compare performances. Full-length recall, on the other hand, does not impose a length restriction but unfairly favors longer summaries. Full-length F1 solves this problem since it can penalize longer summaries, while not imposing a specific length restriction. 
+
+In addition, we also report the percentage of tokens in the system summary that occur in the source (which we call `src. copy rate' in Table \ref{tab:results}). 
+
+\noindent We describe all our experiments and results on the Gigaword corpus below.
+%various models we considered and report their performance.
+
+%\noindent{\it words-1sent}: This is our baseline model and corresponds to the encoder-decoder model described in Sec. \ref{sec:enc_dec}, where we used only the first sentence of the document as the source. The size of the embedding used in this model is 100 and the hidden state size is 200. The training time for this model on a single gpu was 13 hours per epoch, with convergence reaching in 19 epochs. We report the performance of this model on both our internal validation and test samples in Table \ref{tab:results}, in rows \#1 and \#11.
+
+\noindent{\it words-lvt2k-1sent}: This is the baseline attentional encoder-decoder model with the large vocabulary trick. This model is trained only on the first sentence from the source document, as done in \newcite{namas}.
+
+\noindent{\it words-lvt2k-2sent}: This model is identical to the model above except for the fact that it is trained on the first two sentences from the source. On this corpus, adding the additional sentence in the source does seem to aid performance, as shown in Table \ref{tab:results}. We also tried adding more sentences, but the performance dropped, which is probably because the latter sentences in this corpus are not pertinent to the summary.
+%\noindent{\it words-lvt2k-(2|5)sent}: These models are exactly same as the model above, except for that they are trained on the first 2 and 5 sentences of the source document respectively. The table shows that the model trained on 2 sentences (row \#3) improves over the one trained on 1 sentence (row \#2), while the one trained on 5 sentences (row \#4) is not as good as the one trained on two. This may be attributed to the fact that, on Gigaword corpus, most of the information needed for the summary may be found in the first one or at most two sentences, and the rest contain extraneous information. We therefore fixed the source length at 2 sentences for subsequent models. %It is worth mentioning these models seem to borrow more words from the source than the previous models as indicated by the last column of the table, but this can be attributed to increase in source vocabulary size from using more sentences.
+
+%\noindent{\it words-lvt2k-2sent-exp}: This model corresponds to Sec. \ref{sec:expand}. We augment the nearest neighbors to LVT-vocabulary before topping it off with the most frequent words from the target dictionary, to make sure that the LVT-vocabulary size is still maintained at 2,000. This model has produced modest gains as well, as shown in row \#5, but did not improve when used in the context of bigger models in the following experiments.
+
+%However, this model did not improve performance. Our hypothesis is that the noise from the expansions overpowers the signal they bring in, on this dataset.
+
+
+\noindent{\it words-lvt2k-2sent-hieratt}:  Since we used two sentences from source document, we trained the hierarchical attention model proposed in Sec \ref{sec:hierarchical}. As shown in Table \ref{tab:results}, this model improves performance compared to its flatter counterpart by learning the relative importance of the first two sentences automatically. %However, since this model is computationally much more expensive than its flatter counterpart \footnote{The average training time for this model was 746 min per epoch on a single GPU as compared to }, we did not train it in our subsequent experiments on this corpus.
+
+%\noindent{\it big-words-lvt2k-(1|2)sent}: These are identical to models {\it words-lvt-(1|2)sent}, but we increase the embedding size to 200 and the hidden state size to 400. As shown in rows \#7 and \#8 of the table, while both models improve performance compared to their smaller counterparts, {\it big-words-lvt2k-2sent}, trained over 2 source sentences achieves the best performance.
+
+\noindent{\it feats-lvt2k-2sent}:  Here, we still train on the first two sentences, but we exploit the parts-of-speech and named-entity tags in the annotated gigaword corpus as well as TF, IDF values, to augment the input embeddings on the source side as described in Sec \ref{sec:feats}.
+%For each tag-type, we create an additional look-up table of embeddings corresponding to its own vocabulary, and for each token in the source we concatenate the embeddings of all its tags into a single vector. We repeat the process for also {\it tf} and {\it idf} weights of each token which we convert into one-hot representations by discretizing the real-values into one of 50 buckets each. 
+In total, our embedding vector grew from the original 100 to 155, and produced incremental gains compared to its counterpart {\it words-lvt2k-2sent} as shown in Table \ref{tab:results}, demonstrating the utility of syntax based features in this task. 
+%This model also has the additional advantage of lower reliance on source vocabulary as shown in the last column, indicating better abstractive ability.
+
+%\noindent{\bf Model \#8:} {\it feats-lvt2k-2sent-exp}: This model corresponds to Sec. \ref{sec:expand} where we augment the LVT-vocabulary with 1-nearest-neighbors of all words in the source document as measured by cosine similarity in the learned embeddings space. We do this before topping off the LVT-vocabulary with the most frequent words from the target dictionary, and make sure that the LVT-vocabulary size is still maintained at 2,000. However, this model did not improve performance. Our hypothesis is that the noise from the expansions overpowers the signal they bring in, on this dataset.
+
+\noindent{\it feats-lvt2k-2sent-ptr}: This is the switching generator/pointer model described in Sec. \ref{sec:switch}, but in addition, we also use feature-rich embeddings on the document side as in the above model.
+%We created ground truth data for pointers as follows. %In the data produced by the pre-processing scripts, the vocabulary is already trimmed and rare words are replaced by the `UNK' token. We generated parallel training data and validation data preserving all the rare words. 
+%In the training data, we created a pointer from each `UNK' token\footnote{Using standard terminology, 'UNK' tokens are used to replace rare words to limit vocabulary size.} in the summary to the position in the corresponding source document where the matching word occurs, as seen in the original data. The resulting data has 2.7 pointers per 100 examples in the training set and 9.1 in the validation set. When there are multiple matches in the source, we resolved the conflict in favor of the first occurrence of the matching word in the source document. We modeled the `UNK' tokens on the source side using a single placeholder embedding that is shared across all documents. We trained this model using feature embeddings and pointer-data as input. At test time, the model decides between generating or pointing at every time-step automatically.
+%When the model generates a pointer, we simply print the word in the source at the pointed position as part of the summary. 
+Our experiments indicate that the new model is able to achieve the best performance on our test set by all three Rouge variants as shown in Table \ref{tab:results}.
+%set in terms of Rouge-1 as shown in row \#10 of the table, although the features-based model without pointers, {\it big-feats-lvt2k-2sent} (row \#9) remains our best model on Rouge-2 and Rouge-L metrics.
+
+%\noindent{\bf Test set performance:} We compare the performance of our two best performing systems, {\it feats-lvt2k-2sent} and {\it feats-lvt2k-2sent-ptr}, with respect to our baseline Model {\it words-1sent} on our internal test set sample in rows 11, 12 and 13 in Table \ref{tab:results}, using the full-length F1 metric. The switching generator/pointer model is the best model on all three metrics, and outperforms the baseline with statistical significance, as measured by the 95\% confidence interval provided by the Rouge evaluation script.
+
+\noindent{\bf Comparison with state-of-the-art:} 
+%\cite{namas} reported {\it recall-only} from {\it full-length} version of Rouge, but the authors kindly provided us with their F1 numbers, as well as their test sample. 
+%We obtained the exact test set of 1,951 examples used by \cite{namas} and 
+We compared the performance of our model {\it words-lvt2k-1sent} with state-of-the-art models on the sample created by \newcite{namas}, as displayed in the bottom part of Table \ref{tab:results}. We also trained another system which we call {\it words-lvt5k-1sent} which has a larger LVT vocabulary size of 5k, but also has much larger source and target vocabularies of 400K and 200K respectively.
+
+The reason we did not evaluate our best validation models here is that this test set consisted of only 1 sentence from the source document, and did not include NLP annotations, which are needed in our best models. The table shows that, despite this fact, our model outperforms the ABS+ model of \newcite{namas} with statistical significance. In addition, our models exhibit better abstractive ability as shown by the {\it src. copy rate} metric in the last column of the table. Further, our larger model {\it words-lvt5k-1sent} outperforms the state-of-the-art model of \cite{chopra} with statistically significant improvement on Rouge-1. 
+
+We believe the bidirectional RNN we used to model the source captures richer contextual information of every word than the bag-of-embeddings representation used by \newcite{namas} and \newcite{chopra} in their convolutional attentional encoders, which might explain our superior performance. %This could be one reason why we are able to outperform their system significantly. 
+Further, explicit modeling of important information such as multiple source sentences, word-level linguistic features, using the switch mechanism to point to source words when needed, and hierarchical attention, solve specific problems in summarization, each boosting performance incrementally. 
+
+%\footnote{The recall numbers of \cite{namas} displayed in row \#13 of this table are slightly higher than those reported in the original paper because these are the latest numbers made available to us by the authors.} 
+
+%Another important observation on this test set is that our baseline model {\it words-1sent} outperforms the larger model {\it big-words-lvt2k-2sent} on recall, but not on F1, indicating the perils of using recall as the evaluation metric in the full-length version of Rouge. %We believe our results are a strong evidence that the neural machine translation model is a powerful approach for summarization.
+
+\begin{table*}
+%\vspace{-0.5in}
+\begin{center}
+{\small
+\begin{tabular}{|r|l|r|r|r|r|}
+\hline
+{\bf \#} &  {\bf Model name} & {\bf Rouge-1} & {\bf Rouge-2} & {\bf Rouge-L} & {\bf Src. copy rate (\%)}\\
+\hline
+%\hline
+%\multicolumn{6}{|c|}{ Full-length F1 on validation set} \\
+%\hline
+%\multicolumn{6}{|c|}{Models \# 1-2 are trained using the first sentence of source only} \\
+%\hline
+%1 & words-1sent (Sec. \ref{sec:enc_dec})&  34.29          &      17.24              & 32.06            &     {\bf 73.87}      \\
+%2  & words-lvt2k-1sent (Sec. \ref{sec:lvt}) &   34.23          &      17.17              &    32.01         &   84.75        \\
+%\hline
+%\multicolumn{6}{|c|}{Models \# 3-8 are all trained using lvt2k} \\
+%\hline
+%3 & words-lvt2k-2sent (Sec. \ref{sec:lvt}) &       35.29            &  18.11                   &  33.22  &      79.04            \\
+%4 & words-lvt2k-5sent (Sec. \ref{sec:lvt}) &       34.62            &  17.11               &  32.27    &    91.04           \\
+%5 & words-lvt2k-2sent-exp (Sec. \ref{sec:expand}) &  35.59 & 18.32 & 33.55 & 75.76 \\
+%6 & words-lvt2k-2sent-hieratt (Sec. \ref{sec:hierarchical}) & *{\bf 36.04}  & {\bf 18.38} & *{\bf 33.73} &  79.39 \\
+
+\hline
+%5 & words-lvt2k-2sent-in-emb (Sec. \ref{sec:lvt})  &    35.75        &  18.14          & 33.52  &    \\
+
+%\hline
+%\multicolumn{6}{|c|}{Models \# 5-8 are all trained on 2-sentences of source}\\
+%\hline
+%7 & words-lvt2k-1sent (Sec. \ref{sec:lvt}) &  34.87    & 17.50      &  32.71   &  75.30\\
+%8 & words-lvt2k-2sent (Sec. \ref{sec:lvt}) &     36.46            &  18.67  & 34.09  &   79.28    \\
+%9 & feats-lvt2k-2sent (Sec. \ref{sec:feats}) &    36.76            &  *{\bf 18.71}                &  *{\bf 34.35}  & 78.17\\
+%8 & big-feats-lvt2k-2sent-exp (Sec. \ref{sec:feats}, \ref{sec:expand}) & 35.89           &  18.36                &  33.55  &  76.07 \\
+%10 & feats-lvt2k-2sent-ptr (Sec. \ref{sec:feats}, \ref{sec:switch}) &  *{\bf 36.83}          & 18.58                &  34.22     &  78.07 \\
+
+
+\hline
+\hline
+ \multicolumn{6}{|c|}{Full length F1 on our internal test set}  \\
+\hline
+
+1 & words-lvt2k-1sent      &    34.97              &    17.17                 &   32.70           &   75.85  \\
+2 & words-lvt2k-2sent      &     35.73             &    17.38                 &   33.25           &    79.54 \\
+3 & words-lvt2k-2sent-hieratt &   36.05          &    18.17                 &   33.52            &    78.52   \\
+4 & feats-lvt2k-2sent             &   35.90           &    17.57                &   33.38         &      78.92          \\
+5 & feats-lvt2k-2sent-ptr   &   *{\bf 36.40}            &    {\bf 17.77}                 &        *{\bf 33.71}   & 78.70  \\
+%\hline
+%\hline
+%\multicolumn{6}{|c|}{Full length Recall on the test set used by \cite{namas}}  \\
+%\hline
+%6 & ABS+ \cite{namas}  &    31.47      &      12.73             &     %28.54        &   91.50       \\
+%7 & words-lvt2k-1sent   &  *{\bf 34.19} &  *{\bf 16.29}   &  *{\bf 32.13}  &  {\bf 74.57} \\
+%8 & feats-lvt2k-1sent  &     &   &                          &     \\
+%9 & feats-lvt2k-1sent-ptr  &     &   &                          &     \\
+\hline
+\multicolumn{6}{|c|}{Full length F1 on the test set used by \cite{namas}}  \\
+\hline
+6 & ABS+ \cite{namas}  &    29.78      &      11.89             &     26.97        &   91.50       \\
+7 & words-lvt2k-1sent & 32.67 &  15.59   & 30.64   &  74.57     \\
+8 & RAS-Elman \cite{chopra} & 33.78 &  15.97  & 31.15 & \\
+9 & words-lvt5k-1sent & *{\bf 35.30} & {\bf 16.64} & *{\bf 32.62} & \\
+%12 & feats-lvt2k-1sent  &   &   &   &     \\
+%13 & feats-lvt2k-1sent-ptr  &   &   &   &     \\
+\hline
+\end{tabular}
+}
+\end{center}
+\vspace{-0.1in}
+\caption{{\small Performance comparison of various models. '*' indicates statistical significance of the corresponding model with respect to the baseline model on its dataset as given by the 95\% confidence interval in the official Rouge script. We report statistical significance only for the best performing models. 'src. copy rate' for the reference data on our validation sample is 45\%. Please refer to Section \ref{sec:exp} for explanation of notation.}}
+\label{tab:results}
+\vspace{-0.2in}
+\end{table*}
+
+
+\subsection{DUC Corpus}
+
+%The DUC corpus that has been the standard test-bed for evaluation of summarization models for many years. 
+The DUC corpus\footnote{{\it http://duc.nist.gov/duc2004/tasks.html}} comes in two parts: the 2003 corpus consisting of 624 document, summary pairs and the 2004 corpus consisting of 500 pairs. Since these corpora are too small to train large neural networks on, \newcite{namas} trained their models on the Gigaword corpus, but combined it with an additional log-linear extractive summarization model with handcrafted features, that is trained on the DUC 2003 corpus. They call the original neural attention model the ABS model, and the combined model ABS+. \newcite{chopra} also report the performance of their RAS-Elman model on this corpus and is the current state-of-the-art since it outperforms all previously published baselines including non-neural network based extractive and abstractive systems, as measured by the official DUC metric of recall at 75 bytes. In these experiments, we use the same metric to evaluate our models too, but we omit reporting numbers from other systems in the interest of space.
+
+In our work, we simply run the models trained on Gigaword corpus as they are, without tuning them on the DUC validation set. The only change we made to the decoder is to suppress the model from emitting the end-of-summary tag, and force it to emit exactly 30 words for every summary, since the official evaluation on this corpus is based on limited-length Rouge recall. On this corpus too, since we have only a single sentence from source and no NLP annotations, we ran just the models {\it words-lvt2k-1sent} and {\it words-lvt5k-1sent}.
+
+The performance of this model on the test set is compared with ABS and ABS+ models, RAS-Elman from \cite{chopra}, as well as TOPIARY, the top performing system on DUC-2004 in Table \ref{tab:duc}. We note our best model {\it words-lvt5k-1sent} outperforms RAS-Elman on two of the three variants of Rouge, while being competitive on Rouge-1.
+
+\begin{table}[h]
+\centering
+{\small
+\begin{tabular}{|l|r|r|r|}
+\hline
+Model & Rouge-1 & Rouge-2 & Rouge-L \\
+\hline
+%\multicolumn{4}{|c|}{DUC-2003 (validation)} \\
+%\hline
+%words-lvt2k-1sent & 26.65 & 8.72 & {\bf 23.49} \\
+%big-words-lvt2k-1sent & {\bf 26.72} & {\bf 8.96} & 23.45 \\
+%big-words-lvt2k-2sent & 26.60 & 8.62 & 23.32 \\
+%\hline
+%\multicolumn{4}{|c|}{DUC-2004 (test)} \\
+%\hline
+TOPIARY & 25.12 & 6.46 & 20.12 \\
+ABS &   26.55 & 7.06 & 22.05 \\
+ABS+ &   28.18 & 8.49 & 23.81 \\
+RAS-Elman & {\bf 28.97} & 8.26 & 24.06 \\
+words-lvt2k-1sent &  28.35 & {\bf 9.46} & 24.59 \\
+words-lvt5k-1sent & 28.61 & 9.42 &  {\bf 25.24} \\
+%feats-lvt2k-1sent &  &  &  \\
+%feats-lvt2k-1sent-ptr &  &  &  \\
+\hline
+\end{tabular}
+}
+\caption{{\small Evaluation of our models using the limited-length Rouge Recall  at 75 bytes on DUC validation and test sets. Our best model, although trained exclusively on the Gigaword corpus, consistently outperforms the ABS+ model which is tuned on the DUC-2003 validation corpus in addition to being trained on the Gigaword corpus.}}
+\label{tab:duc}
+\end{table}
+
+
+
+\subsection{CNN/Daily Mail Corpus}
+The existing abstractive text summarization corpora including Gigaword and DUC consist of only one sentence in each summary. In this section, we present a new corpus that comprises multi-sentence summaries. To produce this corpus, we modify an existing corpus that has been used for the task of passage-based question answering \cite{reading_comprehension}. In this work, the authors used the human generated abstractive summary bullets from new-stories in {\it CNN} and {\it Daily Mail} websites as questions (with one of the entities hidden), and stories as the corresponding passages from which the system is expected to answer the fill-in-the-blank question. The authors released the scripts that crawl,  extract and generate pairs of passages and questions from these websites. With a simple modification of the script, we restored all the summary bullets of each story in the original order to obtain a multi-sentence summary, where each bullet is treated as a sentence. In all, this corpus has 286,817 training pairs, 13,368 validation pairs and 11,487 test pairs, as defined by their scripts. The source documents in the training set have 766 words spanning 29.74 sentences on an average while the summaries consist of 53 words and 3.72 sentences. The unique characteristics of this dataset such as long documents, and ordered multi-sentence summaries present interesting challenges, and we hope will attract future researchers to build and test novel models on it.
+%Some of the summaries even have co-references between themselves, which can be a signficant problem for our models to replicate. We hope these unique features  on solving some of the difficult challenges of this dataset
+
+The dataset is released in two versions: one consisting of actual entity names, and the other, in which entity occurrences are replaced with document-specific integer-ids beginning from 0. Since the vocabulary size is smaller in the anonymized version, we used it in all our experiments below. We limited the source vocabulary size to 150K, and the target vocabulary to 60K, the source and target lengths to at most 800 and 100 words respectively. We used 100-dimensional word2vec embeddings trained on this dataset as input, and we fixed the model hidden state size at 200. We also created explicit pointers in the training data by matching only the anonymized entity-ids between source and target on similar lines as we did for the OOV words in Gigaword corpus. 
+
+\begin{table}[]
+\centering
+{\small
+\begin{tabular}{|l|r|r|r|}
+\hline
+Model & Rouge-1 & Rouge-2 & Rouge-L \\
+\hline
+%words-lvt2k & 29.57 & 13.41 & 26.64 \\
+%words-lvt2k-ptr & 29.61 & 13.60 & 26.72 \\
+%words-lvt2k-hieratt & *{\bf 30.30} & *{\bf 14.02} & *{\bf 27.52} \\
+%words-lvt2k & {\bf 32.01} & {\bf 11.65} & {\bf 23.28} \\
+%words-lvt2k-ptr & 31.54 & 11.49 & 22.96 \\
+%words-lvt2k-hieratt & 31.58 & 11.45 & 23.15 \\
+words-lvt2k & 32.49 & 11.84 & 29.47 \\
+words-lvt2k-hieratt & 32.75 & 12.21 & 29.01 \\
+words-lvt2k-temp-att & *{\bf 35.46} & *{\bf 13.30} & *{\bf 32.65} \\
+\hline
+\end{tabular}
+}
+\caption{{\small Performance of various models on CNN/Daily Mail test set using full-length Rouge-F1 metric. Bold faced numbers indicate best performing system.}}
+\label{tab:cnn}
+\vspace{-0.2in}
+\end{table}
+
+
+
+\begin{table*}[htpb]
+\centering
+\begin{tabular}{|p{15cm}|}
+\hline
+{\bf Source Document}\\
+\hline
+( @entity0 ) wanted : film director , must be eager to shoot footage of golden lassos and invisible jets . <eos> @entity0 confirms that @entity5 is leaving the upcoming " @entity9 " movie ( the hollywood reporter first broke the story ) . <eos> @entity5 was announced as director of the movie in november . <eos> @entity0 obtained a statement from @entity13 that says , " given creative differences , @entity13 and @entity5 have decided not to move forward with plans to develop and direct ' @entity9 ' together . <eos> " ( @entity0 and @entity13 are both owned by @entity16 . <eos> ) the movie , starring @entity18 in the title role of the @entity21 princess , is still set for release on june 00 , 0000 . <eos> it 's the first theatrical movie centering around the most popular female superhero . <eos> @entity18 will appear beforehand in " @entity25 v. @entity26 : @entity27 , " due out march 00 , 0000 . <eos> in the meantime , @entity13 will need to find someone new for the director 's chair . <eos> \\
+\hline
+{\bf Ground truth Summary}\\
+\hline
+@entity5 is no longer set to direct the first " @entity9 " theatrical movie <eos> @entity5 left the project over " creative differences " <eos> movie is currently set for 0000 \\
+\hline
+{\bf words-lvt2k}\\
+\hline
+@entity0 confirms that @entity5 is leaving the upcoming " @entity9 " movie <eos> @entity13 and @entity5 have decided not to move forward with plans to develop <eos> @entity0 confirms that @entity5 is leaving the upcoming " @entity9 " movie \\
+\hline
+{\bf words-lvt2k-hieratt}\\
+\hline
+@entity5 is leaving the upcoming " @entity9 " movie <eos> the movie is still set for release on june 00 , 0000 <eos> @entity5 is still set for release on june 00 , 0000 \\
+\hline
+{\bf words-lvt2k-temp-att}\\
+\hline
+@entity0 confirms that @entity5 is leaving the upcoming " @entity9 " movie <eos> the movie is the first film to around the most popular female actor <eos> @entity18 will appear in " @entity25 , " due out march 00 , 0000 \\
+\hline
+\end{tabular}
+\caption{Comparison of gold truth summary with summaries from various systems. Named entities and numbers are anonymized by the preprocessing script. The "<eos>" tags represent the boundary between two highlights. The temporal attention model ({\it words-lvt2k-temp-att}) solves the problem of repetitions in summary as exhibited by the models {\it words-lvt2k} and {\it words-lvt2k-hieratt} by encouraging the attention model to focus on the uncovered portions of the document.}
+\label{tab:cnn_example}
+\end{table*}
+
+\noindent{\bf Computational costs:} We used a single Tesla K-40 GPU to train our models on this dataset as well. While the flat models ({\it words-lvt2k} and {\it words-lvt2k-ptr}) took under 5 hours per epoch, the hierarchical attention model was very expensive, consuming nearly 12.5 hours per epoch. %This is owing to the fact that this dataset consists of a large number of sentences per document which adds up to the costs of running a second layer of bi-directional RNN and computing attention weights at both levels, besides computing back-propagation over both layers. 
+Convergence of all models is also slower on this dataset compared to Gigaword, taking nearly 35 epochs for all models. Thus, the wall-clock time for training until convergence is about 7 days for the flat models, but nearly 18 days for the hierarchical attention model. Decoding is also slower as well, with a throughput of 2 examples per second for flat models and 1.5 examples per second for the hierarchical attention model, when run on a single GPU with a batch size of 1.
+
+\noindent{\bf Evaluation:} We evaluated our models using the full-length Rouge F1 metric that we employed for the Gigaword corpus, but with one notable difference: in both system and gold summaries, we considered each highlight to be a separate sentence.\footnote{On this dataset, we used the {\it pyrouge} script (\url{https://pypi.python.org/pypi/pyrouge/0.1.0}) that allows evaluation of each sentence as a separate unit. Additional pre-processing involves assigning each highlight to its own "<a>" tag in the system and gold xml files that go as input to the Rouge evaluation script. Similar evaluation was also done by \cite{jianpeng}.}
+
+\noindent{\bf Results:} Results from the basic attention encoder-decoder as well as the hierarchical attention model are displayed in Table \ref{tab:cnn}. Although this dataset is smaller and more complex than the Gigaword corpus, it is interesting to note that the Rouge numbers are in the same range. However, the hierarchical attention model described in Sec. \ref{sec:hierarchical} outperforms  the baseline attentional decoder only marginally. 
+
+Upon visual inspection of the system output, we noticed that on this dataset, both these models  produced summaries that contain repetitive phrases or even repetitive sentences at times. Since the summaries in this dataset involve multiple sentences, it is likely that the decoder `forgets' what part of the document was used in producing earlier highlights. To overcome this problem, we used the {\it Temporal Attention} model of \newcite{baskaran} that keeps track of past attentional weights of the decoder and expliticly discourages it from attending to the same parts of the document in future time steps. The model works as shown by the following simple equations:
+\begin{equation}
+{\bf \beta}_t = \sum_{k=1}^{t-1}{\bf \alpha}_k';~~ {\bf \alpha}_t \propto \frac{{\bf \alpha}'_t}{{\bf \beta}_t} \nonumber
+\end{equation}
+where ${\bf \alpha}'_t$ is the unnormalized attention-weights vector at the $t^{th}$ time-step of the decoder. In other words, the temporal attention model down-weights the attention weights at the current time step if the past attention weights are high on the same part of the document. 
+
+Using this strategy, the temporal attention model improves performance significantly over both the baseline model as well as the hierarchical attention model. We have also noticed that there are fewer repetitions of summay highlights produced by this model as shown in the example in Table \ref{tab:cnn_example}.
+
+
+
+
+
+These results, although preliminary, should serve as a good baseline for future researchers to compare their models against. %This is not surprising, since modeling a long document requires paying attention to important words as well as important sentences and their positions in the document. 
+%owing to the large number of sentences in the source. However, convergence rate of these models is quite slow on this dataset, and the hierarchical model has not yet reached convergence at the time of submission.
+
+%\textcolor{red}{Present results on anonymized data from both basic model as well as the hierarchical attention model and the memory based decoder. Focus more on the fact that we are the first ones to use this corpus for summarization.}
+
+
+

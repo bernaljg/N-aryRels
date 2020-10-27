@@ -1,0 +1,96 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{cite}
+\usepackage{wrapfig}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{verbatim}
+\usepackage{booktabs}
+%\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\usepackage{comment}
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+
+
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+ 
+
+\def\cvprPaperID{203} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+\def\eqnvspace{{\vspace{-2mm}}}
+\def\figvspace{{\vspace{-4mm}}}
+
+\def\afifthcolumn{0.075\textwidth}
+\def\FittingFigWid{0.11\textwidth}
+\def\ShapeRepFigWid{0.09\textwidth}
+\def\FittingFigShapeWid{0.11\textwidth}
+\def\AlignFigWid{0.11\textwidth}
+\def\AblTexFigWid{0.1\textwidth}
+\def\VaryingShapeFigWid{0.12\textwidth}
+
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+
+
+
+\newcommand{\Paragraph}[1]{\vspace{-0mm} \noindent \textbf{#1.} \hspace{0mm}}
+\newcommand{\Section}[1]{\vspace{-1mm} \section{#1} \vspace{-0mm}}
+\newcommand{\SubSection}[1]{\vspace{-1mm} \subsection{#1} \vspace{-1mm}}
+\newcommand{\SubSubSection}[1]{\vspace{-3mm} \subsubsection{#1} \vspace{-1mm}}
+
+
+\cvprfinalcopy % *** Uncomment this line for the final submission
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+\ifcvprfinal\pagestyle{empty}\fi
+\begin{document}
+
+%%%%%%%%% TITLE
+\title{Nonlinear 3D Face Morphable Model}
+
+\author{Luan Tran, Xiaoming Liu \\
+Department of Computer Science and Engineering \\
+Michigan State University, East Lansing MI 48824\\
+{\tt \{tranluan, liuxm\}@msu.edu}
+}
+
+\maketitle
+%\thispagestyle{empty}
+
+%%%%%%%%% ABSTRACT
+\input{CVPR_2018_Nonlinear_3DMM_abs.tex}
+
+
+%%%%%%%%% BODY TEXT
+\input{CVPR_2018_Nonlinear_3DMM_intro.tex}
+\input{CVPR_2018_Nonlinear_3DMM_prior.tex}
+\input{CVPR_2018_Nonlinear_3DMM_alg.tex}
+\input{CVPR_2018_Nonlinear_3DMM_exp.tex}
+\input{CVPR_2018_Nonlinear_3DMM_con.tex}
+
+
+{\small
+\bibliographystyle{ieee}
+\bibliography{egbib}
+}
+
+\end{document}

@@ -1,0 +1,149 @@
+\section{Pairwise Probabilities}
+\label{sec:unary-and-pairwise}
+Here we describe the estimation of the pairwise terms.
+% , while unary probabilities are described in
+% Sec.~\ref{sec:unary-prob}.
+We define pairwise features $f_{dd'}$ for
+the variable $z_{dd'cc'}$ (Sec.~\ref{section:problem}).
+% where $dd' \in \tbinom{D}{2}$ and $cc'\in C^2$.
+Each part detection $d$ includes the probabilities $f_{p_{dc}}$
+(Sec.~\ref{sec:unary-prob}), its location $(x_d,y_d)$, scale $h_d$ and
+bounding box $B_d$ coordinates.  Given two detections $d$ and $d'$,
+and the corresponding features $( f_{p_{dc}}, x_d, y_d, h_d, B_d)$ and
+$(f_{p_{d'c}}, x_{d'}, y_{d'}, h_{d'}, B_{d'})$, we define two sets of
+auxiliary variables for $z_{dd'cc'}$, one set for $c = c'$ (same body
+part class clustering) and one for $c\neq c'$ (across two body part
+classes labeling).  These features capture the proximity, kinematic
+relation and appearance similarity between body parts.
+% \pgcomment{These are designed as to capture...}
+
+\myparagraph{The same body part class ($c=c'$).}
+% \paragraph{$c = c'$} We leverage the spatial relations between the
+%detections $d$ and $d'$ for the pairwise term within the same body
+%part class.
+Two detections denoting the same body part of the same person should
+be in close proximity to each other. We introduce the following
+auxiliary variables that capture the spatial relations: $\Delta x =
+|x_d-x_{d'}|/\bar{h}$, $\Delta y = |y_d-y_{d'}|/\bar{h}$, $\Delta h =
+|h_d-h_{d'}|/\bar{h}$, $IOUnion$, $IOMin$, $IOMax$. The latter three
+are intersections over union/minimum/maximum of the two detection
+boxes, respectively, and $\bar{h} = (h_d + h_{d'})/2$.
+%% \begin{alignat}{4}
+%% \small
+%% \smallskip
+%%   \Delta x &= \frac{|x_d-x_{d'}|}{\bar{h}}   &\quad IOUnion &= \frac{|B_d \cap B_{d'}|}{|B_d \cup B_{d'}|}     \nonumber \\
+%%   \Delta y &= \frac{|y_d-y_{d'}|}{\bar{h}}  &\quad IOMin &= \frac{|B_d \cap B_{d'}|}{\min(|B_d|, |B_{d'}|)}     \\
+%%   \Delta h &= \frac{|h_d-h_{d'}|}{\bar{h}}   &\quad IOMax &= \frac{|B_d \cap B_{d'}|}{\max(|B_d|, |B_{d'}|)} \nonumber
+%% \end{alignat}
+%% where $\bar{h} = \frac{(h_d + h_{d'})}{2}$, $IOUnion$, $IOMin$ and
+%% $IOMax$ are intersections over union/minimum/maximum of the two
+%% detection bounding box areas, respectively.
+
+{\it Non-linear Mapping.}
+We augment the feature representation by appending quadratic and exponential terms.
+The final pairwise feature  $f_{dd'}$ for the variable $z_{dd'cc}$ is
+$(\Delta x, \Delta y, \Delta h,IOUnion, IOMin, IOMax,{(\Delta x)}^2, \\ \ldots, {(IOMax)}^2, \exp{(-{\Delta x})}, \ldots, \exp{(-{IOMax})})$.
+
+\myparagraph{Two different body part classes ($c\neq c'$).}
+% \paragraph{$c\neq c'$}
+We encode the kinematic body constraints into the pairwise feature by
+introducing auxiliary variables $ S_{dd'}$ and $R_{dd'}$, where
+$S_{dd'}$ and $R_{dd'}$ are the Euclidean distance and the angle
+between two detections, respectively. To capture the joint
+distribution of $S_{dd'}$ and $R_{dd'}$, instead of using $S_{dd'}$
+and $R_{dd'}$ directly, we employ the posterior probability
+$p(z_{dd'cc'} = 1|S_{dd'},R_{dd'})$ as pairwise feature for
+$z_{dd'cc'}$ to encode the geometric relations between the body part
+class $c$ and $c'$.  More specifically, assuming the prior probability
+$p(z_{dd'cc'} = 1) = p(z_{dd'cc'} = 0) = 0.5$, the posterior
+probability of detection $d$ and $d'$ have the body part label $c$ and
+$c'$, namely $z_{dd'cc'} = 1$, is
+\vspace{-0.1cm}
+\begin{align}
+\small
+\noindent
+&p(z_{dd'cc'} = 1|S_{dd'},R_{dd'}) \nonumber \\ &=
+\frac{p(S_{dd'},R_{dd'}|z_{dd'cc'} = 1)}{p(S_{dd'},R_{dd'}|z_{dd'cc'}
+  = 1) + p(S_{dd'},R_{dd'}|z_{dd'cc'} = 0)}, \nonumber
+\enspace
+\end{align}
+\vspace{-0.1cm}
+
+\noindent where $p(S_{dd'},R_{dd'}|z_{dd'cc'} = 1)$ is obtained by
+conducting a normalized 2D histogram of $S_{dd'}$ and $R_{dd'}$ from
+positive training examples, analogous to the negative likelihood
+$p(S_{dd'},R_{dd'}|z_{dd'cc'} = 0)$. In Sec.~\ref{sec:multicut:single}
+we also experiment with encoding the appearance into the pairwise
+feature by concatenating the feature $f_{p_{dc}}$ from $d$ and
+$f_{p_{d'c}}$ from $d'$, as $f_{p_{dc}}$ is the output of the CNN-based part
+detectors. The final pairwise feature is $(p(z_{dd'cc'} =
+1|S_{dd'},R_{dd'}),f_{p_{dc}},f_{p_{d'c}})$.
+
+%Regarding to the unary feature, we implicitly employ the CNN feature
+%since we directly use the R-CNN softmax output as the probability
+%estimation for $x_{dc}$, which is trained based on the CNN feature.
+%We discuss it in the next section.
+\subsection{Probability Estimation} % {\todo{should it be here?}}}
+\label{sec:probability-estimation}
+% the unary cost $\alpha_{dc}$ and the pairwise cost $\beta_{dd'cc'}$
+% are defined in terms of the probability ratio.
+The coefficients $\alpha$ and $\beta $ of the objective function
+(Eq.~\ref{eq:ilp}) are defined by the probability ratio
+in the log space (Eq.~\ref{eq:cost-definition-1} and
+Eq.~\ref{eq:cost-definition-2}).  Here we describe the estimation of
+the corresponding probability density: {\it (1)} For every pair of
+detection and part classes, namely for any $(d, c) \in D \times C$, we
+estimate a probability $p_{dc} \in (0,1)$ of the detection $d$ being a
+body part of class $c$.  {\it (2)} For every combination of two
+distinct detections and two body part classes, namely for any $dd' \in
+\tbinom{D}{2}$ and any $cc' \in C^2$, we estimate a probability
+$p_{dd'cc'} \in (0,1)$ of $d$ and $d'$ belonging to the same person,
+meanwhile $d$ and $d'$ are body parts of classes $c$ and $c'$,
+respectively.
+
+\myparagraph{Learning.} 
+%% The output of the R-CNN softmax layer
+%% contains the jointly estimated probability of the detection $d$ being
+%% each body part class $c$, which we directly use as the probability
+%% estimation for $p_{dc}$.  Learning the parameters of the softmax
+%% classifier from the training data is done in the R-CNN framework in
+%% the standard way.
+%%As for $p_{dd'cc'}$, 
+Given the features $f_{dd'}$ and a Gaussian prior $p(\theta_{cc'}) =
+\mathcal{N}(0,\sigma^2)$ on the parameters, logistic model is
+%logistic model
+\begin{align}
+\label{eq:z-probability}
+p(z_{dd'cc'} = 1 | f_{dd'}, \theta_{cc'}) & = \frac{1}{1 + \exp(-\langle \theta_{cc'}, f_{dd'} \rangle)}.
+\end{align}
+$(|C|\times (|C| + 1))/2 $ parameters are estimated using ML.
+%Maximum Likelihood. % on the training set.
+
+%}{Estimating the maximally probable model parameter $\theta_{cc'}$
+%  from the training data is formulated as s logistic regression
+%  problem. We perform the logistic regression for learning the model
+%  parameter $\theta_{cc'}$ for every pair of body part classes, in
+%  total $(|C|\times (|C| + 1))/2 $.}
+\myparagraph{Inference}
+Given two detections $d$ and $d'$,
+the coefficients $\alpha_{dc}$ for $x_{dc}$ and $\alpha_{d'c}$ for $x_{d'c}$ are obtained by Eq.~\ref{eq:cost-definition-1},
+the coefficient $\beta_{dd'cc'}$ for $z_{dd'cc'}$ has the form
+\begin{align}
+\small
+  \beta_{dd'cc'} = \log \frac{1 - p_{dd'cc'}}{p_{dd'cc'}} = -\langle f_{dd'},  \theta_{cc'}\rangle.
+  \label{cost-probability-feature}
+\end{align}
+%with pairwise features $f_{dd'}$, and 
+%learned model parameters $\theta_{cc'}$ from logistic regression.
+Model parameters $\theta_{cc'}$ are learned using logistic regression.
+% \subsection{Implementation Details}
+% \label{sec:features:details}
+% Using all $2000$ detections in our model is prohibitive due to
+% exponential complexity of the fully connected part graph. We thus
+% select a representative subset of detections
+
+% \begin{itemize}
+
+% \item selecting representative set of unaries
+% \item min probability for unaries
+% \end{itemize}

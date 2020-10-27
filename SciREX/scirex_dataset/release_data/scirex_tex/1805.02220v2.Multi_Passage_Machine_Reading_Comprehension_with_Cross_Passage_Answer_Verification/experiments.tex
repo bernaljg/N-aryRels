@@ -1,0 +1,113 @@
+\section{Experiments}
+\label{experiments}
+
+To verify the effectiveness of our model on multi-passage machine reading comprehension,
+we conduct experiments on the MS-MARCO \cite{marco} and DuReader \cite{dureader} datasets. Our method achieves the state-of-the-art performance on both datasets.
+
+%We conduct our experiments on the MS-MARCO \cite{marco} and DuReader \cite{dureader} datasets. Our model achieves significant improvement on both of these two datasets compared with the baseline methods. And our model also achieves state-of-the-art performance on both leaderboards.
+% for confidential review, remove below by LIUKAI
+%\footnote{https://ai.baidu.com/broad/leaderboard?dataset=dureader} \footnote{http://www.msmarco.org/}. 
+
+\subsection{Datasets}
+We choose the MS-MARCO and DuReader datasets to test our method, since both of them are designed from real-world search engines and involve a large number of passages retrieved from the web. One difference of these two datasets is that MS-MARCO mainly focuses on the English web data, while DuReader is designed for Chinese MRC. This diversity is expected to reflect the generality of our method. In terms of the data size, MS-MARCO contains 102023 questions, each of which is paired up with approximately 10 passages for reading comprehension. As for DuReader, it keeps the top-5 search results for each question and there are totally 201574 questions.  
+
+%We choose the MS-MARCO\cite{marco} and DuReader \cite{dureader} datasets to test our method, since both of them are designed from real-world search engines and involve large number of passages retrieved from the web. One difference of these two datasets is that MS-MARCO mainly focuses on the English web data, while the DuReader is designed for Chinese reading comprehension. This diversity is expected to reflect the generality of our method. In terms of the data size, the MS-MARCO dataset contains 102023 questions, each of which is paired up with approximately 10 passages for reading comprehension. For the DuReader dataset, they kept the top-5 search results for each question and there are totally 201574 questions.  
+
+
+\begin{table}[tbp]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+                          & MS-MARCO & DuReader \\ \hline
+Multiple Answers          &   9.93\%       &  67.28\%        \\
+%Exact Match &  21.17\%        &   7.84\%       \\ 
+Multiple Spans &    40.00\%      &  56.38\%  \\\hline
+\end{tabular}
+\caption{Percentage of questions that have multiple valid answers or answer spans}
+\label{tab:multi-answer}
+\end{table}
+
+One prerequisite for answer verification is that there should be multiple correct answers so that they can verify each other. Both the MS-MARCO and DuReader datasets require the human annotators to generate multiple answers if possible. \tabref{tab:multi-answer} shows the proportion of questions that have multiple answers. However, the same answer that occurs many times is treated as one single answer here. 
+%Actually we want to find out how many text spans in the passages can be regarded as a valid answer. 
+%Therefore, we count the number of text spans that can match with the human-generated answers with F1 or ROUGE-L score larger than 0.7, and we also show the proportion of questions that have multiple matched answer spans.
+Therefore, we also report the proportion of questions that have multiple answer spans to match with the human-generated answers. A span is taken as valid if it can achieve F1 score larger than 0.7 compared with any reference answer. From these statistics, we can see that the phenomenon of multiple answers is quite common for both MS-MARCO and DuReader. These answers will provide strong signals for answer verification if we can leverage them properly.
+
+
+
+\begin{table*}[t!]
+\centering
+\begin{tabular}{lcc}
+\hline
+Model           & ROUGE-L & BLEU-1 \\ \hline
+FastQA\_Ext \cite{fastqa}      & 33.67   & 33.93  \\
+Prediction \cite{match-lstm}  & 37.33   & 40.72  \\
+ReasoNet   \cite{reasonet}     & 38.81   & 39.86  \\
+R-Net      \cite{rnet}     & 42.89   & 42.22  \\
+S-Net      \cite{snet}     & 45.23   & 43.78  \\ 
+Our Model          & \textbf{46.15}        &  \textbf{44.47}      \\ \hline
+S-Net      (Ensemble)     & 46.65   & 44.78  \\
+Our Model (Ensemble) & \textbf{46.66}        &  \textbf{45.41}      \\ \hline
+Human           & 47      & 46   \\ \hline
+\end{tabular}
+\caption{Performance of our method and competing models on the MS-MARCO test set}
+\label{tab:marco-results}
+\end{table*}
+
+
+
+\subsection{Implementation Details}
+\label{sec:implementation}
+
+For MS-MARCO, we preprocess the corpus with the reversible tokenizer from Stanford CoreNLP \cite{stanford-corenlp} and we choose the span that achieves the highest ROUGE-L score with the reference answers as the gold span for training. We employ the 300-D pre-trained Glove embeddings \cite{glove} and keep it fixed during training. The character embeddings are randomly initialized with its dimension as 30. For DuReader, we follow the preprocessing described in \newcite{dureader}. 
+
+We tune the hyper-parameters according to the validation performance on the MS-MARCO development set. The hidden size is set to be 150 and we apply $L2$ regularization with its weight as 0.0003. The task weights $\beta_{1}$, $\beta_{2}$ are both set to be 0.5. To train our model, we employ the Adam algorithm \cite{adam} with the initial learning rate as 0.0004 and the mini-batch size as 32. Exponential moving average is applied on all trainable variables with a decay rate 0.9999.
+
+Two simple yet effective technologies are employed to improve the final performance on these two datasets respectively. For MS-MARCO, approximately 8\% questions have the answers as Yes or No, which usually cannot be solved by extractive approach \cite{snet}. We address this problem by training a simple Yes/No classifier for those questions with certain patterns (e.g., starting with ``is''). Concretely, we simply change the output layer of the basic boundary model so that it can predict whether the answer is ``Yes" or ``No". For DuReader, the retrieved document usually contains a large number of paragraphs that cannot be fed into MRC models directly \cite{dureader}. The original paper employs a simple a simple heuristic strategy to select a representative paragraph for each document, while we train a paragraph ranking model for this. We will demonstrate the effects of these two technologies later.
+
+
+    
+\subsection{Results on MS-MARCO}
+
+\tabref{tab:marco-results} shows the results of our system and other state-of-the-art models on the MS-MARCO test set. We adopt the official evaluation metrics, including ROUGE-L \cite{rouge} and BLEU-1 \cite{bleu}. As we can see, for both metrics, our single model outperforms all the other competing models with an evident margin, which is extremely hard considering the near-human performance. If we ensemble the models trained with different random seeds and hyper-parameters, the results can be further improved and outperform the ensemble model in \newcite{snet}, especially in terms of the BLEU-1. 
+
+
+\subsection{Results on DuReader}
+
+\begin{table}[tbp]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+Model        & BLEU-4 & ROUGE-L \\ \hline
+Match-LSTM   & 31.8   & 39.0  \\ 
+BiDAF        & 31.9   & 39.2  \\
+PR + BiDAF   & 37.55   & 41.81  \\ 
+Our Model    & \textbf{40.97}   &  \textbf{44.18} \\ \hline
+%Ours(Ensemble)  &        & \\ \hline
+Human          & 56.1 & 57.4 \\ \hline
+\end{tabular}
+\caption{Performance on the DuReader test set}
+\label{tab:dureader-results}
+\end{table}
+
+\begin{table}[tbp]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+Model           & ROUGE-L & $\Delta$ \\ \hline
+\textbf{Complete Model}      & \textbf{45.65}   &  \textbf{-} \\
+ \- Answer Verification  &  44.38  & -1.27  \\
+ \- Content Modeling   & 44.27   & -1.38  \\
+ \- Joint Training  & 44.12   & -1.53         \\
+ \- YesNo Classification &  41.87  &  -3.78 \\ 
+\textbf{Boundary Baseline}   &  \textbf{38.95}  &  \textbf{-6.70} \\ \hline
+\end{tabular}
+\caption{Ablation study on MS-MARCO development set}
+\label{tab:ablation}
+\end{table}
+
+The results of our model and several baseline systems on the test set of DuReader are shown in \tabref{tab:dureader-results}. The BiDAF and Match-LSTM models are provided as two baseline systems \cite{dureader}. Based on BiDAF, as is described in \secref{sec:implementation}, we tried a new paragraph selection strategy by employing a paragraph ranking (PR) model. We can see that this paragraph ranking can boost the BiDAF baseline significantly. Finally, we implement our system based on this new strategy, and our system (single model) achieves further improvement by a large margin.
+
+
+
+
+

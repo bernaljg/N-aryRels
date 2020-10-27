@@ -1,0 +1,105 @@
+\documentclass[11pt]{article}
+\usepackage{acl2016}
+\usepackage{times}
+\usepackage{url}
+\usepackage{latexsym}
+\usepackage{xcolor}
+\usepackage{balance}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{booktabs}
+%\usepackage{txfonts}
+\usepackage{enumitem}
+\usepackage{mathtools}
+\usepackage{multirow}
+\usepackage[font=small]{caption}
+\usepackage{stmaryrd}
+
+\newcommand{\denselist}{\setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt} \setlength{\parsep}{0pt}}
+\newcommand{\bitem}{\begin{itemize}[noitemsep,topsep=2pt]\denselist}
+\newcommand{\eitem}{\end{itemize}}
+\newcommand{\qed}{\square}
+
+\newtheorem{theorem}{Theorem}[section]
+
+\setlength\titlebox{5.5cm}
+
+\DeclareMathOperator*{\argmax}{argmax}
+
+\aclfinalcopy
+
+\title{Globally Normalized Transition-Based Neural Networks}
+
+\author{
+  Daniel Andor, Chris Alberti, David Weiss, Aliaksei Severyn, \\
+    {\bf Alessandro Presta, Kuzman Ganchev, Slav Petrov and Michael Collins\thanks{$\;\;$On leave from Columbia University.}}\\
+  Google Inc\\
+  New York, NY\\
+  {\footnotesize \tt \{andor,chrisalberti,djweiss,severyn,apresta,kuzman,slav,mjcollins\}@google.com}
+}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+% Abstract.
+\begin{abstract}
+We introduce a globally normalized transition-based neural network
+model that achieves state-of-the-art part-of-speech tagging,
+dependency parsing and sentence compression results.  Our model is a
+simple feed-forward neural network that operates on a task-specific
+transition system, yet achieves comparable or better accuracies than
+recurrent models.
+We discuss the importance of global as opposed to local normalization:
+a key insight is that the label bias problem implies that
+globally
+normalized models can be strictly more expressive 
+than locally normalized models.
+\end{abstract}
+
+% Utility commands.
+\graphicspath{{./figs/}}
+\newcommand{\bX}{\mathbf{X}}
+\newcommand{\bE}{\mathbf{E}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\bH}{\mathbf{H}}
+\newcommand{\bW}{\mathbf{W}}
+\newcommand{\bh}{\mathbf{h}}
+\newcommand{\mwords}{\mathrm{word}}
+\newcommand{\mtags}{\mathrm{tag}}
+\newcommand{\mlabels}{\mathrm{label}}
+\newcommand{\todo}[1]{{\bf \color{red}{TODO: #1}}}
+\newcommand{\eat}[1]{\ignorespaces}
+\newcommand{\commentout}[1]{}
+\newcommand\T{\rule{0pt}{4ex}}  % Top strut for tables
+
+% Sections of the paper.
+\input{tex/intro}
+\input{tex/model}
+\input{tex/labelbias}
+\input{tex/experiments}
+\input{tex/ablation-experiments}
+\input{tex/conclusions}
+
+\ifaclfinal
+% No acknowledgements in the anonymous submission.
+\section*{Acknowledgements}
+
+We would like to thank Ling Wang for training his C2W part-of-speech tagger on our setup,
+and Emily Pitler, Ryan McDonald, Greg Coppola and
+Fernando Pereira for tremendously helpful discussions.
+Finally, we are grateful to all members of the Google Parsing Team.
+\else\fi
+
+% Bibliography.
+\balance
+\bibliographystyle{acl2016}
+\bibliography{paper}
+
+\end{document}

@@ -1,0 +1,272 @@
+
+\section{Experiments}\label{sec:exp}
+\subsection{Main Results}
+\label{sec:exp-main}
+
+We conduct a series of experiments with the following settings:
+\begin{itemize}[leftmargin=1.5em,label=$\bullet$]
+\item Following previous work~\citep{krause2017dynamic,merity2017regularizing,melis2017state}, we evaluate the proposed MoS model on two widely used language modeling datasets, namely Penn Treebank (PTB)~\citep{mikolov2010recurrent} and WikiText-2 (WT2)~\citep{merity2016pointer} based on perplexity.
+For fair comparison, we closely follow the regularization and optimization techniques introduced by \citet{merity2017regularizing}. We heuristically and manually search hyper-parameters for MoS based on the validation performance while limiting the model size (see Appendix \ref{sec:a-exp-sota} for our hyper-parameters).
+\item To investigate whether the effectiveness of MoS can be extended to even larger datasets, we conduct an additional language modeling experiment on the 1B Word dataset~\citep{chelba2013one}.
+Specifically, 
+%we consider two settings, one using the entire training set and the other using 1/10 of the data.  In both cases, 
+we lower-case the text and choose the top 100K tokens as the vocabulary.
+A standard neural language model with 2 layers of LSTMs followed by a Softmax output layer is used as the baseline.
+Again, the network size of MoS is adjusted to ensure a comparable number of parameters.
+% SGD with validation based learning rate annealing is used to train both models.
+Notably, dropout was not used, since we found it not helpful to either model (see Appendix \ref{sec:a-exp-1b} for more details).
+\item To show that the MoS is a generic structure that can be used to model other context-dependent distributions, we additionally conduct experiments in the dialog domain. We use the Switchboard dataset~\citep{godfrey1997switchboard} preprocessed by \citet{zhao2017learning}\footnote{\url{https://github.com/snakeztc/NeuralDialog-CVAE/tree/master/data}} to train a Seq2Seq~\citep{sutskever2014sequence} model with MoS added to the decoder RNN. Then, a Seq2Seq model using Softmax and another one augmented by MoC with comparable parameter sizes are used as baselines. For evaluation, we include both the perplexity and the precision/recall of Smoothed Sentence-level BLEU, as suggested by~\citet{zhao2017learning}. When generating responses, we use beam search with beam size 10, restrict the maximum length to 30, and retain the top-5 responses.
+\end{itemize}
+
+\begin{table*}[t]%[!h]
+	\small
+	\centering
+	\begin{tabular}{l|ccc}
+		\toprule
+		\bf Model & \bf \#Param & \bf Validation &  \bf Test \\
+		\midrule
+		%		\citet{mikolov2012context} -- KN-5 & 2M^\ddagger & - & 141.2 \\
+		%		\citet{mikolov2012context} -- KN5 + cache & 2M^\ddagger & - & 125.7 \\
+		%		\citet{mikolov2012context} -- RNN & 6M$^\ddagger$ & - & 124.7 \\
+		%		\citet{mikolov2012context} -- RNN-LDA & 7M^\ddagger & - & 113.7 \\
+		\citet{mikolov2012context} -- RNN-LDA + KN-5 + cache & 9M$^\ddagger$ & - & 92.0 \\
+		\citet{zaremba2014recurrent} -- LSTM & 20M & 86.2 & 82.7 \\
+		%		\citet{zaremba2014recurrent} -- LSTM (large) & 66M & 82.2 & 78.4 \\
+		%		\citet{gal2016theoretically} -- Variational LSTM & 20M & 81.9 & 79.7 \\
+		\citet{gal2016theoretically} -- Variational LSTM (MC) & 20M & - & 78.6 \\
+		%		\citet{gal2016theoretically} -- Variational LSTM (large) & 66M & 77.9 \pm 0.3 & 75.2 $\pm$ 0.2 \\
+		%		\citet{gal2016theoretically} -- Variational LSTM (large, MC) & 66M & - & 73.4 $\pm$ 0.0 \\
+		\citet{kim2016character} -- CharCNN & 19M & - & 78.9 \\
+		\citet{merity2016pointer} -- Pointer Sentinel-LSTM & 21M & 72.4 & 70.9 \\
+		%		\citet{grave2016improving} -- LSTM & - & - & 82.3 \\
+		\citet{grave2016improving} -- LSTM + continuous cache pointer$^\dagger$ & - & - & 72.1 \\
+		\citet{inan2016tying} -- Tied Variational LSTM + augmented loss & 24M & 75.7 & 73.2 \\
+		%		\citet{inan2016tying} -- Variational LSTM + augmented loss & 51M & 71.1 & 68.5 \\
+		\citet{zilly2016recurrent} -- Variational RHN & 23M & 67.9 & 65.4 \\
+		\citet{zoph2016neural} -- NAS Cell & 25M & - & 64.0 \\
+		%		\citet{zoph2016neural} -- NAS Cell & 54M & - & 62.4 \\
+		\citet{melis2017state} -- 2-layer skip connection LSTM & 24M & 60.9 & 58.3 \\
+		\midrule
+		\citet{merity2017regularizing} -- AWD-LSTM w/o finetune & 24M & 60.7 & 58.8 \\
+		\citet{merity2017regularizing} -- AWD-LSTM & 24M & 60.0 & 57.3 \\
+		Ours -- AWD-LSTM-MoS w/o finetune & 22M & 58.08 & 55.97 \\
+		Ours -- AWD-LSTM-MoS & 22M & \textbf{56.54} & \textbf{54.44} \\
+		\midrule
+		\citet{merity2017regularizing} -- AWD-LSTM + continuous cache pointer$^\dagger$ & 24M & 53.9 & 52.8 \\
+		\citet{krause2017dynamic} -- AWD-LSTM + dynamic evaluation$^\dagger$ & 24M & 51.6 & 51.1 \\
+		Ours -- AWD-LSTM-MoS + dynamic evaluation$^\dagger$ & 22M & \textbf{48.33} & \textbf{47.69} \\
+		\bottomrule
+	\end{tabular}
+	\caption{\small
+		Single model perplexity on validation and test sets on Penn Treebank. Baseline results are obtained from \citet{merity2017regularizing} and \citet{krause2017dynamic}. $\dagger$ indicates using dynamic evaluation.
+	}
+	\label{table:PTB}
+\end{table*}
+\begin{table*}[t]%[!h]
+	\small
+	\centering
+	\begin{tabular}{l|ccc}
+		\toprule
+		\bf Model & \bf \#Param & \bf Validation &  \bf Test \\
+		\midrule
+		%		\citet{inan2016tying} -- Variational LSTM & 28M & 92.3 & 87.7 \\
+		\citet{inan2016tying} -- Variational LSTM  + augmented loss & 28M & 91.5 & 87.0 \\
+		%		\citet{grave2016improving} -- LSTM & - & - & 99.3 \\
+		\citet{grave2016improving} -- LSTM + continuous cache pointer$^\dagger$ & - & - & 68.9 \\
+		%		\citet{melis2017state} -- 1-layer LSTM & 24M & 69.3 & 65.9 \\
+		\citet{melis2017state} -- 2-layer skip connection LSTM & 24M & 69.1 & 65.9 \\
+		\midrule
+		\citet{merity2017regularizing} -- AWD-LSTM w/o finetune & 33M & 69.1 & 66.0 \\
+		\citet{merity2017regularizing} -- AWD-LSTM & 33M & 68.6 & 65.8 \\
+		Ours -- AWD-LSTM-MoS w/o finetune & 35M & 66.01 & 63.33 \\
+		Ours -- AWD-LSTM-MoS & 35M & \textbf{63.88} & \textbf{61.45} \\
+		\midrule
+		\citet{merity2017regularizing} -- AWD-LSTM + continuous cache pointer $^\dagger$& 33M & 53.8 & 52.0 \\
+		\citet{krause2017dynamic} -- AWD-LSTM + dynamic evaluation$^\dagger$ & 33M & 46.4 & 44.3 \\
+		Ours -- AWD-LSTM-MoS + dynamical evaluation$^\dagger$ & 35M & \textbf{42.41} & \textbf{40.68} \\
+		\bottomrule
+	\end{tabular}
+	\caption{\small 
+		Single model perplexity over WikiText-2. Baseline results are obtained from \citet{merity2017regularizing} and \citet{krause2017dynamic}. $\dagger$ indicates using dynamic evaluation.
+	}
+	\label{table:WT2}
+	\vspace{-1.5em}
+\end{table*}
+The language modeling results on PTB and WT2 are presented in Table \ref{table:PTB} and Table \ref{table:WT2} respectively. With a comparable number of parameters, MoS outperforms all baselines with or without dynamic evaluation, and substantially improves over the current state of the art, by up to 3.6 points in perplexity. 
+
+%\begin{table*}[!h]
+%	\small
+%	\centering
+%	\begin{tabular}{l|c|ccc|ccc}
+%		\toprule
+%		& & \multicolumn{3}{c|}{\bf Perplexity [entire]} & \multicolumn{3}{c}{\bf Perplexity [1/10]} \\
+%		\bf Model & \bf \#Param & Train & Validation & Test & Train & Validation & Test \\
+%		\midrule
+%		Softmax & 119M & 41.47       & 43.86      & 42.77     & 43.15       & 55.59      & 54.14    \\
+%		MoS       & 113M & \bf 36.?? & \bf 38.01 & \bf 37.10 & \bf 41.38 & \bf 49.24 & \bf 48.09 \\
+%		\bottomrule
+%	\end{tabular}
+%	\caption{\small Perplexity comparison on 1B word dataset. Train perplexity is the average of the last 4,000 updates.}
+%	\label{table:1bword}
+%	\vspace{-1em}
+%\end{table*}
+
+\begin{table*}[!h]
+	\small
+	\centering
+	\begin{tabular}{l|c|ccc}
+		\toprule
+		\bf Model & \bf \#Param & \bf Train & \bf Validation & \bf Test \\
+		\midrule
+		Softmax & 119M & 41.47       & 43.86      & 42.77      \\
+		MoS       & 113M & \bf 36.39 & \bf 38.01 & \bf 37.10 \\
+		\bottomrule
+	\end{tabular}
+	\caption{\small Perplexity comparison on 1B word dataset. Train perplexity is the average of the last 4,000 updates.}
+	\label{table:1bword}
+	\vspace{-1em}
+\end{table*}
+The improvement on the large-scale dataset is even more significant. As shown in Table \ref{table:1bword}, MoS outperforms Softmax by over 5.6 points in perplexity. It suggests the effectiveness of MoS is not limited to small datasets where many regularization techniques are used. Note that with limited computational resources, we didn't tune the hyper-parameters for MoS. 
+
+\begin{table*}[t]%[!h]
+	\small
+	\centering
+	\begin{tabular}{l|c|cc|cc|cc|cc}
+		\toprule
+		& \bf Perplexity & \multicolumn{2}{c|}{\bf BLEU-1} & \multicolumn{2}{c|}{\bf BLEU-2} & \multicolumn{2}{c|}{\bf BLEU-3} & \multicolumn{2}{c}{\bf BLEU-4} \\
+		\bf Model & & prec & recall & prec & recall & prec & recall & prec & recall \\
+		\midrule
+		Seq2Seq-Softmax & 34.657 & 0.249 & 0.188 & 0.193 & 0.151 & 0.168 & 0.133& 0.141 & 0.111  \\
+		Seq2Seq-MoC & 33.291 & 0.259 & 0.198 & 0.202 & 0.159 & 0.176 & 0.140 & 0.148 & 0.117  \\
+		Seq2Seq-MoS & \bf 32.727 & \bf 0.272 & \bf 0.206 & \bf 0.213 & \bf 0.166 & \bf 0.185 & \bf 0.146 & \bf 0.157 & \bf 0.123 \\
+		\bottomrule
+	\end{tabular}
+	\caption{\small
+		Evaluation scores on Switchboard.
+	}
+	\label{table:dialog}
+	\vspace{-1.5em}
+\end{table*}
+Further, the experimental results on Switchboard are summarized in Table \ref{table:dialog}\footnote{The numbers are not directly comparable to \cite{zhao2017learning} since their Seq2Seq implementation and evaluation scripts are not publicly available.}. Clearly, on all metrics, MoS outperforms MoC and Softmax, showing its general effectiveness.
+
+\subsection{Ablation Study}
+
+To further verify the improvement shown above does come from the MoS structure rather than adding another hidden layer or finding a particular set of hyper-parameters, we conduct an ablation study on both PTB and WT2. 
+Firstly, we compare MoS with an MoC architecture with the same number of layers, hidden sizes, and embedding sizes, which thus has the same number of parameters.
+In addition, we adopt the hyper-parameters used to obtain the best MoS model (denoted as MoS hyper-parameters), and train a baseline AWD-LSTM. 
+To avoid distractive factors and save computational resources, all ablative experiments excluded the use of finetuing and dynamic evaluation.
+
+The results are shown in Table \ref{table:ablation}. Compared to the vanilla AWD-LSTM, though being more expressive, MoC performs only better on PTB, but worse on WT2. It suggests that simply adding another hidden layer or employing a mixture structure in the feature space does not guarantee a better performance. On the other hand, training AWD-LSTM using MoS hyper-parameters severely hurts the performance, which rules out hyper-parameters as the main source of improvement.
+% Moreover, MoC is consistently outperformed by MoS, which well matches our theoretical analysis in Section \ref{sec:rank} and shows the benefits of a high-rank language model.
+% Thus, the study verifies the role of MoS in achieving the state-of-the-art performance.
+\begin{table*}[!h]
+	\small
+	\centering
+	\begin{tabular}{l|cc|cc}
+		\toprule
+		& \multicolumn{2}{c|}{PTB} & \multicolumn{2}{c}{WT2} \\
+		\bf Model & \bf Validation &  \bf Test & \bf Validation &  \bf Test \\
+		\midrule
+		AWD-LSTM-MoS & \bf 58.08 & \bf 55.97 & \bf 66.01 & \bf 63.33\\
+		%		\midrule
+		AWD-LSTM-MoC & 59.82 & 57.55 & 68.76 & 65.98\\
+		%	    \midrule
+		AWD-LSTM (\citet{merity2017regularizing} hyper-parameters) & 61.49 & 58.95 & 68.73 & 65.40\\
+		AWD-LSTM (MoS hyper-parameters) & 78.86 & 74.86 & 72.73 & 69.18\\
+		\bottomrule
+	\end{tabular}
+	\caption{\small
+		Ablation study on Penn Treebank and WikiText-2 without finetuning or dynamical evaluation.
+	}
+	\label{table:ablation}
+	\vspace{-1.5em}
+\end{table*}
+
+\subsection{Verify the Role of Rank} \label{sec:exp-rank}
+While the study above verifies that MoS is the key to achieving the state-of-the-art performance, it is still not clear whether the superiority of MoS comes from its potential high rank, as suggested by our theoretical analysis in Section \ref{sec:rank}.
+In the sequel, we take steps to verify this hypothesis. 
+\begin{itemize}[leftmargin=*,label=$\bullet$]
+\item
+Firstly, we verify that MoS does induce a high-rank log-probability matrix empirically, while MoC and Softmax fail.
+On the validation or test set of PTB with tokens $\mathbf{X} = \{X_1, \dots, X_T\}$, we compute the log probabilities $\{ \log P(X_i \mid X_{<i}) \in \mathbb{R}^{M}\}_{t=1}^{T}$ for each token using all three models.
+Then, for each model, we stack all $T$ log-probability vectors into a $T \times M$ matrix, resulting in $\hat{\mathbf{A}}_\text{MoS}$, $\hat{\mathbf{A}}_\text{MoC}$ and $\hat{\mathbf{A}}_\text{Softmax}$.
+Theoretically, the number of non-zero singular values of a matrix is equal to its rank.
+However, performing singular value decomposition of real valued matrices using numerical approaches often encounter roundoff errors. 
+Hence, we adopt the expected roundoff error suggested by \citet{press2007numerical} when estimating the ranks of $\hat{\mathbf{A}}_\text{MoS}$, $\hat{\mathbf{A}}_\text{MoC}$ and $\hat{\mathbf{A}}_\text{Softmax}$. 
+
+The estimated ranks are shown in Table \ref{table:quantitative}. As predicted by our theoretical analysis, the matrix ranks induced by Softmax and MoC are both limited by the corresponding embedding sizes.
+By contrast, the matrix rank obtained from MoS does not suffer from this constraint, almost reaching full rank ($M=10000$).
+In appendix \ref{sec:a-rank}, we give additional evidences for the higher rank of MoS. 
+\begin{table}[t]%[ht]
+	\small
+	\centering
+	\begin{minipage}[b]{0.48\linewidth}
+		\small
+		\centering
+		\begin{tabular}{l|cc}
+			\toprule
+			\bf Model & \bf Validation & \bf Test \\
+			\midrule
+			Softmax & 400  & 400  \\
+			MoC & 280 & 280 \\
+			MoS & \bf 9981 & \bf 9981  \\
+			\bottomrule
+		\end{tabular}
+		\caption{\small
+			Rank comparison on PTB. To ensure comparable model sizes, the embedding sizes of Softmax, MoC and MoS are 400, 280, 280 respectively. The vocabulary size, i.e., $M$, is 10,000 for all models.
+		}
+		\label{table:quantitative}
+	\end{minipage}
+	\hfill
+	\begin{minipage}[b]{0.45\linewidth}
+		\small
+		\centering
+		\begin{tabular}{l|c|c}
+			\toprule
+			\bf \#Softmax & \bf Rank & \bf Perplexity \\
+			\midrule
+			3  & 6467 & 58.62 \\
+			5  & 8930 & 57.36 \\
+			10 & 9973 & 56.33 \\
+			15 & 9981 & 55.97 \\
+			20 & 9981 & 56.17 \\
+			\bottomrule
+		\end{tabular}
+		\caption{\small Empirical rank and test perplexity on PTB with different number of Softmaxes.}
+		\label{table:rank_perf}
+	\end{minipage}
+\vspace{-1em}
+\end{table}
+
+\item
+Secondly, we show that, before reaching full rank, increasing the number of mixture components in MoS also increases the rank of the log-probability matrix, which in turn leads to improved performance (lower perplexity).
+Specifically, on PTB, with other hyper-parameters fixed as used in section \ref{sec:exp-main}, we vary the number of mixtures used in MoS and compare the corresponding empirical rank and test perplexity without finetuning. 
+Table \ref{table:rank_perf} summarizes the results.
+This clear positive correlation between rank and performance strongly supports the our theoretical analysis in section \ref{sec:rank}. Moreover, note that after reaching almost full rank (i.e., using 15 mixture components), further increasing the number of components degrades the performance due to overfitting (as we inspected the training and test perplexities).
+
+\item 
+In addition, as performance improvement can often come from better regularization, we investigate whether MoS has a better, though unexpected, regularization effect compared to Softmax.
+We consider the 1B word dataset where overfitting is unlikely and no explicit regularization technique (e.g., dropout) is employed.
+% To allow a fair comparison, we should consider a setting where overfitting is unlikely. 
+% The language modeling experiment using the 1B Word dataset satisfies the need perfectly. 
+As we can see from the left part of Table \ref{table:1bword}, MoS and Softmax achieve a similar generalization gap, i.e., the performance gap between the test set and the training set.
+It suggests both models have similar regularization effects.
+Meanwhile, MoS has a lower training perplexity compared to Softmax, indicating that the improvement of MoS results from improved expressiveness.
+% superior modeling power.
+
+\item 
+The last evidence we provide is based on an \textit{inverse} experiment. Empirically, we find that when Softmax does \textit{not} suffer from a rank limitation, e.g., in character-level language modeling, using MoS will \textit{not} improve the performance.
+Due to lack of space, we refer readers to Appendix \ref{sec:a-charlm} for details.
+
+\end{itemize}
+
+\subsection{Additional analysis}
+\paragraph{MoS computational time} 
+The expressiveness of MoS does come with a computational cost---computing a $K$-times larger Softmax. To give readers a concrete idea of the influence on training time, we perform detailed analysis in Appendix \ref{sec:a-time}. As we will see, computational wall time of MoS is actually \textit{sub-linear} w.r.t. the number of Softmaxes $K$. In most settings, we observe a two to three times slowdown when using MoS with up to 15 mixture components.
+
+\paragraph{Qualitative analysis}
+Finally, we conduct a case study on PTB to see how MoS improves the next-token prediction in detail. Due to lack of space, we refer readers to Appendix \ref{sec:a-qualitative} for details. 
+The key insight from the case study is that MoS is better at making context-dependent predictions. Specifically, given the same immediate preceding word, MoS will produce distinct next-step prediction based on long-term context in history. By contrast, the baseline often yields similar next-step prediction, independent of the long-term context.
+% in the same situation. 
+
+

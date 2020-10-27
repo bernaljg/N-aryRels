@@ -1,0 +1,15 @@
+\begin{abstract}
+  %In this paper, we design a novel landmark localizer DU-Net by densely connecting the stacked U-Nets. Blocks in different U-Nets with the same semantic meanings are directly connected. The dense connectivity is global which could largely improve the information flow and encourage the feature reuse across different U-Nets. To make it parameter efficient, the order-K dense connectivity is proposed and used along with the intermediate supervisions. A memory efficient implementation is also provided to train much deep DU-Net. Experiments on benchmark datasets of both the human pose estimation and facial landmark localization demonstrate its state-of-the-art performances but with significantly less parameters.
+  
+  
+%   We propose densely connected U-Nets for visual landmark localization. The idea is features of the same semantic meanings are globally reused across the stacked U-Nets. This dense connectivity largely improves the information flow, yielding improved localization accuracy. However, a vanilla dense design would suffer from critical efficiency issue in both training and testing. To solve this problem, we first propose order-K dense connectivity to trim off unnecessary shortcuts; then, we use a memory-efficient implementation to significantly boost the training efficiency; finally, we investigate an iterative refinement that may slice the model size in half. We validate our approach in two tasks: human pose estimation and face alignment. The results show that DU-Net achieves state-of-the-art localization accuracy, but using at least 70\% less parameters compared with other benchmark localizers. \footnote{We will release the training code upon acceptance.}
+  
+  In this paper, we propose quantized densely connected U-Nets for efficient visual landmark localization. The idea is that features of the same semantic meanings are globally reused across the stacked U-Nets. This dense connectivity largely improves the information flow, yielding improved localization accuracy. However, a vanilla dense design would suffer from critical efficiency issue in both training and testing. To solve this problem, we first propose order-K dense connectivity to trim off long-distance shortcuts; then, we use a memory-efficient implementation to significantly boost the training efficiency and investigate an iterative refinement that may slice the model size in half. 
+  %G%
+  Finally, to reduce the memory consumption and high precision operations both in training and testing, we further quantize weights, inputs, and gradients of our localization network to low bit-width numbers.
+  We validate our approach in two tasks: human pose estimation and face alignment. The results show that our approach achieves state-of-the-art localization accuracy, but using $\sim$70\% fewer parameters, $\sim$98\% less model size and saving $\sim$75\% training memory compared with other benchmark localizers. The code is available at \href{https://github.com/zhiqiangdon/CU-Net}{https://github.com/zhiqiangdon/CU-Net}. 
+  
+%   \footnote{We will release the training code upon acceptance.}
+  %G%
+  
+\end{abstract}

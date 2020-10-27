@@ -1,0 +1,469 @@
+%%% -*-BibTeX-*-
+%%% Do NOT edit. File created by BibTeX with style
+%%% ACM-Reference-Format-Journals [18-Jan-2012].
+
+\begin{thebibliography}{00}
+
+%%% ====================================================================
+%%% NOTE TO THE USER: you can override these defaults by providing
+%%% customized versions of any of these macros before the \bibliography
+%%% command.  Each of them MUST provide its own final punctuation,
+%%% except for \shownote{}, \showDOI{}, and \showURL{}.  The latter two
+%%% do not use final punctuation, in order to avoid confusing it with
+%%% the Web address.
+%%%
+%%% To suppress output of a particular field, define its macro to expand
+%%% to an empty string, or better, \unskip, like this:
+%%%
+%%% \newcommand{\showDOI}[1]{\unskip}   % LaTeX syntax
+%%%
+%%% \def \showDOI #1{\unskip}           % plain TeX syntax
+%%%
+%%% ====================================================================
+
+\ifx \showCODEN    \undefined \def \showCODEN     #1{\unskip}     \fi
+\ifx \showDOI      \undefined \def \showDOI       #1{#1}\fi
+\ifx \showISBNx    \undefined \def \showISBNx     #1{\unskip}     \fi
+\ifx \showISBNxiii \undefined \def \showISBNxiii  #1{\unskip}     \fi
+\ifx \showISSN     \undefined \def \showISSN      #1{\unskip}     \fi
+\ifx \showLCCN     \undefined \def \showLCCN      #1{\unskip}     \fi
+\ifx \shownote     \undefined \def \shownote      #1{#1}          \fi
+\ifx \showarticletitle \undefined \def \showarticletitle #1{#1}   \fi
+\ifx \showURL      \undefined \def \showURL       {\relax}        \fi
+% The following commands are used for tagged output and should be
+% invisible to TeX
+\providecommand\bibfield[2]{#2}
+\providecommand\bibinfo[2]{#2}
+\providecommand\natexlab[1]{#1}
+\providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[\protect\citeauthoryear{Bahdanau, Cho, and Bengio}{Bahdanau
+  et~al\mbox{.}}{2015}]%
+        {bahdanau2015attention}
+\bibfield{author}{\bibinfo{person}{Dzmitry Bahdanau},
+  \bibinfo{person}{Kyunghyun Cho}, {and} \bibinfo{person}{Yoshua Bengio}.}
+  \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Neural machine translation by jointly learning to
+  align and translate}. In \bibinfo{booktitle}{{\em ICLR}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Bottou}{Bottou}{2014}]%
+        {bottou2014machine}
+\bibfield{author}{\bibinfo{person}{L{\'e}on Bottou}.}
+  \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{From machine learning to machine reasoning}.
+\newblock \bibinfo{journal}{{\em Machine Learning\/}} \bibinfo{volume}{94},
+  \bibinfo{number}{2} (\bibinfo{year}{2014}), \bibinfo{pages}{133--149}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Chen, Bolton, and Manning}{Chen
+  et~al\mbox{.}}{2016}]%
+        {ChenACL2016}
+\bibfield{author}{\bibinfo{person}{Danqi Chen}, \bibinfo{person}{Jason Bolton},
+  {and} \bibinfo{person}{Christopher~D Manning}.}
+  \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{A Thorough Examination of the {CNN} / {Daily Mail}
+  Reading Comprehension Task}. In \bibinfo{booktitle}{{\em {ACL}}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Chen, Fisch, Weston, and Bordes}{Chen
+  et~al\mbox{.}}{2017}]%
+        {DBLP:journals/corr/ChenFWB17}
+\bibfield{author}{\bibinfo{person}{Danqi Chen}, \bibinfo{person}{Adam Fisch},
+  \bibinfo{person}{Jason Weston}, {and} \bibinfo{person}{Antoine Bordes}.}
+  \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{Reading Wikipedia to Answer Open-Domain Questions}.
+\newblock \bibinfo{journal}{{\em CoRR\/}}  \bibinfo{volume}{abs/1704.00051}
+  (\bibinfo{year}{2017}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Cui, Chen, Wei, Wang, Liu, and Hu}{Cui
+  et~al\mbox{.}}{2016}]%
+        {Cui2016AoA}
+\bibfield{author}{\bibinfo{person}{Yiming Cui}, \bibinfo{person}{Zhipeng Chen},
+  \bibinfo{person}{Si Wei}, \bibinfo{person}{Shijin Wang},
+  \bibinfo{person}{Ting Liu}, {and} \bibinfo{person}{Guoping Hu}.}
+  \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Attention-over-Attention Neural Networks for
+  Reading Comprehension}.
+\newblock \bibinfo{journal}{{\em CoRR\/}}  \bibinfo{volume}{abs/1607.04423}
+  (\bibinfo{year}{2016}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Dhingra, Liu, Cohen, and
+  Salakhutdinov}{Dhingra et~al\mbox{.}}{2016}]%
+        {Dhingra2016Gated}
+\bibfield{author}{\bibinfo{person}{Bhuwan Dhingra}, \bibinfo{person}{Hanxiao
+  Liu}, \bibinfo{person}{William~W. Cohen}, {and} \bibinfo{person}{Ruslan
+  Salakhutdinov}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Gated-Attention Readers for Text Comprehension}.
+\newblock \bibinfo{journal}{{\em CoRR\/}}  \bibinfo{volume}{abs/1606.01549}
+  (\bibinfo{year}{2016}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Hermann, Ko{\v{c}}isk{\'{y}}, Grefenstette,
+  Espeholt, Kay, Suleyman, and Blunsom}{Hermann et~al\mbox{.}}{2015}]%
+        {HermannNIPS2015}
+\bibfield{author}{\bibinfo{person}{Karm~Moritz Hermann},
+  \bibinfo{person}{Tom{\'{a}}{\v{s}} Ko{\v{c}}isk{\'{y}}},
+  \bibinfo{person}{Edward Grefenstette}, \bibinfo{person}{Lasse Espeholt},
+  \bibinfo{person}{Will Kay}, \bibinfo{person}{Mustafa Suleyman}, {and}
+  \bibinfo{person}{Phil Blunsom}.} \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Teaching Machines to Read and Comprehend}. In
+  \bibinfo{booktitle}{{\em NIPS}}. \bibinfo{pages}{1693--1701}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Hill, Bordes, Chopra, and Weston}{Hill
+  et~al\mbox{.}}{2016}]%
+        {HillICLR2016}
+\bibfield{author}{\bibinfo{person}{Felix Hill}, \bibinfo{person}{Antoine
+  Bordes}, \bibinfo{person}{Sumit Chopra}, {and} \bibinfo{person}{Jason
+  Weston}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{The {Goldilocks} Principle: Reading Children'S
+  Books With Explicit Memory Representations}. In \bibinfo{booktitle}{{\em
+  ICLR}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Kadlec, Schmid, Bajgar, and
+  Kleindienst}{Kadlec et~al\mbox{.}}{2016}]%
+        {KadlecAttentionSum2016}
+\bibfield{author}{\bibinfo{person}{Rudolf Kadlec}, \bibinfo{person}{Martin
+  Schmid}, \bibinfo{person}{Ondrej Bajgar}, {and} \bibinfo{person}{Jan
+  Kleindienst}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Text Understanding with the Attention Sum Reader
+  Network}.
+\newblock \bibinfo{journal}{{\em arXiv:1603.01547v1 [cs.CL]\/}}
+  (\bibinfo{year}{2016}).
+\newblock
+\showeprint[arxiv]{1603.01547}
+
+
+\bibitem[\protect\citeauthoryear{Kaelbling, Littman, and Cassandra}{Kaelbling
+  et~al\mbox{.}}{1998}]%
+        {Kaelbling98planningand}
+\bibfield{author}{\bibinfo{person}{Leslie~Pack Kaelbling},
+  \bibinfo{person}{Michael~L. Littman}, {and} \bibinfo{person}{Anthony~R.
+  Cassandra}.} \bibinfo{year}{1998}\natexlab{}.
+\newblock \showarticletitle{Planning and acting in partially observable
+  stochastic domains}.
+\newblock \bibinfo{journal}{{\em Artificial Intelligence\/}}
+  \bibinfo{volume}{101} (\bibinfo{year}{1998}), \bibinfo{pages}{99--134}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Kingma and Ba}{Kingma and Ba}{2015}]%
+        {KingmaICLR2015Adam}
+\bibfield{author}{\bibinfo{person}{Diederik~P. Kingma} {and}
+  \bibinfo{person}{Jimmy Ba}.} \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Adam: {A} Method for Stochastic Optimization}. In
+  \bibinfo{booktitle}{{\em ICLR}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Kobayashi, Tian, Okazaki, and Inui}{Kobayashi
+  et~al\mbox{.}}{2016}]%
+        {Kobayashi2016a}
+\bibfield{author}{\bibinfo{person}{Sosuke Kobayashi}, \bibinfo{person}{Ran
+  Tian}, \bibinfo{person}{Naoaki Okazaki}, {and} \bibinfo{person}{Kentaro
+  Inui}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Dynamic Entity Representation with Max-pooling
+  Improves Machine Reading}. In \bibinfo{booktitle}{{\em Proceedings of the
+  North American Chapter of the Association for Computational Linguistics and
+  Human Language Technologies (NAACL-HLT)}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Kumar, Irsoy, Ondruska, Iyyer, Bradbury,
+  Gulrajani, Zhong, Paulus, and Socher}{Kumar et~al\mbox{.}}{2016}]%
+        {KumarMetamindICML2016}
+\bibfield{author}{\bibinfo{person}{Ankit Kumar}, \bibinfo{person}{Ozan Irsoy},
+  \bibinfo{person}{Peter Ondruska}, \bibinfo{person}{Mohit Iyyer},
+  \bibinfo{person}{James Bradbury}, \bibinfo{person}{Ishaan Gulrajani},
+  \bibinfo{person}{Victor Zhong}, \bibinfo{person}{Romain Paulus}, {and}
+  \bibinfo{person}{Richard Socher}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Ask Me Anything: Dynamic Memory Networks for
+  Natural Language Processing}. In \bibinfo{booktitle}{{\em ICML}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Lee, Kwiatkowski, Parikh, and Das}{Lee
+  et~al\mbox{.}}{2016}]%
+        {DBLP:journals/corr/LeeKP016}
+\bibfield{author}{\bibinfo{person}{Kenton Lee}, \bibinfo{person}{Tom
+  Kwiatkowski}, \bibinfo{person}{Ankur~P. Parikh}, {and}
+  \bibinfo{person}{Dipanjan Das}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Learning Recurrent Span Representations for
+  Extractive Question Answering}.
+\newblock \bibinfo{journal}{{\em CoRR\/}}  \bibinfo{volume}{abs/1611.01436}
+  (\bibinfo{year}{2016}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Mnih, Heess, Graves, et~al\mbox{.}}{Mnih
+  et~al\mbox{.}}{2014}]%
+        {mnih2014recurrent}
+\bibfield{author}{\bibinfo{person}{Volodymyr Mnih}, \bibinfo{person}{Nicolas
+  Heess}, \bibinfo{person}{Alex Graves}, {et~al\mbox{.}}}
+  \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{Recurrent models of visual attention}. In
+  \bibinfo{booktitle}{{\em Advances in Neural Information Processing Systems}}.
+  \bibinfo{pages}{2204--2212}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Nogueira and Cho}{Nogueira and Cho}{2016}]%
+        {nogueira2016nips}
+\bibfield{author}{\bibinfo{person}{Rodrigo Nogueira} {and}
+  \bibinfo{person}{Kyunghyun Cho}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{WebNav: A New Large-Scale Task for Natural Language
+  based Sequential Decision Making}. In \bibinfo{booktitle}{{\em Advances in
+  Neural Information Processing Systems}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Pennington, Socher, and Manning}{Pennington
+  et~al\mbox{.}}{2014}]%
+        {GloveEMNLP2014}
+\bibfield{author}{\bibinfo{person}{Jeffrey Pennington},
+  \bibinfo{person}{Richard Socher}, {and} \bibinfo{person}{Christopher~D.
+  Manning}.} \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{Glove: Global Vectors for Word Representation.}. In
+  \bibinfo{booktitle}{{\em EMNLP}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Rajpurkar, Zhang, Lopyrev, and
+  Liang}{Rajpurkar et~al\mbox{.}}{2016}]%
+        {Squad2016}
+\bibfield{author}{\bibinfo{person}{Pranav Rajpurkar}, \bibinfo{person}{Jian
+  Zhang}, \bibinfo{person}{Konstantin Lopyrev}, {and} \bibinfo{person}{Percy
+  Liang}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{{SQuAD}: 100, 000+ Questions for Machine
+  Comprehension of Text}. In \bibinfo{booktitle}{{\em EMNLP}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Richardson, Burges, and Renshaw}{Richardson
+  et~al\mbox{.}}{2013}]%
+        {richardson2013mctest}
+\bibfield{author}{\bibinfo{person}{Matthew Richardson},
+  \bibinfo{person}{Christopher~JC Burges}, {and} \bibinfo{person}{Erin
+  Renshaw}.} \bibinfo{year}{2013}\natexlab{}.
+\newblock \showarticletitle{{MCTest}: A Challenge Dataset for the Open-Domain
+  Machine Comprehension of Text.}. In \bibinfo{booktitle}{{\em EMNLP}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Seo, Kembhavi, Farhadi, and Hajishirzi}{Seo
+  et~al\mbox{.}}{2016}]%
+        {DBLP:journals/corr/SeoKFH16}
+\bibfield{author}{\bibinfo{person}{Min~Joon Seo}, \bibinfo{person}{Aniruddha
+  Kembhavi}, \bibinfo{person}{Ali Farhadi}, {and} \bibinfo{person}{Hannaneh
+  Hajishirzi}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Bidirectional Attention Flow for Machine
+  Comprehension}.
+\newblock \bibinfo{journal}{{\em CoRR\/}}  \bibinfo{volume}{abs/1611.01603}
+  (\bibinfo{year}{2016}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Sordoni, Bachman, and Bengio}{Sordoni
+  et~al\mbox{.}}{2016}]%
+        {Sordoni2016IterativeAtt}
+\bibfield{author}{\bibinfo{person}{Alessandro Sordoni},
+  \bibinfo{person}{Phillip Bachman}, {and} \bibinfo{person}{Yoshua Bengio}.}
+  \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Iterative Alternating Neural Attention for Machine
+  Reading}.
+\newblock \bibinfo{journal}{{\em CoRR\/}}  \bibinfo{volume}{abs/1606.02245}
+  (\bibinfo{year}{2016}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Sukhbaatar, Weston, and Fergus}{Sukhbaatar
+  et~al\mbox{.}}{2015}]%
+        {sukhbaatar2015end2endmn}
+\bibfield{author}{\bibinfo{person}{Sainbayar Sukhbaatar},
+  \bibinfo{person}{Jason Weston}, {and} \bibinfo{person}{Rob Fergus}.}
+  \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{End-to-end memory networks}. In
+  \bibinfo{booktitle}{{\em Advances in Neural Information Processing Systems}}.
+  \bibinfo{pages}{2440--2448}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Sutton}{Sutton}{1984}]%
+        {SuttonPhDThesis}
+\bibfield{author}{\bibinfo{person}{Richard~Stuart Sutton}.}
+  \bibinfo{year}{1984}\natexlab{}.
+\newblock {\em \bibinfo{title}{Temporal Credit Assignment in Reinforcement
+  Learning}}.
+\newblock \bibinfo{thesistype}{Ph.D. Dissertation}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Sutton, McAllester, Singh, and Mansour}{Sutton
+  et~al\mbox{.}}{1999}]%
+        {sutton2001policy}
+\bibfield{author}{\bibinfo{person}{Richard~S. Sutton}, \bibinfo{person}{David
+  McAllester}, \bibinfo{person}{Satinder Singh}, {and} \bibinfo{person}{Yishay
+  Mansour}.} \bibinfo{year}{1999}\natexlab{}.
+\newblock \showarticletitle{Policy Gradient Methods for Reinforcement Learning
+  with Function Approximation}. In \bibinfo{booktitle}{{\em NIPS}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Trischler, Ye, Yuan, and Suleman}{Trischler
+  et~al\mbox{.}}{2016}]%
+        {Trischler2016EpiReader}
+\bibfield{author}{\bibinfo{person}{Adam Trischler}, \bibinfo{person}{Zheng Ye},
+  \bibinfo{person}{Xingdi Yuan}, {and} \bibinfo{person}{Kaheer Suleman}.}
+  \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Natural Language Comprehension with the
+  {EpiReader}}. In \bibinfo{booktitle}{{\em EMNLP}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Wang and Jiang}{Wang and Jiang}{2016}]%
+        {DBLP:journals/corr/WangJ16a}
+\bibfield{author}{\bibinfo{person}{Shuohang Wang} {and} \bibinfo{person}{Jing
+  Jiang}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Machine Comprehension Using Match-LSTM and Answer
+  Pointer}.
+\newblock \bibinfo{journal}{{\em CoRR\/}}  \bibinfo{volume}{abs/1608.07905}
+  (\bibinfo{year}{2016}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Wang, Yang, Wei, Chang, and Zhou}{Wang
+  et~al\mbox{.}}{2017}]%
+        {rnet}
+\bibfield{author}{\bibinfo{person}{Wenhui Wang}, \bibinfo{person}{Nan Yang},
+  \bibinfo{person}{Furu Wei}, \bibinfo{person}{Baobao Chang}, {and}
+  \bibinfo{person}{Ming Zhou}.} \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{Gated Self-Matching Networks for Reading
+  Comprehension and Question Answering}. In \bibinfo{booktitle}{{\em ACL}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Wang, Mi, Hamza, and Florian}{Wang
+  et~al\mbox{.}}{2016}]%
+        {IBM_MC_2016}
+\bibfield{author}{\bibinfo{person}{Zhiguo Wang}, \bibinfo{person}{Haitao Mi},
+  \bibinfo{person}{Wael Hamza}, {and} \bibinfo{person}{Radu Florian}.}
+  \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Multi-Perspective Context Matching for Machine
+  Comprehension}.
+\newblock \bibinfo{journal}{{\em CoRR\/}}  \bibinfo{volume}{abs/1612.04211}
+  (\bibinfo{year}{2016}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Weissenborn}{Weissenborn}{2016}]%
+        {Weissenborn2016}
+\bibfield{author}{\bibinfo{person}{Dirk Weissenborn}.}
+  \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Separating Answers from Queries for Neural Reading
+  Comprehension}.
+\newblock \bibinfo{journal}{{\em CoRR\/}}  \bibinfo{volume}{abs/1607.03316}
+  (\bibinfo{year}{2016}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Weissenborn, Wiese, and Seiffe}{Weissenborn
+  et~al\mbox{.}}{2017}]%
+        {DBLP:journals/corr/WeissenbornWS17}
+\bibfield{author}{\bibinfo{person}{Dirk Weissenborn}, \bibinfo{person}{Georg
+  Wiese}, {and} \bibinfo{person}{Laura Seiffe}.}
+  \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{FastQA: {A} Simple and Efficient Neural
+  Architecture for Question Answering}.
+\newblock \bibinfo{journal}{{\em CoRR\/}}  \bibinfo{volume}{abs/1703.04816}
+  (\bibinfo{year}{2017}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Williams}{Williams}{1992}]%
+        {williams1992reinforce}
+\bibfield{author}{\bibinfo{person}{Ronald~J Williams}.}
+  \bibinfo{year}{1992}\natexlab{}.
+\newblock \showarticletitle{Simple statistical gradient-following algorithms
+  for connectionist reinforcement learning}.
+\newblock \bibinfo{journal}{{\em Machine Learning\/}} \bibinfo{volume}{8},
+  \bibinfo{number}{3-4} (\bibinfo{year}{1992}), \bibinfo{pages}{229--256}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Xiong, Zhong, and Socher}{Xiong
+  et~al\mbox{.}}{2016}]%
+        {DBLP:journals/corr/XiongZS16}
+\bibfield{author}{\bibinfo{person}{Caiming Xiong}, \bibinfo{person}{Victor
+  Zhong}, {and} \bibinfo{person}{Richard Socher}.}
+  \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Dynamic Coattention Networks For Question
+  Answering}.
+\newblock \bibinfo{journal}{{\em CoRR\/}}  \bibinfo{volume}{abs/1611.01604}
+  (\bibinfo{year}{2016}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Yang, Dhingra, Yuan, Hu, Cohen, and
+  Salakhutdinov}{Yang et~al\mbox{.}}{2016}]%
+        {DBLP:journals/corr/YangDYHCS16}
+\bibfield{author}{\bibinfo{person}{Zhilin Yang}, \bibinfo{person}{Bhuwan
+  Dhingra}, \bibinfo{person}{Ye Yuan}, \bibinfo{person}{Junjie Hu},
+  \bibinfo{person}{William~W. Cohen}, {and} \bibinfo{person}{Ruslan
+  Salakhutdinov}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Words or Characters? Fine-grained Gating for
+  Reading Comprehension}.
+\newblock \bibinfo{journal}{{\em CoRR\/}}  \bibinfo{volume}{abs/1611.01724}
+  (\bibinfo{year}{2016}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Yu, Zhang, Hasan, Yu, Xiang, and Zhou}{Yu
+  et~al\mbox{.}}{2016}]%
+        {DBLP:journals/corr/YuZHYXZ16}
+\bibfield{author}{\bibinfo{person}{Yang Yu}, \bibinfo{person}{Wei Zhang},
+  \bibinfo{person}{Kazi Hasan}, \bibinfo{person}{Mo Yu}, \bibinfo{person}{Bing
+  Xiang}, {and} \bibinfo{person}{Bowen Zhou}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{End-to-End Reading Comprehension with Dynamic
+  Answer Chunk Ranking}.
+\newblock \bibinfo{journal}{{\em CoRR\/}}  \bibinfo{volume}{abs/1610.09996}
+  (\bibinfo{year}{2016}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Zeiler}{Zeiler}{2012}]%
+        {DBLP:journals/corr/abs-1212-5701}
+\bibfield{author}{\bibinfo{person}{Matthew~D. Zeiler}.}
+  \bibinfo{year}{2012}\natexlab{}.
+\newblock \showarticletitle{{ADADELTA:} An Adaptive Learning Rate Method}.
+\newblock \bibinfo{journal}{{\em CoRR\/}}  \bibinfo{volume}{abs/1212.5701}
+  (\bibinfo{year}{2012}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Zhang, Zhu, Chen, Dai, Wei, and Jiang}{Zhang
+  et~al\mbox{.}}{2017}]%
+        {DBLP:journals/corr/ZhangZCDWJ17}
+\bibfield{author}{\bibinfo{person}{Junbei Zhang}, \bibinfo{person}{Xiao{-}Dan
+  Zhu}, \bibinfo{person}{Qian Chen}, \bibinfo{person}{Li{-}Rong Dai},
+  \bibinfo{person}{Si Wei}, {and} \bibinfo{person}{Hui Jiang}.}
+  \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{Exploring Question Understanding and Adaptation in
+  Neural-Network-Based Question Answering}.
+\newblock \bibinfo{journal}{{\em CoRR\/}}  \bibinfo{volume}{abs/1703.04617}
+  (\bibinfo{year}{2017}).
+\newblock
+
+
+\end{thebibliography}

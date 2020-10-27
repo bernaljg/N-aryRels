@@ -1,0 +1,91 @@
+% last updated in April 2002 by Antje Endemann
+% Based on CVPR 07 and LNCS, with modifications by DAF, AZ and elle, 2008 and AA, 2010, and CC, 2011; TT, 2014; AAS, 2016
+
+%pdflatex -shell-escape paper.tex
+
+\documentclass[runningheads]{llncs}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb} % define this before the line numbering.
+\usepackage{dsfont}
+% \usepackage{ruler} % comment out for camera-ready
+\usepackage{color}
+\usepackage{lettrine}
+\usepackage[width=122mm,left=12mm,paperwidth=146mm,height=193mm,top=12mm,paperheight=217mm]{geometry}
+\usepackage{tikz}
+\usepackage{multirow}
+
+\usepackage{xspace}
+\usepackage{bbm} 
+\usepackage{fixltx2e}
+\usepackage{contour}
+\usepackage{colortbl}
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[pagebackref=true,breaklinks=true,colorlinks,bookmarks=false]{hyperref} % for arXiv
+% \usepackage{hyperref}
+
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\DeclareMathOperator*{\knn}{\mathit{kNN}}
+
+% \input{plots}
+\input{ext-plots}
+%\input{no-plots} 
+
+\begin{document}
+% \renewcommand\thelinenumber{\color[rgb]{0.2,0.5,0.8}\normalfont\sffamily\scriptsize\arabic{linenumber}\color[rgb]{0,0,0}}
+% \renewcommand\makeLineNumber {\hss\thelinenumber\ \hspace{6mm} \rlap{\hskip\textwidth\ \hspace{6.5mm}\thelinenumber}}
+% \linenumbers
+\pagestyle{headings}
+\mainmatter
+\def\ECCV16SubNumber{825}  % Insert your submission number here
+
+
+\title{CNN Image Retrieval Learns from BoW:\\ Unsupervised Fine-Tuning with Hard Examples}
+
+% \titlerunning{ECCV-16 submission ID \ECCV16SubNumber}
+\titlerunning{CNN Image Retrieval Learns from BoW} % for camera-ready
+
+% \authorrunning{ECCV-16 submission ID \ECCV16SubNumber}
+\authorrunning{F. Radenovi{\'c}, G. Tolias, and O. Chum} % for camera ready
+
+% \author{Anonymous ECCV submission}
+\newcommand{\namespace}{\hspace{5mm}} \author{Filip Radenovi{\'c} \namespace Giorgos Tolias \namespace Ond{\v r}ej Chum} % for camera ready
+
+% \institute{Paper ID \ECCV16SubNumber}
+\institute{CMP, Faculty of Electrical Engineering, Czech Technical University in Prague \\ \email{ \{filip.radenovic,giorgos.tolias,chum\}@cmp.felk.cvut.cz}} % for camera ready
+
+\maketitle
+
+\input{abbrev}
+
+\begin{abstract}
+%
+Convolutional Neural Networks (CNNs) achieve state-of-the-art performance in many computer vision tasks. However, this achievement is preceded by extreme manual annotation in order to perform either training from scratch or fine-tuning for the target task. In this work, we propose to fine-tune CNN for image retrieval from a large collection of unordered images in a fully automated manner.
+%
+We employ state-of-the-art retrieval and Structure-from-Motion (SfM) methods to obtain 3D models, which are used to guide the selection of the training data for CNN fine-tuning. We show that both hard positive and hard negative examples enhance the final performance in particular object retrieval with compact codes.
+%
+\keywords{CNN fine-tuning, unsupervised learning, image retrieval}
+\end{abstract}
+
+\input{intro}
+\input{related}
+\input{network}
+\input{dataset}
+\input{experiments}
+
+\vspace{-2pt}
+\section{Conclusions}
+% \vspace{-5pt}
+%
+We addressed fine-tuning of CNN for image retrieval. The training data are selected from an automated 3D reconstruction system applied on a large unordered photo collection. The proposed method does not require any manual annotation and yet outperforms the state of the art on a number of standard benchmarks for wide range (16 to 512) of descriptor dimensionality. The achieved results are reaching the level of the best systems based on local features with spatial matching and query expansion, while being faster and requiring less memory. Training data, fine-tuned networks and evaluation code are publicly available\footnote{\href{http://cmp.felk.cvut.cz/~radenfil/projects/siamac.html}{http://cmp.felk.cvut.cz/\~{}radenf{}i{}l/projects/siamac.html}}.
+
+\clearpage
+
+\paragraph{Acknowledgment}. Work was supported by the MSMT LL1303 ERC-CZ grant.
+
+\bibliographystyle{splncs}
+\bibliography{egbib}
+\end{document}

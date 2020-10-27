@@ -1,0 +1,53 @@
+% last updated in April 2002 by Antje Endemann
+% Based on CVPR 07 and LNCS, with modifications by DAF, AZ and elle, 2008 and AA, 2010, and CC, 2011; TT, 2014; AAS, 2016
+
+%\documentclass[runningheads]{llncs}
+\documentclass{llncs}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb} % define this before the line numbering.
+%\usepackage{ruler}
+\usepackage{color}
+\usepackage[width=122mm,left=12mm,paperwidth=146mm,height=193mm,top=12mm,paperheight=217mm]{geometry}
+\usepackage{enumitem}
+
+\DeclareMathOperator{\softmax}{softmax}
+
+
+\begin{document}
+% \renewcommand\thelinenumber{\color[rgb]{0.2,0.5,0.8}\normalfont\sffamily\scriptsize\arabic{linenumber}\color[rgb]{0,0,0}}
+% \renewcommand\makeLineNumber {\hss\thelinenumber\ \hspace{6mm} \rlap{\hskip\textwidth\ \hspace{6.5mm}\thelinenumber}}
+% \linenumbers
+\pagestyle{headings}
+\mainmatter
+
+\title{Ask, Attend and Answer: Exploring Question-Guided Spatial Attention for Visual Question Answering} % Replace with your title
+
+%\titlerunning{Ask, Attend and Answer: Exploring Question-Guided Spatial Attention for Visual Question Answering}
+%\authorrunning{Huijuan Xu and Kate Saenko}
+
+\author{Huijuan Xu \and Kate Saenko}
+\institute{Department of Computer Science, UMass Lowell, USA\\{\tt\small hxu1@cs.uml.edu}, {\tt\small saenko@cs.uml.edu}}
+%{\tt\small hxu1@cs.uml.edu} \and {\tt\small saenko@cs.uml.edu}
+
+\maketitle
+
+
+
+%%%%%%%%% ABSTRACT
+\input{abstract}
+
+
+%%%%%%%%% BODY TEXT
+\input{introduction}
+\input{related}
+\input{method}
+\input{experiment}
+\input{conclusion}
+
+
+%\clearpage
+
+
+\bibliographystyle{splncs}
+\bibliography{egbib}
+\end{document}

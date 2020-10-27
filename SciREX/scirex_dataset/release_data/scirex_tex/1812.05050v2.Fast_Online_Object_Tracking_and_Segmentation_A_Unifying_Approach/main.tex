@@ -1,0 +1,82 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{arxiv}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{tabulary}
+\usepackage{amssymb}%
+\usepackage{pifont}%
+\newcommand{\cmark}{\ding{52}}%
+\newcommand{\xmark}{\ding{56}}%
+
+\newcommand{\bd}[1]{\textbf{#1}}
+\newcommand{\app}{\raise.17ex\hbox{$\scriptstyle\sim$}}
+\newcommand{\ncdot}{{\mkern 0mu\cdot\mkern 0mu}}
+\newcommand{\mypar}[1]{\smallskip\noindent {\bf #1}\enskip}
+\def\x{\times}
+\newcolumntype{x}[1]{>{\centering\arraybackslash}p{#1pt}}
+\newcommand{\dt}[1]{\fontsize{8pt}{.1em}\selectfont \emph{#1}}
+\newlength\savewidth\newcommand\shline{\noalign{\global\savewidth\arrayrulewidth
+  \global\arrayrulewidth 1pt}\hline\noalign{\global\arrayrulewidth\savewidth}}
+\newcommand{\tablestyle}[2]{\setlength{\tabcolsep}{#1}\renewcommand{\arraystretch}{#2}\centering\footnotesize}
+\makeatletter\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}
+  {.5em \@plus1ex \@minus.2ex}{-.5em}{\normalfont\normalsize\bfseries}}\makeatother
+
+
+
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+\begin{document}
+
+\title{Fast Online Object Tracking and Segmentation: A Unifying Approach}
+
+\author{Qiang Wang\thanks{Equal contribution.}\\
+CASIA\\
+{\tt\small qiang.wang@nlpr.ia.ac.cn}
+\and
+Li Zhang$^*$\\
+University of Oxford\\
+{\tt\small lz@robots.ox.ac.uk}
+\and
+Luca Bertinetto$^*$\\
+FiveAI\\
+{\tt\small luca@robots.ox.ac.uk}
+\and
+Weiming Hu\\
+CASIA\\
+{\tt\small wmhu@nlpr.ia.ac.cn}
+\and
+Philip H.S. Torr\\
+University of Oxford\\
+{\tt\small philip.torr@eng.ox.ac.uk}
+}
+
+\maketitle
+\input{abstract}
+
+\input{introduction}
+
+\input{related}
+
+\input{methodology}
+
+\input{experiments}
+
+\input{further_analysis}
+
+\input{conclusion}
+
+
+{\small
+\bibliographystyle{ieee}
+\bibliography{biblio.bib}
+}
+\clearpage
+\input{appendix}
+\end{document}

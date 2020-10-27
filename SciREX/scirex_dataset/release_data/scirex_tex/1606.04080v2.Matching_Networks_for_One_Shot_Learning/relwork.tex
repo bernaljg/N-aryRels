@@ -1,0 +1,16 @@
+\section{Related Work}
+\label{sec:relwork}
+
+\subsection{Memory Augmented Neural Networks}
+
+A recent surge of models which go beyond ``static'' classification of fixed vectors onto their classes has reshaped current research and industrial applications alike. This is most notable in the massive adoption of LSTMs \cite{hochreiter} in a variety of tasks such as speech \cite{hinton2012deep}, translation \cite{seq2seqilya,montreal} or learning programs \cite{ntm, ptrnets}.
+A key component which allowed for more expressive models was the introduction of ``content'' based attention in \cite{montreal}, and ``computer-like'' architectures such as the Neural Turing Machine \cite{ntm} or Memory Networks \cite{memnets}.
+Our work takes the metalearning paradigm of \cite{mann}, where an LSTM learnt to learn quickly from data presented sequentially, but we treat the data as a set.
+The one-shot learning task we defined on the Penn Treebank \cite{marcus1993building} relates to evaluation techniques and models presented in \cite{hill2015goldilocks}, and we discuss this in Section~\ref{sec:results}.
+
+
+\subsection{Metric Learning}
+
+As discussed in Section~\ref{sec:model}, there are many links between content based attention, kernel based nearest neighbor and metric learning \cite{lwl}.  The most relevant work is Neighborhood Component Analysis (NCA) \cite{nca}, and the follow up non-linear version \cite{salakhutdinov2007learning}. The loss is very similar to ours, except we use the whole support set $S$ instead of pair-wise comparisons which is more amenable to one-shot learning. Follow-up work in the form of deep convolutional siamese \cite{siamese} networks included much more powerful non-linear mappings. Other losses which include the notion of a set (but use less powerful metrics) were proposed in \cite{weinberger2009distance}.
+
+Lastly, the work in one-shot learning in \cite{omniglot} was inspirational and also provided us with the invaluable Omniglot dataset -- referred to as the ``transpose'' of MNIST. Other works used zero-shot learning on ImageNet, e.g. \cite{norouzi2013zero}. However, there is not much one-shot literature on ImageNet, which we hope to amend via our benchmark and task definitions in the following section.

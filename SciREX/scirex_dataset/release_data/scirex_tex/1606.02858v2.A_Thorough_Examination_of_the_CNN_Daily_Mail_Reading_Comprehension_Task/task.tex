@@ -1,0 +1,33 @@
+
+\section{The Reading Comprehension Task}
+
+% \subsection{The Problem Setup}
+
+The RC datasets introduced in \cite{hermann2015teaching} are made from articles on the news websites \ti{CNN} and \ti{Daily Mail}, utilizing articles and their bullet point summaries.\footnote{The datasets are available at \url{https://github.com/deepmind/rc-data}.} Figure~\ref{fig:example} demonstrates an example\footnote{The original article can be found at \url{http://www.cnn.com/2015/03/10/entertainment/feat-star-wars-gay-character/}.}: it consists of a passage $p$, a question $q$ and an answer $a$, where the passage is a news article, the question is a cloze-style task, in which one of the article's bullet points has had one entity replaced by a placeholder, and the answer is this questioned entity. The goal is to infer the missing entity (answer $a$) from all the possible entities which appear in the passage. A news article is usually associated with a few (e.g., 3--5) bullet points and each of them highlights one aspect of its content.
+
+The text has been run through a Google NLP pipeline. It it tokenized, lowercased, and named entity recognition and coreference resolution have been run. For each coreference chain containing at least one named entity, all items in the chain are replaced by an @entity$n$ marker, for a distinct index $n$. \newcite{hermann2015teaching} argue convincingly that such a strategy is necessary to ensure that systems approach this task by understanding the passage in front of them, rather than by using world knowledge or a language model to answer questions without needing to understand the passage. However, this also gives the task a somewhat artificial character. On the one hand, systems are greatly helped by entity recognition and coreference having already been performed; on the other, they suffer when either of these modules fail, as they do (in \figref{example}, ``the character'' should probably be coreferent with @entity14; clearer examples of failure appear later on in our data analysis). Moreover, this inability to use world knowledge also makes it much more difficult for a human to do this task -- occasionally it is very difficult or impossible for a human to determine the correct answer when presented with an item anonymized in this way.
+
+\begin{table}
+\centering
+\begin{tabular}{@{} l r  r @{}}
+\toprule
+& \tf{CNN} & \tf{Daily Mail} \\
+\hline
+\# Train & 380,298 & 879,450 \\
+\# Dev & 3,924 & 64,835 \\
+\# Test & 3,198 & 53,182 \\
+\midrule
+Passage: avg.\ tokens & 761.8 & 813.1 \\
+Passage: avg.\ sentences & 32.3 & 28.9 \\
+Question: avg.\ tokens & 12.5 & 14.3 \\
+\hline
+Avg. \# entities & 26.2 & 26.2 \\
+\bottomrule
+\end{tabular}
+\caption{Data statistics of the \ti{CNN} and \ti{Daily Mail} datasets. The avg.\ tokens and sentences in the passage, the avg.\ tokens in the query, and the number of entities are based on statistics from the training set, but they are similar on the development and test sets.}
+\label{table:data_stat}
+\end{table}
+
+The creation of the datasets benefits from the sheer volume of news articles available online, so they offer a large and realistic testing ground for statistical models. Table~\ref{table:data_stat} provides some statistics on the two datasets: there are 380k and 879k training examples for \ti{CNN} and \ti{Daily Mail} respectively. The passages are around 30 sentences and 800 tokens on average, while each question contains around 12--14 tokens.
+
+In the following sections, we seek to more deeply understand the nature of this dataset. We first build some straightforward systems in order to get a better idea of a lower-bound for the performance of current NLP systems. Then we turn to data analysis of a sample of the items to examine their nature and an upper bound on performance.

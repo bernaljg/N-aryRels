@@ -1,0 +1,79 @@
+Deepening feed-forward neural networks has generally returned dividends in
+performance.  A striking example within the computer vision community is the
+improvement on the ImageNet~\citep{deng2009imagenet} classification task when
+transitioning from AlexNet~\citep{alexNet12} to VGG~\citep{vgg16} to
+GoogLeNet~\citep{szegedy2015inception} to {\resnet}~\citep{he2015deep}.
+Unfortunately, greater depth also makes training more challenging, at least
+when employing a first-order optimization method with randomly initialized
+layers.  As the network grows deeper and more non-linear, the linear
+approximation of a gradient step becomes increasingly inappropriate.  Desire
+to overcome these difficulties drives research on both optimization techniques
+and network architectures.
+
+On the optimization side, much recent work yields improvements.  To prevent
+vanishing gradients, ReLU activation functions now widely replace sigmoid and
+tanh units~\citep{nair2010rectified}.  This subject remains an area of active
+inquiry, with various tweaks on ReLUs, \eg~PReLUs~\citep{he2015prelu}, and
+ELUs~\citep{elu}.  Even with ReLUs, employing batch normalization~\citep{
+batchnorm} speeds training by reducing internal covariate shift.  Good
+initialization can also ameliorate this problem~\citep{glorot2010understanding,
+mishkin2015all}.  Path-SGD~\citep{pathsgd} offers an alternative normalization
+scheme.  Progress in optimization is somewhat orthogonal to our architectural
+focus, with the expectation that advances in either are ripe for combination.
+
+Notable ideas in architecture reach back to skip connections, the earliest
+example of a nontrivial routing pattern within a neural network.  Recent work
+further elaborates upon them~\citep{MYP:ACCV:2014,HAGM:CVPR:2015}.  Highway
+networks~\citep{srivastava2015highway} and {\resnet}~\citep{he2015deep,
+he2016identity} offer additional twists in the form of parameterized
+pass-through and gating.  In work subsequent to our own, \cite{densenet}
+investigate a {\resnet} variant with explicit skip connections.  These methods
+share distinction as the only other designs demonstrated to scale to hundreds
+of layers and beyond.  {\Resnet}'s building block uses the identity map as an
+anchor point and explicitly parameterizes an additive correction term (the
+residual).  Identity initialization also appears in the context of recurrent
+networks~\citep{le2015simple}.  A tendency of {\resnet} and highway networks to
+fall-back to the identity map may make their effective depth much smaller than
+their nominal depth.
+
+Some prior results hint at what we experimentally demonstrate in
+Section~\ref{sec:results}.  Namely, reduction of effective depth is key to
+training extremely deep networks; residuals are incidental.
+\cite{huang2016stochasticdepth} provide one clue in their work on stochastic
+depth: randomly dropping layers from {\resnet} during training, thereby
+shrinking network depth by a constant factor, provides additional performance
+benefit.  We build upon this intuition through {\droppath}, which shrinks depth
+much more drastically.
+
+The success of deep supervision~\citep{lee2014deeply} provides another clue
+that effective depth is crucial.  Here, an auxiliary loss, forked off mid-level
+layers, introduces a shorter path during backpropagation.  The layer at the
+fork receives two gradients, originating from the main loss and the auxiliary
+loss, that are added together.  Deep supervision is now common, being adopted,
+for example, by GoogLeNet~\citep{szegedy2015inception}.  However, irrelevance
+of the auxiliary loss at test time introduces the drawback of having a
+discrepancy between the actual objective and that used for training.
+
+Exploration of the student-teacher paradigm~\citep{ba2014dodeep} illuminates
+the potential for interplay between networks of different depth.  In the model
+compression scenario, a deeper network (previously trained) guides and improves
+the learning of a shallower and faster student network~\citep{ba2014dodeep,
+urban2016dodeepsfollowup}.  This is accomplished by feeding unlabeled data
+through the teacher and having the student mimic the teacher's soft output
+predictions.  FitNets~\citep{romero2014fitnets} explicitly couple students and
+teachers, forcing mimic behavior across several intermediate points in the
+network.  Our fractal networks capture yet another alternative, in the form of
+implicit coupling, with the potential for bidirectional information flow
+between shallow and deep subnetworks.
+
+Widening networks, by using larger modules in place of individual layers, has
+also produced performance gains.  For example, an Inception module~\citep{
+szegedy2015inception} concatenates results of convolutional layers of different
+receptive field size.  Stacking these modules forms the GoogLeNet architecture.
+\cite{liao2015competitive} employ a variant with maxout in place of
+concatenation.  Figure~\ref{fig:fractalnet} makes apparent our connection with
+such work.  As a fractal network deepens, it also widens.  Moreover, note that
+stacking two 2D convolutional layers with the same spatial receptive field
+(\eg~$3 \times 3$) achieves a larger ($5 \times 5$) receptive field.  A
+horizontal cross-section of a fractal network is reminiscent of an Inception
+module, except with additional joins due to recursive structure.

@@ -1,0 +1,54 @@
+
+\section{CoGAN Learning Algorithm}\label{subsec::learning}
+
+We present the learning algorithm for the coupled generative adversarial networks in Algorithm~\ref{alg::dgan}. The algorithm is an extension of the learning algorithm for the generative adversarial networks (GAN) to the case of training two GANs with weight sharing constraints. The convergence property follows the results shown in~\cite{goodfellow2014generative}.
+
+\begin{algorithm}[th!]
+\caption{Mini-batch stochastic gradient descent for training coupled generative adversarial nets.}
+\begin{algorithmic}[1]
+ \STATE{Initialize the network parameters $\text{\boldmath$\theta$}_{f_1^{(i)}}$'s $\text{\boldmath$\theta$}_{f_2^{(i)}}$'s $\text{\boldmath$\theta$}_{g_1^{(i)}}$'s and $\text{\boldmath$\theta$}_{g_2^{(i)}}$'s with the shared network connection weights set to the same values.
+ }
+ \FOR{$t=0,1,2,...,\text{maximum number of iterations}$} 
+ 	\STATE{Draw $N$ samples from $p_{Z}$, $\{\mathbf{z}^1,\mathbf{z}^2,...,\mathbf{z}^N\}$} 
+ 	\STATE{Draw $N$ samples from $p_{X_1}$, $\{\mathbf{x}_1^1,\mathbf{x}_1^2,...,\mathbf{x}_1^N\}$} 
+ 	\STATE{Draw $N$ samples from $p_{X_2}$, $\{\mathbf{x}_2^1,\mathbf{x}_2^2,...,\mathbf{x}_2^N\}$}
+ 	\STATE{Compute the gradients of the parameters of the discriminative model, $f_1^t$, $\Delta\text{\boldmath$\theta$}_{f_1^{(i)}}$;
+ 		\begin{align}
+ 			\nabla_{\text{\boldmath$\theta$}_{f_1^{(i)}}} 
+ 			\frac{1}{N}\sum_{j=1}^{N}  -\log f_1^{t}(\mathbf{x}_1^{j}) - \log\Big{(} 1 - f_1^t\big{(}g_1^t(\mathbf{z}^j)\big{)}\Big{)} \nonumber
+ 		\end{align}
+ 	} 	
+ 	\STATE{Compute the gradients of the parameters of the discriminative model, $f_2^t$, $\Delta\text{\boldmath$\theta$}_{f_2^{(i)}}$;
+ 		\begin{align}
+ 			\nabla_{\text{\boldmath$\theta$}_{f_2^{(i)}}} 
+ 			\frac{1}{N}\sum_{j=1}^{N} - \log f_2^t(\mathbf{x}_2^j) - \log\Big{(} 1 - f_2^t\big{(}g_2^t(\mathbf{z}^j)\big{)}\Big{)}\nonumber
+ 		\end{align}
+ 	}
+ 	\STATE{Average the gradients of the shared parameters of the discriminative models.
+ 	}
+ 	\STATE{Compute $f_1^{t+1}$ and $f_2^{t+1}$ according to the gradients.
+ 	}
+
+ 	% Update the generative models
+ 	\STATE{Compute the gradients of the parameters of the generative model, $g_1^t$, $\Delta\text{\boldmath$\theta$}_{g_1^{(i)}}$;
+ 		\begin{align}
+ 			\nabla_{\text{\boldmath$\theta$}_{g_1^{(i)}}} 
+ 			\frac{1}{N}\sum_{j=1}^{N}  - \log\Big{(} 1 - f_1^{t+1}\big{(}g_1^t(\mathbf{z}^j)\big{)}\Big{)} \nonumber
+ 		\end{align}
+ 	} 	
+ 	\STATE{Compute the gradients of the network parameters of the generative model, $g_2$, $\Delta\text{\boldmath$\theta$}_{g_2^{(i)}}$;
+ 		\begin{align}
+ 			\nabla_{\text{\boldmath$\theta$}_{g_2^{(i)}}} 
+ 			\frac{1}{N}\sum_{j=1}^{N} - \log\Big{(} 1 - f_2^{t+1}\big{(}g_2^t(\mathbf{z}^j)\big{)}\Big{)}\nonumber
+ 		\end{align}
+ 	} 	 
+ 	\STATE{Average the gradients of the shared parameters of the generative models.
+ 	}
+ 	\STATE{Compute $g_1^{t+1}$ and $g_2^{t+1}$ according to the  gradients.
+ 	}
+ \ENDFOR
+\end{algorithmic}\label{alg::dgan}
+\end{algorithm}
+
+
+\clearpage

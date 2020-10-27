@@ -1,0 +1,114 @@
+\documentclass{article}
+\pdfoutput=1
+% if you need to pass options to natbib, use, e.g.:
+\PassOptionsToPackage{numbers, compress}{natbib}
+% before loading nips_2016
+%
+% to avoid loading the natbib package, add option nonatbib:
+% \usepackage[nonatbib]{nips_2016}
+
+\usepackage[arxiv]{nips_2016}
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+% \usepackage[final]{nips_2016}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage[bookmarks=false]{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{graphicx}
+
+\newcommand\todo[1]{\textcolor{blue}{\textbf{TODO:} #1}}
+\def\colspaceDS{1.25mm}
+\def\colspaceS{2.25mm}
+\def\colspaceM{4.0mm}
+\def\colspaceL{4.25mm}
+\def\colspaceD{5.25mm}
+\def\colspaceDD{9.25mm}
+\def\t#1{#1}
+\def\b#1{\t{\textbf{#1}}}
+\newcommand{\cev}[1]{\reflectbox{\ensuremath{\vec{\reflectbox{\ensuremath{#1}}}}}}
+\newcommand\abbr[1]{\textsc{#1}}
+
+\newcommand{\Strn}{\ensuremath{S_a}}
+\newcommand{\Stst}{\ensuremath{S_b}}
+
+\title{Matching Networks for One Shot Learning}
+
+\author{
+  Oriol Vinyals \\
+  Google DeepMind \\ 
+  \texttt{vinyals@google.com}
+  \And
+  Charles Blundell \\
+  Google DeepMind \\
+  \texttt{cblundell@google.com}
+  \And
+  Timothy Lillicrap \\
+  Google DeepMind \\
+  \texttt{countzero@google.com}
+  \AND
+  Koray Kavukcuoglu \\
+  Google DeepMind \\
+  \texttt{korayk@google.com}
+  \And
+  Daan Wierstra \\
+  Google DeepMind \\
+  \texttt{wierstra@google.com}
+  %% examples of more authors
+  %% \And
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+  %% \AND
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+  %% \And
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+  %% \And
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+}
+
+\begin{document}
+% \nipsfinalcopy is no longer used
+
+\maketitle
+
+\begin{abstract}
+Learning from a few examples remains a key challenge in machine learning. Despite recent advances in important domains such as vision and language, the standard supervised deep learning paradigm does not offer a satisfactory solution for learning new concepts rapidly from little data. In this work, we employ ideas from metric learning based on deep neural features and from recent advances that augment neural networks with external memories. Our framework learns a network that maps a small labelled support set and an unlabelled example to its label, obviating the need for fine-tuning to adapt to new class types. We then define one-shot learning problems on vision (using Omniglot, ImageNet) and language tasks. Our algorithm improves one-shot accuracy on ImageNet from 87.6\% to 93.2\% and from 88.0\% to 93.8\% on Omniglot compared to competing approaches. We also demonstrate the usefulness of the same model on language modeling by introducing a one-shot task on the Penn Treebank.
+\end{abstract}
+
+\input{intro}
+\input{model}
+\input{relwork}
+\input{results}
+\input{concl}
+
+\section*{Acknowledgements}
+We would like to thank Nal Kalchbrenner for brainstorming around the design of the function $g$, and Sander Dieleman and Sergio Guadarrama for their help setting up ImageNet. We would also like thank Simon Osindero for useful discussions around the tasks discussed in this paper, and Theophane Weber and Remi Munos for following some early developments. Karen Simonyan and David Silver helped with the manuscript, as well as many at Google DeepMind. Thanks also to Geoff Hinton and Alex Toshev for discussions about our results.
+
+{\small
+\setlength{\bibsep}{0pt plus 1pt}
+\bibliography{refs}
+\bibliographystyle{plain}}
+
+\input{appendix}
+
+\end{document}

@@ -1,0 +1,68 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{verbatim}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{booktabs} % 
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{footnote}
+
+\usepackage[linesnumbered,lined,vlined,ruled,commentsnumbered]{algorithm2e}
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+\cvprfinalcopy % 
+
+\newcommand{\beginsupp}{%
+        \setcounter{table}{0}
+        \renewcommand{\thetable}{S\arabic{table}}%
+        \setcounter{figure}{0}
+        \renewcommand{\thefigure}{S\arabic{figure}}%
+     }
+\newcommand{\myparagraph}[1]{\vspace{0.1em}\noindent\textbf{#1}}
+
+\newcommand{\redt}[1]{\textcolor[rgb]{1,0,0}{#1}}
+% \setcounter{page}{1}
+\pagestyle{empty}
+
+\begin{document}
+
+%%%%%%%%% TITLE
+\title{Meta-Transfer Learning for Few-Shot Learning}
+\author{Qianru Sun$^{1,3}$ \quad Yaoyao Liu$^{2}$ \quad Tat-Seng Chua$^{1}$ \quad Bernt Schiele$^{3}$ \\
+\\
+\small  $^{1}$National University of Singapore \quad  $^{2}$Tianjin University$\thanks{Yaoyao Liu did this work during his internship at NUS.}$ \\
+\small  $^{3}$Max Planck Institute for Informatics, Saarland Informatics Campus\\
+\small  {\texttt{\{qsun, schiele\}@mpi-inf.mpg.de}} \\
+\small  {\texttt{liuyaoyao@tju.edu.cn}} \quad  {\texttt{\{dcssq, dcscts\}@nus.edu.sg}}
+}
+
+
+
+\maketitle
+\thispagestyle{empty}
+
+
+
+\input{0_abs.tex}
+\input{1_intro.tex}
+\input{2_related.tex}
+% \input{3_prelimi.tex}
+\input{4_method.tex}
+\input{5_experiment.tex}
+{\small
+\bibliographystyle{ieee}
+\bibliography{egbib}
+}
+
+\clearpage
+
+\input{7_supple.tex}
+
+\end{document}

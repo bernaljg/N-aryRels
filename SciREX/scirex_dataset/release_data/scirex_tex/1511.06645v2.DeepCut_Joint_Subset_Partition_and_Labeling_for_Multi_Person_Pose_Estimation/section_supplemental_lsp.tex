@@ -1,0 +1,171 @@
+\section{Additional Results on LSP dataset}
+\label{seq:supplemental:lsp}
+We provide additional quantitative results on LSP dataset using
+person-centric (PC) and observer-centric (OC) evaluation settings.
+\subsection{LSP Person-Centric (PC)}
+First, detailed performance analysis is performed when evaluating
+various parameters of $\rcnn$ and results are reported using
+PCK~\cite{sapp13cvpr} evaluation
+measure. Then, performance of the proposed $\rcnn$ and $\dense$ part
+detection models is evaluated using strict PCP~\cite{Ferrari:2008:PSS}
+measure.
+
+\myparagraph{Detailed $\rcnn$ performance analysis (PCK).} Detailed
+parameter analysis of $\rcnn$ is provided in
+Tab.~\ref{tab:unary-large:rcnn} and results are reported using PCK
+evaluation measure. Respecting parameters for each experiment are
+shown in the first column and parameter differences between the
+neighboring rows in the table are highlighted in bold. Re-scoring the
+$2000$ DPM proposals using $\rcnn$ with
+AlexNet~\cite{krizhevsky12nips} leads to $56.9$\% PCK. This is
+achieved using basis scale $1$ ($\approx$ head size) of proposals and
+training with initial learning rate (lr) of $0.001$ for $80$k
+iterations, after which lr is reduced by $0.1$, for a total number of
+$140$k SGD iterations. In addition, bounding box regression and
+default IoU threshold of $0.5$ for positive/negative label
+assignment~\cite{girshickICCV15fastrcnn} have been used. Extending the
+regions by $4$x increases the performance to 65.1\% PCK, as it
+incorporates more context including the information about symmetric
+body parts and allows to implicitly encode higher-order body part
+relations into the part detector. No improvements observed for larger
+scales. Increasing lr to $0.003$, lr reduction step to $160$k and
+training for a larger number of iterations ($240$k) improves the
+results to $67.4$, as higher lr allows for for more significant
+updates of model parameters when finetuned on the task of human body
+part detection. Increasing the number of training examples by reducing
+the training IoU threshold to $0.4$ results into slight performance
+improvement ($68.8$ vs. $67.4$\% PCK). Further increasing the number
+of training samples by horizontally flipping each image and performing
+translation and scale jittering of the ground truth training samples
+improves the performance to $69.6$\% PCK and $42.3$\% AUC. The
+improvement is more pronounced for smaller distance thresholds ($42.3$
+vs. $40.9$\% AUC): localization of body parts is improved due to the
+increased number of jittered samples that significantly overlap with
+the ground truth. Further increasing the lr, lr reduction step and
+total number of iterations altogether improves the performance to
+$72.4$\% PCK, and very minor improvements are observed when training
+longer. All results above are achieved by finetuning the AlexNet
+architecture from the ImageNet model on the MPII training set. Further
+finetuning the MPII-finetuned model on the LSP training set increases
+the performance to $77.9$\% PCK, as the network learns LSP-specific
+image representations. Using the deeper VGG~\cite{Simonyan14c}
+architecture improves over more shallow AlexNet (77.9 vs. 72.4\% PCK,
+50.0 vs. 44.6\% AUC). Funetuning VGG on LSP achieves remarkable 82.8\%
+PCK and 57.0\% AUC. Strong increase in AUC (57.0 vs. 50\%)
+characterizes the improvement for smaller PCK evaluation
+thresholds. Switching off bounding box regression results into
+performance drop (81.3\% PCK, 53.2\% AUC) thus showing the importance
+of the bounding box regression for better part localization. Overall,
+we demonstrate that proper adaptation and tweaking of the
+state-of-the-art generic object detector
+FR-CNN~\cite{girshickICCV15fastrcnn} leads to a strong body part
+detection model that dramatically improves over the vanilla FR-CNN
+($82.8$ vs. $56.9$\% PCK, $57.8$ vs. $35.9$\% AUC) and significantly
+outperforms the state of the art ($+9.4$\% PCK over the best known PCK
+result~\cite{chen14nips} and $+9.7$\% AUC over the best known AUC
+result~\cite{tompson14nips}.
+
+\input{table_rcnn_unary_lsp_large}
+
+\myparagraph{Overall performance using PCP evaluation measure.}
+Performance when using the strict ``Percentage of Correct Parts
+(PCP)''~\cite{Ferrari:2008:PSS} measure is reported in
+Tab.~\ref{tab:multicut:lsp-pc-pcp}. In contrast to PCK measure
+evaluating the accuracy of predicting body joints, PCP evaluation
+metric measures the accuracy of predicting body part sticks. $\rcnn$
+achieves $78.3$\% PCP. Similar to PCK results, $\deepcut~\singb~\rcnn$
+slightly improves over unary alone, as it enforces more consistent
+predictions of body part sticks. Using more general multi-person
+$\deepcut~\multb~\rcnn$ model results into similar performance, which
+shows the generality of $\deepcut~\multb$
+method. $\deepcut~\singb~\dense$ slightly improves over $\dense$ alone
+($84.3$ vs. $83.9$\% PCP) achieving the best PCP result on LSP dataset
+using PC annotations. This is in contrast to PCK results where
+performance differences $\deepcut~\singb~\dense$ vs. $\dense$ alone
+are minor.
+
+We now compare the PCP results to the state of the art. The $\deepcut$
+models outperform all other methods by a large margin. The best known
+PCP result by Chen\&Yuille~\cite{chen14nips} is outperformed by
+$10.7$\% PCP. This is interesting, as their deep learning based
+method relies on the image conditioned pairwise terms while our
+approach uses more simple geometric only connectivity. Interestingly,
+$\rcnn$ alone outperforms the approach of Fan et al.~\cite{fan15cvpr}
+(78.3 vs. 70.1\% PCP), who build on the previous version of the R-CNN
+detector~\cite{girshick2014rcnn}. At the same time, the best
+performing dense architecture $\deepcut~\singb~\dense$
+outperforms~\cite{fan15cvpr} by $+14.2$\% PCP. Surprisingly,
+$\deepcut~\singb~\dense$ dramatically outperforms the method of
+Tompson et al.~\cite{tompson14nips} (+17.7\% PCP) that also produces
+dense score maps, but additionally includes multi-scale receptive
+fields and jointly trains appearance and spatial models in a single
+deep learning framework. We envision that both advances can further
+improve the performance of $\deepcut$ models. Finally, all proposed
+approaches significantly outperform earlier non-deep learning based
+methods~\cite{wang13cvpr,pishchulin13iccv} relying on hand-crafted
+image features.
+
+\input{table_multicut_lsp_pc_pcp.tex}
+
+\subsection{LSP Observer-Centric (OC)}
+
+We now evaluate the performance of the proposed part detection models
+on LSP dataset using the observer-centric (OC)
+annotations~\cite{eichner12accv}. In contrast to the person-centric
+(PC) annotations used in all previous experiments, OC annotations do
+not penalize for the right/left body part prediction flips and count a
+body part to be the right body part, if it is on the right side of the
+line connecting pelvis and neck, and a body part to be the left body part
+otherwise.
+
+Evaluation is performed using the official OC annotations provided
+by~\cite{pishchulin13cvpr,eichner12accv}. Prior to evaluation, we
+first finetune the $\rcnn$ and $\dense$ part detection models from
+ImageNet on MPII and MPII+LSPET training sets, respectively, (same as
+for PC evaluation), and then further finetuned the models on LSP OC
+training set.
+
+\myparagraph{PCK evaluation measure.} Results using OC annotations and
+PCK evaluation measure are shown in Tab.~\ref{tab:multicut:lsp:oc} and
+in Fig.~\ref{fig:pck-curves:lsp:oc}. $\rcnn$ achieves $84.2$\% PCK and
+$58.1$\% AUC. This result is only slightly better compared to $\rcnn$
+evaluated using PC annotations (84.2 vs 82.8\% PCK, $58.1$
+vs. $57.0$\% AUC). Although PC annotations correspond to a harder
+task, only small drop in performance when using PC annotations shows
+that the network can learn to accurately predict person's viewpoint and
+correctly label left/right limbs in most cases. This is contrast to
+earlier approaches based on hand-crafted features whose performance
+drops much stronger when evaluated in PC evaluation setting
+(e.g.~\cite{pishchulin13iccv} drops from 71.0\% PCK when using OC
+annotations to 58.0\% PCK when using PC annotations). Similar to PC
+case, $\dense$ detection model outperforms $\rcnn$ (88.2 vs. 84.2\%
+PCK and 65.0 vs. 58.1\% AUC). The differences are more pronounced when
+examining the entire PCK curve for smaller distance thresholds
+(c.f. Fig.~\ref{fig:pck-curves:lsp:oc}).
+
+\input{table_multicut_lsp_oc}
+\input{figure_pck_curves_oc}
+
+Comparing the performance by $\rcnn$ and $\dense$ to the state of the
+art, we observe that both proposed approaches significantly outperform
+other methods. Both deep learning based approaches of
+Chen\&Yuille~\cite{chen14nips} and Ouyang et al.~\cite{ouyang14cvpr}
+are outperformed by $+10.7$ and $+18.2$\% PCK when compared to the
+best performing $\dense$. Analysis of PCK curve for the entire range
+of PCK distance thresholds reveals even larger performance differences
+(c.f. Fig.~\ref{fig:pck-curves:lsp:oc}). The results using OC
+annotations confirm our findings from PC evaluation and clearly show
+the advantages of the proposed part detection models over the
+state-of-the-art deep learning methods~\cite{chen14nips,ouyang14cvpr},
+as well as over earlier pose estimation methods based on hand-crafted
+image features~\cite{pishchulin13iccv,kiefel14eccv,ramakrishna14eccv}.
+
+\input{table_multicut_lsp_oc_pcp.tex}
+
+\myparagraph{PCP evaluation measure.} Results using OC annotations and
+PCP evaluation measure are shown in
+Tab.~\ref{tab:multicut:lsp-oc-pcp}. Overall, the trend is similar to
+PC evaluation: both proposed approaches significantly outperform
+the state-of-the-art methods with $\dense$ achieving the best result
+of 85.0\% PCP thereby improving by $+10$\% PCP over the best
+published result~\cite{chen14nips}.

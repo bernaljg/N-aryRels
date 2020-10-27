@@ -1,0 +1,61 @@
+% \begin{figure*}
+%         %\begin{subfigure}[b]{0.5\textwidth}
+%                 \includegraphics[width=0.34\textwidth]{confusion_matrix_norm.eps}
+%         %        \caption{}
+%         %        \label{fig:sample1}
+%         %\end{subfigure}%
+%         \hspace{1cm}
+%       \begin{subfigure}[b]{0.47\textwidth}
+       
+%                 \includegraphics[width=1.1\textwidth]{doc_class_accuracy.png}
+%                 %\caption{Comparison of the class accuraci}
+%                 \label{fig:synexample1}
+%         \end{subfigure}%
+%         ~
+%         \caption{The class confusion matrix of the results obtained by one partition which contains $100$ images from each class and rest of the images are used for testing.}
+% \label{fig:confmat}
+% \end{figure*}
+
+\section{Deep CNN for Document Image Classification}
+\subsection{Preprocessing}
+The presented method in this paper relies on the structure of the document and not the content. To analyze document structure, it is not necessary to have a very high-resolution image where characters are completely recognizable. Therefore, the images are downsampled to $227\times227$ which is consistent with the deep CNN trained using ImageNet~\cite{cnn_alexnet_nips2014}. This down sampling helps to reduce the computational complexity of the system.
+%All the images in the dataset are downsampled and resized to $227\times227$ using bilinear interpolation. 
+%This follows from the basic theme of our approach which emphasise more the structure and layout of the document in comparison with the actual contents.
+%The characters are still visible but are mostly unrecognizable. The locations of the layout components remain consistent and could easily be recognized either alone or in relation with the other layout components.
+The input images are further mean normalized using the mean of the $1.2$ million images of the ImageNet dataset. The classification performance generally improves when the images are mean compensated.
+The mean compensation is applied both on the training and the test images. We convert grey document images to three channel images by copying the same content in every channel. This is consistent with the network~\cite{cnn_alexnet_nips2014}.
+%and also different types of feature are extracted from every channel. 
+The original weights which are used to initialize the proposed network were trained using all three channels RGB and therefore extracts different types of features. We introduce the same information in all the channels in order to enrich the features for better classification.
+\subsection{Network Layer Overview}
+The deep \ac{cnn} architecture used in the proposed approach consists of convolutional layer, maxpooling layer, \ac{relu} and the fully connected (FC) layers.
+The convolutional layers filter the input with the kernel to produce the feature maps which are either refined by the next convolutional layers or used for the classification by fully connected layers after applying the \ac{relu}.
+Pooling layers gather the overall response of the neighbouring groups of neurons in the same kernel. A window centered at the pooling location of size $n\times n$ is applied. 
+The dropout~\cite{dropout_Hinton12} layers are used to avoid any type of overfitting which may occur during the training. The dropout layer is preferred over having combinations of different models for the efficiency reasons.
+The fully connected layers are the classifiers which are used to classify the features extracted by the combination of the convolutional and the pooling layers.
+\subsection{Network Architecture}
+The architecture of the proposed neural network model (depicted in Figure~\ref{fig:deepcnn}) is inspired from~\cite{cnn_alexnet_nips2014}. 
+The model consists of eight main layers (five convolutional and the three fully connected layers). 
+The model uses the overlapping pooling \ie the windows used to summarize the outputs are overlapping.
+This can be achieved by setting the distance between the pooling units less than the size of the window.
+As depicted in Figure~\ref{fig:deepcnn} first convolutional layers processes the input of shape $227\times227\times3$.
+The first convolutional layer has $96$ kernels of size $11\times11\times3$.
+The first layer uses the stride(step size) of 4 pixels.
+The output of the first layer is then pooled to the first maxpooling layer where the average pooling and response normalization has been performed.
+The second layer has $256$ kernels of size $5\times5\times48$.
+The pooling and response normalization is perfromed for each layer except the third and the fourth layers because they are connected to each other.
+The number and the shapes of the kernels are (384, $3\times3\times256$),  (384, $3\times3\times192$) and (256, $3\times3\times192$) for third, fourth and fifth layer respectively.
+Each convolutional and fully connected layer is followed by a \ac{relu} layer.
+To avoid overfitting the dropout layer is applied to the sixth and the seventh layer which are fully connected layers.
+The eighth layer corresponds to the actual number of classes of the Tobacco-3428 Legislation dataset and hence contains $10$ output neurons corresponding to each class of the dataset.
+The output of the last layer is provided to a 10-way softmax which models a distribution over the 10 class labels. The data input and output sizes are depicted in Figure~\ref{fig:deepcnn}.
+\subsection{Learning Details}
+The objective is minimized using the stochastic gradient descent. 
+A batch size of $10$ is used.
+The learning rate, momentum and weight decay are set to $0.0001$, $0.9$ and $0.0005$ respectively.
+The weights of the network are initialized using the pretrained model\footnote{https://github.com/BVLC/caffe/tree/master/models/bvlc\_alexnet} except for the last fully connected layer.
+The training of the network has been done using Caffe\footnote{http://caffe.berkeleyvision.org/} deep learning framework~\cite{jia2014caffe}.
+
+
+
+
+

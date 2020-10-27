@@ -1,0 +1,60 @@
+\input{tex/experiments-wsj}
+\input{tex/experiments-conll}
+
+\subsection{Dependency Parsing}
+
+In dependency parsing the goal is to produce a directed tree representing
+the syntactic structure of the input sentence.
+
+\paragraph{Data \& Evaluation.}
+
+We use the same corpora as in our POS tagging experiments, except that we use
+the standard parsing splits of the WSJ. To avoid over-fitting to the development
+set (Sec.~22), we use Sec.~24 for tuning the hyperparameters of our models.
+We convert the English constituency trees to Stanford style dependencies
+\cite{stanford_dependencies} using version 3.3.0 of the converter.
+For English, we use predicted POS tags (the same POS tags are used for
+all models) and exclude punctuation from the evaluation, as is standard.
+For the CoNLL '09 datasets
+we follow standard practice and include all punctuation in the evaluation.
+We follow \newcite{alberti-EtAl:2015:EMNLP} and 
+use our own predicted POS tags so that we can include a k-best tag
+feature (see below) but use the supplied predicted morphological features.
+We report unlabeled and labeled attachment scores (UAS/LAS).
+
+\paragraph{Model Configuration.}
+
+Our model configuration is basically the same as the one originally proposed
+by \newcite{chen-manning:2014:EMNLP} and then refined by
+\newcite{weiss-etAl:2015:ACL}. 
+In particular, we use the arc-standard
+transition system and extract the same set of features
+as prior work: words, part of speech tags, and
+dependency arcs and labels in the surrounding context of the state, 
+as well as k-best tags as proposed by \newcite{alberti-EtAl:2015:EMNLP}.
+We use two hidden layers of 1,024 dimensions each.
+
+\paragraph{Results.}
+
+Tables \ref{tab:english_parsing} and \ref{tab:conll09_final} show
+our final parsing results and a comparison to the best systems from the literature.
+We obtain the best ever published results on almost all datasets, including the WSJ.
+Our main results use the same pre-trained word embeddings
+as \newcite{weiss-etAl:2015:ACL} and \newcite{alberti-EtAl:2015:EMNLP}, but no tri-training.
+When we artificially restrict ourselves to not use pre-trained word embeddings, 
+we observe only a modest drop of $\sim$0.5\% UAS;
+for example, training only on the WSJ yields 94.08\% UAS and 92.15\% LAS 
+for our global model with a beam of size 32.
+
+Even though we do not use tri-training, our model compares favorably to the 94.26\% LAS and 92.41\% UAS
+reported by \newcite{weiss-etAl:2015:ACL} with tri-training.
+As we show in Sec.~\ref{sec:discussion}, these gains can be attributed to the full backpropagation
+training that differentiates our approach from that of \newcite{weiss-etAl:2015:ACL}
+and \newcite{alberti-EtAl:2015:EMNLP}.
+Our results also significantly outperform the LSTM-based approaches of
+\newcite{dyer-etAl:2015:ACL} and \newcite{BallesterosDS15}.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% End:

@@ -1,0 +1,367 @@
+\section{Experiments}
+\label{sect:experiments}
+
+% \begin{figure*}
+%   \centering
+%   \setlength{\tabcolsep}{0pt}
+%   \setlength\figurewidth{0.05\textwidth}
+%   \newcommand{\example}[1]{\raisebox{-.4\height}{\includegraphics[width=\figurewidth]{./figures/domains_examples/#1}}}
+%   \begin{sc}
+%   \begin{tabular}{r@{\hskip 1cm} ccccccccccc}
+%     MNIST \cite{LeCun98} &
+%     \example{mnist_0.png} &
+%     \example{mnist_1.png} &
+%     \example{mnist_2.png} &
+%     \example{mnist_3.png} &
+%     \example{mnist_4.png} &
+%     \example{mnist_5.png} &
+%     \example{mnist_6.png} &
+%     \example{mnist_7.png} &
+%     \example{mnist_8.png} &
+%     \example{mnist_9.png} &
+%     \example{mnist_10.png}\\
+%     MNIST ($ | \Delta | $, BG) &
+%     \example{mnisti_0.png} &
+%     \example{mnisti_1.png} &
+%     \example{mnisti_2.png} &
+%     \example{mnisti_3.png} &
+%     \example{mnisti_4.png} &
+%     \example{mnisti_5.png} &
+%     \example{mnisti_6.png} &
+%     \example{mnisti_7.png} &
+%     \example{mnisti_8.png} &
+%     \example{mnisti_9.png} &
+%     \example{mnisti_10.png}\\
+%     Syn Numbers &
+%     \example{syn_0.png} &
+%     \example{syn_1.png} &
+%     \example{syn_2.png} &
+%     \example{syn_3.png} &
+%     \example{syn_4.png} &
+%     \example{syn_5.png} &
+%     \example{syn_6.png} &
+%     \example{syn_7.png} &
+%     \example{syn_8.png} &
+%     \example{syn_9.png} &
+%     \example{syn_10.png}\\
+%     SVHN \cite{Netzer11} &
+%     \example{svhn_0.png} &
+%     \example{svhn_1.png} &
+%     \example{svhn_2.png} &
+%     \example{svhn_3.png} &
+%     \example{svhn_4.png} &
+%     \example{svhn_5.png} &
+%     \example{svhn_6.png} &
+%     \example{svhn_7.png} &
+%     \example{svhn_8.png} &
+%     \example{svhn_9.png} &
+%     \example{svhn_10.png}\\
+%     Syn Signs &
+%     \example{synsgn_11.png} &
+%     \example{synsgn_1.png} &
+%     \example{synsgn_2.png} &
+%     \example{synsgn_3.png} &
+%     \example{synsgn_4.png} &
+%     \example{synsgn_5.png} &
+%     \example{synsgn_12.png} &
+%     \example{synsgn_7.png} &
+%     \example{synsgn_8.png} &
+%     \example{synsgn_9.png} &
+%     \example{synsgn_10.png}\\
+%     GTSRB \cite{Stallkamp12} &
+%     \example{gtsrb_0.png} &
+%     \example{gtsrb_1.png} &
+%     \example{gtsrb_2.png} &
+%     \example{gtsrb_3.png} &
+%     \example{gtsrb_4.png} &
+%     \example{gtsrb_5.png} &
+%     \example{gtsrb_6.png} &
+%     \example{gtsrb_7.png} &
+%     \example{gtsrb_8.png} &
+%     \example{gtsrb_9.png} &
+%     \example{gtsrb_10.png}\\
+%     % CIFAR-10 \cite{Krizhevsky09} &
+%     % \example{cifar10_0.png} &
+%     % \example{cifar10_1.png} &
+%     % \example{cifar10_2.png} &
+%     % \example{cifar10_3.png} &
+%     % \example{cifar10_4.png} &
+%     % \example{cifar10_5.png} &
+%     % \example{cifar10_11.png} &
+%     % \example{cifar10_7.png} &
+%     % \example{cifar10_8.png} &
+%     % \example{cifar10_9.png} &
+%     % \example{cifar10_10.png}\\
+%     % STL-10 \cite{Coates11} &
+%     % \example{stl10_12.png} &
+%     % \example{stl10_1.png} &
+%     % \example{stl10_2.png} &
+%     % \example{stl10_3.png} &
+%     % \example{stl10_4.png} &
+%     % \example{stl10_5.png} &
+%     % \example{stl10_6.png} &
+%     % \example{stl10_13.png} &
+%     % \example{stl10_8.png} &
+%     % \example{stl10_9.png} &
+%     % \example{stl10_10.png}\\
+%   \end{tabular}
+%   \end{sc}
+%   \vskip 2.5mm
+%   \caption{\todo[What to do with this figure? Add Office? Remove?]Random samples from the datasets used in the experiments. See \sect{exper_quant} for details.}
+%   \label{fig:exper_domains_examples}
+% \end{figure*}
+
+\begin{figure*}
+  \centering
+  \setlength{\tabcolsep}{0pt}
+  \setlength\figurewidth{0.05\textwidth}
+  \newcommand{\example}[1]{\raisebox{-.4\height}{\includegraphics[width=\figurewidth]{./figures/domains_examples/#1}}}
+  \begin{sc}
+  \begin{small}
+  \begin{tabular}{r@{\hskip 0.5cm} ccc c@{\hskip 0.4cm} ccc c@{\hskip 0.4cm} ccc c@{\hskip 0.4cm} ccc}
+    &
+    \multicolumn{3}{c}{MNIST} & &
+    \multicolumn{3}{c}{Syn Numbers} & &
+    \multicolumn{3}{c}{SVHN} & &
+    \multicolumn{3}{c}{Syn Signs}\\
+    
+    Source &
+    \example{mnist_0.png} &
+    \example{mnist_1.png} &
+    \example{mnist_3.png} & &
+    
+    \example{syn_0.png} &
+    \example{syn_1.png} &
+    \example{syn_2.png} & &
+    
+    \example{svhn_3.png} &
+    \example{svhn_4.png} &
+    \example{svhn_5.png} & &
+    
+    \example{synsgn_3.png} &
+    \example{synsgn_4.png} &
+    \example{synsgn_5.png}\\
+    
+    Target &
+    \example{mnisti_0.png} &
+    \example{mnisti_1.png} &
+    \example{mnisti_2.png} & &
+    
+    \example{svhn_0.png} &
+    \example{svhn_1.png} &
+    \example{svhn_2.png} & &
+    
+    \example{mnist_4.png} &
+    \example{mnist_5.png} &
+    \example{mnist_6.png} & &
+    
+    \example{gtsrb_2.png} &
+    \example{gtsrb_3.png} &
+    \example{gtsrb_4.png}\\
+    
+    &
+    \multicolumn{3}{c}{\rule{0pt}{0.35cm} MNIST-M} & &
+    \multicolumn{3}{c}{SVHN} & &
+    \multicolumn{3}{c}{MNIST} & &
+    \multicolumn{3}{c}{GTSRB}\\
+  \end{tabular}
+  \end{small}
+  \end{sc}
+  \caption{Examples of domain pairs used in the experiments. See \sect{exper_quant} for details.}
+  \label{fig:exper_domains_examples}
+\end{figure*}
+
+
+\begin{table*}[t]
+  \vskip 0.15in
+  \begin{center}
+    \begin{small}
+      \begin{sc}
+        \renewcommand{\arraystretch}{1.5}
+        \begin{tabular}{l r | c c c c}
+          \hline
+          \multirow{2}{*}{Method} & {\scriptsize Source} & MNIST & Syn Numbers & SVHN & Syn Signs \\
+          & {\scriptsize Target} & MNIST-M & SVHN & MNIST & GTSRB \\
+          \hline
+          \multicolumn{2}{l |}{Source only} & 
+          $ .5749 $                      & $ .8665 $                      & $ .5919 $                      & $ .7400 $                      \\
+          \multicolumn{2}{l |}{SA \cite{Fernando13}} & 
+          $ .6078 \; (7.9\%) $           & $ .8672 \; (1.3\%) $           & $ .6157 \; (5.9\%) $           & $ .7635 \; (9.1\%) $           \\
+          \multicolumn{2}{l |}{Proposed approach} & 
+          $ \mathbf{.8149} \; (57.9\%) $ & $ \mathbf{.9048} \; (66.1\%) $ & $ \mathbf{.7107} \; (29.3\%) $ & $ \mathbf{.8866} \; (56.7\%) $ \\
+          \multicolumn{2}{l |}{Train on target} & 
+          $ .9891 $                      & $ .9244 $                      & $ .9951 $                      & $ .9987 $                      \\
+          \hline
+        \end{tabular}
+      \end{sc}
+    \end{small}
+  \end{center}
+    \caption{Classification accuracies for digit image classifications for different source and target domains. {\sc MNIST-M} corresponds to difference-blended digits over non-uniform background. The first row corresponds to the lower performance bound (i.e.\ if no adaptation is performed). The last row corresponds to training on the target domain data with known class labels (upper bound on the DA performance). For each of the two DA methods (ours and \cite{Fernando13}) we show how much of the gap between the lower and the upper bounds was covered (in brackets). For all five cases, our approach outperforms \cite{Fernando13} considerably, and covers a big portion of the gap.\vspace{-0mm} }
+  \label{tab:results}
+  \vskip -0.1in
+\end{table*}
+
+\begin{table*}[t]
+  \vskip 0.15in
+  \begin{center}
+    \begin{small}
+      \begin{sc}
+        \renewcommand{\arraystretch}{1.5}
+        \begin{tabular}{l r | c c c}
+          \hline
+          \multirow{2}{*}{Method} & {\scriptsize Source} & Amazon & DSLR & Webcam \\
+          & {\scriptsize Target} & Webcam & Webcam & DSLR \\
+          \hline
+          \multicolumn{2}{l |}{GFK(PLS, PCA) \cite{Gong12}} & 
+          $ .464 \pm .005 $ & $ .613 \pm .004 $ & $ .663 \pm .004 $\\ 
+          \multicolumn{2}{l |}{SA \cite{Fernando13}} & 
+          $ .450 $ & $ .648 $ & $ .699 $\\ 
+          \multicolumn{2}{l |}{DA-NBNN \cite{Tommasi13}} & 
+          $ .528 \pm .037 $ & $ .766 \pm .017 $ & $ .762 \pm .025 $\\ 
+          \multicolumn{2}{l |}{DLID \cite{Chopra13}} & 
+          $ .519 $ & $ .782 $ & $ .899 $\\
+          \multicolumn{2}{l |}{DeCAF$_6$ Source Only \cite{Donahue14}} &
+          $ .522 \pm .017 $ & $ .915 \pm .015 $ & --\\ 
+          \multicolumn{2}{l |}{DaNN \cite{Ghifary14}} & 
+          $ .536 \pm .002 $ & $ .712 \pm .000 $ & $ .835 \pm .000 $\\ 
+          \multicolumn{2}{l |}{DDC \cite{Tzeng14}} & 
+          $ .594 \pm .008 $ & $ .925 \pm .003 $ & $ .917 \pm .008 $\\ 
+          \multicolumn{2}{l |}{Proposed Approach} & 
+          $ \mathbf{ .673 \pm .017 } $ & $ \mathbf{ .940 \pm .008 } $ & $ \mathbf{ .937 \pm .010 } $\\
+          \hline
+        \end{tabular}
+      \end{sc}
+    \end{small}
+  \end{center}
+    \caption{Accuracy evaluation of different DA approaches on the standard {\sc Office} \cite{Saenko10} dataset. Our method (last row) outperforms competitors setting the new state-of-the-art.}
+  \label{tab:results_office}
+\end{table*}
+
+% Other rows refer to the following algorithms (from top to bottom): Geodesic Flow Kernel \cite{Gong12}, Subspace Alignment \cite{Fernando13}, Naive Bayes Nearest Neighbor \cite{Tommasi13},  deep learning approach from \cite{Chopra13}, DeCAF$_6$-features described in \cite{Donahue14}, Domain Adaptive NNs \cite{Ghifary14}, Deep Domain Confusion \cite{Tzeng14}.
+
+\def\X{{\mathbf X}}
+\def\y{{\mathbf y}}
+
+% \vspace{2mm}\noindent {\bf Datasets.}
+% \label{sect:exper_datasets}
+
+% In order to test our method in the setting of traffic signs classification we obtained~100,000 synthetic images ({\sc Syn~Signs}) simulating various photoshooting conditions. This dataset was used in conjunction with {\it The German Traffic Sign Recognition Benchmark} ({\sc GTSRB}) \cite{Stallkamp12}.
+
+% Finally, we perform domain adaption for the {\sc CIFAR-10} and the {\sc STL-10} downsampled to the size of $ 32 \times 32 $. This pair is considerably different from the previously mentioned datasets as the intra-class variability here is higher.
+
+We perform extensive evaluation of the proposed approach on a number of popular image datasets and their modifications. These include large-scale datasets of small images popular with deep learning methods, and the {\sc Office} datasets \cite{Saenko10}, which are a {\em de facto} standard for domain adaptation in computer vision, but have much fewer images.
+
+\vspace{2mm}\noindent {\bf Baselines.} For the bulk of experiments the following baselines are evaluated. The \textbf{source-only} model is trained without consideration for target-domain data (no domain classifier branch included into the network). The \textbf{train-on-target} model is trained on the target domain with class labels revealed. This model serves as an upper bound on DA methods, assuming that target data are abundant and the shift between the domains is considerable. 
+
+In addition, we compare our approach against the recently proposed unsupervised DA method based on \textbf{subspace alignment (SA)} \cite{Fernando13}, which is simple to setup and test on new datasets, but has also been shown to perform very well in experimental comparisons with other ``shallow'' DA methods. To boost the performance of this baseline, we pick its most important free parameter (the number of principal components) from the range $ \{ 2, \ldots, 60 \} $, so that the test performance on the target domain is maximized. To apply SA in our setting, we train a source-only model and then consider the activations of the last hidden layer in the label predictor (before the final linear classifier) as descriptors/features, and learn the mapping between the source and the target domains \cite{Fernando13}.
+
+Since the SA baseline requires to train a new classifier after adapting the features, and in order to put all the compared settings on an equal footing, we retrain the last layer of the label predictor using a standard linear SVM~\cite{liblinear} for all four considered methods (including ours; the performance on the target domain remains approximately the same after the retraining). 
+
+For the {\sc Office} dataset \cite{Saenko10}, we directly compare the performance of our full network (feature extractor and label predictor) against recent DA approaches using previously published results.
+
+\vspace{2mm}\noindent {\bf CNN architectures.} In general, we compose feature extractor from two or three convolutional layers, picking their exact configurations from previous works. We give the exact architectures in \ref{sect:appendix_archs}.
+
+For the domain adaptator we stick to the three fully connected layers ($x\rightarrow1024\rightarrow1024\rightarrow2$), except for {\sc MNIST} where we used a simpler ($x\rightarrow100\rightarrow2$) architecture to speed up the experiments.
+
+For loss functions, we set $ L_y $ and $ L_d $ to be the logistic regression loss and the binomial cross-entropy respectively.
+
+\vspace{2mm}\noindent {\bf CNN training procedure.}
+The model is trained on $128$-sized batches. Images are preprocessed by the mean subtraction. A half of each batch is populated by the samples from the source domain (with known labels), the rest is comprised of the target domain (with unknown labels).
+
+In order to suppress noisy signal from the domain classifier at the early stages of the training procedure instead of fixing the adaptation factor $ \lambda $, we gradually change it from $0$ to $1$ using the following schedule:
+\begin{equation}
+  \lambda_p = \frac{2}{1 + \exp(-\gamma \cdot p)} - 1,
+\end{equation}
+where $\gamma$ was set to $10$ in all experiments (the schedule was not optimized/tweaked). Further details on the CNN training can be found in \ref{sect:appendix_training}.
+
+\vspace{2mm}\noindent {\bf Visualizations.}
+We use t-SNE \cite{Maaten13} projection to visualize feature distributions at different points of the network, while color-coding the domains (\fig{exper_adapt_vis}). We observe strong correspondence between the success of the adaptation in terms of the classification accuracy for the target domain, and the overlap between the domain distributions in such visualizations.
+ 
+\vspace{2mm}\noindent {\bf Choosing meta-parameters.} 
+In general, good unsupervised DA methods should provide ways to set meta-parameters (such as $\lambda$, the learning rate, the momentum rate, the network architecture for our method) in an unsupervised way, i.e.\ without referring to labeled data in the target domain. %Here we would like to give few recommendations concerning this matter. First, as it was pointed out in \sect{theory} the domain classifier should not be significantly more complex than the label predictor. 
+In our method, one can assess the performance of the whole system (and the effect of changing hyper-parameters) by observing the test error on the source domain {\em and} the domain classifier error. In general, we observed a good correspondence between the success of adaptation and these errors (adaptation is more successful when the source domain test error is low, while the domain classifier error is high).
+In addition, the layer, where the the domain adaptator is attached can be picked by computing difference between means as suggested in \cite{Tzeng14}. 
+
+% \begin{figure*}
+%   \centering
+%   {\sc MNIST $ \rightarrow $ MNIST ($ | \Delta | $, bg)}: top feature extractor layer
+%   \setcounter{subfigure}{0}
+%   \subfigure[Non-adapted]{%%
+%     \scalebox{0.8}{\input{./figures/adaptation_vis/pool2_mnist2inv_before.pgf}}}%%
+%   \subfigure[Adapted]{%%
+%     \scalebox{0.8}{\input{./figures/adaptation_vis/pool2_mnist2inv_after.pgf}}}\\
+%   \vspace{5mm}
+%   {\sc Syn Numbers $ \rightarrow $ SVHN}: last hidden layer of the label predictor
+%   \setcounter{subfigure}{0}
+%   \subfigure[Non-adapted]{%%
+%     \scalebox{0.8}{\input{./figures/adaptation_vis/before.pgf}}}%%
+%   \subfigure[Adapted]{%%
+%     \scalebox{0.8}{\input{./figures/adaptation_vis/after.pgf}}}%%
+%   \caption{The effect of adaptation on the distribution of the extracted features. The figure shows t-SNE \cite{Maaten13} visualizations of the CNN's activations {\bf (a)} in case when no adaptation was performed and {\bf (b)} in case when our adaptation procedure was incorporated into training. {\it Blue} points correspond to the source domain examples, while {\it red} ones correspond to the target domain. In all cases, the adaptation in our method makes the two distributions of features much closer.}
+%   \label{fig:exper_adapt_vis}
+% \end{figure*}
+
+\begin{figure*}
+  \addtolength{\subfigcapskip}{0.1cm}
+  \centering
+  \begin{minipage}{.5\textwidth}
+  \centering
+  \small{{\sc MNIST $ \rightarrow $ MNIST-M}: top feature extractor layer}
+  \setcounter{subfigure}{0}
+  \hspace*{\fill}%
+  \subfigure[Non-adapted]{%%
+    \includegraphics[width=0.45\textwidth]{./figures/adaptation_vis/pool2_mnist2inv_before.pdf}}\hfill%
+  \subfigure[Adapted]{%%
+    \includegraphics[width=0.45\textwidth]{./figures/adaptation_vis/pool2_mnist2inv_after.pdf}}%%
+  \hspace*{\fill}%
+  \end{minipage}%
+  \begin{minipage}{.5\textwidth}
+  \centering
+  \small{{\sc Syn Numbers $ \rightarrow $ SVHN}: last hidden layer of the label predictor}
+  \setcounter{subfigure}{0}
+  \hspace*{\fill}%
+  \subfigure[Non-adapted]{%%
+    \includegraphics[width=0.45\textwidth]{./figures/adaptation_vis/before.pdf}}\hfill%
+  \subfigure[Adapted]{%%
+    \includegraphics[width=0.45\textwidth]{./figures/adaptation_vis/after.pdf}}%%
+  \hspace*{\fill}%
+  \end{minipage}
+  \caption{The effect of adaptation on the distribution of the extracted features (best viewed in color). The figure shows t-SNE \cite{Maaten13} visualizations of the CNN's activations {\bf (a)} in case when no adaptation was performed and {\bf (b)} in case when our adaptation procedure was incorporated into training. {\it Blue} points correspond to the source domain examples, while {\it red} ones correspond to the target domain. In all cases, the adaptation in our method makes the two distributions of features much closer.}
+  \label{fig:exper_adapt_vis}
+\end{figure*}
+
+\subsection{Results}
+\label{sect:exper_quant}
+
+We now discuss the experimental settings and the results. In each case, we train on the source dataset and test on a different target domain dataset, with considerable shifts between domains (see \fig{exper_domains_examples}). The results are summarized in \tab{results} and \tab{results_office}. 
+
+\vspace{2mm}\noindent {\bf MNIST $ \rightarrow $ MNIST-M.}
+Our first experiment deals with the MNIST dataset~\cite{LeCun98} (source). In order to obtain the target domain ({\sc MNIST-M}) we blend digits from the original set over patches randomly extracted from color photos from BSDS500 \cite{Arbelaez11}. This operation is formally defined for two images $ I^{1}, I^{2} $ as $ I_{ijk}^{out} = | I_{ijk}^{1} - I_{ijk}^{2} | $, where $ i, j $ are the coordinates of a pixel and $ k $ is a channel index. In other words, an output sample is produced by taking a patch from a photo and inverting its pixels at positions corresponding to the pixels of a digit. For a human the classification task becomes only slightly harder compared to the original dataset (the digits are still clearly distinguishable) whereas for a CNN trained on MNIST this domain is quite distinct, as the background and the strokes are no longer constant. Consequently, the source-only model performs poorly. Our approach succeeded at aligning feature distributions (\fig{exper_adapt_vis}), which led to successful adaptation results (considering that the adaptation is unsupervised). At the same time, the improvement over source-only model achieved by subspace alignment (SA) \cite{Fernando13} is quite modest, thus highlighting the difficulty of the adaptation task. 
+
+\vspace{2mm}\noindent {\bf Synthetic numbers $ \rightarrow $ SVHN.}
+To address a common scenario of training on synthetic data and testing on  real data, we use Street-View House Number dataset {\sc SVHN} \cite{Netzer11} as the target domain and synthetic digits as the source. The latter ({\sc Syn ~Numbers}) consists of ~500,000 images generated by ourselves from Windows fonts by varying the text (that includes different one-, two-, and three-digit numbers), positioning, orientation, background and stroke colors, and the amount of blur. The degrees of variation were chosen manually to simulate SVHN, however the two datasets are still rather distinct, the biggest difference being the structured clutter in the background of SVHN images. 
+
+The proposed backpropagation-based technique works well covering two thirds of the gap between training with source data only and training on target domain data with known target labels. In contrast, SA~\cite{Fernando13} does not result in any significant improvement in the classification accuracy, thus highlighting that the adaptation task is even more challenging than in the case of the MNIST experiment.
+
+\vspace{2mm}\noindent {\bf MNIST $ \leftrightarrow $ SVHN.}
+In this experiment, we further increase the gap between distributions, and test on {\sc MNIST} and {\sc SVHN}, which are significantly different in appearance. Training on SVHN even without adaptation is challenging --- classification error stays high during the first 150 epochs. In order to avoid ending up in a poor local minimum we, therefore, do not use learning rate annealing here. Obviously, the two directions ({\sc MNIST} $ \rightarrow $ {\sc SVHN} and {\sc SVHN} $ \rightarrow $ {\sc MNIST}) are not equally difficult. As {\sc SVHN} is more diverse, a model trained on SVHN is expected to be more generic and to perform reasonably on the MNIST dataset. This, indeed, turns out to be the case and is supported by the appearance of the feature distributions. We observe a quite strong separation between the domains when we feed them into the CNN trained solely on { \sc MNIST}, whereas for the {\sc SVHN}-trained network the features are much more intermixed. This difference probably explains why our method succeeded in improving the performance by adaptation in the {\sc SVHN} $ \rightarrow $ {\sc MNIST} scenario (see \tab{results}) but not in the opposite direction (SA is not able to perform adaptation in this case either). Unsupervised adaptation from MNIST to SVHN gives a failure example for our approach (we are unaware of any unsupervised DA methods capable of performing such adaptation).
+
+\vspace{2mm}\noindent {\bf Synthetic Signs $ \rightarrow $ GTSRB.}
+Overall, this setting is similar to the {\sc Syn Numbers} $ \rightarrow $ {\sc SVHN} experiment, except the distribution of the features is more complex due to the significantly larger number of classes (43 instead of 10). For the source domain we obtained~100,000 synthetic images (which we call {\sc Syn~Signs}) simulating various photoshooting conditions. Once again, our method achieves a sensible increase in performance once again proving its suitability for the synthetic-to-real data adaptation.
+
+\begin{figure}
+  \centering
+  \setlength\figureheight{2.7cm}
+  \setlength\figurewidth{6.8cm}
+  \input{./figures/semi_test_error.tikz}
+  \caption{Semi-supervised domain adaptation for the traffic signs. As labeled target domain data are shown to the method, it achieves significantly lower error than the model trained on target domain data only or on source domain data only. \vspace{-4mm}}
+  \label{fig:exper_semi_test}
+\end{figure}
+
+As an additional experiment, we also evaluate the proposed algorithm for semi-supervised domain adaptation, i.e.\ when one is additionally provided with a small amount of labeled target data. For that purpose we split {\sc GTSRB} into the train set (1280 random samples with labels) and the validation set (the rest of the dataset). The validation part is used solely for the evaluation and does not participate in the adaptation. The training procedure changes slightly as the label predictor is now exposed to the target data. \fig{exper_semi_test} shows the change of the validation error throughout the training. While the graph clearly suggests that our method can be used in the semi-supervised setting, thorough verification of semi-supervised setting is left for future work.
+
+
+\vspace{2mm}\noindent {\bf Office dataset.} 
+We finally evaluate our method on {\sc Office} dataset, which is a collection of three distinct domains: {\sc Amazon}, {\sc DSLR}, and {\sc Webcam}. Unlike previously discussed datasets, {\sc Office} is rather small-scale with only 2817 labeled images spread across 31 different categories in the largest domain. The amount of available data is crucial for a successful training of a deep model, hence we opted for the fine-tuning of the CNN pre-trained on the ImageNet \cite{Jia14} as it is done in some recent DA works \cite{Donahue14,Tzeng14,Hoffman14}. We make our approach more comparable with \cite{Tzeng14} by using exactly the same network architecture replacing domain mean-based regularization with the domain classifier.
+
+Following most previous works, we evaluate our method using 5 random splits for each of the 3 transfer tasks commonly used for evaluation. Our training protocol is close to \cite{Tzeng14,Saenko10,Gong12} as we use the same number of labeled source-domain images per category. Unlike those works and similarly to e.g.\ DLID~\cite{Chopra13} we use the whole unlabeled target domain (as the premise of our method is the abundance of unlabeled data in the target domain). Under this transductive setting, our method is able to improve previously-reported state-of-the-art accuracy for unsupervised adaptation very considerably (\tab{results_office}), especially in the most challenging {\sc Amazon} $ \rightarrow $ {\sc Webcam} scenario (the two domains with the largest domain shift).

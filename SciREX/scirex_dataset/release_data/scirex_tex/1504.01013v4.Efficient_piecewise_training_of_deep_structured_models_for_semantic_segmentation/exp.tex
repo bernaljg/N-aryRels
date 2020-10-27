@@ -1,0 +1,346 @@
+
+
+
+
+
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+
+
+
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+
+
+
+
+
+
+
+
+\section{Experiments}
+
+We evaluate our method on $4$ popular semantic segmentation datasets: PASCAL VOC 2012, NYUDv2, PASCAL-Context and SIFT-flow.
+The segmentation performance is measured by the intersection-over-union (IoU) score \cite{everingham2010pascal}, the pixel accuracy and the mean accuracy \cite{LongSD14}.
+
+The first $5$ convolution blocks and the first convolution layer in the $6$th convolution block are initialized from the VGG-16 network \cite{simonyan2014very}.
+All remaining layers are randomly initialized. All layers are trained using back-propagation/SGD.
+As illustrated in Fig.~\ref{fig:pairwise},
+we use $2$ types of pairwise potential functions.
+In total, we have 1 type of unary potential function and 2 types of pairwise potential functions.
+We formulate one specific FeatMap-Net and potential network (Unary-Net or Pairwise-Net) for one type of potential
+function. 
+We apply simple data augmentation in the training stage;
+specifically, we perform random scaling (from $0.7$ to $1.2$) and flipping of the images for training.
+Our system is built on MatConvNet \cite{matconvnet}.
+
+
+
+
+
+
+\subsection{Results on NYUDv2}
+
+We first evaluate our method on the dataset NYUDv2 \cite{silberman2012indoor}.
+NYUDv2 dataset has 1449 RGB-D images. We use the segmentation labels provided in \cite{gupta2013perceptual} in which labels are processed into $40$ classes.
+We use the standard training set which contains $795$ images and the test set which contains $654$ images.
+We train our models only on RGB images without using the depth information.
+
+%
+%
+%
+%
+%
+%
+
+%
+%
+
+
+Results are shown in Table \ref{tab:nyud}.
+%
+Unless otherwise specified, our models are initialized using the VGG-16 network.
+VGG-16 is also used in the competing method FCN \cite{LongSD14}.
+Our contextual model with CNN pairwise potentials achieves the best performance, which sets a new state-of-the-art result on the NYUDv2 dataset.
+Note that we do not use any depth information in our model.
+
+
+
+
+
+%
+%
+
+\paragraph{Component Evaluation}
+We evaluate the performance contribution of different components of the FeatMap-Net for capturing patch-background context on the NYUDv2 dataset.
+We present the results of adding different components of FeatMap-Net in Table \ref{tab:featmapnet}.
+We start from a baseline setting of our FeatMap-Net (``FullyConvNet Baseline" in the result table), for which multi-scale and sliding pooling is removed.
+This baseline setting is the conventional fully convolution network
+for segmentation, which can be considered as our implementation of the FCN method in \cite{LongSD14}.
+The result shows that our CNN baseline implementation (``FullyConvNet") achieves very similar performance (slightly better) than the FCN method.
+Applying multi-scale network design and sliding pyramid pooling significantly improve the performance,
+which clearly shows the benefits of encoding rich background context in our approach.
+Applying the dense CRF method \cite{krahenbuhl2012efficient} for boundary refinement gains further improvement.
+Finally, adding our contextual CNN pairwise potentials brings significant further improvement, for which we achieve the best performance in this dataset.
+
+
+
+
+
+\begin{table}[t]
+\caption{Segmentation results on NYUDv2 dataset (40 classes).
+We compare to a number of recent methods.
+Our method significantly outperforms the existing methods.}
+\centering
+\resizebox{1\linewidth}{!}
+  {
+  \begin{tabular}{ r | c | c c c }
+method  &training data  &pixel accuracy &mean accuracy  &IoU\\ \hline \hline
+Gupta et al. \cite{gupta2014learning}   &RGB-D  &60.3 &-  &28.6\\
+FCN-32s \cite{LongSD14} &RGB  &60.0 &42.2 &29.2\\
+FCN-HHA \cite{LongSD14} &RGB-D  &65.4 &46.1 &34.0\\ \hline
+%
+ours  &RGB  &\bf 70.0 &\bf 53.6 &\bf 40.6\\
+%
+ \end{tabular}
+  }
+\label{tab:nyud}
+\end{table}
+
+
+
+\begin{table}[t]
+\caption{Ablation Experiments. The table shows the value added
+by the different system components of our method on the NYUDv2 dataset (40 classes).
+}
+\centering
+\resizebox{1\linewidth}{!}
+  {
+  \begin{tabular}{ r | c c c }
+method  &pixel accuracy &mean accuracy  &IoU\\ \hline \hline
+FCN-32s \cite{LongSD14} &60.0 &42.2 &29.2\\ \hline
+FullyConvNet Baseline  &61.5 &43.2 &30.5\\
+$+$ sliding pyramid pooling  &63.5 &45.3 &32.4\\
+$+$ multi-scales  &67.0 &50.1 &37.0\\
+$+$ boundary refinement &68.5 &50.9 &38.3\\
+$+$ CNN contextual pairwise &70.0 &53.6 &40.6\\
+ \end{tabular}
+  }
+\label{tab:featmapnet}
+\end{table}
+
+
+
+
+
+
+
+
+
+\begin{table*}[t]
+\caption{Individual category results on the PASCAL VOC 2012 test set (IoU scores). Our method performs the best}
+\centering
+\resizebox{1\linewidth}{!}
+  {
+  \begin{tabular}{ r | c c c c c c c c c c c c c c c c c c c c | c }
+
+method & \rot{aero}  &\rot{bike} &\rot{bird} &\rot{boat} &\rot{bottle}   &\rot{bus}  &\rot{car}  &\rot{cat}  &\rot{chair}    &\rot{cow}  &\rot{table}    &\rot{dog}  &\rot{horse}    &\rot{mbike}    &\rot{person}   &\rot{potted}   &\rot{sheep}    &\rot{sofa} &\rot{train}    &\rot{tv}  & mean \\ \hline \hline
+\multicolumn{22}{c}{\bf Only using VOC training data} \\ \hline
+FCN-8s \cite{LongSD14}    &76.8   &34.2   &68.9   &49.4   &60.3   &75.3   &74.7   &77.6   &21.4   &62.5   &46.8   &71.8   &63.9   &76.5   &73.9   &45.2   &72.4   &37.4   &70.9 & 55.1 & 62.2 \\
+Zoom-out \cite{MostajabiYS14}  &85.6 &37.3 &\bf 83.2 &62.5 &66.0 &85.1 &80.7 &84.9 &27.2 &73.2 &57.5 &78.1 &79.2 &81.1 &77.1 &53.6 &74.0 &49.2 &71.7 &63.3 &69.6\\
+DeepLab \cite{ChenPKMY14} &84.4 &54.5 &81.5 &63.6 &65.9 &85.1 &79.1 &83.4 &30.7 &74.1 &59.8 &79.0 &76.1 &83.2 &80.8 &59.7 &82.2 &50.4 &73.1 &63.7 &71.6 \\
+CRF-RNN \cite{zheng2015conditional} &87.5 &39.0 &79.7 &64.2 &68.3 &87.6 &80.8 &84.4 &30.4 &78.2 &60.4 &80.5 &77.8 &83.1 &80.6 &59.5 &82.8 &47.8 &78.3 &67.1 &72.0 \\
+DeconvNet \cite{noh2015learning} &89.9 &39.3 &79.7 &63.9 &68.2 &87.4 &81.2 &86.1 &28.5 &77.0 &62.0 &79.0 &80.3 &83.6 &80.2 &58.8 &\bf 83.4 &54.3 &80.7 &65.0 &72.5\\
+DPN \cite{LiuDPN}  &87.7  &\bf 59.4 &78.4 &64.9 &70.3 &89.3 &83.5 &86.1 &31.7 &79.9 &\bf 62.6 &81.9 &80.0 &83.5 &82.3 &60.5 &83.2 &53.4 &77.9 &65.0 &74.1\\
+ours &\bf 90.6  &37.6 & 80.0 &\bf 67.8 &\bf 74.4 &\bf 92.0 &\bf 85.2 &\bf 86.2 &\bf 39.1 &\bf 81.2 & 58.9 &\bf 83.8 &\bf 83.9 &\bf 84.3 &\bf 84.8 &\bf 62.1 & 83.2 &\bf 58.2 &\bf 80.8 &\bf 72.3 & \best 75.3 \\ \hline \hline
+\multicolumn{22}{c}{\bf Using VOC+COCO training data} \\ \hline
+DeepLab \cite{ChenPKMY14} &89.1 &38.3 &88.1 &63.3 &69.7 &87.1 &83.1 &85.0 &29.3 &76.5 &56.5 &79.8 &77.9 &85.8 &82.4 &57.4 &84.3 &54.9 &80.5 &64.1 &72.7 \\
+CRF-RNN \cite{zheng2015conditional} &90.4 &55.3 &88.7 &68.4 &69.8 &88.3 &82.4 &85.1 &32.6 &78.5 &64.4 &79.6 &81.9 &\bf 86.4 &81.8 &58.6 &82.4 &53.5 &77.4 &70.1 &74.7\\
+BoxSup \cite{Dai2015arXiv} &89.8  &38.0 &\bf 89.2 &\bf 68.9 &68.0 &89.6 &83.0 &87.7 &34.4 &83.6 &\bf 67.1 &81.5 &83.7 &85.2 &83.5 &58.6 &84.9 &55.8 &\bf 81.2 &70.7 &75.2\\
+DPN \cite{LiuDPN} &89.0 & \bf 61.6 &87.7 &66.8 &74.7 &91.2 &\bf 84.3 &87.6 &36.5 & 86.3 &66.1 &84.4 &87.8 &85.6 &85.4 &63.6 &87.3 &61.3 &79.4 &66.4 &77.5 \\
+%
+ours+ &\bf 94.1	&40.7	&84.1	&67.8	&\bf 75.9	&\bf 93.4	&\bf 84.3	&\bf 88.4	&\bf 42.5	&\bf 86.4	&64.7	&\bf 85.4	&\bf 89.0	& 85.8	&\bf 86.0	&\bf 67.5	&\bf 90.2	&\bf 63.8	&80.9	&\bf 73.0	&\best 78.0 \\
+
+\end{tabular}
+  }
+\label{tab:voc12_test_details}
+\end{table*}
+
+
+
+
+
+
+
+\input{seg_example.tex}
+
+
+
+
+\subsection{Results on PASCAL VOC 2012}
+
+PASCAL VOC 2012 \cite{everingham2010pascal} is a well-known segmentation evaluation dataset which consists of 20 object categories and one background category.
+This dataset is split into a training set, a validation set and a test set,
+which respectively contain $1464$, $1449$ and $1456$ images.
+Following a conventional setting in \cite{BharathECCV2014,ChenPKMY14}, the training set is augmented by extra annotated VOC images provided in \cite{HariharanABMM11}, which results in $10582$ training images.
+We verify our performance on the PASCAL VOC 2012 test set.
+We compare with a number of recent methods with competitive performance.
+Since the ground truth labels are not available for the test set,
+we report the result through the VOC evaluation server.
+
+
+The results of IoU scores are shown in the last column of Table \ref{tab:voc12_test_details}.
+We first train our model only using the VOC images.
+We achieve $75.3$ 
+%
+%
+IoU score which is the best result amongst methods that only use the VOC training data.
+
+
+To improve the performance, following the setting in recent work \cite{ChenPKMY14,Dai2015arXiv},
+we train our model with the extra images from the COCO dataset \cite{lin2014microsoft}.
+With these extra training images, we achieve an IoU score of $77.2$.
+
+
+For further improvement, we also exploit the the middle-layer features 
+as in the recent methods \cite{ChenPKMY14,LongSD14,hariharan2014hypercolumns}.
+We learn extra refinement layers on the feature maps from middle layers to refine the coarse prediction.
+The feature maps from the middle layers encode lower level visual information which
+helps to predict details in the object boundaries.
+Specifically, we add $3$ refinement convolution layers 
+on top of the feature maps from the first $5$ max-pooling layers and the input image.
+The resulting feature maps and the coarse prediction score map
+ are then concatenated and go through another $3$ refinement convolution layers to output the refined prediction.
+The resolution of the prediction is increased from $1/16$ (coarse prediction) to $1/4$ of the input image.
+With this refined prediction, we further perform boundary refinement \cite{krahenbuhl2012efficient} to generate the final prediction.
+Finally,  we achieve an IoU score of $78.0$, {\em which is best reported result on this challenging dataset.}
+\footnote{The result link at the VOC evaluation server: \url{http://host.robots.ox.ac.uk:8080/anonymous/XTTRFF.html}}
+
+
+
+
+The results for each category are shown in Table \ref{tab:voc12_test_details}.
+We outperform competing methods in most categories.
+For only using the VOC training set, our method outperforms the second best method, DPN \cite{LiuDPN}, 
+on $18$ categories out of $20$.
+Using VOC+COCO training set, our method outperforms DPN \cite{LiuDPN}
+on $15$ categories out of $20$.
+Some prediction examples of our method are shown in Fig. \ref{fig:example_voc}.
+
+
+
+
+
+
+\begin{table}[t]
+\caption{Segmentation results on PASCAL-Context dataset (60 classes).
+Our method performs the best.}
+\centering
+\resizebox{.8\linewidth}{!}
+  {
+  \begin{tabular}{ r | c c c}
+  method	&pixel accuracy	&mean accuracy	&IoU\\ \hline \hline
+O2P \cite{carreira2012semantic}	&-	&-	&18.1\\
+CFM \cite{dai2014convolutional}	&-	&-	&34.4\\
+FCN-8s \cite{LongSD14}	&65.9	&46.5	&35.1\\
+BoxSup \cite{Dai2015arXiv}	&-	&-	&40.5\\ \hline
+ours	&\bf 71.5	&\bf 53.9	&\bf 43.3\\
+ \end{tabular}
+  }
+\label{tab:pascalcontext}
+\end{table}
+
+
+
+
+
+
+
+\begin{table}[t]
+\caption{Segmentation results on SIFT-flow dataset (33 classes).
+Our method performs the best.}
+\centering
+\resizebox{1\linewidth}{!}
+  {
+  \begin{tabular}{ r | c c c}
+  method	&pixel accuracy	&mean accuracy	&IoU\\ \hline \hline
+Liu et al. \cite{liu2011sift}	&76.7	&-	&-\\
+Tighe et al. \cite{tighe2013finding} 	&75.6	&41.1	&-\\
+Tighe et al. (MRF) \cite{tighe2013finding}	&78.6	&39.2	&-\\
+Farabet et al. (balance) \cite{farabet2013learning}	&72.3	&50.8	&-\\
+Farabet et al. \cite{farabet2013learning} 	&78.5	&29.6	&-\\
+Pinheiro et al. \cite{pinheiro2013recurrent} &77.7 &29.8 &-\\
+FCN-16s \cite{LongSD14}	&85.2	&51.7	&39.5\\ \hline
+ours	&\bf 88.1	&\bf 53.4	&\bf 44.9\\
+ \end{tabular}
+  }
+\label{tab:siftflow}
+\end{table}
+
+
+
+
+
+
+\subsection{Results on PASCAL-Context}
+The
+PASCAL-Context \cite{mottaghi2014role} dataset provides the segmentation labels of the whole scene (including the ``stuff" labels) for the PASCAL VOC images.
+We use the segmentation labels which contain $60$ classes ($59$ classes plus the `` background" class ) for evaluation.
+We use the provided training/test splits.
+The training set contains $4998$ images and the test set has $5105$ images.
+
+Results are shown in Table \ref{tab:pascalcontext}. Our method significantly outperforms the competing methods. To our knowledge, {\em ours is the best reported result on this dataset}.
+
+
+
+
+\subsection{Results on SIFT-flow}
+
+We further evaluate our method on the SIFT-flow dataset.
+This dataset contains $2688$ images and provide the segmentation labels for $33$ classes.
+We use the standard split for training and evaluation.
+The training set has $2488$ images and the rest $200$ images are for testing.
+Since images are in small sizes, we upscale the image by a factor of $2$ for training.
+Results are shown in Table \ref{tab:siftflow}. We achieve the best performance for this dataset.
+
+
+
+

@@ -1,0 +1,61 @@
+\documentclass{article}
+\usepackage{iclr2017_conference,times}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\input{macros}
+\usepackage{tablefootnote}
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+\iclrfinalcopy
+\begin{document}
+
+\title{Tying Word Vectors and Word Classifiers:\\A Loss Framework for Language Modeling}
+%\title{Achieving More with Less:\\A Loss Framework for Language Modeling}
+
+\author{Hakan Inan,\hspace{1mm} Khashayar Khosravi \\
+Stanford University \\ Stanford, CA, USA\\
+\texttt{\{inanh,khosravi\}@stanford.edu} \\
+\And
+Richard Socher \\
+Salesforce Research \\ Palo Alto, CA, USA \\
+\texttt{rsocher@salesforce.com}
+}
+
+%\date{}
+
+\maketitle
+
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+\input{Introduction}
+
+\input{Background}
+
+\input{Contributions}
+
+\input{RelatedWork}
+
+\input{Experiments}
+
+\input{Conclusion}
+
+\newpage
+\bibliographystyle{iclr2017_conference}
+\bibliography{bib}
+
+\newpage
+\input{Appendix}
+
+
+
+
+\end{document}

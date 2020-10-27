@@ -1,0 +1,44 @@
+
+\begin{table*}
+%   \vspace{0.2cm}
+  \small
+  \centering
+  \begin{tabular}{l l lcc}
+    \toprule
+     \multicolumn{2}{c}{Few-shot learning method} & Feature extractor & 1-shot & 5-shot \\
+    \midrule
+    \multirow{2}{*}{\emph{Data augmentation}}
+    & Adv. ResNet, \cite{Mehrotra2017} & WRN-40 (pre) & 55.2 & 69.6 \\
+    & Delta-encoder, \cite{SchwartzNIPS18} & VGG-16 (pre) & 58.7 & 73.6 \\
+    \midrule  
+    \multirow{3}{*}{\emph{Metric learning}}
+    &Matching Nets, \cite{VinyalsBLKW16} & 4 CONV & 43.44 $\pm$ $0.77$ & 55.31 $\pm$  $0.73$ \\
+    &ProtoNets, \cite{SnellSZ17} & 4 CONV & 49.42 $\pm$ $0.78$ & 68.20 $\pm$ $0.66$\\
+    &CompareNets, \cite{SungCVPR2018} & 4 CONV & 50.44 $\pm$ $0.82$ & 65.32 $\pm$ $0.70$\\
+         \midrule
+    \multirow{3}{*}{\emph{Memory network}} 
+    & Meta Networks, \cite{MunkhdalaiICML2017} & 5 CONV  & 49.21 $\pm$ $0.96$ & -- \\
+    & SNAIL, \cite{MishraICLR2018} & ResNet-12 (pre)${}^{\diamond}$  & 55.71 $\pm$ $0.99$  & 68.88 $\pm$ $0.92$\\
+    & TADAM, \cite{OreshkinNIPS18} & ResNet-12 (pre)${}^{\dag}$  & 58.5 $\pm$ $0.3$  & \textbf{76.7} $\mathbf{\pm}$ $\mathbf{0.3}$\\
+    \midrule
+    \multirow{6}{*}{\emph{Gradient descent}}
+    & MAML, \cite{FinnAL17} & 4 CONV & 48.70 $\pm$ $1.75$ & 63.11 $\pm$ $0.92$ \\
+    & Meta-LSTM, \cite{RaviICLR2017} & 4 CONV & 43.56 $\pm$ $0.84$ & 60.60 $\pm$ $0.71$ \\
+    & Hierarchical Bayes, \cite{GrantICLR2018} & 4 CONV  & 49.40 $\pm$ $1.83$ & -- \\
+    & Bilevel Programming, \cite{FranceschiICML18} & ResNet-12${}^{\diamond}$   & 50.54 $\pm$ $0.85$  & 64.53 $\pm$ $0.68$\\
+    & MetaGAN, \cite{ZhangNIPS2018MetaGAN} & ResNet-12 & 52.71 $\pm$ $0.64$  & 68.63 $\pm$ $0.67$ \\
+    & adaResNet, \cite{MunkhdalaiICML18} & ResNet-12${}^{\ddag}$   & 56.88 $\pm$ $0.62$ & 71.94 $\pm$ $0.57$ \\
+    \midrule
+    MAML, HT  & \emph{FT} $[\Theta; \theta]$, HT meta-batch & 4 CONV & 49.1 $\pm$ $1.9$ & 64.1 $\pm$ $0.9$ \\
+    MAML deep, HT  & \emph{FT} $[\Theta; \theta]$, HT meta-batch & ResNet-12 (pre) & 59.1 $\pm$ $1.9$ & 73.1 $\pm$ $0.9$ \\
+    \midrule
+    \multirow{2}{*}{\textbf{MTL (Ours)}}
+     & \emph{SS} $[\Theta; \theta]$, meta-batch & ResNet-12 (pre) & 60.2 $\pm$ $1.8$ & 74.3 $\pm$ $0.9$\\
+     & \emph{SS} $[\Theta; \theta]$, HT meta-batch & ResNet-12 (pre) & \textbf{61.2} $\mathbf{\pm}$ $\mathbf{1.8}$ & \textbf{75.5} $\mathbf{\pm}$ $\mathbf{0.8}$\\
+  \bottomrule
+    \multicolumn{5}{l}{${}^{\diamond}$Additional 2 convolutional layers { } ${}^{\ddag}$Additional 1 convolutional layer { } ${}^{\dag}$Additional 72 fully connected layers}\\
+\end{tabular}
+  \vspace{0.2cm}
+  \caption{The 5-way, 1-shot and 5-shot classification accuracy ($\%$) on miniImageNet dataset. ``pre'' means pre-trained for a single classification task using all training datapoints.}
+    \label{table_mini}
+\end{table*}

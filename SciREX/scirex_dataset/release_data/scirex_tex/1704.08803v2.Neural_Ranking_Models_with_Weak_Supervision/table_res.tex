@@ -1,0 +1,64 @@
+% !TEX root = main.tex
+\newcommand{\ps}{$^\blacktriangleup$}
+\newcommand{\ns}{$^\smalltriangledown$}
+\newcommand{\fs}{$^{~}$}
+
+\begin{table*}[tbp]
+\centering
+\caption{\label{tbl_main}Performance of the different models on different datasets. \ps or \ns indicates that the improvements or degradations with respect to BM25 are statistically significant, at the 0.05 level using the paired two-tailed t-test.}
+\vspace{-5pt}
+%\begin{adjustbox}{max width=\columnwidth}
+%\begin{tabular}{@{}l@{~~~}c@{~~}c@{~~}c@{~~~}c@{~~}c@{~~}c@{}}
+\begin{adjustbox}{max width=0.9\textwidth}
+\begin{tabular}{l c c c c c c}
+\toprule
+\multirow{2}{*}{\textbf{Method}} &
+%\multicolumn{1}{l}{\textbf{Method}} & 
+\multicolumn{3}{c}{\textbf{Robust04}} & \multicolumn{3}{c}{\textbf{ClueWeb}}
+\\ \cmidrule(lr){2-4} \cmidrule(lr){5-7}
+& \textit{MAP} & \textit{P@20} & \textit{nDCG@20}  & \textit{MAP} & \textit{P@20} & \textit{nDCG@20}
+\\ \midrule
+\textbf{BM25} 
+& 0.2503\fs & 0.3569\fs & 0.4102\fs  
+& 0.1021\fs & 0.2418\fs & 0.2070\fs
+\\ \midrule
+\textbf{\mone + \fone} 
+& 0.1961\ns & 0.2787\ns & 0.3260\ns 
+& 0.0689\ns & 0.1518\ns & 0.1430\ns
+\\ 
+\textbf{\mone + \ftwo} 
+& 0.2141\ns & 0.3180\ns & 0.3604\ns 
+& 0.0701\ns & 0.1889\ns & 0.1495\ns
+\\ 
+\textbf{\mone + \fthree} 
+& 0.2423\ns & 0.3501\fs & 0.3999\fs 
+& 0.1002\fs & 0.2513\fs & 0.2130\fs
+\\ \midrule
+\textbf{\mtwo + \fone} 
+& 0.1940\ns & 0.2830\ns & 0.3317\ns 
+& 0.0622\ns & 0.1516\ns & 0.1383\ns
+\\ 
+\textbf{\mtwo + \ftwo} 
+& 0.2213\ns & 0.3216\ns & 0.3628\ns 
+& 0.0776\ns & 0.1989\ns & 0.1816\ns
+\\ 
+\textbf{\mtwo + \fthree} 
+& \textbf{0.2811}\ps & \textbf{0.3773}\ps & \textbf{0.4302}\ps 
+& \textbf{0.1306}\ps & \textbf{0.2839}\ps & \textbf{0.2216}\ps
+\\ \midrule
+\textbf{\mthree + \fone} 
+& 0.2192\ns & 0.2966\ns & 0.3278\ns 
+& 0.0702\ns & 0.1711\ns & 0.1506\ns
+\\ 
+\textbf{\mthree + \ftwo} 
+& 0.2246\ns & 0.3250\ns & 0.3763\ns 
+& 0.0894\ns & 0.2109\ns & 0.1916\fs
+\\ 
+\textbf{\mthree + \fthree} 
+& \textbf{0.2837}\ps & \textbf{0.3802}\ps & \textbf{0.4389}\ps 
+& \textbf{0.1387}\ps & \textbf{0.2967}\ps & \textbf{0.2330}\ps
+\\ \bottomrule
+\end{tabular}
+\end{adjustbox}
+\vspace{-5pt}
+\end{table*}

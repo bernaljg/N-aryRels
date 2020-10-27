@@ -1,0 +1,66 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%% ICML 2014 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Use the following line _only_ if you're still using LaTeX 2.09.
+%\documentstyle[icml2014,epsf,natbib]{article}
+% If you rely on Latex2e packages, like most moden people use this:
+\documentclass[a4paper]{article}
+
+% use Times
+\usepackage{times}
+% For figures
+\usepackage{graphicx} % more modern
+%\usepackage{epsfig} % less modern
+\usepackage{subfigure} 
+\usepackage{rotating}
+% For citations
+%\usepackage{natbib}
+\usepackage[square,sort,comma,numbers,compress]{natbib}
+%\usepackage[ruled]{algorithm2e}
+
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{dsfont}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{authblk}
+
+% As of 2011, we use the hyperref package to produce hyperlinks in the
+% resulting PDF.  If this breaks your system, please commend out the
+% following usepackage line and replace \usepackage{icml2014} with
+% \usepackage[nohyperref]{icml2014} above.
+\usepackage{hyperref}
+
+% Packages hyperref and algorithmic misbehave sometimes.  We can fix
+% this with the following command.
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Employ the following version of the ``usepackage'' statement for
+% submitting the draft version of the paper for review.  This will set
+% the note in the first column to ``Under review.  Do not distribute.''
+% x\usepackage{icml2014} 
+% Employ this version of the ``usepackage'' statement after the paper has
+% been accepted, when creating the final version.  This will set the
+% note in the first column to ``Proceedings of the...''
+%\usepackage[accepted]{icml2014}
+\title{Deep Networks with Internal Selective Attention through Feedback Connections \\ \small{\vspace{.4cm} \it A version of this paper was submitted to ICML 2014 on 31-01-2014.}}
+
+%\title{Self-Adaptive Deep Convolutional Networks with Full Feedback Connections}
+
+\author[*]{Marijn Stollenga \texttt{marijn@idsia.ch}}
+\author[*]{\authorcr Jonathan Masci \texttt{jonathan@idsia.ch}}
+\affil[*]{Shared first author.}
+\author[ ]{\authorcr Faustino Gomez \texttt{tino@idsia.ch}}
+\author[ ]{\authorcr Juergen Schmidhuber \texttt{juergen@idsia.ch}}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\usepackage{xcolor}
+\newcommand\todo[1]{\textcolor{red}{#1}}
+
+\input{body}
+

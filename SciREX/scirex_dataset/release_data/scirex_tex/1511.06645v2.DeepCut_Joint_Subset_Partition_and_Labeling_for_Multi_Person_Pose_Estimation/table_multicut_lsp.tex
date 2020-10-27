@@ -1,0 +1,32 @@
+%\renewcommand{\tabcolsep}{0.15cm}
+\tabcolsep 1.5pt
+\begin{table}[tbp]
+ \scriptsize
+  \centering
+  \begin{tabular}{@{} l c ccc ccc c|c@{}}
+    \toprule
+    Setting& Head   & Sho  & Elb & Wri & Hip & Knee & Ank & PCK & AUC\\       
+    \midrule
+    \input{pck-torso-expidx201-2.tex}
+    \input{pck-torso-expidx276.tex}
+    \input{pck-torso-expidx266.tex}
+    \input{pck-torso-expidx480.tex} 
+    \midrule
+    $\dense$ (unary)                   & \textbf{97.2}  & 90.8  & 83.0  & \textbf{79.3}  & 90.6  & 85.6 & \textbf{83.1} & \textbf{87.1} & \textbf{63.6}\\
+    %\quad + $\deepcuts~\singb$ & 97.0  & \textbf{91.1}  & \textbf{83.9}  & 77.8  & 90.7  & \textbf{86.7} & 81.0 & 86.9 & 63.4\\
+    \quad + $\deepcut~\singb$ & 97.0  & 91.0  & \textbf{83.8}  & 78.1  & 91.0  & 86.7 & 82.0 & \textbf{87.1} & 63.5\\
+    \input{pck-torso-expidx511.tex} 
+    \midrule
+    %Tompson et al.~\cite{tompson14nips} (unary)  & 88.3 & 77.3 & 66.1 & 62.7 & 66.6 & 68.3 & 65.0 & 70.6 \\
+    Tompson et al.~\cite{tompson14nips}& 90.6  & 79.2  & 67.9  & 63.4  & 69.5  & 71.0 & 64.2 & 72.3 & 47.3\\
+    Chen\&Yuille~\cite{chen14nips}& 91.8  & 78.2  & 71.8  & 65.5  & 73.3  & 70.2 & 63.4& 73.4 & 40.1\\
+    Fan et al.~\cite{fan15cvpr}$^*$
+    & 92.4 & 75.2& 65.3& 64.0& 75.7& 68.3& 70.4& 73.0 & 43.2 \\
+    \bottomrule
+  \end{tabular}
+  
+  $^*$ re-evaluated using the standard protocol, for details see project page of \cite{fan15cvpr}
+  \caption[]{Pose estimation results (PCK) on LSP (PC) dataset.}
+    \vspace{-1.5em}
+  \label{tab:multicut:lsp}
+\end{table}

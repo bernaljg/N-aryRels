@@ -1,0 +1,247 @@
+\begin{figure*}
+\centering
+\includegraphics[width=0.85\textwidth]{architecture}
+\caption{The overall architecture of our proposed network. The network
+contains layers of symmetric convolution (encoder) and deconvolution (decoder).
+Skip shortcuts are connected every a few (in our experiments, two) layers from
+convolutional feature maps to their mirrored deconvolutional feature maps.
+The response from a convolutional layer is directly propagated to the corresponding
+mirrored deconvolutional layer, both forwardly and backwardly.}
+\label{fig1}
+\end{figure*}
+
+\section{Very deep convolutional auto-encoder for image restoration}
+\label{sec:main}
+
+The proposed framework mainly contains a chain of convolutional layers and symmetric
+deconvolutional layers, as shown in Figure \ref{fig1}. Skip connections are connected
+symmetrically from convolutional layers to deconvolutional layers. We term our method
+``RED-Net''---very deep Residual Encoder-Decoder Networks.
+
+
+\subsection{Architecture}
+
+The framework is fully convolutional (and deconvolutional.  Deconvolution is essentially unsampling convolution). Rectification layers are added
+after each convolution and deconvolution. For low-level image restoration problems, we
+use neither pooling nor unpooling in the network as usually pooling discards useful image
+details that are essential for these tasks. It is worth mentioning that since the convolutional
+and deconvolutional layers are symmetric, the network is essentially pixel-wise prediction,
+thus the size of input image can be arbitrary. The input and output of the network are images
+of the same size $w\times h\times c$, where $w$, $h$ and $c$ are width, height and number of channels.
+
+Our main idea is that the convolutional layers act as a feature extractor, which preserve the
+primary components of objects in the image and meanwhile eliminating the corruptions.
+After forwarding through the convolutional layers, the corrupted input  image is converted into
+a ``clean" one. The subtle details of the image contents may be lost during this process.
+The deconvolutional layers are then combined to recover the details of image contents.
+The output of the deconvolutional layers is the recovered clean version of the input image.
+Moreover, we add skip connections  from a convolutional layer to its corresponding
+mirrored deconvolutional layer. The passed convolutional feature maps are summed to the
+deconvolutional feature maps element-wise, and passed to the next layer after rectification.
+Deriving from the above architecture, we have used two networksvin our experiments, which are of 20 layers
+ and 30 layers
+respectively, for image denoising, image super-resolution, JPEG deblocking and image inpainting.
+
+
+
+\subsection{Deconvolution decoder}
+
+Architectures combining layers of convolution and deconvolution~\cite{DBLP:conf/iccv/NohHH15,
+hong2015decoupled} have been proposed for semantic segmentation recently. In contrast to
+convolutional layers, in which multiple input activations within a filter window are fused
+to output a single activation, deconvolutional layers associate a single input activation with
+multiple outputs. Deconvolution is usually used as {\em learnable up-sampling layers}.
+
+ In our network,
+the convolutional layers successively down-sample the input image content into a  small
+size abstraction. Deconvolutional layers then up-sample the abstraction back into its original resolution.
+
+Besides the use of skip connections, a main difference between our model and
+~\cite{DBLP:conf/iccv/NohHH15,hong2015decoupled} is that our network is fully convolutional and
+deconvolutional, i.e., without pooling and un-pooling. The reason is that for low-level image restoration,
+the aim is to eliminate low level corruption while preserving image details instead of learning
+image abstractions. Different from high-level applications such as segmentation or recognition,
+pooling typically eliminates the abundant image details and can deteriorate restoration performance.
+
+
+
+One can simply replace deconvolution with convolution, which results in an architecture that is
+very similar to recently proposed very deep fully convolutional neural networks
+~\cite{DBLP:conf/cvpr/LongSD15,DBLP:journals/pami/DongLHT16}. However, there exist essential
+differences between a fully convolution model and our model. Take image denoising as an example.
+We compare the 5-layer and 10-layer fully convolutional network with our network
+(combining convolution and deconvolution, but without skip connection). For fully convolutional
+networks, we use padding or up-sampling the input to make the input and output be of the same size.
+For our network, the first 5 layers are convolutional and the second 5 layers are deconvolutional.
+All the other parameters for training are identical, i.e., trained with SGD and learning rate of
+$10^{-6}$, noise level $\sigma=70$. The Peak Signal-to-Noise Ratio (PSNR) on the validation set
+is reported, which shows that using deconvolution works better than the fully convolutional
+counterpart, as shown in Figure \ref{fig2}.
+
+
+Furthermore, in Figure \ref{fig3}, we visualize some results that are outputs of layer 2, 5, 8 and 10
+from the 10-layer fully convolutional network and ours. In the fully convolution case, the noise
+is eliminated step by step, i.e., the noise level is reduced after each layer. During this process,
+the details of the image content may be lost. Nevertheless, in our network, convolution  preserves
+the primary image content. Then deconvolution is used to compensate the details.
+
+
+\begin{figure}[htb!]
+\centering
+\includegraphics[width=0.48\textwidth]{conv-vs-decv}
+\caption{ PSNR  values  on the validation set during training. Our model  exhibits better PSNR
+than the compared ones upon convergence.}
+\label{fig2}
+\end{figure}
+
+
+
+\begin{figure}[htb!]
+\centering
+\subfigure[]{ \includegraphics[width=0.48\textwidth]{show-denoising-conv} }
+\subfigure[]{ \includegraphics[width=0.48\textwidth]{show-denoising-decv} }
+\caption{ (a) Visualization of the 10-layer fully convolutional network. The images from
+top-left to bottom-right are: clean image, noisy image, output of conv-2, output of conv-5,
+output of conv-8 and output of conv-10, where ``conv-$i$" stands for the $i$-th convolutional layer;
+(b) Visualization of the 10-layer convolutional and deconvolutional network. The images from
+top-left to bottom-right are: clean image, noisy image, output of conv-2, output of conv-5,
+output of deconv-3 and output of deconv-5, where ``deconv-$i$" stands for the $i$-th deconvolutional layer.}
+\label{fig3}
+\end{figure}
+
+
+
+
+\subsection{Skip connections}
+
+An intuitive question is that, is a network with deconvolution able to recover image details from
+the image abstraction only? We find that in shallow networks with only a few layers
+of convolution layers, deconvolution is able to recover the details. However, when the
+network goes deeper or using operations such as max pooling, even with deconvolution layers, it does not work
+that well, possibly because too much details are already lost in the convolution and pooling.
+
+
+The second question is that, when our network goes deeper, does it achieve performance gain?
+We observe that deeper networks in image restoration tasks tend to easily suffer from
+performance degradation. The reason may be two folds. First of all, with more layers of
+convolution, a significant amount of image details could be lost or corrupted. Given only the image abstraction,
+recovering its details is an under-determined problem. Secondly, in terms of optimization,
+deep networks often suffer from gradients vanishing and become much harder to train---a problem
+that is well addressed in the literature of neural networks.
+
+
+To address the above two problems, inspired by highway networks \cite{DBLP:journals/corr/SrivastavaGS15}
+and deep residual networks \cite{DBLP:journals/corr/HeZRS15}, we add skip connections between
+two corresponding convolutional and deconvolutional layers as shown in Figure \ref{fig1}.
+A building block is shown in Figure \ref{fig4}. There are two reasons for using such connections.
+First, when the network goes deeper, as mentioned above, image details can be lost, making deconvolution
+weaker in recovering them. However, the feature maps passed by skip connections carry much image detail,
+which helps deconvolution to recover an improved clean version of the image. Second, the skip connections also achieve
+benefits on back-propagating the gradient to bottom layers, which makes training deeper network much
+easier as observed in \cite{DBLP:journals/corr/SrivastavaGS15} and \cite{DBLP:journals/corr/HeZRS15}.
+
+Note that our skip layer connections are very different from the ones proposed in
+\cite{DBLP:journals/corr/SrivastavaGS15} and \cite{DBLP:journals/corr/HeZRS15}, where the only concern
+is on the optimization side. In our case, we want to pass information of the convolutional feature maps
+to the corresponding deconvolutional layers. The very deep highway networks
+\cite{DBLP:journals/corr/SrivastavaGS15} are essentially feedforward long short-term memory (LSTMs)
+with forget gates, and the CNN layers of deep residual network \cite{DBLP:journals/corr/HeZRS15}
+are feedforward LSTMs without gates. Note that our networks are in general not in the format of
+standard feedforward LSTMs.
+
+\begin{figure}[htb!]
+\centering
+\includegraphics[width=0.48\textwidth]{block}
+\caption{An example of a building block in the proposed framework. The rectangle in solid and
+dotted lines denote convolution and deconvolution respectively. $\oplus$ denotes element-wise sum of feature maps.}
+\label{fig4}
+\end{figure}
+
+Instead of directly learning the mappings from the input $X$ to the output $Y$, we would like the network
+to fit the residual~\cite{DBLP:journals/corr/HeZRS15} of the problem, which is denoted as $\mathcal{F}(X)=Y-X$.
+Such a learning strategy is applied to inner blocks of the encoding-decoding network to make training more
+effective. Skip connections are passed every two convolutional layers to their mirrored deconvolutional
+layers. Other configurations are possible and our experiments show that this configuration already works
+very well. Using such shortcuts makes the network easier to be trained and gains restoration performance
+by increasing the network depth.
+
+
+
+
+\subsection{Training}
+
+In general, there are three types of layers in our network: convolution, deconvolution
+and element-wise sum. Each layer is followed by a Rectified Linear Unit (ReLU)
+~\cite{DBLP:conf/icml/NairH10}. Let $X$ be the input, the convolutional and
+deconvolutional layers are expressed as:
+\begin{equation}
+F(X) = \max(0,W_k * X + B_k),
+\end{equation}
+where $W_k$ and $B_k$ represent the filters and biases, and $*$ denotes either
+convolution or deconvolution operation for the convenience of formulation.
+For element-wise sum layer, the output is the element-wise sum of two inputs
+of the same size, followed by the ReLU activation:
+\begin{equation}
+F(X_1,X_2) = \max(0, X_1 + X_2)
+\end{equation}
+
+Learning the end-to-end mapping from corrupted images to clean images needs to
+estimate the weights $\Theta$ represented by the convolutional and deconvolutional
+kernels. Specifically, given a collection of $N$ training sample pairs $\{X^i,Y^i\}$,
+where $X^i$ is a noisy image and $Y^i$ is the clean version as the groundtruth.
+We minimize the following Mean Squared Error (MSE):
+\begin{equation}
+  \mathcal{L}(\Theta) = \frac{1}{N}\sum_{i=1}^{N}\|\mathcal{F}(X^i;\Theta)-Y^i\|_F^2.
+\label{eq1}
+\end{equation}
+
+Traditionally, a  network can learn the mapping from the corrupted image to the clean version
+directly. However, our network learns for the additive corruption from the input since there
+is a skip connection between the input and the output of the network.
+%
+%
+%
+We found that optimizing for the corruption converges better than
+optimizing for the clean image. In the extreme case, if the input is a clean image, it would be easier
+to push the network to be zero mapping (learning the corruption) than to fit an identity
+mapping (learning the clean image) with a stack of nonlinear layers.
+
+We implement and train our network using Caffe~\cite{jia2014caffe}. Empirically, we find
+that using Adam~\cite{DBLP:journals/corr/KingmaB14} with base learning rate of $10^{-4}$ for
+training converges faster than traditional stochastic gradient descent (SGD). The base
+learning rate for all layers are the same, different from ~\cite{DBLP:journals/pami/DongLHT16,
+DBLP:conf/nips/JainS08}, in which a smaller learning rate is set for the last layer.
+This  is not necessary in our network. Specifically, gradients with respect to the
+parameters of $i$th layer is firstly computed as:
+\begin{equation}
+g = \nabla_{\theta_i}\mathcal{L}(\theta_i).
+\end{equation}
+Then, the two momentum vectors are computed as:
+\begin{equation}
+m = \beta_1m + (1 - \beta_1)g,\quad v = \beta_2v + (1-\beta_2)g^2.
+\end{equation}
+The update rule is:
+\begin{equation}
+\alpha = \alpha\sqrt{1-\beta_2^t}/(1-\beta_1^t), \quad \theta_i=\theta_i-\alpha m/(\sqrt{v}+\epsilon).
+\end{equation}
+$\beta_1$, $\beta_2$ and $\epsilon$ are set as the recommended values in~\cite{DBLP:journals/corr/KingmaB14}.
+
+300 images from the Berkeley Segmentation Dataset (BSD)~\cite{MartinFTM01} are used to
+generate image patches as the training set for each image restoration task.
+%
+%
+%
+
+
+
+
+\subsection{Testing}
+
+Although trained on local patches, our network can perform restoration on images of arbitrary sizes.
+Given a testing image, one can simply go forward through the network, which is already able to
+ outperform existing methods. To achieve even better results, we propose
+to process a corrupted image on multiple orientations. Different from segmentation, the
+filter kernels in our network only eliminate the corruptions, which is usually not sensitive
+to the orientation of image contents in low level restoration tasks. Therefore, we can rotate
+and mirror flip the kernels and perform forward multiple times, and then average the output to
+achieve an ensemble of multiple tests. We see that this can lead to slightly better performance.

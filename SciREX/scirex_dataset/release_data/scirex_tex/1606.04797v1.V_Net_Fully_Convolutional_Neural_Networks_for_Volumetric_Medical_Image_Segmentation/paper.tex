@@ -1,0 +1,86 @@
+% This is sample.tex the demonstration file of
+% MICCAI 2010 for Latex2e
+% adapted from LLNCS.DEM from
+% the LaTeX macro package from Springer-Verlag
+% for Lecture Notes in Computer Science,
+% version 2.2 for LaTeX2e
+%
+\documentclass{llncs}
+%
+\usepackage{makeidx}  % allows for indexgeneration
+\usepackage{url}      
+\usepackage{subfigure}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{cancel}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{hyperref}
+
+\newcommand{\etal}{\textit{et al}.}
+
+%\usepackage{mathcomp}    
+
+%
+
+\usepackage{graphicx}
+\graphicspath{{pics/}{figs/}}
+% list here all the paths to your figure folders
+
+\newcommand{\todo}[1]{\textcolor{red}{(TODO: \textbf{#1})}}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+
+\begin{document}
+%
+\frontmatter          % for the preliminaries
+%
+\pagestyle{headings}  % switches on printing of running heads
+%\pagestyle{empty}  % switches on printing of running heads
+%
+\mainmatter              % start of your contributions
+%
+\title{V-Net: Fully Convolutional Neural Networks for Volumetric Medical Image Segmentation}
+%\title{Improved reconstruction of multi-view 3D ultrasound through segmentation-based registration}
+%
+\titlerunning{V-Net: Fully Convolutional Neural Networks for Volumetric Medical Image Segmentation}  % abbreviated title (for running head)
+
+%\tocauthor{Fausto Milletari (Technical University of Munich), Vasileios Belagiannis (Technical University of Munich), Nassir Navab (Technical University of Munich), Pascal Fallavollita (Technical University of Munich)} 
+%\institute{Chair for Computer Aided Medical Procedures, Technical University of Munich, Germany}}
+
+\author{Fausto Milletari \inst{1},
+	Nassir Navab\inst{1,2},
+	Seyed-Ahmad Ahmadi \inst{3}
+}
+
+\institute{
+  Computer Aided Medical Procedures, Technische Universit\"{a}t M\"{u}nchen, Germany 
+  \and
+  Computer Aided Medical Procedures,  Johns Hopkins University, Baltimore, USA 
+  \and
+  Department of Neurology, Klinikum Grosshadern, Ludwig-Maximilians-Universit\"{a}t M\"{u}nchen, Germany}
+
+\authorrunning{F. Milletari \and A. Ahmadi  \and N. Navab}   
+
+\maketitle              % typeset the title of the contribution
+
+
+\begin{abstract}
+Convolutional Neural Networks (CNNs) have been recently employed to solve problems from both the computer vision and medical image analysis fields. Despite their popularity, most approaches are only able to process 2D images while most medical data used in clinical practice consists of 3D volumes. In this work we propose an approach to 3D image segmentation based on a volumetric, fully convolutional, neural network. Our CNN is trained end-to-end on MRI volumes depicting prostate, and learns to predict segmentation for the whole volume at once. We introduce a novel objective function, that we optimise during training, based on Dice coefficient. In this way we can deal with situations where there is a strong imbalance between the number of foreground and background voxels. To cope with the limited number of annotated volumes available for training, we augment the data applying random non-linear transformations and histogram matching. We show in our experimental evaluation that our approach achieves good performances on challenging test data while requiring only a fraction of the processing time needed by other previous methods.
+\end{abstract}
+
+
+\input{01_Introduction}
+
+\input{02_Methods}
+
+\input{03_Experiments}
+
+\input{04_Conclusion}
+
+\bibliographystyle{splncs03}
+\bibliography{bibliography}
+
+%achtung, remember to push it: https://www.youtube.com/watch?v=A8A0EGnhvfI
+
+\end{document}
+

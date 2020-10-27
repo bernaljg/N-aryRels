@@ -1,0 +1,4 @@
+Across all of the presented experiments, we use categorical sampling during decoding with a tempered $\mathrm{softmax}$ \citep{PixelRecursiveSuperResolution}. We adjust the concentration of the distribution we sample from with a temperature $\tau > 0$ by which we divide the logits for the channel intensities.
+
+We tuned $\tau$ between $0.8$ and $1.0$, observing the highest perceptual quality in unconditioned and class-conditional image generation with  $\tau=1.0$.
+For super-resolution we present results for different temperatures in Table~\ref{tab:CelebASuperResolution}.

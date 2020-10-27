@@ -1,0 +1,119 @@
+\myparagraph{Related work.} 
+Most work on pose estimation targets the 
+single person case. Methods progressed from
+simple part detectors and elaborate body models
+\cite{Ren:2005:RHB,Ramanan:2006:LPI,Jiang:2008:GPE} to tree-structured
+pictorial structures (PS) models with strong
+part detectors
+\cite{pishchulin13iccv,yang12pami,chen14nips,sapp13cvpr}. 
+Impressive results are obtained predicting locations
+of parts with convolutional neural networks (CNN)~\cite{Toshev:2014:DHP,Tompson:2015:EOL}. 
+%For example
+%\cite{Tompson:2015:EOL} proposes a model that does not rely on
+%explicit body modeling, and instead encodes appearance of part
+%configurations via a convolutional multi-scale image representation.
+While body models are not a necessary component for effective
+part localization, constraints among parts allow to assemble
+independent detections into body configurations as 
+demonstrated in~\cite{chen14nips} by combining CNN-based body part
+detectors with a body model \cite{yang12pami}.
+% while primarily
+%focusing on the single-person case.
+
+A popular approach to multi-person pose estimation is to detect people first and then estimate body
+pose independently 
+\cite{Sun:2011:APM,pishchulin12cvpr,yang12pami,Gkioxari:2014:UKP}. \cite{yang12pami} proposes a
+flexible mixture-of-parts model for detection and pose estimation. 
+\cite{yang12pami} obtains multiple pose hypotheses 
+%by computing locations of body limbs 
+corresponding to
+different root part positions %(\eg , torso) 
+and then performing non-maximum suppression.
+\cite{Gkioxari:2014:UKP} detects people using a flexible configuration of
+poselets and  
+%. Given a person detection 
+the body pose is predicted as a weighted average 
+%over predictions
+%of each activated 
+of activated poselets. \cite{pishchulin12cvpr} detects people and then predicts poses of each
+person using a PS model. \cite{Belagiannis:2014:3DP} estimates poses of multiple
+people in 3D by constructing a shared space of 3D body part hypotheses, but uses 2D person detections
+to establish the number of people in the scene. 
+%While aiming to predict poses of multiple people these
+These approaches are limited to cases with people sufficiently far from each other that do not have
+overlapping body parts.
+
+Our work is closely related to \cite{eichner10eccv,Ladicky:2013:HPE}
+who also propose a joint objective to estimate poses of multiple
+people. \cite{eichner10eccv} proposes a multi-person PS model that
+explicitly models depth ordering and person-person occlusions. Our
+formulation is not limited by a number of occlusion states among
+people. \cite{Ladicky:2013:HPE} proposes a joint model for pose
+estimation and body segmentation coupling pose estimates of
+individuals by image segmentation.
+\cite{eichner10eccv,Ladicky:2013:HPE} uses a person detector
+to generate initial hypotheses for the joint
+model. \cite{Ladicky:2013:HPE} resorts to a greedy approach of adding
+one person hypothesis at a time until the joint objective can be
+reduced, whereas our formulation can be solved with a certified optimality gap. In
+addition \cite{Ladicky:2013:HPE} relies on expensive labeling of body
+part segmentation, which the proposed approach does not require.
+
+Similarly to \cite{Chen:2015:POC} we aim to distinguish between
+visible and occluded body parts. \cite{Chen:2015:POC} primarily
+focuse on the single-person case and handles multi-person scenes
+akin to \cite{yang12pami}. 
+% by performing part-based non-maximum
+%suppression on the set of pose estimates. 
+We consider the
+ more difficult problem of full-body pose estimation,
+whereas \cite{eichner10eccv,Chen:2015:POC} focus on upper-body poses
+and consider a simplified case of people seen from the front.
+
+Our work is related to early work on pose estimation that also relies
+on integer linear programming to assemble candidate body part
+hypotheses into valid configurations \cite{Jiang:2008:GPE}. Their
+single person method employs a tree graph augmented with weaker
+non-tree repulsive edges and expects the same number of parts. In
+contrast, our novel formulation relies on fully connected model
+%is proposed that extends
+%beyond \cite{Jiang:2008:GPE} 
+to deal with unknown number of people per image and body parts per
+person.
+%%  and multiple people, deal with a
+%% variable number of parts and multiple candidate hypotheses per body
+%% part.
+
+The Minimum Cost Multicut Problem
+\cite{chopra-1993,deza-1997},
+known in machine learning as correlation clustering
+\cite{bansal-2004},
+has been used in computer vision for image segmentation 
+\cite{alush-2012,andres-2011,kim-2014,yarkony-2012}
+but has not been used before in the context of pose estimation.
+It is known to be NP-hard
+\cite{demaine-2006}.
+
+
+%\cite{Gkioxari:2014:UKP} use agglomerative clustering to generate a set of final person detections
+%from an initial candidate set. %This is similar to our approach (TODO).
+
+% \begin{itemize}
+% \item approaches that consider one person only and don't model multiple people jointly, assume that location/scale known 
+
+% \item recent Yuille CVPR'15 - they do occlusion only, we focus on inferring poses of multiple people
+%   - our model handles occlusions as well.
+
+% \item We are the Family - Eichner ECCV, we deal with more complex poses, build on a stronger detector
+
+% \item Leonid's CVPR'12, we jointly reason about multiple people, they first detect and then estimate
+%   people poses.
+
+% \item joint detection and pose estimation, Ramanan, Savarese, Gkioxari
+
+% \item Ladicky CVPR'13 - similar idea, but based on segmentation, greedy selection of number of candidate person hypothesis. require segmentation labels at training time !!!
+
+% \item Belagianis CVPR'13, multiple people in 3D, but greedy two step process (detect first)
+% \end{itemize}
+
+% Relation to agglomerative clustering used in Gkioxari et al.

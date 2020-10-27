@@ -1,0 +1,95 @@
+\section{Training dataset}
+\label{sec:dataset}
+%
+In this section we briefly summarize the tightly-coupled BoW and SfM reconstruction system~\cite{SRCF15,RSJFCM16} that is employed to automatically select our training data. 
+Then, we describe how we exploit the 3D information to select harder matching pairs and hard non-matching pairs with larger variability. 
+
+\subsection{BoW and 3D reconstruction}
+%
+The retrieval engine used in the work of Schonberger \etal~\cite{SRCF15} builds upon BoW with fast spatial verification~\cite{PCISZ07}. 
+It uses Hessian affine local features~\cite{MTSZMSKG05}, \mbox{RootSIFT} descriptors~\cite{AZ12}, and a fine vocabulary of 16M visual words~\cite{MPCM13}.
+Then, query images are chosen via min-hash and spatial verification, as in~\cite{CM10a}. 
+Image retrieval based on BoW is used to collect images of the objects/landmarks.
+These images serve as the initial matching graph for the succeeding SfM reconstruction, which is performed using state-of-the-art SfM~\cite{FGGJR10,AFSS+11}. Different mining techniques, \eg zoom in, zoom out~\cite{MCM13,MRCM14}, sideways crawl~\cite{SRCF15}, help to build larger and complete model. 
+
+In this work, we exploit the outcome of such a system. 
+Given a large unannotated image collection, images are clustered and a 3D model is constructed per cluster.
+We use the terms \emph{3D model}, \emph{model} and \emph{cluster} interchangeably.
+For each image, the estimated camera position is known, as well as the local features registered on the 3D model. 
+We drop redundant (overlapping) 3D models, that might have been constructed from different seeds.
+Models reconstructing the same landmark but from different and disjoint viewpoints are considered as non-overlapping.
+
+\subsection{Selection of training image pairs}
+
+A 3D model is described as a bipartite visibility graph $\bG = (\cI \cup \cP,\cE)$~\cite{LSH10}, where images $\cI$ and points $\cP$ are the vertices of the graph. 
+Edges of this graph are defined by visibility relations between cameras and points, \ie if a point $p\in \cP$ is visible in an image $i\in \cI$, then there exists an edge $(i,p) \in \cE$. 
+The set of points observed by an image $i$ is given by
+%
+\begin{equation}
+\label{equ:observed_points}
+\cP(i) = \{ p \in \cP: (i,p) \in \cE \}.
+\end{equation} 
+%
+
+We create a dataset of tuples $\left(q, m(q), \cN(q)\right)$, where $q$ represents a query image, $m(q)$ is a positive image that matches the query, and $\cN(q)$ is a set of negative images that do not match the query.
+These tuples are used to form training image pairs, where each tuple corresponds to $|\cN(q)|+1$ pairs. 
+For a query image $q$, a pool $\cM(q)$ of candidate positive images is constructed based on the camera positions in the cluster of $q$.
+It consists of the $k$ images with closest camera centers to the query.
+Due to the wide range of camera orientations, these do not necessarily depict the same object. 
+We therefore propose three different ways to sample the positive image.
+The positives examples are fixed during the whole training process for all three strategies.
+%
+
+\paragraph{Positive images: MAC distance.} 
+The image that has the lowest MAC distance to the query is chosen as positive, formally
+%
+\begin{equation}
+m_1(q) = \argmin_{i \in \cM(q)} ||\mac(q)-\mac(i)||.
+\label{equ:mac_pos}
+\end{equation} 
+%
+This strategy is similar to the one followed by Arandjelovic \etal~\cite{AGTPS15}. 
+They adopt this choice since only GPS coordinates are available and not camera orientations.
+Downside of this approach is that the chosen matching examples already have low distance, thus not forcing network to learn much out of the positive samples.
+
+
+\paragraph{Positive images: maximum inliers.} 
+%
+In this approach, the 3D information is exploited to choose the positive image, independently of the CNN descriptor. In particular, the image that has the highest number of co-observed 3D points with the query is chosen.
+That is, 
+%
+\begin{equation}
+\label{equ:ninl_pos}
+m_2(q) = \argmax_{i \in \cM(q)} |\cP(q) \cap \cP(i)|.
+\end{equation} 
+%
+This measure corresponds to the number of spatially verified features between two images, a measure commonly used for ranking in BoW-based retrieval. As this choice is independent of the CNN representation, it delivers more challenging positive examples.
+%
+
+%
+\input{fig_positive}
+%
+
+\paragraph{Positive images: relaxed inliers.}
+%
+Even though both previous methods choose positive images depicting the same object as the query, the variance of viewpoints is limited.
+Instead of using a pool of images with similar camera position, the positive example is selected at random from a set of images that co-observe enough points with the query, but do not exhibit too extreme scale change. 
+The positive example in this case is  
+\begin{equation}
+\label{equ:relaxed_pos}
+m_3(q) = \texttt{random}\left\{ i \in \cM(q): \frac{|\cP(i) \cap \cP(q)|}{|\cP(q)|} \geq t_i,~\texttt{scale}(i,q) \leq t_s \right\},
+\end{equation} 
+%
+where $\texttt{scale}(i,q)$ is the scale change between the two images.
+This method results in selecting harder matching examples which are still guaranteed to depict the same object. Method $m_3$ chooses different image than $m_1$ on 86.5\% of the queries.
+In Figure~\ref{fig:positives} we present examples of query images and the corresponding positives selected with the three different methods. The relaxed method increases the variability of viewpoints. 
+%
+
+\paragraph{Negative images.} 
+%
+Negative examples are selected from clusters different than the cluster of the query image, as the clusters are non-overlaping. 
+Following a well-known procedure, we choose hard negatives~\cite{STFKM14,GDDM14}, that is, non-matching images with the most similar descriptor. Two different strategies are proposed. In the first, $\cN_1(q)$, k-nearest neighbors from all non-matching images are selected. In the other, $\cN_2(q)$, the same criterion is used, but at most one image per cluster is allowed. While $\cN_1(q)$ often leads to multiple, and very similar, instances of the same object, $\cN_2(q)$ provides higher variability of the negative examples, see Figure~\ref{fig:negatives}. While positives examples are fixed during the whole training process, hard negatives depend on the current CNN parameters and are re-mined multiple times per epoch. 
+
+%
+\input{fig_negative}
+%

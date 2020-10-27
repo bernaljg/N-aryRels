@@ -1,0 +1,165 @@
+%%%%%%%%%%%%%%%%%%%%%%% file template.tex %%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This is a general template file for the LaTeX package SVJour3
+% for Springer journals.          Springer Heidelberg 2010/09/16
+%
+% Copy it to a new file with a new name and use it as the basis
+% for your article. Delete % signs as needed.
+%
+% This template includes a few options for different layouts and
+% content for various journals. Please consult a previous issue of
+% your journal as needed.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% First comes an example EPS file -- just ignore it and
+% proceed on the \documentclass line
+% your LaTeX will extract the file if required
+\begin{filecontents*}{example.eps}
+%!PS-Adobe-3.0 EPSF-3.0
+%%BoundingBox: 19 19 221 221
+%%CreationDate: Mon Sep 29 1997
+%%Creator: programmed by hand (JK)
+%%EndComments
+gsave
+newpath
+  20 20 moveto
+  20 220 lineto
+  220 220 lineto
+  220 20 lineto
+closepath
+2 setlinewidth
+gsave
+  .4 setgray fill
+grestore
+stroke
+grestore
+\end{filecontents*}
+%
+\RequirePackage{fix-cm}
+%
+%\documentclass{svjour3}                     % onecolumn (standard format)
+%\documentclass[smallcondensed]{svjour3}     % onecolumn (ditto)
+% \documentclass[smallextended]{svjour3}       % onecolumn (second format)
+\documentclass[twocolumn]{svjour3}          % twocolumn
+%
+\smartqed  % flush right qed marks, e.g. at end of proof
+%
+
+\usepackage{graphicx}
+\usepackage{bm}
+\usepackage{subfig}
+\usepackage{amssymb}
+\usepackage{gensymb}
+\usepackage{natbib}
+\bibliographystyle{spbasic}
+\hyphenation{Den-se-Reg}
+% \usepackage{amsmath}
+% \usepackage{afterpage}
+% \usepackage{multirow}
+% \usepackage{placeins}
+% \usepackage{times}
+% \usepackage{epsfig}
+
+
+
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+
+
+% \hyphenation{op-tical net-works semi-conduc-tor}
+
+%
+% \usepackage{mathptmx}      % use Times fonts if available on your TeX system
+%
+% insert here the call for the packages your document requires
+%\usepackage{latexsym}
+% etc.
+%
+% please place your own definitions here and don't use \def but
+% \newcommand{}{}
+%
+% Insert the name of "your journal" with
+\journalname{International Journal of Computer Vision}
+%
+\begin{document}
+
+\title{DenseReg: Fully Convolutional Dense Shape Regression In-the-Wild}
+
+% \titlerunning{DenseReg}        % if too long for running head
+
+\author{R{\i}za Alp G\"uler, Yuxiang Zhou, George Trigeorgis, Epameinondas Antonakos, Patrick Snape, Stefanos Zafeiriou, Iasonas Kokkinos
+}
+
+\authorrunning{G\"uler, Zhou, Trigeorgis, Antonakos, Snape, Zafeiriou, Kokkinos} % if too long for running head
+
+\institute{
+    R{\i}za Alp G\"uler
+    \email{riza.guler@inria.fr}  
+    Yuxiang Zhou 
+    \email{yuxiang.zhou10@imperial.ac.uk}  
+    \and 
+    George Trigeorgis
+    \email{gt108@imperial.ac.uk}  
+    \and
+    Epameinondas Antonakos
+    \email{e.antonakos@imperial.ac.uk}  
+    \and
+    Patrick Snape
+    \email{p.snape@imperial.ac.uk}  
+    \and
+    Stefanos Zafeiriou
+    \email{s.zafeiriou@imperial.ac.uk}  
+    \and
+    Iasonas Kokkinos
+    \email{i.kokkinos@cs.ucl.ac.uk}  
+}
+
+\date{Received: date / Accepted: date}
+% The correct dates will be entered by the editor
+
+
+\maketitle
+
+\begin{abstract} 
+In this work we use deep learning to establish dense correspondences between a 3D object model and an image  ``in the wild''. We introduce `DenseReg', 
+ a  fully-convolutional neural network (F-CNN) that  {\em{dens}}ely {\em{reg}}resses  at every foreground pixel a pair of U-V template coordinates in a single feedforward pass. 
+To train DenseReg we construct a supervision signal by combining 3D deformable model fitting and 2D landmark annotations. We define the regression task in terms of the intrinsic, U-V coordinates of a 3D deformable model that is brought into correspondence with image instances at training time. A host of other object-related tasks (e.g. part segmentation, landmark localization) are shown to be by-products of this task, and to largely improve thanks to its introduction. 
+We obtain highly-accurate regression results by combining ideas from semantic segmentation with regression networks, yielding a `quantized regression' architecture that first obtains a quantized estimate of position through classification, and refines it through regression of the residual.
+We show that such networks can boost the performance of existing state-of-the-art systems for pose estimation. 
+Firstly, we show that 
+our system can serve as an initialization for Statistical Deformable Models, as well as an element of cascaded architectures that jointly localize landmarks and estimate dense correspondences. We also show that  the obtained dense correspondence can act as  a  source  of  ‘privileged  information’  that  complements and extends the pure landmark-level annotations, accelerating and improving the training of pose estimation networks.
+We report state-of-the-art performance  on the challenging 300W benchmark for facial landmark localization and on the MPII and LSP datasets for human pose estimation.
+DenseReg code and demonstrations are made available at \url{http://alpguler.com/DenseReg.html}.
+\end{abstract}
+
+% main file
+\section{Introduction}
+\label{sec:introduction}
+\input{content/1_introduction}
+
+\section{From Statistical Deformable Models to Network Supervision}\label{sec:SDMs}
+\input{content/2_sdms}
+
+\section{Quantized Regression}\label{sec:quantized}
+\input{content/3_densereg}
+
+\input{content/4_experiments}
+
+\input{content/5_conclusion}
+
+
+
+% use section* for acknowledgment
+\section*{Acknowledgement}
+Alp Guler and Iasonas Kokkinos were supported by the European Horizon 2020 programme under grant agreement no 643666 (I-Support). G. Trigeorgis was supported by EPSRC DTA award at Imperial College London.  The work of S. Zafeiriou was funded by the EPSRC project EP/N007743/1 (FACER2VM).
+
+\bibliography{egbib}
+
+\section*{Appendix}
+\appendix
+\input{content/appendix}
+
+\end{document}
+% end of file template.tex
+

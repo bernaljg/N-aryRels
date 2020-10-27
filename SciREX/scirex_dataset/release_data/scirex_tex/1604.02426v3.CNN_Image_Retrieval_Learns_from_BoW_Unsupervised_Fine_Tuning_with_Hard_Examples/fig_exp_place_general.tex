@@ -1,0 +1,103 @@
+%=== Place recognition experiments ===% 
+\begin{figure}
+\centering
+\extdata{fig/data/sample}
+\hspace{-15pt}
+\setlength{\tabcolsep}{-1pt}
+\begin{tabular}{ccc}
+\extfig{placePittsSmall}{ 
+\begin{tikzpicture}
+\begin{axis}[%
+	width=0.35\linewidth,
+	height=0.4\linewidth,
+	xlabel={\footnotesize top N candidates},
+	ylabel={\footnotesize Recall@N (\%)},
+	title={Pitts30k-test},
+	legend pos=south east,
+   legend style={cells={anchor=east}, font =\tiny, fill opacity=0.7, row sep=-3.5pt},	
+    ymax = 1,
+    ymin = 0.2,
+    xmin = 0,
+    xmax = 25,
+    grid=both,
+    xtick={0,5,...,25},    
+    xticklabels={0,5,...,25},
+    ytick={0.2, 0.4,...,1},
+ 	 y label style={at={(axis description cs:.2,.5)}},
+ 	 x label style={at={(axis description cs:.5,.05)}} 	 
+]	
+	\addplot[color=red,     	solid, mark=*, mark options={solid}, mark size=1, line width=1] table[x=N,y=pitts30kV]  \placePittsSmall;\leg{Pitts30k(V)};
+	\addplot[color=red,        dashed, mark=*, mark options={solid}, mark size=1, line width=1] table[x=N,y=pitts30kA]  \placePittsSmall;\leg{Pitts30k(A)};
+	\addplot[color=green,      dashed, mark=*, mark options={solid}, mark size=1, line width=1] table[x=N,y=pitts250kA] \placePittsSmall;\leg{Pitts250k(A)};
+	\addplot[color=blue,     	solid, mark=*, mark options={solid}, mark size=1, line width=1] table[x=N,y=tokyoTMV]   \placePittsSmall;\leg{TokyoTM(V)};
+	\addplot[color=blue,       dashed, mark=*, mark options={solid}, mark size=1, line width=1] table[x=N,y=tokyoTMA]   \placePittsSmall;\leg{TokyoTM(A)};
+	\addplot[color=cyan,        solid, mark=*, mark options={solid}, mark size=1, line width=1] table[x=N,y=oursV]      \placePittsSmall;\leg{Ours(V)};
+	\addplot[color=cyan,       dashed, mark=*, mark options={solid}, mark size=1, line width=1] table[x=N,y=oursA]      \placePittsSmall;\leg{Ours(A)};
+	
+\end{axis}
+\end{tikzpicture}
+}
+&
+\extfig{placePittsBig}{ 
+\begin{tikzpicture}
+\begin{axis}[%
+	width=0.35\linewidth,
+	height=0.4\linewidth,
+	xlabel={\footnotesize top N candidates},
+	ylabel={\footnotesize Recall@N (\%)},
+	title={Pitts250k-test},
+	legend pos=south east,
+    legend style={cells={anchor=east}, font =\tiny, fill opacity=0.7, row sep=-3.5pt},	
+    ymax = 1,
+    ymin = 0.2,
+    xmin = 0,
+    xmax = 25,
+    grid=both,
+    xtick={0,5,...,25},    
+    xticklabels={0,5,...,25},
+    ytick={0.2, 0.4,...,1},
+  	 y label style={at={(axis description cs:.2,.5)}},
+ 	 x label style={at={(axis description cs:.5,.05)}} 	 
+]
+	\addplot[color=red,     	solid, mark=*,  mark size=1, line width=1] table[x=N,y=pitts30kA]  \placePittsBig;\leg{Pitts30k(A)};
+	\addplot[color=blue,      	solid, mark=*,  mark size=1, line width=1] table[x=N,y=pitts250kA] \placePittsBig;\leg{Pitts250k(A)};
+	\addplot[color=green,     	solid, mark=*,  mark size=1, line width=1] table[x=N,y=tokyoTMA]   \placePittsBig;\leg{TokyoTM(A)};
+	\addplot[color=magenta,     solid, mark=*,  mark size=1, line width=1] table[x=N,y=oursA]      \placePittsBig;\leg{Ours(A)};
+	
+\end{axis}
+\end{tikzpicture}
+}
+&
+\extfig{placeTokyo}{ 
+\begin{tikzpicture}
+\begin{axis}[%
+	width=0.35\linewidth,
+	height=0.4\linewidth,
+	xlabel={\footnotesize top N candidates},
+	ylabel={\footnotesize Recall@N (\%)},
+	title={Tokyo 24/7},
+	legend pos=south east,
+    legend style={cells={anchor=east}, font =\tiny, fill opacity=0.7, row sep=-3.5pt},	
+    ymax = 0.8,
+    ymin = 0.0,
+    xmin = 0,
+    xmax = 25,
+    grid=both,
+    xtick={0,5,...,25},    
+    xticklabels={0,5,...,25},
+    ytick={0.0, 0.2, ..., 0.8},
+ 	 y label style={at={(axis description cs:.2,.5)}},
+ 	 x label style={at={(axis description cs:.5,.05)}} 	 
+]
+	\addplot[color=red,     	solid, mark=*,  mark size=1, line width=1] table[x=N,y=pitts30kA]  \placeTokyo;\leg{Pitts30k(A)};
+	\addplot[color=blue,      	solid, mark=*,  mark size=1, line width=1] table[x=N,y=pitts250kA] \placeTokyo;\leg{Pitts250k(A)};
+	\addplot[color=green,     	solid, mark=*,  mark size=1, line width=1] table[x=N,y=tokyoTMA]   \placeTokyo;\leg{TokyoTM(A)};
+	\addplot[color=magenta,     solid, mark=*,  mark size=1, line width=1] table[x=N,y=oursA]      \placeTokyo;\leg{Ours(A)};
+	
+\end{axis}
+\end{tikzpicture}
+}
+\end{tabular}
+
+\caption{Generalization on place recognition task.}
+\end{figure}

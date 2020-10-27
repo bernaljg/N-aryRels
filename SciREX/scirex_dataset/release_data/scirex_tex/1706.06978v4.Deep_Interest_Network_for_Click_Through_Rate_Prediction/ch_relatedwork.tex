@@ -1,0 +1,24 @@
+\section{Relatedwork}
+The structure of CTR prediction model has evolved from shallow to deep. At the same time, the number of samples and the dimension of features used in CTR model have become larger and larger. In order to better extract feature relations to improve performance, several works pay attention to the design of model structure.
+
+As a pioneer work, NNLM \cite{bengio:nnlm} learns distributed representation for each word,
+aiming to avoid curse of dimension in language modeling.
+This method, often referred to as embedding,
+has inspired many natural language models and CTR prediction models that need to handle large-scale sparse inputs.
+
+LS-PLM \cite{MLR} and FM \cite{rendle:fm} models can be viewed as a class of networks with one hidden layer, which first 
+ employs embedding layer on sparse inputs and then imposes specially designed transformation functions for target fitting, aiming to capture the combination relations among features.
+
+Deep Crossing \cite{deep_crossing}, Wide\&Deep Learning \cite{widedeep} and YouTube Recommendation CTR model \cite{youtube:recommend} extend LS-PLM and FM by replacing the transformation function with complex MLP network, which enhances the model capability greatly. PNN\cite{PNN} tries to capture high-order feature interactions by involving a product layer after embedding layer. DeepFM\cite{DeepFM} imposes a factorization machines as "wide" module in Wide\&Deep \cite{widedeep} with no need of feature engineering.
+Overall, these methods follow a similar model structure with combination of embedding layer (for learning the dense representation of sparse features) and MLP (for learning the combination relations of features automatically).
+This kind of CTR prediction model reduces the manual feature engineering jobs greatly. %to a great extent.
+Our base model follows this kind of model structure. 
+However in applications with rich user behaviors, features are often contained with variable-length list of ids, e.g., searched terms or watched videos in YouTube recommender system \cite{youtube:recommend}. These models often transform corresponding list of embedding vectors into a fixed-length vector via sum/average pooling, which causes loss of information.
+The proposed DIN tackles it by adaptively learning the representation vector w.r.t. given ad, improving the expressive ability of model.   
+
+Attention mechanism originates from Neural Machine Translation (NMT) field \cite{bengio:attention}.
+NMT takes a weighted sum of all the annotations to get an expected annotation and focuses only on information relevant to the generation of next target word.
+A recent work, DeepIntent \cite{deep_intent} applies attention in the context of search advertising. Similar to NMT, they use RNN\cite{rnn} to model text, then learn one global hidden vector to help paying attention on the key words in each query. It is shown that the use of attention can help capturing the main intent of query or ad.
+DIN designs a local activation unit to soft-search for relevant user behaviors and takes a weighted sum pooling to obtain the adaptive representation of user interests with respect to a given ad. The user representation vector varies over different ads, which is different from DeepIntent in which there is no interaction between ad and user.
+
+We make code publicly available, and further show how to successfully deploy DIN in one of the world's largest advertising systems with novel developed techniques for training large scale deep networks with hundreds of millions of parameters. 

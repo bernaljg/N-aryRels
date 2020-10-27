@@ -1,0 +1,52 @@
+\section{Related work}
+
+\subsection{Part-based models for detection and pose localization}
+Previous work has proposed explicit modeling of object part appearances and locations for more accurate recognition and localization.
+Starting with pictorial structures~\cite{pedro2000,pictorial},
+% which were revisited with HOG features and discriminative training in DPM,
+and continuing through poselets~\cite{BourdevMalikICCV09} and related work, many methods have jointly localized a set of geometrically related parts.
+% \todo{Poselets, Ramanan, and others have explored models 
+The deformable parts model (DPM)~\cite{dpm}, until recently the state-of-the-art PASCAL object detection method, models parts with additional learned filters in positions anchored with respect to the whole object bounding box, allowing parts to be displaced from this anchor with learned deformation costs.
+The ``strong'' DPM~\cite{Hossein_ECCV12} adapted this method for the strongly supervised setting in which part locations are annotated at training time.
+A limitation of these methods is their use of weak features (usually HOG~\cite{hog}). 
+
+\subsection{Fine-grained categorization}
+Recently, a large body of computer vision research has focused on the fine-grained classification problem
+in a number of domains, such as animal breeds or species~\cite{BirdletsFarrellICCV11,KhoslaYaoJayadevaprakashFeiFei_FGVC2011,Liu_Dogs_2012,MartinezMunozEtalCVPR2009,ParkhiEtalCVPR12,YaoEtalCVPR11}, plant species~\cite{AngelovaCVPR13,Anelia13,leafsnap,nilsback_visual_2006,nilsback_automated_2008,VantageFramesCVPR13}, and man-made objects~\cite{maji13fine-grained,StarkKrauseBMVC12}. 
+
+Several approaches are based on detecting and extracting features from certain parts of objects. Farrell et al.~\cite{BirdletsFarrellICCV11} proposed a pose-normalized representation using poselets \cite{BourdevMalikICCV09}. Deformable part models \cite{dpm} were used in \cite{ParkhiEtalCVPR12,dpd} for part localization. Based on the work of localizing fiducial landmarks on faces~\cite{Belhumeur_Localizing_2011}, Liu et al.~\cite{Liu_Dogs_2012} proposed an exemplar-based geometric method to detect dog faces and extract highly localized image features from keypoints to differentiate dog breeds. Furthermore, Berg et al.~\cite{poof} learned a set of highly discriminative intermediate features by learning a descriptor for each pair of keypoints. Moreover, in \cite{iccv13_keypoint}, the authors extend the non-parametric exemplar-based method of \cite{Belhumeur_Localizing_2011} by enforcing pose and subcategory consistency. Yao et al.~\cite{YaoEtalCVPR12} and Yang et al.~\cite{UW_NIPS12} have investigated template matching methods to reduce the cost of sliding window approaches. Recent work by G\"{o}ring et al.~\cite{Goering14:NPT} transfers part annotations from objects with similar global shape as non-parametric part detections. 
+All these part-based methods, however, require the ground truth bounding box at test time for part localization or keypoint prediction. 
+
+Human-in-the-loop methods \cite{BransonEtalECCV10,Deng_FineCrowd_2013,DuanEtalCVPR12} ask a human to name attributes of the object, click on certain parts or mark the most discriminative regions to improve classification accuracy.
+Segmentation-based approaches are also very effective for fine-grained recognition.
+Approaches such as \cite{Tricos_Chai_ECCV12,iccv13_alignment,ParkhiEtalICCV11,ParkhiEtalCVPR12,iccv13_partmatching} used region-level cues to infer the foreground segmentation mask and to discard the noisy visual information in the background.
+Chai et al.~\cite{iccv13_symbiotic} showed that jointly learning part localization and foreground segmentation together can be beneficial for fine-grained categorization.
+Similar to most previous part-based approaches, these efforts require the ground truth bounding box to initialize the segmentation seed.
+In contrast, the aim of our work is to perform end-to-end fine-grained categorization with no knowledge at test time of the ground truth bounding box.
+Our part detectors use convolutional features on bottom-up region proposals, together with learned non-parametric geometric constraints to more accurately localize object parts, thus enabling strong fine-grained categorization.
+
+
+% \subsection{Part-based model for detection and pose localization}
+
+%\cite{pictorial}
+
+% \todo{maybe incorporate with the deep learning subsection}
+
+\subsection{Convolutional networks}
+In recent years, convolutional neural networks (CNNs) have been incorporated into a number of visual recognition systems in a wide variety of domains.
+At least some of the strength of these models lies in their ability to \textit{learn} discriminative features from raw data inputs (e.g., image pixels), in contrast to more traditional object recognition pipelines which compute hand-engineered features on images as an initial preprocessing step.
+CNNs were popularized by LeCun and colleagues who initially applied such models to digit recognition~\cite{Lecun89} and OCR~\cite{Lecun98OCR} and later to generic object recognition tasks~\cite{jarrett-iccv2009}.
+With the introduction of large labeled image databases~\cite{ILSVRC} and GPU implementations used to efficiently perform the massive parallel computations required for learning and inference in large CNNs,
+these networks have become the most accurate method for generic object classification~\cite{krizhevsky}.
+
+Most recently, generic object detection methods have begun to leverage deep CNNs and outperformed any competing approaches based on traditional features.
+OverFeat~\cite{overfeat} uses a CNN to regress to object locations in a coarse sliding-window detection framework.
+Of particular inspiration to our work is the R-CNN method~\cite{rcnn} which leverages features from a deep CNN in a region proposal framework to achieve unprecedented object detection results on the PASCAL VOC dataset.
+Our method generalizes R-CNN by applying it to model object parts in addition to whole objects, which our empirical results will demonstrate is essential for accurate fine-grained recognition.
+
+%The R-CNN pipeline begins by preprocessing images using a region proposal method to generate a relatively small set of candidate windows which may be used as detection.
+%The selective search method~\cite{selsearch} generates around 2000 candidate windows per image and was chosen for this piece of the pipeline due to its high recall in practice on the PASCAL VOC~\cite{PASCALVOC} dataset.
+%Independent of the region proposal step, the deep CNN  architecture of~\cite{krizhevsky} is trained for a large-scale object recognition task on the 1000-category ILSVRC-2012~\cite{ILSVRC} dataset and then fine-tuned on PASCAL object proposals.
+%Given the set of region proposals and trained CNN, R-CNN warps each of these regions to the fixed input size ($227 \times 227$) of the CNN and takes the features from a particular layer of the network as a descriptor representing a global descriptor for the region.
+%We use the Caffe GPU CNN implementation~\cite{caffe} both to train the CNN proposed by~\cite{krizhevsky} and for fast feature extraction.
+%Finally, a linear SVM is trained on these descriptors for each object category, with descriptors extracted from regions with high ground truth overlap taken as positives for the ground truth category, and regions with low ground truth overlap taken as negatives.

@@ -1,0 +1,495 @@
+\documentclass{article}
+
+% if you need to pass options to natbib, use, e.g.:
+\PassOptionsToPackage{round}{natbib}
+% before loading nips_2018
+
+% ready for submission
+\usepackage[final]{neurips_2018}
+%\setlength{\bibsep}{7.3pt}
+
+\input{vcl-shortcuts.tex}
+
+% to compile a preprint version, e.g., for submission to arXiv, add
+% add the [preprint] option:
+% \usepackage[preprint]{nips_2018}
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+% \usepackage[final]{nips_2018}
+
+% to avoid loading the natbib package, add option nonatbib:
+% \usepackage[nonatbib]{nips_2018}
+
+
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{microtype}      % microtypography
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{siunitx}
+\sisetup{output-exponent-marker=\ensuremath{\mathrm{e}}}
+\newrobustcmd*{\bftabnum}{%
+  \bfseries
+  \sisetup{output-decimal-marker={\textmd{.}}}%
+}
+
+\usepackage{xpatch}
+\makeatletter
+\AtBeginDocument{\xpatchcmd{\@thm}{\thm@headpunct{.}}{\thm@headpunct{}}{}{}}
+\makeatother
+
+\newcommand{\eqname}[1]{\tag*{#1}}% Tag equation with name
+
+
+\graphicspath{{./figures/}}
+
+
+\title{Multi-Task Learning as Multi-Objective Optimization}
+
+% The \author macro works with any number of authors. There are two
+% commands used to separate the names and addresses of multiple
+% authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to
+% break the lines. Using \AND forces a line break at that point. So,
+% if LaTeX puts 3 of 4 authors names on the first line, and the last
+% on the second line, try using \AND instead of \And before the third
+% author name.
+
+\author{
+  Ozan Sener\\
+  Intel Labs\\
+  %\texttt{ozansener.net}
+ % \texttt{ozan.sener@intel.com} \\
+  \And
+  Vladlen Koltun\\
+  Intel Labs\\
+  %\texttt{vladlen.info}
+%  \texttt{vladlen.koltun@intel.com} \\
+}
+
+%\linespread{0.98}
+
+\begin{document}
+% \nipsfinalcopy is no longer used
+\maketitle
+
+\begin{abstract}
+In multi-task learning, multiple tasks are solved jointly, sharing inductive bias between them. Multi-task learning is inherently a multi-objective problem because different tasks may conflict, necessitating a trade-off. A common compromise is to optimize a proxy objective that minimizes a weighted linear combination of per-task losses. However, this workaround is only valid when the tasks do not compete, which is rarely the case. In this paper, we explicitly cast multi-task learning as multi-objective optimization, with the overall objective of finding a Pareto optimal solution. To this end, we use algorithms developed in the gradient-based multi-objective optimization literature. These algorithms are not directly applicable to large-scale learning problems since they scale poorly with the dimensionality of the gradients and the number of tasks. We therefore propose an upper bound for the multi-objective loss and show that it can be optimized efficiently. We further prove that optimizing this upper bound yields a Pareto optimal solution under realistic assumptions. We apply our method to a variety of multi-task deep learning problems including digit classification, scene understanding (joint semantic segmentation, instance segmentation, and depth estimation), and multi-label classification. Our method produces higher-performing models than recent multi-task learning formulations or per-task training.
+\end{abstract}
+%The transfer typically occurs as the result of shared parameter space between the models of each task. Whereas, learning is done via minimisation of the task specific empirical risks.
+
+\section{Introduction}
+\label{sec:introduction}
+\input{tex/introduction.tex}
+
+
+\section{Related Work}
+\label{sec:related}
+\input{tex/related-work.tex}
+
+
+\section{Multi-Task Learning as Multi-Objective Optimization}
+\label{sec:method}
+\input{tex/method}
+
+\section{Experiments}
+\label{sec:experiments}
+\input{tex/experiments.tex}
+
+
+\section{Conclusion}
+\label{sec:conclusion}
+\input{tex/conclusion.tex}
+
+\input{tex/exp_figure_page}
+
+\clearpage
+
+{\small
+
+
+\begin{thebibliography}{60}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Argyriou et~al.(2007)Argyriou, Evgeniou, and Pontil]{Argyriou2007}
+A.~Argyriou, T.~Evgeniou, and M.~Pontil.
+\newblock Multi-task feature learning.
+\newblock In \emph{NIPS}, 2007.
+
+\bibitem[Bagherjeiran et~al.(2005)Bagherjeiran, Vilalta, and
+  Eick]{Bagherjeiran2005}
+A.~Bagherjeiran, R.~Vilalta, and C.~F. Eick.
+\newblock Content-based image retrieval through a multi-agent meta-learning
+  framework.
+\newblock In \emph{International Conference on Tools with Artificial
+  Intelligence}, 2005.
+
+\bibitem[Bakker and Heskes(2003)]{Bakker2003}
+B.~Bakker and T.~Heskes.
+\newblock Task clustering and gating for {Bayesian} multitask learning.
+\newblock \emph{JMLR}, 4:\penalty0 83--99, 2003.
+
+\bibitem[Baxter(2000)]{Baxter2000}
+J.~Baxter.
+\newblock A model of inductive bias learning.
+\newblock \emph{Journal of Artificial Intelligence Research}, 12:\penalty0
+  149--198, 2000.
+
+\bibitem[Bilen and Vedaldi(2016)]{Bilen2016}
+H.~Bilen and A.~Vedaldi.
+\newblock Integrated perception with recurrent multi-task neural networks.
+\newblock In \emph{NIPS}, 2016.
+
+\bibitem[Caruana(1997)]{Caruana1997}
+R.~Caruana.
+\newblock Multitask learning.
+\newblock \emph{Machine Learning}, 28\penalty0 (1):\penalty0 41--75, 1997.
+
+\bibitem[Chen et~al.(2018)Chen, Badrinarayanan, Lee, and Rabinovich]{Chen2018}
+Z.~Chen, V.~Badrinarayanan, C.~Lee, and A.~Rabinovich.
+\newblock {GradNorm}: Gradient normalization for adaptive loss balancing in
+  deep multitask networks.
+\newblock In \emph{{ICML}}, 2018.
+
+\bibitem[Collobert and Weston(2008)]{Collobert2008}
+R.~Collobert and J.~Weston.
+\newblock A unified architecture for natural language processing: Deep neural
+  networks with multitask learning.
+\newblock In \emph{ICML}, 2008.
+
+\bibitem[Cordts et~al.(2016)Cordts, Omran, Ramos, Rehfeld, Enzweiler, Benenson,
+  Franke, Roth, and Schiele]{cityscapes}
+M.~Cordts, M.~Omran, S.~Ramos, T.~Rehfeld, M.~Enzweiler, R.~Benenson,
+  U.~Franke, S.~Roth, and B.~Schiele.
+\newblock The {Cityscapes} dataset for semantic urban scene understanding.
+\newblock In \emph{{CVPR}}, 2016.
+
+\bibitem[de~Miranda et~al.(2012)de~Miranda, Prud{\^{e}}ncio, de~Carvalho, and
+  Soares]{Miranda2012}
+P.~B.~C. de~Miranda, R.~B.~C. Prud{\^{e}}ncio, A.~C. P. L.~F. de~Carvalho, and
+  C.~Soares.
+\newblock Combining a multi-objective optimization approach with meta-learning
+  for {SVM} parameter selection.
+\newblock In \emph{International Conference on Systems, Man, and Cybernetics},
+  2012.
+
+\bibitem[Deng et~al.(2009)Deng, Dong, Socher, Li, Li, and Fei-Fei]{imagenet}
+J.~Deng, W.~Dong, R.~Socher, L.-J. Li, K.~Li, and L.~Fei-Fei.
+\newblock {ImageNet}: A large-scale hierarchical image database.
+\newblock In \emph{{CVPR}}, 2009.
+
+\bibitem[D{\'e}sid{\'e}ri(2012)]{Desideri2012}
+J.-A. D{\'e}sid{\'e}ri.
+\newblock Multiple-gradient descent algorithm {(MGDA)} for multiobjective
+  optimization.
+\newblock \emph{Comptes Rendus Mathematique}, 350\penalty0 (5):\penalty0
+  313--318, 2012.
+
+\bibitem[Dong et~al.(2015)Dong, Wu, He, Yu, and Wang]{Dong2015}
+D.~Dong, H.~Wu, W.~He, D.~Yu, and H.~Wang.
+\newblock Multi-task learning for multiple language translation.
+\newblock In \emph{ACL}, 2015.
+
+\bibitem[Ehrgott(2005)]{Ehrgott2005}
+M.~Ehrgott.
+\newblock \emph{Multicriteria Optimization {(2.} ed.)}.
+\newblock Springer, 2005.
+
+\bibitem[Fliege and Svaiter(2000)]{Fliege2000}
+J.~Fliege and B.~F. Svaiter.
+\newblock Steepest descent methods for multicriteria optimization.
+\newblock \emph{Mathematical Methods of Operations Research}, 51\penalty0
+  (3):\penalty0 479--494, 2000.
+
+\bibitem[Ghosh et~al.(2013)Ghosh, Lovell, and Gunn]{Ghish2013}
+S.~Ghosh, C.~Lovell, and S.~R. Gunn.
+\newblock Towards {Pareto} descent directions in sampling experts for multiple
+  tasks in an on-line learning paradigm.
+\newblock In \emph{AAAI Spring Symposium: Lifelong Machine Learning}, 2013.
+
+\bibitem[Hashimoto et~al.(2017)Hashimoto, Xiong, Tsuruoka, and
+  Socher]{Hashimoto2016}
+K.~Hashimoto, C.~Xiong, Y.~Tsuruoka, and R.~Socher.
+\newblock A joint many-task model: Growing a neural network for multiple {NLP}
+  tasks.
+\newblock In \emph{EMNLP}, 2017.
+
+\bibitem[He et~al.(2016)He, Zhang, Ren, and Sun]{resnet}
+K.~He, X.~Zhang, S.~Ren, and J.~Sun.
+\newblock Deep residual learning for image recognition.
+\newblock In \emph{{CVPR}}, 2016.
+
+\bibitem[Hern{\'{a}}ndez{-}Lobato et~al.(2016)Hern{\'{a}}ndez{-}Lobato,
+  Hern{\'{a}}ndez{-}Lobato, Shah, and Adams]{Lobato2016}
+D.~Hern{\'{a}}ndez{-}Lobato, J.~M. Hern{\'{a}}ndez{-}Lobato, A.~Shah, and R.~P.
+  Adams.
+\newblock Predictive entropy search for multi-objective bayesian optimization.
+\newblock In \emph{{ICML}}, 2016.
+
+\bibitem[Huang et~al.(2013)Huang, Li, Yu, Deng, and Gong]{Huang2013}
+J.-T. Huang, J.~Li, D.~Yu, L.~Deng, and Y.~Gong.
+\newblock Cross-language knowledge transfer using multilingual deep neural
+  network with shared hidden layers.
+\newblock In \emph{ICASSP}, 2013.
+
+\bibitem[Huang et~al.(2015)Huang, Li, Siniscalchi, Chen, Wu, and
+  Lee]{Huang2015}
+Z.~Huang, J.~Li, S.~M. Siniscalchi, I.-F. Chen, J.~Wu, and C.-H. Lee.
+\newblock Rapid adaptation for deep neural networks through multi-task
+  learning.
+\newblock In \emph{Interspeech}, 2015.
+
+\bibitem[Jaggi(2013)]{Jaggi2013}
+M.~Jaggi.
+\newblock Revisiting {Frank-Wolfe}: Projection-free sparse convex optimization.
+\newblock In \emph{{ICML}}, 2013.
+
+\bibitem[Kaiser et~al.(2017)Kaiser, Gomez, Shazeer, Vaswani, Parmar, Jones, and
+  Uszkoreit]{Kaiser2017}
+L.~Kaiser, A.~N. Gomez, N.~Shazeer, A.~Vaswani, N.~Parmar, L.~Jones, and
+  J.~Uszkoreit.
+\newblock One model to learn them all.
+\newblock \emph{arXiv:1706.05137}, 2017.
+
+\bibitem[Kendall et~al.(2018)Kendall, Gal, and Cipolla]{Kendall2018}
+A.~Kendall, Y.~Gal, and R.~Cipolla.
+\newblock Multi-task learning using uncertainty to weigh losses for scene
+  geometry and semantics.
+\newblock In \emph{{CVPR}}, 2018.
+
+\bibitem[Kokkinos(2017)]{Kokkinos2016}
+I.~Kokkinos.
+\newblock {UberNet}: Training a universal convolutional neural network for
+  low-, mid-, and high-level vision using diverse datasets and limited memory.
+\newblock In \emph{CVPR}, 2017.
+
+\bibitem[Kuhn and Tucker(1951)]{Kuhn1951}
+H.~W. Kuhn and A.~W. Tucker.
+\newblock Nonlinear programming.
+\newblock In \emph{Proceedings of the Second Berkeley Symposium on Mathematical
+  Statistics and Probability}, Berkeley, Calif., 1951. University of California
+  Press.
+
+\bibitem[LeCun et~al.(1998)LeCun, Bottou, Bengio, and Haffner]{mnist}
+Y.~LeCun, L.~Bottou, Y.~Bengio, and P.~Haffner.
+\newblock Gradient-based learning applied to document recognition.
+\newblock \emph{Proceedings of the IEEE}, 86\penalty0 (11):\penalty0
+  2278--2324, 1998.
+
+\bibitem[Li et~al.(2014)Li, Georgiopoulos, and Anagnostopoulos]{Cong2014}
+C.~Li, M.~Georgiopoulos, and G.~C. Anagnostopoulos.
+\newblock Pareto-path multi-task multiple kernel learning.
+\newblock \emph{arXiv:1404.3190}, 2014.
+
+\bibitem[Liu et~al.(2015{\natexlab{a}})Liu, Gao, He, Deng, Duh, and
+  Wang]{Liu2015}
+X.~Liu, J.~Gao, X.~He, L.~Deng, K.~Duh, and Y.-Y. Wang.
+\newblock Representation learning using multi-task deep neural networks for
+  semantic classification and information retrieval.
+\newblock In \emph{NAACL HLT}, 2015{\natexlab{a}}.
+
+\bibitem[Liu et~al.(2015{\natexlab{b}})Liu, Luo, Wang, and Tang]{celeba}
+Z.~Liu, P.~Luo, X.~Wang, and X.~Tang.
+\newblock Deep learning face attributes in the wild.
+\newblock In \emph{{ICCV}}, 2015{\natexlab{b}}.
+
+\bibitem[Long and Wang(2015)]{Long2015}
+M.~Long and J.~Wang.
+\newblock Learning multiple tasks with deep relationship networks.
+\newblock \emph{arXiv:1506.02117}, 2015.
+
+\bibitem[Luong et~al.(2015)Luong, Le, Sutskever, Vinyals, and
+  Kaiser]{Luong2015}
+M.-T. Luong, Q.~V. Le, I.~Sutskever, O.~Vinyals, and L.~Kaiser.
+\newblock Multi-task sequence to sequence learning.
+\newblock \emph{arXiv:1511.06114}, 2015.
+
+\bibitem[Makimoto et~al.(1994)Makimoto, Nakagawa, and Tamura]{Makimoto1994}
+N.~Makimoto, I.~Nakagawa, and A.~Tamura.
+\newblock An efficient algorithm for finding the minimum norm point in the
+  convex hull of a finite point set in the plane.
+\newblock \emph{Operations Research Letters}, 16\penalty0 (1):\penalty0 33--40,
+  1994.
+
+\bibitem[Miettinen(1998)]{Miettinen1999}
+K.~Miettinen.
+\newblock \emph{Nonlinear Multiobjective Optimization}.
+\newblock Springer, 1998.
+
+\bibitem[Misra et~al.(2016)Misra, Shrivastava, Gupta, and Hebert]{Misra2016}
+I.~Misra, A.~Shrivastava, A.~Gupta, and M.~Hebert.
+\newblock Cross-stitch networks for multi-task learning.
+\newblock In \emph{CVPR}, 2016.
+
+\bibitem[Parisi et~al.(2014)Parisi, Pirotta, Smacchia, Bascetta, and
+  Restelli]{Parisi2014}
+S.~Parisi, M.~Pirotta, N.~Smacchia, L.~Bascetta, and M.~Restelli.
+\newblock Policy gradient approaches for multi-objective sequential decision
+  making.
+\newblock In \emph{IJCNN}, 2014.
+
+\bibitem[Paszke et~al.(2017)Paszke, Gross, Chintala, Chanan, Yang, DeVito, Lin,
+  Desmaison, Antiga, and Lerer]{pytorch}
+A.~Paszke, S.~Gross, S.~Chintala, G.~Chanan, E.~Yang, Z.~DeVito, Z.~Lin,
+  A.~Desmaison, L.~Antiga, and A.~Lerer.
+\newblock Automatic differentiation in {PyTorch}.
+\newblock In \emph{NIPS Workshops}, 2017.
+
+\bibitem[Peitz and Dellnitz(2018)]{Peitz2017}
+S.~Peitz and M.~Dellnitz.
+\newblock Gradient-based multiobjective optimization with uncertainties.
+\newblock In \emph{NEO}, 2018.
+
+\bibitem[Pirotta and Restelli(2016)]{Pirotta2016}
+M.~Pirotta and M.~Restelli.
+\newblock Inverse reinforcement learning through policy gradient minimization.
+\newblock In \emph{AAAI}, 2016.
+
+\bibitem[Poirion et~al.(2017)Poirion, Mercier, and
+  D{\'{e}}sid{\'{e}}ri]{Poirion2017}
+F.~Poirion, Q.~Mercier, and J.~D{\'{e}}sid{\'{e}}ri.
+\newblock Descent algorithm for nonsmooth stochastic multiobjective
+  optimization.
+\newblock \emph{Computational Optimization and Applications}, 68\penalty0
+  (2):\penalty0 317--331, 2017.
+
+\bibitem[Roijers et~al.(2013)Roijers, Vamplew, Whiteson, and
+  Dazeley]{Whiteson2018}
+D.~M. Roijers, P.~Vamplew, S.~Whiteson, and R.~Dazeley.
+\newblock A survey of multi-objective sequential decision-making.
+\newblock \emph{Journal of Artificial Intelligence Research}, 48:\penalty0
+  67--113, 2013.
+
+\bibitem[Rosenbaum et~al.(2017)Rosenbaum, Klinger, and Riemer]{Rosenbaum2017}
+C.~Rosenbaum, T.~Klinger, and M.~Riemer.
+\newblock Routing networks: Adaptive selection of non-linear functions for
+  multi-task learning.
+\newblock \emph{arXiv:1711.01239}, 2017.
+
+\bibitem[Rudd et~al.(2016)Rudd, G{\"u}nther, and Boult]{Rudd2016}
+E.~M. Rudd, M.~G{\"u}nther, and T.~E. Boult.
+\newblock {MOON}: A mixed objective optimization network for the recognition of
+  facial attributes.
+\newblock In \emph{ECCV}, 2016.
+
+\bibitem[Ruder(2017)]{Ruder2017}
+S.~Ruder.
+\newblock An overview of multi-task learning in deep neural networks.
+\newblock \emph{arXiv:1706.05098}, 2017.
+
+\bibitem[Sabour et~al.(2017)Sabour, Frosst, and Hinton]{multi_mnist}
+S.~Sabour, N.~Frosst, and G.~E. Hinton.
+\newblock Dynamic routing between capsules.
+\newblock In \emph{{NIPS}}, 2017.
+
+\bibitem[Sch{\"a}ffler et~al.(2002)Sch{\"a}ffler, Schultz, and
+  Weinzierl]{Schaffler2002}
+S.~Sch{\"a}ffler, R.~Schultz, and K.~Weinzierl.
+\newblock Stochastic method for the solution of unconstrained vector
+  optimization problems.
+\newblock \emph{Journal of Optimization Theory and Applications}, 114\penalty0
+  (1):\penalty0 209--222, 2002.
+
+\bibitem[Sekitani and Yamamoto(1993)]{Sekitani1993}
+K.~Sekitani and Y.~Yamamoto.
+\newblock A recursive algorithm for finding the minimum norm point in a
+  polytope and a pair of closest points in two polytopes.
+\newblock \emph{Mathematical Programming}, 61\penalty0 (1-3):\penalty0
+  233--249, 1993.
+
+\bibitem[Seltzer and Droppo(2013)]{Seltzer2013}
+M.~L. Seltzer and J.~Droppo.
+\newblock Multi-task learning in deep neural networks for improved phoneme
+  recognition.
+\newblock In \emph{ICASSP}, 2013.
+
+\bibitem[Shah and Ghahramani(2016)]{Shah2016}
+A.~Shah and Z.~Ghahramani.
+\newblock Pareto frontier learning with expensive correlated objectives.
+\newblock In \emph{{ICML}}, 2016.
+
+\bibitem[Stein(1956)]{Stein1956}
+C.~Stein.
+\newblock Inadmissibility of the usual estimator for the mean of a multivariate
+  normal distribution.
+\newblock Technical report, Stanford University, US, 1956.
+
+\bibitem[Wolfe(1976)]{Wolfe1976}
+P.~Wolfe.
+\newblock Finding the nearest point in a polytope.
+\newblock \emph{Mathematical Programming}, 11\penalty0 (1):\penalty0 128--149,
+  1976.
+
+\bibitem[Xue et~al.(2007)Xue, Liao, Carin, and Krishnapuram]{Xue2007}
+Y.~Xue, X.~Liao, L.~Carin, and B.~Krishnapuram.
+\newblock Multi-task learning for classification with dirichlet process priors.
+\newblock \emph{JMLR}, 8:\penalty0 35--63, 2007.
+
+\bibitem[Yang and Hospedales(2016)]{Yang2017}
+Y.~Yang and T.~M. Hospedales.
+\newblock Trace norm regularised deep multi-task learning.
+\newblock \emph{arXiv:1606.04038}, 2016.
+
+\bibitem[Zamir et~al.(2018)Zamir, Sax, Shen, Guibas, Malik, and
+  Savarese]{Zamir2018}
+A.~R. Zamir, A.~Sax, W.~B. Shen, L.~J. Guibas, J.~Malik, and S.~Savarese.
+\newblock Taskonomy: Disentangling task transfer learning.
+\newblock In \emph{CVPR}, 2018.
+
+\bibitem[Zhang and Yeung(2010)]{Zhang2010}
+Y.~Zhang and D.~Yeung.
+\newblock A convex formulation for learning task relationships in multi-task
+  learning.
+\newblock In \emph{{UAI}}, 2010.
+
+\bibitem[Zhao et~al.(2017)Zhao, Shi, Qi, Wang, and Jia]{pspnet}
+H.~Zhao, J.~Shi, X.~Qi, X.~Wang, and J.~Jia.
+\newblock Pyramid scene parsing network.
+\newblock In \emph{{CVPR}}, 2017.
+
+\bibitem[Zhou et~al.(2017{\natexlab{a}})Zhou, Zhao, Puig, Fidler, Barriuso, and
+  Torralba]{pspnet_implementation}
+B.~Zhou, H.~Zhao, X.~Puig, S.~Fidler, A.~Barriuso, and A.~Torralba.
+\newblock Scene parsing through {ADE20K} dataset.
+\newblock In \emph{{CVPR}}, 2017{\natexlab{a}}.
+
+\bibitem[Zhou et~al.(2017{\natexlab{b}})Zhou, Wang, Jiang, Guo, and
+  Li]{ZhouDi2017}
+D.~Zhou, J.~Wang, B.~Jiang, H.~Guo, and Y.~Li.
+\newblock Multi-task multi-view learning based on cooperative multi-objective
+  optimization.
+\newblock \emph{IEEE Access}, 2017{\natexlab{b}}.
+
+\bibitem[Zhou et~al.(2011{\natexlab{a}})Zhou, Chen, and Ye]{Zhou2011}
+J.~Zhou, J.~Chen, and J.~Ye.
+\newblock Clustered multi-task learning via alternating structure optimization.
+\newblock In \emph{{NIPS}}, 2011{\natexlab{a}}.
+
+\bibitem[Zhou et~al.(2011{\natexlab{b}})Zhou, Chen, and Ye]{zhou2011malsar}
+J.~Zhou, J.~Chen, and J.~Ye.
+\newblock {MALSAR}: Multi-task learning via structural regularization.
+\newblock \emph{Arizona State University}, 2011{\natexlab{b}}.
+
+\end{thebibliography}
+
+
+}
+
+\appendix
+\section{Proof of Theorem 1}
+\input{tex/appendix-proofs.tex}
+\section{Additional Results on Multi-label Classification}
+\input{tex/appendix-additional-results.tex}
+\section{Implementation Details}
+\input{tex/appendix-implementation-details.tex}
+
+\end{document}

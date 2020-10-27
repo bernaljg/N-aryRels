@@ -1,0 +1,57 @@
+Sequence-to-Sequence learning with deep neural networks (herein,
+seq2seq)~\cite{sutskever11generating,sutskever14sequence} has rapidly
+become a very useful and surprisingly general-purpose tool for natural
+language processing. In addition to demonstrating impressive results
+for machine translation \cite{bahdanau15neural}, roughly the same model and training
+have also proven to be useful for sentence compression~\cite{filippova15sentence}, parsing \cite{vinyals15grammar}, and dialogue systems~\cite{serban16building}, and they additionally underlie other text generation applications, such as image or video captioning~\cite{vid2text,showattend}.
+
+The dominant approach to training a seq2seq system is as
+a conditional language model, with training maximizing the likelihood of each successive target word conditioned on the input sequence and
+the \textit{gold} history of target words. Thus, training uses a strictly word-level loss, usually cross-entropy over the target vocabulary. This approach has proven to be very effective and efficient for training neural language models, and seq2seq models similarly obtain impressive perplexities for word-generation tasks.
+
+Notably, however, seq2seq models are not used as conditional language
+models at test-time; they must instead generate fully-formed word sequences. In practice, generation is accomplished by searching over output sequences greedily or with beam search. In this context, \newcite{ranzato16sequence}
+note that the combination of the training and generation scheme just described leads to at least two major issues:
+
+\begin{enumerate}
+\item \textit{Exposure Bias}: the model is never exposed to its own
+  errors during training, and so the inferred histories at test-time
+  do not resemble the gold training histories.
+\item \textit{Loss-Evaluation Mismatch}: training uses a word-level
+  loss, while at test-time we target improving sequence-level
+  evaluation metrics, such as BLEU~\cite{papineni02bleu}.
+\end{enumerate}
+
+We might additionally add the concern of \textit{label bias}~\cite{lafferty01conditional}
+to the list, since word-probabilities at each time-step are locally
+normalized, guaranteeing that successors of incorrect histories receive
+the same mass as do the successors of the true history.
+
+In this work we develop a non-probabilistic variant of the seq2seq
+model that can assign a score to any possible target
+\textit{sequence}, and we propose a training procedure, inspired by the learning
+as search optimization (LaSO) framework of \newcite{daume05learning},
+that defines a loss function in terms of errors made during beam
+search. Furthermore, we provide an efficient algorithm to
+back-propagate through the beam-search procedure during seq2seq
+training.
+
+This approach offers a possible solution to each of the three
+aforementioned issues, while largely maintaining the model architecture and
+training efficiency of standard seq2seq learning. Moreover, by scoring sequences rather than words, our approach also allows for enforcing hard-constraints on sequence generation \textit{at training time}. To test out the effectiveness of the proposed approach, we develop a general-purpose seq2seq system with beam
+search optimization. We run experiments on three very different
+problems: word ordering, syntactic parsing, and machine
+translation, and compare to a highly-tuned seq2seq system with
+attention~\cite{luong15effective}. The version with beam search optimization shows
+significant improvements on all three tasks, and particular
+improvements on tasks that require difficult search. 
+
+% As beam search is universally used for text generation
+% tasks, training in a way that more closely matches inference is likely
+% to improve performance. More concretely, such an approach addresses
+% the three aforementioned issues with RNN training, as elaborated upon
+% below.
+
+%\newcite{ranzato15sequence} attempt to address these issues using a mixture of reinforcement learning and word-level training, where they initially train with a word-level loss, and then gradually mix reinforcement learning in to training. Because the REINFORCE algorithm uses samples from a model's current policy in training, and because RL moreover allows for arbitrary losses/rewards, both issues above are addressed.  At the same time, using REINFORCE here seems somewhat excessive, since in many language generation applications we will have access to the correct intermediate parts of the structure (e.g., prefixes of the target sequence), and so we don't have to wait until the end of the generation to get a loss/reward signal. (Indeed, \newcite{mixer} pre-train with a word-level loss precisely because the action space is too large to use REINFORCE directly on an entire sequence). 
+%
+%In this note, we will propose to instead use a beam-search along the lines of the approach suggested in \newcite{laso}. Using beam-search should tackle exposure bias since the model must learn to rank its own predictions. It also allows for sequence-level losses, since, as described below, we define the loss function in terms of prefixes arrived at during beam-search. Finally, we note that the approach outlined below also additionally addresses ``label bias'' (an issue not raised by \newcite{mixer}), which might arise, for instance, when beam-decoding with locally normalized scores. 

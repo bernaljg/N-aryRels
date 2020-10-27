@@ -1,0 +1,62 @@
+\section{Positive Definiteness of~$K$}\label{sec:appendixA}
+To show that the kernel~$K$ defined in~(\ref{eq:kernel}) is positive definite
+(p.d.), we simply use elementary rules from the kernel literature described in
+Sections 2.3.2 and 3.4.1 of~\cite{shawe2004}.  A linear combination of p.d. kernels with non-negative weights is also p.d. (see Proposition 3.22
+of\cite{shawe2004}), and thus it is sufficient to show that for all $\z,\z'$
+in~$\Omega$, the following kernel on $\Omega \to \HH$ is p.d.:
+\begin{displaymath}
+   (\varphi,\varphi') \mapsto \big\|\varphi(\z)\big\|_\HH  \normH{\varphi'(\z')} e^{-\frac{1}{2\sigma^2} \normH{\tildephi(\z)-\tildephi'(\z')}^2}.
+\end{displaymath}
+Specifically, it is also sufficient to
+show that the following kernel on $\HH$ is p.d.:
+\begin{displaymath}
+   (\phi,\phi') \mapsto \big\|{\phi}\big\|_\HH  \normH{\phi'} e^{-\frac{1}{2\sigma^2} \normH{\frac{\phi}{\|\phi\|_\HH}-\frac{\phi'}{\|\phi'\|_\HH}}^2}.
+\end{displaymath}
+with the convention $\phi/\|\phi\|_\HH=0$ if~$\phi=0$.
+This is a pointwise product of two kernels and is p.d. when each of the two
+kernels is p.d. The first one is obviously p.d.: $(\phi,\phi') \mapsto
+\|{\phi}\|_\HH  \normH{\phi'}$. The second one is a composition of the Gaussian
+kernel---which is p.d.---, with feature maps $\phi/\|\phi\|_\HH$ of a
+normalized linear kernel in~$\HH$.  This composition is p.d. according to
+Proposition 3.22, item (v) of~\cite{shawe2004} since the normalization does
+not remove the positive-definiteness property.
+
+\section{List of Architectures Reported in the Experiments}\label{appendix:arch}
+We present in details the architectures used in the paper in Table~\ref{table:arch}.
+\begin{table}[hbtp]
+   \centering
+   \begin{tabular}{|*{9}{c|}}
+      \hline
+      Arch. & $N$ & $m_1$  & $p_1$  &  $\gamma_1$ & $m_2$ &  $p_2$ & $S$  &  $\sharp$ param\\
+      \hline
+      \hline
+      \multicolumn{9}{|c|}{MNIST} \\
+      \hline
+      CKN-GM1 & 2 &  $1 \times 1$  &  12  & 2 &  $3 \times 3$ &  50 &  $4 \times 4$ & $5\,400$\\
+      \hline
+      CKN-GM2 & 2 &  $1 \times 1$  &  12  & 2 &  $3 \times 3$ &  400 &  $3 \times 3$& $43\,200$ \\
+      \hline
+      CKN-PM1 & 1 &  $5 \times 5$  &  200  & 2 &  - &  - &  $4 \times 4$  & $5\,000$ \\
+      \hline
+      CKN-PM2 & 2 &  $5 \times 5$  &  50  & 2 &  $2 \times 2$ &  200 &  $6 \times 6$ & $41\,250$ \\
+      \hline
+      \hline
+      \multicolumn{9}{|c|}{CIFAR-10} \\
+      \hline
+      CKN-GM & 2 &  $1 \times 1$  &  12  & 2 &  $2 \times 2$ & 800 &  $4 \times 4$ & $38\,400$\\
+      \hline
+      CKN-PM & 2 &  $2 \times 2$  &  100  & 2 &  $2 \times 2$ &  800 &  $4 \times 4$ & $321\,200$\\
+      \hline
+      \hline
+      \multicolumn{9}{|c|}{STL-10} \\
+      \hline
+      CKN-GM & 2 &  $1 \times 1$  &  12  & 2 &  $3 \times 3$ & 800 &  $4 \times 4$ & $86\,400$\\
+      \hline
+      CKN-PM & 2 &  $3 \times 3$  &  50  & 2 &  $3 \times 3$ &  800 &  $3 \times 3$ & $361\,350$\\
+      \hline
+
+   \end{tabular}
+   \caption{List of architectures reported in the paper. $N$ is the number of layers; $p_1$ and~$p_2$ represent the number of filters are each layer; $m_1$ and~$m_2$ represent the size of the patches~$\NN_1$ and~$\NN_2$ that are of size~$m_1 \times m_1$ and~$m_2 \times m_2$ on their respective feature maps~$\zeta_1$ and~$\zeta_2$; $\gamma_1$ is the subsampling factor between layer 1 and layer 2; $S$ is the size of the output feature map, and the last column indicates the number of parameters that the network has to learn.}
+   \label{table:arch}
+\end{table}
+

@@ -1,0 +1,4 @@
+
+\section{Generating input of the proposed system}
+
+To create the input of the proposed system, the 2D depth map should be converted to voxelized form. To voxelize the 2D depth map, we first reproject each pixel of the depth map to the 3D space. After reprojecting all depth pixels, the 3D space is discretized based on the pre-defined voxel size. Then, the target object is extracted by drawing the cubic box around the reference point obtained in Section~\ref{refineRefPoint_Section}. We set the voxel value of the network's input $V(i,j,k)$ as 1 if the voxel is occupied by any depth point and 0 otherwise.

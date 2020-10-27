@@ -1,0 +1,62 @@
+% !TEX root = main.tex
+\begin{figure}[!t]
+\pgfplotsset{ticks=none}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+        width= 9cm, 
+        height=5.5cm,
+        grid = both,
+        nodes near coords, %={(\coordindex)},
+        scatter/classes={
+        	BM25={mark=otimes*, mark size=3pt, yellow, draw = black},%
+        	m1f1={mark=halfcircle*, mark size=3pt, blue, },%
+        	m1f2={mark=halfcircle*, mark size=3pt, red},%
+        	m1f3={mark=halfcircle*, mark size=3pt, black},
+        	m2f1={mark=halfsquare*, mark size=3pt, blue},%
+        	m2f2={mark=halfsquare*, mark size=3pt, red},%
+        	m2f3={mark=halfsquare*, mark size=3pt, black},
+        	m3f1={mark=pentagon*, mark size=3pt, blue},%
+        	m3f2={mark=pentagon*, mark size=3pt, red},%
+        	m3f3={mark=pentagon*, mark size=3pt, black}
+    	},
+    	legend style={
+            % legend image post style={xscale=0.75},
+            % inner sep=0pt,
+            at={(1.2,0.85)},
+            % anchor=west,
+            font=\fontsize{6}{7}\selectfont,
+        },
+    	]
+	\addplot[scatter,only marks,
+		scatter src=explicit symbolic]
+		coordinates {
+			(0.403,0.801) [BM25]
+			(0.341,0.749) [m1f1]
+			(0.232,0.240) [m1f2]
+			(0.570,0.412) [m1f3]
+			(0.091,0.718) [m2f1]
+			(0.265,0.369) [m2f2]
+			(0.808,0.101) [m2f3]
+			(0.246,0.601) [m3f1]
+			(0.371,0.600) [m3f2]
+			(0.730,0.305) [m3f3]
+		};
+	\node [right] at (0.413,0.801){\footnotesize{BM25}};
+	\node [left] at (0.381,0.800){\footnotesize{\mone + \fone}};
+	\node [below] at (0.232,0.230){\footnotesize{\mone + \ftwo}};
+	\node [above] at (0.570,0.422){\footnotesize{\mone + \fthree}};
+	\node [below] at (0.121,0.708){\footnotesize{\mtwo + \fone}};
+	\node [above] at (0.265,0.379){\footnotesize{\mtwo + \ftwo}};
+	\node [above] at (0.758,0.121){\footnotesize{\mtwo + \fthree}};
+	\node [below] at (0.226,0.591){\footnotesize{\mthree + \fone}};
+	\node [right] at (0.381,0.600){\footnotesize{\mthree + \ftwo}};
+	\node [above] at (0.730,0.315){\footnotesize{\mthree + \fthree}};
+%  	\legend{BM25,m1f1,m1f2,m1f3,m2f1,m2f2,m2f3,m3f1,m3f2,m3f3}
+\end{axis}
+\end{tikzpicture}
+\vspace{-5pt}
+\caption{Proximity of different models in terms of query-by-query performance.
+ \label{fig:modelproximity}}
+ \vspace{-15pt}
+ \end{figure}

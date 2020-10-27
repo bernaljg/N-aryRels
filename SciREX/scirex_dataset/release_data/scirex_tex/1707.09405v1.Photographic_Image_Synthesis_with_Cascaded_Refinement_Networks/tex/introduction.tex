@@ -1,0 +1,37 @@
+\begin{comment}
+- What is the problem? Why is it interesting and important?
+
+- Why hasn't it been solved yet? What is the challenge?
+
+- What is our contribution? How do we overcome the challenge? What is our key idea?
+
+- Technical details, anything else that is interesting about the approach, extensions.
+
+- What do the experiments say?
+\end{comment}
+
+Consider the semantic layouts in Figure~\ref{fig:teaser}. A skilled painter could draw images that depict urban scenes that conform to these layouts. Highly trained craftsmen can even create paintings that approach photorealism~\cite{Letze2013}. Can we train computational models that have this ability? Given a semantic layout of a novel scene, can an artificial system synthesize an image that depicts this scene and looks like a photograph?
+
+This question is connected to central problems in computer graphics and artificial intelligence. First, consider the problem of photorealism in computer graphics. A system that synthesizes photorealistic images from semantic layouts would in effect function as a kind of rendering engine that bypasses the laborious specification of detailed three-dimensional geometry and surface reflectance distributions, and avoids computationally intensive light transport simulation~\cite{Pharr2016}. A direct synthesis approach could not immediately replace modern rendering engines, but would indicate that an alternative route to photorealism may be viable and could some day complement existing computer graphics techniques.
+%which could complement existing computer graphics techniques.
+
+Our second source of motivation is the role of mental imagery and simulation in human cognition~\cite{Kosslyn2006}. Mental imagery is believed to play an important role in planning and decision making. The level of detail and completeness of mental imagery is a matter of debate, but its role in human intelligence suggests that the ability to synthesize photorealistic images may support the development of artificial intelligent systems~\cite{Markman2009}.
+%~\cite{Finn2016}.
+%and even the aforementioned hyperrealistic painters commonly rely on reference photographs instead of drawing purely from imagination~\cite{Letze2013}. Nevertheless, the ability to synthesize photorealistic images may support the development of intelligent systems~\cite{Finn2016}.
+
+%The most prominent contemporary approach to image synthesis uses generative adversarial networks (GANs)~\cite{Goodfellow2014}. ...
+
+In this work, we develop a model for photographic image synthesis from pixelwise semantic layouts. Our model is a convolutional network, trained in a supervised fashion on pairs of photographs and corresponding semantic layouts. Such pairs are provided with semantic segmentation datasets~\cite{Cordts2016}. We use them not to infer semantic layouts from photographs, but to synthesize photographs from semantic layouts. In this sense our problem is the inverse of semantic segmentation. Images synthesized by our model are shown in Figure~\ref{fig:teaser}.
+
+We show that photographic images can be synthesized directly by a single feedforward convolutional network trained to minimize a regression loss. This departs from much recent and contemporaneous work, which uses adversarial training of generator-discriminator dyads~\cite{DosovitskiyBrox2016,Isola2017,Nguyen2016,Salimans2016}. We show that direct supervised training of a single convolutional network can yield photographic images. This bypasses adversarial training, which is known to be ``massively unstable''~\cite{ArjovskyBottou2017}.
+%One of the benefits is that we completely avoid adversarial training, which is known to be ``massively unstable"~\cite{ArjovskyBottou2017}.
+%Response from Alexey concerning resolution: In the DeePSiM paper it's 227x227 - the size AlexNet takes as input. In  "Synthesizing the preferred inputs" and PPGN it's the same since they are built on top.
+%Our number of pixels: 2,097,152
+%227x227 = 51,529
+Furthermore, the presented approach scales seamlessly to high image resolutions. We synthesize images with resolution up to 2 megapixels \mbox{($1024 \timess 2048$)}, the full resolution of our training data.
+%This is more than an order of magnitude beyond the state of the art~\cite{DosovitskiyBrox2016,Isola2017,Nguyen2016,Salimans2016}.
+Doubling the output resolution and generating appropriate details at that resolution amounts to adding a single module to our end-to-end model.
+%Since our approach uses a single feedforward network, even high-resolution models can be trained without running out of memory.
+
+We conduct careful perceptual experiments using the Amazon Mechanical Turk platform, comparing the presented approach to a range of baselines. These experiments clearly indicate that images synthesized by our model are significantly more realistic than images synthesized by alternative approaches.
+%the contemporaneous work in 97\% of the cases, with strong statistical significance. We evaluate images synthesized by models trained on different datasets, and demonstrate cross-dataset generalization by using a model trained on one dataset to synthesize images for semantic layouts from a different dataset.

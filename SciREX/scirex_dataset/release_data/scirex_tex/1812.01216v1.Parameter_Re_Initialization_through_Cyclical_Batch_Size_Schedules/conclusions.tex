@@ -1,0 +1,15 @@
+\section{Conclusions}\label{sec:conclusions}
+In this work we explored different cyclical batch size (CBS) schedules for training neural networks. We framed the motivation behind CBS schedules through the lens of Bayesian statistical methods, in particular adaptive MCMC algorithms, which seek out better estimates of the
+posterior starting with a (poor) prior distribution. In the context of neural network training, this translates to re-initialization of the weights via cycling between large and small batch sizes which control the noise in SGD. We show empirical results which find this cyclical batch size schedule can significantly outperform fixed batch size baselines, especially in networks prone to overfitting or initialized poorly, on the tasks of language modeling, natural language inference, and image classification with LSTMs, CNNs, and ResNets.
+In our language modeling experiments, we see that a wide variety of CBS schedules outperform the baseline by up to 7.91 perplexity and up to $33\%$ fewer training iterations. For natural language inference and image classification tasks, we observe a reduction in the number of training iterations of up to $61\%$, which translates directly into reduced runtime. Finally, we demonstrate the flexibility of CBS as a building block for ensembling and adversarial training methods. Ensembling on language modeling yields improvements of up to 11.22 perplexity over the baseline and on image classification, an improvement of up to $1.07\%$ accuracy. Adversarial training in conjunction with CBS gives a bump in image classification accuracy of 0.26\%.
+
+\paragraph{Limitations}
+We believe that it is very important for every work to state its limitations (in 
+general, but in particular in this area).
+We performed an extensive variety of experiments on different tasks in order to comprehensively test the algorithm. 
+The primary limitation of our work is that cyclical batch size schedules introduce another
+hyper-parameter that requires manual tuning. We note that this is also true
+for cyclical learning rate schedules, and hope to address this
+using second order methods~\cite{yao2018large} as part of future work.
+Furthermore, for well initialized models which are not prone to overfitting, single snapshot
+CBS achieves similar performance to the baseline, although the cyclical ensembling provides a modicum of improvement.

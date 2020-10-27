@@ -1,0 +1,19 @@
+\newcommand{\galleryRowOther}[7]{\vspace*{-0.075cm} \includegraphics[width=\galleryWidth]{figures/gallery/#1} & \includegraphics[width=\galleryWidth]{figures/gallery/#2} &  \includegraphics[width=\galleryWidth]{figures/gallery/#3} &  \includegraphics[width=\galleryWidth]{figures/gallery/#4} &  \includegraphics[width=\galleryWidth]{figures/gallery/#5} &  \includegraphics[width=\galleryWidth]{figures/gallery/#6} &  \includegraphics[width=\galleryWidth]{figures/gallery/#7} \tabularnewline 
+}
+  \resizebox{\linewidth}{!}{%
+    \setlength{\tabcolsep}{0.7pt}%
+    \begin{tabular}{ccccccc}%
+      Image Overlay &
+      FlowFields  \cite{flowfields} &
+      DeepFlow \cite{deepflow} &
+      LDOF (GPU) \cite{ldof-gpu} &
+      PCA-Flow \cite{pcaflowlayers} &
+      FlowNetS \cite{DFIB15} &
+      FlowNet2 \\
+\galleryRowOther{other/Backyard_overlay.jpg}{other/Backyard_FlowFields.jpg}{other/Backyard_DeepFlow.jpg}{other/Backyard_LDOF.jpg}{other/Backyard_PCA-Flow.jpg}{other/Backyard_FlowNetS.jpg}{other/Backyard_FlowNet2.jpg}
+\galleryRowOther{other/BasketballMid_overlay.jpg}{other/BasketballMid_FlowFields.jpg}{other/BasketballMid_DeepFlow.jpg}{other/BasketballMid_LDOF.jpg}{other/BasketballMid_PCA-Flow.jpg}{other/BasketballMid_FlowNetS.jpg}{other/BasketballMid_FlowNet2.jpg}
+\galleryRowOther{other/Philipp_b04_overlay.jpg}{other/Philipp_b04_FlowFields.jpg}{other/Philipp_b04_DeepFlow.jpg}{other/Philipp_b04_LDOF.jpg}{other/Philipp_b04_PCA-Flow.jpg}{other/Philipp_b04_FlowNetS.jpg}{other/Philipp_b04_FlowNet2.jpg}
+\galleryRowOther{other/Basketball_overlay.jpg}{other/Basketball_FlowFields.jpg}{other/Basketball_DeepFlow.jpg}{other/Basketball_LDOF.jpg}{other/Basketball_PCA-Flow.jpg}{other/Basketball_FlowNetS.jpg}{other/Basketball_FlowNet2.jpg}
+\galleryRowOther{other/v_PlayingFlute_g03_c07_00010_00011_overlay.jpg}{other/v_PlayingFlute_g03_c07_00010_00011_FlowFields.jpg}{other/v_PlayingFlute_g03_c07_00010_00011_DeepFlow.jpg}{other/v_PlayingFlute_g03_c07_00010_00011_LDOF.jpg}{other/v_PlayingFlute_g03_c07_00010_00011_PCA-Flow.jpg}{other/v_PlayingFlute_g03_c07_00010_00011_FlowNetS.jpg}{other/v_PlayingFlute_g03_c07_00010_00011_FlowNet2.jpg}
+    \end{tabular}%
+  }%

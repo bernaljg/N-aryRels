@@ -1,0 +1,23 @@
+\section{Conclusions}
+In this paper, we focus on the task of CTR prediction modeling in the scenario of display advertising in e-commerce industry with rich user behavior data.
+The use of fixed-length representation in traditional deep CTR models is a bottleneck for capturing the diversity of user interests. 
+To improve the expressive ability of model, a novel approach named DIN is designed to activate related user behaviors and obtain an adaptive representation vector for user interests which varies over different ads.    
+%soft-searching for a part of user's behaviors to represent user's activated interests with a vector, which varies with candidate ads.\par
+%With exploiting these characteristic sufficiently, we design a novel model named DIN.
+%Besides, we propose a mini-batch aware regularization technique which can help reducing overfitting greatly in our scenario. What's more, we design a mini-batch aware activation function to accelerate convergence of our model. These approaches could be generalized to other industrial deep learning tasks.
+Besides two novel techniques are introduced to help training industrial deep networks and further improve the performance of DIN. They can be easily generalized to other industrial deep learning tasks. 
+DIN now has been deployed in the online display advertising system in Alibaba.  
+%DIN now has been deployed in the productive display advertising system in Alibaba and contributes up to 10.0\% CTR promotion compared with BaseModel, our last productive version, which is a significant improvement to the business.
+%Experiments show that DIN brings more interpretability and achieves better GAUC performance compared with popular Embedding\&MLP model.
+%=======
+%We reveal and summarize the two key characteristics of data: diversity and local activation. With exploiting these characteristics sufficiently, we design a novel model named DIN.
+%Experiments show that DIN brings more interpretability and achieves better GAUC performance compared with popular Embedding\&MLP model.
+%Besides, we propose a mini-batch aware regularization technique which can help reducing overfitting greatly in our scenario. What's more, we design a new activation function based on data to accelerate convergence of our model. We suppose these approaches could be instructive to other industrial deep learning tasks.\par
+%>>>>>>> 802ff3c7671abeecb6185253b8389137e6009ec9
+%Different from the fields of image recognition and natural language process with mature and state-of-the-art deep network structures, applications with rich internet-scale user behavior data still face a lot of challenges. These applications are worth making more efforts to study and improve. We will continue to focus on this direction.
+
+%\section{Future work}
+%With better understanding the diversity and local activation effects of user's interests, DIN captures users' interests effectively. It's notable that the users' behavior data is sequential, which may reflect user intentions further. But user's behavior sequence contains concurrent multiple varying interests and rapid jumping over these diverse interests, which make the sequence seems noisy and disordering. Our proposed attention-like activation network can filter out the relevant single-interest sub-sequence, making the sequence analysis easier. However, in e-commerce scenario, special characteristics of the behavior sequence need to be carefully studied, e.g., the first-activation, termination (like due to one purchasing behavior), possible reactivation (like periodic repeat purchase) of one sequential interest, which are all mixed in the user's concurrent multiple different interest sequences. One future direction is to design more delicate structure to capture interests from sequential historical behavior better.\par
+
+%the sequential characteristic of user historical behavior is weak and noisy, which may be affected by both users' interests and system factors. So, in future, we will focus on
+%What's more, many methods on task of CTR prediction in a real online system do experiment on their own industry dataset, which makes it difficult to compare fairly. We plan to publish the dataset after desensitizing from our advertising display system. We wish it could help the standardization of the experiment later.

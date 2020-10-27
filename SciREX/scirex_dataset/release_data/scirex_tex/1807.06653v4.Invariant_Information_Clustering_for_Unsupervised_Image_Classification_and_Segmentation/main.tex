@@ -1,0 +1,166 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{iccv}
+\usepackage{times}
+
+\usepackage[font={footnotesize}]{caption}
+\usepackage[linesnumbered, ruled]{algorithm2e}
+\usepackage[percent]{overpic}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{comment}
+\usepackage{contour}
+\usepackage{dsfont}
+\usepackage{floatrow}
+\usepackage{graphicx}
+\usepackage{layouts}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{subcaption}
+\usepackage{tabularx}
+\usepackage{tcolorbox}
+\usepackage{transparent}
+\usepackage{url}
+\usepackage{verbatim}
+\usepackage{xspace}
+
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+%\usepackage[capitalise]{cleveref}
+\usepackage{cleveref}
+
+\iccvfinalcopy
+\def\iccvPaperID{3193}
+\ificcvfinal\pagestyle{empty}\fi
+
+\newfloatcommand{capbtabbox}{table}[][\FBwidth]
+
+\newcommand{\mytodo}[1]{{\noindent\textcolor{red}{TODO: #1}}}
+\newcommand{\todo}[1]{\mytodo{#1}}
+\newcommand{\bbf}{\mathbf{f}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bz}{\mathbf{z}}
+\newcommand{\bw}{\mathbf{w}}
+\newcommand{\be}{\mathbf{e}}
+\newcommand{\bv}{\mathbf{v}}
+\newcommand{\methodname}{Invariant Information Clustering\xspace}
+\newcommand{\methodnameshort}{IIC\xspace}
+\newcommand{\bdash}{\mathbf{'}}
+\newcommand{\bc}{\mathbf{c}}
+\newcommand{\defeq}{\overset{\Delta}{=}}
+\newcommand{\cmt}[1]{\ignorespaces}
+
+\newcommand{\matP}{\mathbf{P}}  %\boldsymbol{P}
+
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{6.5} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{6.5}  % for normal
+
+% Suppress annoying badness warnings (disable for final version).
+\hfuzz=10000pt
+\vfuzz=10000pt
+\hbadness=2000
+\vbadness=\maxdimen
+
+% No space paragraph.
+\makeatletter
+\renewcommand{\paragraph}{%
+  \@startsection{paragraph}{4}%
+  %{\z@}{3.25ex \@plus 1ex \@minus .2ex}{-1em}%
+  {\z@}{0.5em}{-1em}%
+  {\normalfont\normalsize\bfseries}%
+}
+\makeatother
+
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+% General parameters, for ALL pages:
+\renewcommand{\topfraction}{0.9}    % max fraction of floats at top
+\renewcommand{\bottomfraction}{0.8} % max fraction of floats at bottom
+
+% Parameters for TEXT pages (not float pages):
+\setcounter{topnumber}{2}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4} % 2 may work better
+\setcounter{dbltopnumber}{2} % for 2-column pages
+\renewcommand{\dbltopfraction}{0.9} % fit big float above 2-col. text
+\renewcommand{\textfraction}{0.07} % allow minimal text w. figs
+
+% Parameters for FLOAT pages (not text pages):
+\renewcommand{\floatpagefraction}{0.7} % require fuller float pages
+
+% N.B.: floatpagefraction MUST be less than topfraction !!
+\renewcommand{\dblfloatpagefraction}{0.7} % require fuller float pages
+
+% Separation between text and figure etc
+\setlength{\textfloatsep}{5.0pt plus 2.0pt minus 4.0pt}
+\setlength{\floatsep}{5.0pt plus 2.0pt minus 2.0pt}
+\setlength{\intextsep}{5.0pt plus 2.0pt minus 2.0pt}
+\setlength{\dbltextfloatsep}{5.0pt plus 2.0pt minus 2.0pt}
+\setlength{\dblfloatsep}{5.0pt plus 2.0pt minus 2.0pt}
+
+\floatsetup[table]{capposition=bottom,captionskip=0.2em}
+\floatsetup[figure]{capposition=bottom,captionskip=0.2em}
+
+\title{\methodname for \\ Unsupervised Image Classification and Segmentation}
+\author{Xu Ji\\
+University of Oxford\\
+{\tt\small xuji@robots.ox.ac.uk}
+\and
+Jo\~ao F. Henriques\\
+University of Oxford\\
+{\tt\small joao@robots.ox.ac.uk}
+\and
+Andrea Vedaldi\\
+University of Oxford\\
+{\tt\small vedaldi@robots.ox.ac.uk}}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+%We present a novel clustering objective that learns a classifier and an image representation from scratch given only unlabelled data samples.
+%We present a novel clustering objective that learns a classifier given only unlabelled data samples, learning an image representation from scratch.
+
+We present a novel clustering objective that learns a neural network classifier from scratch, given only unlabelled data samples.
+The model discovers clusters that accurately match semantic classes, achieving state-of-the-art results in eight unsupervised clustering benchmarks spanning image classification and segmentation.
+These include STL10, an unsupervised variant of ImageNet, and CIFAR10, where we significantly beat the accuracy of our closest competitors by 6.6 and 9.5 absolute percentage points respectively.
+%The method is applicable to any data source that produces pairs of correlated data samples and, while we obtain such pairs by randomly transforming images, it is not restricted to computer vision data.
+%The objective is to maximise the mutual information between the class assignments of each pair, optimising the cluster assignments end-to-end.
+The method is not specialised to computer vision and operates on any paired dataset samples; in our experiments we use random transforms to obtain a pair from each image. 
+The trained network directly outputs semantic labels, rather than high dimensional representations that need external processing to be usable for semantic clustering.
+The objective is simply to maximise mutual information between the class assignments of each pair.
+It is easy to implement and rigorously grounded in information theory, meaning we effortlessly avoid degenerate solutions that other clustering methods are susceptible to.
+%This allows it to effortlessly avoids certain degenerate solutions that afflict other methods that output instead high dimensional representations that need post-processing for clustering.
+In addition to the fully unsupervised mode, we also test two semi-supervised settings. The first achieves 88.8\% accuracy on STL10 classification, setting a new global state-of-the-art over all existing methods (whether supervised, semi-supervised or unsupervised).
+The second shows robustness to 90\% reductions in label coverage, of relevance to applications that wish to make use of small amounts of labels. \lstinline[basicstyle=\ttfamily]{github.com/xu-ji/IIC} 
+%The first achieves a new global state-of-the-art accuracy of 88.8\% on STL10 classification, which is better than all existing methods (whether supervised, semi-supervised or unsupervised). The second shows robustness to 90\% reductions in label coverage, of relevance to applications that wish to make use of small amounts of labels.
+%when one can only afford to collect small amounts of labels.
+
+\begin{comment}
+We present a novel clustering objective that trains a randomly-initialised network into a classifier without any example labels provided in training or testing.
+The discovered clusters correspond to semantic classes with high accuracy, setting new state-of-the-art records on 8 unsupervised datasets across image classification and segmentation, including STL10, an unsupervised variant of ImageNet on which we beat our closest competitor by 8\%. 
+The method is not specialised to computer vision and can use any data with a pairwise distance metric; in our experiments we use random transforms to obtain a pair from each image.
+The objective is simply to maximise mutual information between the class assignments of each pair.
+It is easy to implement and rigorously grounded in information theory, meaning unlike other methods, we are able to avoid degenerate solutions with no effort. 
+The objective optimises for the final clusters and therefore the trained network directly outputs semantic labels rather than high dimensional representations that need external processing to be usable.
+In addition to the fully unsupervised mode, we also test two semi-supervised settings, setting a new global state of the art of 88.8\% accuracy on STL10 classification out of all known methods (whether supervised, semi-supervised or unsupervised) and demonstrating robustness to 90\% reductions in label coverage, of relevance to applications that wish to make use of small amounts of labels.
+\end{comment}
+\end{abstract}
+
+\input{intro}
+\input{related}
+\input{method}
+\input{experiments}
+\input{conclusions}
+
+{\noindent\textbf{Acknowledgments.} We are grateful to ERC StG IDIU-638009 and EPSRC AIMS CDT for support.}
+{\small\bibliographystyle{ieee_fullname}\bibliography{main}}
+%\clearpage
+%\input{appendix}
+%\input{experiments}
+%\clearpage\input{new}
+%\clearpage\input{scratch}
+\end{document}

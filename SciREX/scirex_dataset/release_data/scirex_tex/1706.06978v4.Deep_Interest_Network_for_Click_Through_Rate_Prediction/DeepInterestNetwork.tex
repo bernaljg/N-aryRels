@@ -1,0 +1,161 @@
+\documentclass[sigconf]{acmart}
+\usepackage{amsmath,amssymb,amsfonts,bm,amsthm}
+\usepackage[linesnumbered,ruled]{algorithm2e}
+\usepackage{graphicx}
+\usepackage[tight,normal]{subfigure}
+\usepackage{multirow,makecell,url,footmisc}
+\usepackage{enumerate}
+\usepackage{lineno}
+\usepackage{textcomp}
+\usepackage{booktabs} % For formal tables
+\usepackage{subfigure}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{bm}
+\usepackage{mathtools}
+\usepackage{threeparttable}
+%\usepackage{epstopdf}
+\usepackage[american]{babel}
+% \usepackage[numbers]{natbib}
+\usepackage{color}
+\usepackage{threeparttable}
+\usepackage{appendix}
+\usepackage{comment}
+\usepackage{multirow}
+%\usepackage[left]{lineno}
+\usepackage{blindtext}
+\usepackage{comment}
+%\usepackage{amsmath}
+\newcommand{\argmax}{\mathop{\arg\max}}
+\newcommand{\argmin}{\mathop{\arg\min}}
+\newcommand{\med}{\mathop{\textrm{med}}}
+\newcommand{\x}{{\bf x}}
+\newcommand{\w}{{\bf w}}
+\newcommand{\z}{{\bf z}}
+\newcommand{\y}{{\bf y}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\expect}{\mathbb{E}}
+\newcommand{\sign}{\mathtt{sign}}
+\newcommand{\mathI}{\mathcal{I}}
+\newcommand{\defeq}{\stackrel{\text{def}}{=}}
+\newcommand{\EDIT}{\color{red}}
+\newcommand{\bs}{\boldsymbol}
+
+\newcommand{\chuhao}{\fontsize{1.25pt}{\baselineskip}\selectfont}
+
+\usepackage{comment}
+
+%\DeclareMathOperator*{\argmax}{argmax}
+
+\fancyhead{}
+\settopmatter{printacmref=false}
+\renewcommand\footnotetextcopyrightpermission[1]{}
+\pagestyle{plain}
+%\settopmatter{printcopyright=false}
+\copyrightyear{2018} 
+\acmYear{2018} 
+\setcopyright{acmcopyright}
+\acmConference{KDD'18}{}{August 19--23, 2018, London, United Kingdom.}
+
+
+
+\begin{document}
+
+\title{Deep Interest Network for Click-Through Rate Prediction}
+
+\author{Guorui Zhou, Chengru Song, Xiaoqiang Zhu \\
+  Ying Fan, Han Zhu, Xiao Ma, Yanghui Yan, Junqi Jin, Han Li, Kun Gai}
+\affiliation{%
+  \institution{Alibaba Group}
+}
+%\affiliation{$^\dag$Alibaba Inc.}
+\email{{guorui.xgr, chengru.scr, xiaoqiang.zxq, zhuhan.zh, fanying.fy, maxiao.ma, yanghui.yyh, junqi.jjq, lihan.hl,jingshi.gk}@alibaba-inc.com}
+
+\begin{abstract}
+%Click-through rate prediction is an essential task in online advertising. Recently deep learning based models have been proposed, which follow a similar Embedding\&MLP paradigm. In these methods large scale sparse input features are first mapped into low dimensional embedding vectors, and then transformed into fixed-length vectors in a group-wise manner, finally concatenated together to fed into a multilayer perceptron (MLP) to learn the nonlinear relations among features. In this way, user features are compressed into a fixed-length representation vector, in regardless of what candidate ad features are. However, in applications with rich historical behaviors, the user representation vector with a limited size will be a bottleneck to express multiple concurrent interests of users, limiting the effectiveness of Embedding\&MLP methods.In this paper, we propose a novel model: Deep Interest Network (DIN) which tackles this challenge by designing an attention unit to adaptively learn the representation of user interests from historical behaviors with respect to a certain ad. This representation vector varies over different ads, improving the expressive ability of model greatly. Besides, we develop two techniques: mini-batch aware regularization and data adaptive activation function which can help training industrial deep networks with hundreds of millions of parameters. Experiments on two public datasets as well as an internal dataset collected from productive system demonstrate the effectiveness of proposed approaches, which achieves superior performance compared with state-of-the-art methods. DIN now has been successfully deployed in the productive displaying system in Alibaba, contributing up to 15\% CTR promotion which is a significant improvement to the business.
+
+Click-through rate prediction is an essential task in industrial applications, such as online advertising.
+Recently deep learning based models have been proposed, which follow a similar Embedding\&MLP paradigm.
+In these methods large scale sparse input features are first mapped into low dimensional embedding vectors, and then transformed into fixed-length vectors in a group-wise manner, finally concatenated together to fed into a multilayer perceptron (MLP) to learn the nonlinear relations among features.
+In this way, user features are compressed into a fixed-length representation vector, in regardless of what candidate ads are.
+The use of fixed-length vector will be a bottleneck, which brings difficulty  for Embedding\&MLP methods to capture user's diverse interests effectively from rich historical behaviors.
+%The use of fixed-length vector will be a bottleneck to express user's diverse interests. This brings difficulty   for Embedding\&MLP methods to capture user's diverse interests effectively from rich historical behaviors.
+%The use of fixed-length vector will be a bottleneck to express user's diverse interests, limiting the effectiveness of Embedding\&MLP methods to capture user interests from rich historical behaviors. 
+In this paper, we propose a novel model: Deep Interest Network (DIN) which tackles this challenge by designing a local activation unit to adaptively learn the representation of user interests from historical behaviors with respect to a certain ad.
+This representation vector varies over different ads, improving the expressive ability of model greatly.
+Besides, we develop two techniques: mini-batch aware regularization and data adaptive activation function which can help training industrial deep networks with hundreds of millions of parameters.
+Experiments on two public datasets as well as an Alibaba real production dataset with over 2 billion samples demonstrate the effectiveness of proposed approaches, which achieve superior performance compared with state-of-the-art methods.
+%DIN now has been successfully deployed in the productive displaying system in Alibaba, contributing up to 10.0\% CTR promotion which is a significant improvement to the business.
+DIN now has been successfully deployed in the online display advertising system in Alibaba, serving the main traffic. 
+
+
+%Recently a number of deep learning based models have been proposed, which follow a similar Embedding\&MLP paradigm. 
+%% version 1
+%They first map large scale sparse features into low dimensional embedding vectors and transfer them into fixed-length vectors in the group-wise manner via pooling, for example, fixed-length presentations for user, ad, etc. Then a multilayer perceptron (MLP) is used to learn the nonlinear relations among features with input of concatenation of group-wise vectors. %They first map large scale sparse features into low dimensional embedding vectors and summarize them into fixed-length vectors in the group-wise manner via pooling. Then a multilayer perceptron (MLP) is used to learn the nonlinear relations among features.
+%However, in applications with rich user behavior data, to capture users' diverse interests within a fixed-length representation vector gives challenge for Embedding\&MLP methods.  
+%However, in applications with rich user behaviors, a fixed-length representation vector lacks of the ability to express concurrent and diverse interests of users.  
+%% version 2:gk
+%They first map large scale sparse features into low dimensional embedding vectors, and then pool them in a group-wise manner and concatenate them into a fixed length vector. Finally a multilayer perceptron (MLP) is used to learn the nonlinear relations among features. In Embedding&MLP, user feature groups including rich user behaviors are compressed into a fixed-length representation vectors (as a part of the whole representation vector), separately from candidate ad/item features,  and is lack of the ability of expressing user's concurrent diverse interests. a fixed-length vector representation for each user is lack of ability of expressing user's simultaneously-existing diverse interests.
+%% version 4:gk
+
+%However, in applications with rich historical user behaviors, where user interests are diverse concurrently and difficult to be represented within a fixed-length vector, Embedding\&MLP methods encounter challenge.  
+%However, in applications with rich historical user behaviors, where user interests are diverse concurrently, a fixed-length representation vector it lacks of expressive ability with a fixed-length representation vector used Embedding\&MLP methods.    
+%However, in applications with rich historical user behaviors,  such fixed-length user representation vector in Embedding\&MLP methods are lack of ability of expressing multiple concurrent interests for a certain user.
+
+%Embedding&MLP methods are lack of ability of expressing user's concurrently-existing diverse interests.
+%However, in applications with rich historical user behaviors, where user interests are diverse concurrently and challengable to be represented within a fixed-length vector in Embedding\&MLP methods.  
+%% version 3
+%[M2]:They first map large scale sparse features into low dimensional embedding vectors and transfer them into fixed-length vectors in the group-wise manner via pooling, for example, separate representation vectors for user group, ad group, etc. Then a multilayer perceptron (MLP) is used to learn the nonlinear relations among features with input of concatenation of vectors from different groups. However, in applications with rich historical user behaviors, where user interests are diverse concurrently and difficult to be represented within a fixed-length vector, Embedding\&MLP methods encounter challenge.  
+
+ 
+%A number of deep models have been proposed for click-through rate (CTR) prediction recently. They usually belong to the family of Embedding\&MLP approaches, which embeds information like users' behaviors, candidate goods and context features into a fixed-length vector. Then a multilayer perceptron is exploited for the CTR prediction task. However, the use of fixed-length representation may fail to capture the diversity of user interests, as well as the local attention effects in industrial-level ads displaying system. In this paper,  we propose a novel model: Deep Interest Network (DIN) to automatically capture the users' activated interests from users' historical behaviors given the candidate goods to display. To improve the performance of our model, we further design a mini-batch aware regularization, as well as a novel activation function that show significant improvements on both online and offline experiments. DIN has been successfully deployed in the online ads displaying services in Alibaba, showing superior performance over the competitors.
+
+
+%Click-through rate (CTR) prediction is an essential task in many industrial applications, such as advertising, recommendation and web search. 
+%The data in those applications is mostly categorical and contains multiple fields. 
+%Recently, a number of deep learning based CTR models have been proposed, most of which take the field-aware manner to map large scale one-hot or multi-hot discrete features into fixed-length vectors via embedding and pooling technique and then apply fully connected layers, in other words, multilayer perception(MLP), to capture the nonlinear patterns between inter-field features.
+
+%However, we argue that in many scenarios fixed-length representations for each feature field miss            
+
+%which embeds information like  users' behaviors, candidate goods and context features into a fixed-length vector. 
+%Then a multilayer perceptron is exploited for the CTR prediction task. 
+%However, we argue that fixed-length representation may fail to capture the diversity of user interests, as well as the local attention effects in industrial-level ads displaying system. 
+%In this paper,  we propose a novel model: Deep Interest Network (DIN) to automatically capture the users' activated interests from users' historical behaviors given the candidate goods to display. 
+%To improve the performance of our model, we further design a mini-batch aware regularization, as well as a novel activation function that show significant improvements on both online and offline experiments. 
+%DIN has been successfully deployed in the online ads displaying services in Alibaba, showing superior performance over the competitors.
+
+\end{abstract}
+\begin{CCSXML}
+<ccs2012>
+<concept>
+<concept_id>10002951.10003260.10003272.10003275</concept_id>
+<concept_desc>Information systems~Display advertising</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+<concept>
+<concept_id>10002951.10003317.10003347.10003350</concept_id>
+<concept_desc>Information systems~Recommender systems</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Information systems~Display advertising}
+\ccsdesc[500]{Information systems~Recommender systems}
+
+\keywords{Click-Through Rate Prediction, Display Advertising, E-commerce}
+%\keywords{Click-Through Rate Prediction, Display Advertising, E-commerce, User's Diverse Interests, Training Industrial Deep Network}
+\maketitle
+
+\input{ch_intro}
+\input{ch_relatedwork}
+\input{ch_sysview}
+\input{ch_approach}
+\input{ch_exp}
+\input{ch_concln}
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{DIN} 
+\end{document}

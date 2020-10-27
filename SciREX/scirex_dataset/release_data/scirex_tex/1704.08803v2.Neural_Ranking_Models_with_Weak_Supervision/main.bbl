@@ -1,0 +1,582 @@
+%%% -*-BibTeX-*-
+%%% Do NOT edit. File created by BibTeX with style
+%%% ACM-Reference-Format-Journals [18-Jan-2012].
+
+\begin{thebibliography}{00}
+
+%%% ====================================================================
+%%% NOTE TO THE USER: you can override these defaults by providing
+%%% customized versions of any of these macros before the \bibliography
+%%% command.  Each of them MUST provide its own final punctuation,
+%%% except for \shownote{}, \showDOI{}, and \showURL{}.  The latter two
+%%% do not use final punctuation, in order to avoid confusing it with
+%%% the Web address.
+%%%
+%%% To suppress output of a particular field, define its macro to expand
+%%% to an empty string, or better, \unskip, like this:
+%%%
+%%% \newcommand{\showDOI}[1]{\unskip}   % LaTeX syntax
+%%%
+%%% \def \showDOI #1{\unskip}           % plain TeX syntax
+%%%
+%%% ====================================================================
+
+\ifx \showCODEN    \undefined \def \showCODEN     #1{\unskip}     \fi
+\ifx \showDOI      \undefined \def \showDOI       #1{{\tt DOI:}\penalty0{#1}\ }
+  \fi
+\ifx \showISBNx    \undefined \def \showISBNx     #1{\unskip}     \fi
+\ifx \showISBNxiii \undefined \def \showISBNxiii  #1{\unskip}     \fi
+\ifx \showISSN     \undefined \def \showISSN      #1{\unskip}     \fi
+\ifx \showLCCN     \undefined \def \showLCCN      #1{\unskip}     \fi
+\ifx \shownote     \undefined \def \shownote      #1{#1}          \fi
+\ifx \showarticletitle \undefined \def \showarticletitle #1{#1}   \fi
+\ifx \showURL      \undefined \def \showURL       #1{#1}          \fi
+% The following commands are used for tagged output and should be
+% invisible to TeX
+\providecommand\bibfield[2]{#2}
+\providecommand\bibinfo[2]{#2}
+\providecommand\natexlab[1]{#1}
+\providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[\protect\citeauthoryear{Asadi, Metzler, Elsayed, and Lin}{Asadi
+  et~al\mbox{.}}{2011}]%
+        {Asadi:2011}
+\bibfield{author}{\bibinfo{person}{Nima Asadi}, \bibinfo{person}{Donald
+  Metzler}, \bibinfo{person}{Tamer Elsayed}, {and} \bibinfo{person}{Jimmy
+  Lin}.} \bibinfo{year}{2011}\natexlab{}.
+\newblock \showarticletitle{Pseudo test collections for learning web search
+  ranking functions}. In \bibinfo{booktitle}{{\em Proceedings of the 34th
+  international ACM SIGIR conference on Research and development in Information
+  Retrieval}}. ACM, \bibinfo{pages}{1073--1082}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Baldi}{Baldi}{2012}]%
+        {Baldi:2012}
+\bibfield{author}{\bibinfo{person}{Pierre Baldi}.}
+  \bibinfo{year}{2012}\natexlab{}.
+\newblock \showarticletitle{Autoencoders, unsupervised learning, and deep
+  architectures.}
+\newblock \bibinfo{journal}{{\em ICML unsupervised and transfer learning\/}}
+  \bibinfo{volume}{27} (\bibinfo{year}{2012}), \bibinfo{pages}{37--50}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Bing, Chaudhari, Wang, and Cohen}{Bing
+  et~al\mbox{.}}{2015}]%
+        {Bing:2015}
+\bibfield{author}{\bibinfo{person}{Lidong Bing}, \bibinfo{person}{Sneha
+  Chaudhari}, \bibinfo{person}{Richard~C Wang}, {and}
+  \bibinfo{person}{William~W Cohen}.} \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Improving Distant Supervision for Information
+  Extraction Using Label Propagation Through Lists}. In
+  \bibinfo{booktitle}{{\em EMNLP '15}}. \bibinfo{pages}{524--529}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Borisov, Markov, de~Rijke, and
+  Serdyukov}{Borisov et~al\mbox{.}}{2016}]%
+        {Borisov:2016}
+\bibfield{author}{\bibinfo{person}{Alexey Borisov}, \bibinfo{person}{Ilya
+  Markov}, \bibinfo{person}{Maarten de Rijke}, {and} \bibinfo{person}{Pavel
+  Serdyukov}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{A Neural Click Model for Web Search}. In
+  \bibinfo{booktitle}{{\em WWW '16}}. \bibinfo{pages}{531--541}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Bromley, Guyon, LeCun, S\"{a}ckinger, and
+  Shah}{Bromley et~al\mbox{.}}{1993}]%
+        {Bromley:1993}
+\bibfield{author}{\bibinfo{person}{Jane Bromley}, \bibinfo{person}{Isabelle
+  Guyon}, \bibinfo{person}{Yann LeCun}, \bibinfo{person}{Eduard S\"{a}ckinger},
+  {and} \bibinfo{person}{Roopak Shah}.} \bibinfo{year}{1993}\natexlab{}.
+\newblock \showarticletitle{Signature Verification Using a "Siamese" Time Delay
+  Neural Network}. In \bibinfo{booktitle}{{\em NIPS '93}}.
+  \bibinfo{pages}{737--744}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Cohen and Croft}{Cohen and Croft}{2016}]%
+        {Cohen:2016}
+\bibfield{author}{\bibinfo{person}{Daniel Cohen} {and}
+  \bibinfo{person}{W.~Bruce Croft}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{End to End Long Short Term Memory Networks for
+  Non-Factoid Question Answering}. In \bibinfo{booktitle}{{\em ICTIR '16}}.
+  \bibinfo{pages}{143--146}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Cormack, Smucker, and Clarke}{Cormack
+  et~al\mbox{.}}{2011}]%
+        {Cormack:2011}
+\bibfield{author}{\bibinfo{person}{Gordon~V. Cormack}, \bibinfo{person}{Mark~D.
+  Smucker}, {and} \bibinfo{person}{Charles~L. Clarke}.}
+  \bibinfo{year}{2011}\natexlab{}.
+\newblock \showarticletitle{Efficient and Effective Spam Filtering and
+  Re-ranking for Large Web Datasets}.
+\newblock \bibinfo{journal}{{\em Inf. Retr.\/}} \bibinfo{volume}{14},
+  \bibinfo{number}{5} (\bibinfo{year}{2011}), \bibinfo{pages}{441--465}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Desautels, Krause, and Burdick}{Desautels
+  et~al\mbox{.}}{2014}]%
+        {Desautels:2014}
+\bibfield{author}{\bibinfo{person}{Thomas Desautels}, \bibinfo{person}{Andreas
+  Krause}, {and} \bibinfo{person}{Joel~W Burdick}.}
+  \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{Parallelizing exploration-exploitation tradeoffs in
+  Gaussian process bandit optimization.}
+\newblock \bibinfo{journal}{{\em Journal of Machine Learning Research\/}}
+  \bibinfo{volume}{15}, \bibinfo{number}{1} (\bibinfo{year}{2014}),
+  \bibinfo{pages}{3873--3923}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Diaz}{Diaz}{2016}]%
+        {Diaz:2016:ictir}
+\bibfield{author}{\bibinfo{person}{Fernando Diaz}.}
+  \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Learning to Rank with Labeled Features}. In
+  \bibinfo{booktitle}{{\em ICTIR '16}}. \bibinfo{pages}{41--44}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Diaz, Mitra, and Craswell}{Diaz
+  et~al\mbox{.}}{2016}]%
+        {Diaz:2016}
+\bibfield{author}{\bibinfo{person}{Fernando Diaz}, \bibinfo{person}{Bhaskar
+  Mitra}, {and} \bibinfo{person}{Nick Craswell}.}
+  \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{{Query Expansion with Locally-Trained Word
+  Embeddings}}. In \bibinfo{booktitle}{{\em ACL '16}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Erhan, Bengio, Courville, Manzagol, Vincent,
+  and Bengio}{Erhan et~al\mbox{.}}{2010}]%
+        {Rrhan:2010}
+\bibfield{author}{\bibinfo{person}{Dumitru Erhan}, \bibinfo{person}{Yoshua
+  Bengio}, \bibinfo{person}{Aaron Courville}, \bibinfo{person}{Pierre-Antoine
+  Manzagol}, \bibinfo{person}{Pascal Vincent}, {and} \bibinfo{person}{Samy
+  Bengio}.} \bibinfo{year}{2010}\natexlab{}.
+\newblock \showarticletitle{Why does unsupervised pre-training help deep
+  learning?}
+\newblock \bibinfo{journal}{{\em Journal of Machine Learning Research\/}}
+  \bibinfo{volume}{11} (\bibinfo{year}{2010}), \bibinfo{pages}{625--660}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{et~al.}{et~al.}{2015}]%
+        {tensorflow2015-whitepaper}
+\bibfield{author}{\bibinfo{person}{Mart\'{\i}n~Abadi et al.}}
+  \bibinfo{year}{2015}\natexlab{}.
+\newblock \bibinfo{title}{{TensorFlow}: Large-Scale Machine Learning on
+  Heterogeneous Systems}.
+\newblock   (\bibinfo{year}{2015}).
+\newblock
+\showURL{%
+\url{http://tensorflow.org/}}
+\newblock
+\shownote{Software available from tensorflow.org.}
+
+
+\bibitem[\protect\citeauthoryear{Goodfellow, Pouget-Abadie, Mirza, Xu,
+  Warde-Farley, Ozair, Courville, and Bengio}{Goodfellow et~al\mbox{.}}{2014}]%
+        {Goodfellow:2014}
+\bibfield{author}{\bibinfo{person}{Ian Goodfellow}, \bibinfo{person}{Jean
+  Pouget-Abadie}, \bibinfo{person}{Mehdi Mirza}, \bibinfo{person}{Bing Xu},
+  \bibinfo{person}{David Warde-Farley}, \bibinfo{person}{Sherjil Ozair},
+  \bibinfo{person}{Aaron Courville}, {and} \bibinfo{person}{Yoshua Bengio}.}
+  \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{Generative adversarial nets}. In
+  \bibinfo{booktitle}{{\em NIPS}}. \bibinfo{pages}{2672--2680}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Guo, Fan, Ai, and Croft}{Guo
+  et~al\mbox{.}}{2016}]%
+        {Guo:2016}
+\bibfield{author}{\bibinfo{person}{Jiafeng Guo}, \bibinfo{person}{Yixing Fan},
+  \bibinfo{person}{Qingyao Ai}, {and} \bibinfo{person}{W.~Bruce Croft}.}
+  \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{A Deep Relevance Matching Model for Ad-hoc
+  Retrieval}. In \bibinfo{booktitle}{{\em CIKM '16}}. \bibinfo{pages}{55--64}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Han and Sun}{Han and Sun}{2016}]%
+        {Han:2016}
+\bibfield{author}{\bibinfo{person}{Xianpei Han} {and} \bibinfo{person}{Le
+  Sun}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Global Distant Supervision for Relation
+  Extraction}. In \bibinfo{booktitle}{{\em AAAI'16}}.
+  \bibinfo{pages}{2950--2956}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Herbrich, Graepel, and Obermayer}{Herbrich
+  et~al\mbox{.}}{1999}]%
+        {Herbrich:1999}
+\bibfield{author}{\bibinfo{person}{Ralf Herbrich}, \bibinfo{person}{Thore
+  Graepel}, {and} \bibinfo{person}{Klaus Obermayer}.}
+  \bibinfo{year}{1999}\natexlab{}.
+\newblock \showarticletitle{Support Vector Learning for Ordinal Regression}. In
+  \bibinfo{booktitle}{{\em ICANN '99}}. \bibinfo{pages}{97--102}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Hoffmann, Zhang, Ling, Zettlemoyer, and
+  Weld}{Hoffmann et~al\mbox{.}}{2011}]%
+        {Hoffmann:2011}
+\bibfield{author}{\bibinfo{person}{Raphael Hoffmann}, \bibinfo{person}{Congle
+  Zhang}, \bibinfo{person}{Xiao Ling}, \bibinfo{person}{Luke Zettlemoyer},
+  {and} \bibinfo{person}{Daniel~S. Weld}.} \bibinfo{year}{2011}\natexlab{}.
+\newblock \showarticletitle{Knowledge-based Weak Supervision for Information
+  Extraction of Overlapping Relations}. In \bibinfo{booktitle}{{\em ACL '11}}.
+  \bibinfo{pages}{541--550}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Huang, He, Gao, Deng, Acero, and Heck}{Huang
+  et~al\mbox{.}}{2013}]%
+        {Huang:2013}
+\bibfield{author}{\bibinfo{person}{Po-Sen Huang}, \bibinfo{person}{Xiaodong
+  He}, \bibinfo{person}{Jianfeng Gao}, \bibinfo{person}{Li Deng},
+  \bibinfo{person}{Alex Acero}, {and} \bibinfo{person}{Larry Heck}.}
+  \bibinfo{year}{2013}\natexlab{}.
+\newblock \showarticletitle{Learning Deep Structured Semantic Models for Web
+  Search Using Clickthrough Data}. In \bibinfo{booktitle}{{\em CIKM '13}}.
+  \bibinfo{pages}{2333--2338}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{J\"{a}rvelin and
+  Kek\"{a}l\"{a}inen}{J\"{a}rvelin and Kek\"{a}l\"{a}inen}{2002}]%
+        {Jarvelin:2002}
+\bibfield{author}{\bibinfo{person}{Kalervo J\"{a}rvelin} {and}
+  \bibinfo{person}{Jaana Kek\"{a}l\"{a}inen}.} \bibinfo{year}{2002}\natexlab{}.
+\newblock \showarticletitle{Cumulated Gain-based Evaluation of IR Techniques}.
+\newblock \bibinfo{journal}{{\em ACM Trans. Inf. Syst.\/}}
+  \bibinfo{volume}{20}, \bibinfo{number}{4} (\bibinfo{date}{Oct.}
+  \bibinfo{year}{2002}), \bibinfo{pages}{422--446}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Joachims}{Joachims}{2002}]%
+        {Joachims:2002}
+\bibfield{author}{\bibinfo{person}{Thorsten Joachims}.}
+  \bibinfo{year}{2002}\natexlab{}.
+\newblock \showarticletitle{Optimizing Search Engines Using Clickthrough Data}.
+  In \bibinfo{booktitle}{{\em KDD '02}}. \bibinfo{pages}{133--142}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Kingma and Ba}{Kingma and Ba}{2014}]%
+        {Kingma:2014}
+\bibfield{author}{\bibinfo{person}{Diederik Kingma} {and}
+  \bibinfo{person}{Jimmy Ba}.} \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{Adam: A method for stochastic optimization}.
+\newblock \bibinfo{journal}{{\em arXiv preprint arXiv:1412.6980\/}}
+  (\bibinfo{year}{2014}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Kiros, Zhu, Salakhutdinov, Zemel, Urtasun,
+  Torralba, and Fidler}{Kiros et~al\mbox{.}}{2015}]%
+        {Kiros:2015}
+\bibfield{author}{\bibinfo{person}{Ryan Kiros}, \bibinfo{person}{Yukun Zhu},
+  \bibinfo{person}{Ruslan~R Salakhutdinov}, \bibinfo{person}{Richard Zemel},
+  \bibinfo{person}{Raquel Urtasun}, \bibinfo{person}{Antonio Torralba}, {and}
+  \bibinfo{person}{Sanja Fidler}.} \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Skip-thought vectors}. In \bibinfo{booktitle}{{\em
+  NIPS '15}}. \bibinfo{pages}{3294--3302}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Le and Mikolov}{Le and Mikolov}{2014}]%
+        {Le:2014}
+\bibfield{author}{\bibinfo{person}{Quoc~V Le} {and} \bibinfo{person}{Tomas
+  Mikolov}.} \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{Distributed Representations of Sentences and
+  Documents}. In \bibinfo{booktitle}{{\em ICML '14}},
+  Vol.~\bibinfo{volume}{14}. \bibinfo{pages}{1188--1196}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{LeCun, Bengio, and Hinton}{LeCun
+  et~al\mbox{.}}{2015}]%
+        {Lecun:2015}
+\bibfield{author}{\bibinfo{person}{Yann LeCun}, \bibinfo{person}{Yoshua
+  Bengio}, {and} \bibinfo{person}{Geoffrey Hinton}.}
+  \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Deep Learning}.
+\newblock \bibinfo{journal}{{\em Nature\/}} \bibinfo{volume}{521},
+  \bibinfo{number}{7553} (\bibinfo{year}{2015}), \bibinfo{pages}{436--444}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Liu, Gao, He, Deng, Duh, and Wang}{Liu
+  et~al\mbox{.}}{2015}]%
+        {Liu:2015}
+\bibfield{author}{\bibinfo{person}{Xiaodong Liu}, \bibinfo{person}{Jianfeng
+  Gao}, \bibinfo{person}{Xiaodong He}, \bibinfo{person}{Li Deng},
+  \bibinfo{person}{Kevin Duh}, {and} \bibinfo{person}{Ye-yi Wang}.}
+  \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Representation Learning Using Multi-Task Deep
+  Neural Networks for Semantic Classification and Information Retrieval}. In
+  \bibinfo{booktitle}{{\em NAACL '15}}. \bibinfo{pages}{912--921}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Lu and Li}{Lu and Li}{2013}]%
+        {Lu:2013}
+\bibfield{author}{\bibinfo{person}{Zhengdong Lu} {and} \bibinfo{person}{Hang
+  Li}.} \bibinfo{year}{2013}\natexlab{}.
+\newblock \showarticletitle{A Deep Architecture for Matching Short Texts}. In
+  \bibinfo{booktitle}{{\em NIPS '13}}. \bibinfo{pages}{1367--1375}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Mikolov, Sutskever, Chen, Corrado, and
+  Dean}{Mikolov et~al\mbox{.}}{2013}]%
+        {Mikolov:2013}
+\bibfield{author}{\bibinfo{person}{Tomas Mikolov}, \bibinfo{person}{Ilya
+  Sutskever}, \bibinfo{person}{Kai Chen}, \bibinfo{person}{Greg~S Corrado},
+  {and} \bibinfo{person}{Jeff Dean}.} \bibinfo{year}{2013}\natexlab{}.
+\newblock \showarticletitle{{Distributed Representations of Words and Phrases
+  and their Compositionality}}. In \bibinfo{booktitle}{{\em NIPS '13}}.
+  \bibinfo{pages}{3111--3119}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Mitra, Diaz, and Craswell}{Mitra
+  et~al\mbox{.}}{2017}]%
+        {Mitra:2016}
+\bibfield{author}{\bibinfo{person}{Bhaskar Mitra}, \bibinfo{person}{Fernando
+  Diaz}, {and} \bibinfo{person}{Nick Craswell}.}
+  \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{Learning to Match Using Local and Distributed
+  Representations of Text for Web Search}. In \bibinfo{booktitle}{{\em WWW
+  '17}}. \bibinfo{pages}{1291--1299}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Onal, Altingovde, Karagoz, and de~Rijke}{Onal
+  et~al\mbox{.}}{2016}]%
+        {Onal:2016}
+\bibfield{author}{\bibinfo{person}{Kezban~Dilek Onal},
+  \bibinfo{person}{Ismail~Sengor Altingovde}, \bibinfo{person}{Pinar Karagoz},
+  {and} \bibinfo{person}{Maarten de Rijke}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Getting Started with Neural Models for Semantic
+  Matching in Web Search}.
+\newblock \bibinfo{journal}{{\em arXiv preprint arXiv:1611.03305\/}}
+  (\bibinfo{year}{2016}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Pass, Chowdhury, and Torgeson}{Pass
+  et~al\mbox{.}}{2006}]%
+        {Pass:2006}
+\bibfield{author}{\bibinfo{person}{Greg Pass}, \bibinfo{person}{Abdur
+  Chowdhury}, {and} \bibinfo{person}{Cayley Torgeson}.}
+  \bibinfo{year}{2006}\natexlab{}.
+\newblock \showarticletitle{A Picture of Search}. In \bibinfo{booktitle}{{\em
+  InfoScale '06}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Pennington, Socher, and Manning}{Pennington
+  et~al\mbox{.}}{2014}]%
+        {Pennington:2014}
+\bibfield{author}{\bibinfo{person}{Jeffrey Pennington},
+  \bibinfo{person}{Richard Socher}, {and} \bibinfo{person}{Christopher
+  Manning}.} \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{{GloVe: Global Vectors for Word Representation}}.
+  In \bibinfo{booktitle}{{\em EMNLP '14}}. \bibinfo{pages}{1532--1543}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Rekabsaz, Lupu, Hanbury, and Zamani}{Rekabsaz
+  et~al\mbox{.}}{2017}]%
+        {Rekabsaz:2017}
+\bibfield{author}{\bibinfo{person}{Navid Rekabsaz}, \bibinfo{person}{Mihai
+  Lupu}, \bibinfo{person}{Allan Hanbury}, {and} \bibinfo{person}{Hamed
+  Zamani}.} \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{Word Embedding Causes Topic Shifting; Exploit
+  Global Context!}. In \bibinfo{booktitle}{{\em SIGIR'17}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Rekabsaz, Lupu, Hanbury, and Zuccon}{Rekabsaz
+  et~al\mbox{.}}{2016}]%
+        {Rekabsaz:2016}
+\bibfield{author}{\bibinfo{person}{Navid Rekabsaz}, \bibinfo{person}{Mihai
+  Lupu}, \bibinfo{person}{Allan Hanbury}, {and} \bibinfo{person}{Guido
+  Zuccon}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Generalizing translation models in the
+  probabilistic relevance framework}. In \bibinfo{booktitle}{{\em Proceedings
+  of the 25th ACM International on Conference on Information and Knowledge
+  Management}}. ACM, \bibinfo{pages}{711--720}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Severyn and Moschitti}{Severyn and
+  Moschitti}{2015}]%
+        {Severyn:2015}
+\bibfield{author}{\bibinfo{person}{Aliaksei Severyn} {and}
+  \bibinfo{person}{Alessandro Moschitti}.} \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Twitter Sentiment Analysis with Deep Convolutional
+  Neural Networks}. In \bibinfo{booktitle}{{\em SIGIR '15}}.
+  \bibinfo{pages}{959--962}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Shen, He, Gao, Deng, and Mesnil}{Shen
+  et~al\mbox{.}}{2014}]%
+        {Shen:2014}
+\bibfield{author}{\bibinfo{person}{Yelong Shen}, \bibinfo{person}{Xiaodong He},
+  \bibinfo{person}{Jianfeng Gao}, \bibinfo{person}{Li Deng}, {and}
+  \bibinfo{person}{Gr{\'e}goire Mesnil}.} \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{Learning Semantic Representations Using
+  Convolutional Neural Networks for Web Search}. In \bibinfo{booktitle}{{\em
+  WWW '14}}. \bibinfo{pages}{373--374}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Srivastava, Hinton, Krizhevsky, Sutskever, and
+  Salakhutdinov}{Srivastava et~al\mbox{.}}{2014}]%
+        {Srivastava:2014}
+\bibfield{author}{\bibinfo{person}{Nitish Srivastava},
+  \bibinfo{person}{Geoffrey Hinton}, \bibinfo{person}{Alex Krizhevsky},
+  \bibinfo{person}{Ilya Sutskever}, {and} \bibinfo{person}{Ruslan
+  Salakhutdinov}.} \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{Dropout: A Simple Way to Prevent Neural Networks
+  from Overfitting}.
+\newblock \bibinfo{journal}{{\em J. Mach. Learn. Res.\/}} \bibinfo{volume}{15},
+  \bibinfo{number}{1} (\bibinfo{year}{2014}), \bibinfo{pages}{1929--1958}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Tang}{Tang}{2016}]%
+        {tang2016:tflearn}
+\bibfield{author}{\bibinfo{person}{Yuan Tang}.}
+  \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{TF.Learn: TensorFlow's High-level Module for
+  Distributed Machine Learning}.
+\newblock \bibinfo{journal}{{\em arXiv preprint arXiv:1612.04251\/}}
+  (\bibinfo{year}{2016}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Van~Gysel, de~Rijke, and Kanoulas}{Van~Gysel
+  et~al\mbox{.}}{2016a}]%
+        {VanGysel:2016:cikm}
+\bibfield{author}{\bibinfo{person}{Christophe Van~Gysel},
+  \bibinfo{person}{Maarten de Rijke}, {and} \bibinfo{person}{Evangelos
+  Kanoulas}.} \bibinfo{year}{2016}\natexlab{a}.
+\newblock \showarticletitle{Learning latent vector spaces for product search}.
+  In \bibinfo{booktitle}{{\em CIKM'16}}. \bibinfo{pages}{165--174}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Van~Gysel, de~Rijke, and Worring}{Van~Gysel
+  et~al\mbox{.}}{2016b}]%
+        {VanGysel:2016:www}
+\bibfield{author}{\bibinfo{person}{Christophe Van~Gysel},
+  \bibinfo{person}{Maarten de Rijke}, {and} \bibinfo{person}{Marcel Worring}.}
+  \bibinfo{year}{2016}\natexlab{b}.
+\newblock \showarticletitle{Unsupervised, efficient and semantic expertise
+  retrieval}. In \bibinfo{booktitle}{{\em WWW'16}}.
+  \bibinfo{pages}{1069--1079}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Wauthier, Jordan, and Jojic}{Wauthier
+  et~al\mbox{.}}{2013}]%
+        {Wauthier:2013}
+\bibfield{author}{\bibinfo{person}{Fabian~L. Wauthier},
+  \bibinfo{person}{Michael~I. Jordan}, {and} \bibinfo{person}{Nebojsa Jojic}.}
+  \bibinfo{year}{2013}\natexlab{}.
+\newblock \showarticletitle{Efficient Ranking from Pairwise Comparisons}. In
+  \bibinfo{booktitle}{{\em ICML'13}}. \bibinfo{pages}{109--117}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Yang, Ai, Guo, and Croft}{Yang
+  et~al\mbox{.}}{2016}]%
+        {Yang:2016}
+\bibfield{author}{\bibinfo{person}{Liu Yang}, \bibinfo{person}{Qingyao Ai},
+  \bibinfo{person}{Jiafeng Guo}, {and} \bibinfo{person}{W.~Bruce Croft}.}
+  \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{aNMM: Ranking Short Answer Texts with
+  Attention-Based Neural Matching Model}. In \bibinfo{booktitle}{{\em CIKM
+  '16}}. \bibinfo{pages}{287--296}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Zamani, Bendersky, Wang, and Zhang}{Zamani
+  et~al\mbox{.}}{2017}]%
+        {Zamani:2017b}
+\bibfield{author}{\bibinfo{person}{Hamed Zamani}, \bibinfo{person}{Michael
+  Bendersky}, \bibinfo{person}{Xuanhui Wang}, {and} \bibinfo{person}{Mingyang
+  Zhang}.} \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{Situational Context for Ranking in Personal
+  Search}. In \bibinfo{booktitle}{{\em WWW '17}}. \bibinfo{pages}{1531--1540}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Zamani and Croft}{Zamani and Croft}{2016a}]%
+        {Zamani:2016a}
+\bibfield{author}{\bibinfo{person}{Hamed Zamani} {and}
+  \bibinfo{person}{W.~Bruce Croft}.} \bibinfo{year}{2016}\natexlab{a}.
+\newblock \showarticletitle{Embedding-based Query Language Models}. In
+  \bibinfo{booktitle}{{\em ICTIR '16}}. \bibinfo{pages}{147--156}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Zamani and Croft}{Zamani and Croft}{2016b}]%
+        {Zamani:2016b}
+\bibfield{author}{\bibinfo{person}{Hamed Zamani} {and}
+  \bibinfo{person}{W.~Bruce Croft}.} \bibinfo{year}{2016}\natexlab{b}.
+\newblock \showarticletitle{Estimating Embedding Vectors for Queries}. In
+  \bibinfo{booktitle}{{\em ICTIR '16}}. \bibinfo{pages}{123--132}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Zamani and Croft}{Zamani and Croft}{2017}]%
+        {Zamani:2017}
+\bibfield{author}{\bibinfo{person}{Hamed Zamani} {and}
+  \bibinfo{person}{W.~Bruce Croft}.} \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{Relevance-based Word Embedding}. In
+  \bibinfo{booktitle}{{\em SIGIR '17}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Zhang, Rahman, Braylan, Dang, Chang, Kim,
+  McNamara, Angert, Banner, Khetan, et~al\mbox{.}}{Zhang et~al\mbox{.}}{2016}]%
+        {Zhang:2016}
+\bibfield{author}{\bibinfo{person}{Ye Zhang}, \bibinfo{person}{Md~Mustafizur
+  Rahman}, \bibinfo{person}{Alex Braylan}, \bibinfo{person}{Brandon Dang},
+  \bibinfo{person}{Heng-Lu Chang}, \bibinfo{person}{Henna Kim},
+  \bibinfo{person}{Quinten McNamara}, \bibinfo{person}{Aaron Angert},
+  \bibinfo{person}{Edward Banner}, \bibinfo{person}{Vivek Khetan}, {and}
+  \bibinfo{person}{others}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Neural Information Retrieval: A Literature Review}.
+\newblock \bibinfo{journal}{{\em arXiv preprint arXiv:1611.06792\/}}
+  (\bibinfo{year}{2016}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Zheng and Callan}{Zheng and Callan}{2015}]%
+        {Zheng:2015}
+\bibfield{author}{\bibinfo{person}{Guoqing Zheng} {and} \bibinfo{person}{Jamie
+  Callan}.} \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{{Learning to Reweight Terms with Distributed
+  Representations}}. In \bibinfo{booktitle}{{\em SIGIR '15}}.
+  \bibinfo{pages}{575--584}.
+\newblock
+
+
+\end{thebibliography}

@@ -1,0 +1,46 @@
+\begin{figure*}[th]
+\begin{center}
+\footnotesize
+\begin{tikzpicture}[auto, node distance=0.5cm]
+\node (x) {$\bx$} ;
+\node (xsplit) [right=of x] {};
+\matrix (m) [matrix of math nodes, 
+    column sep=0.5cm,
+    row sep=0.2cm,
+    right=of xsplit]
+ { 
+\node(pool5) [block] {\phi_\text{pool5}} ;
+& \node(spp) [block] {\phi_\text{SPP}} ;
+& \node(fc6) [block] {\phi_\text{fc6}};
+& \node(fc7) [block] {\phi_\text{fc7}};
+& \node(fc8) [block] {\phi_\text{fc8c}};
+\\
+\node(ssw) [block] {\text{SSW/EB}};
+& &&& \node(fc8d) [block] {\phi_\text{fc8d}};
+\\
+};
+\node [block,right=1cm of fc8] (cscore) {$\sigma_\text{class}$};
+\node [block,right=1cm of fc8d] (dscore) {$\sigma_\text{det}$};
+\node [draw, rectangle,below right=-0.05cm and 0.5cm of cscore] (times) {$\odot$};
+\node [draw, rectangle,right=of times] (sum) {$\Sigma$};
+\node [right=of sum] (y) {$\by$};
+\draw[to] (x) -- (0.75,0) |- (pool5);
+\draw[to] (pool5) -- (spp) ;
+\draw[to] (spp) -- (fc6) ;
+\draw[to] (fc6) -- (fc7) ;
+\draw[to] (fc7) -- (fc8) ;
+\draw[to] (fc8) -- node {$\bx^c$} (cscore) ;
+\draw[to] (0.75,0) |- (ssw) ;
+\draw[to] (ssw) -| node[right] {$\mathcal{R}$} (spp) ; 
+\draw[to] (fc7) |- (fc8d);
+\draw[to] (fc8d) -- node {$\bx^d$} (dscore) ;
+\draw[to] (cscore) -| (times) ;
+\draw[to] (dscore) -| (times) ;
+\draw[to] (times) -- node {$\bx^{\mathcal{R}}$} (sum) ;
+\draw[to] (sum) -- (y) ;
+\end{tikzpicture}
+\end{center}
+\label{f:WSDDN}
+\caption{{\bf Weakly-supervised deep detection network.} The figure illustrates the architecture of WSDDN.}
+\end{figure*}
+

@@ -1,0 +1,31 @@
+%\renewcommand{\tabcolsep}{0.15cm}
+\tabcolsep 1.5pt
+\begin{table}[tbp]
+ \scriptsize
+  \centering
+  \begin{tabular}{@{} l c cc cc |c@{}}
+    \toprule
+    Setting& Head   & U Arms  & L Arms & Torso & $m$PCP  & AOP \\
+    \midrule
+    \input{pcp-unary-expidx462.tex}
+    \input{pcp-expidx462.tex}
+    %\input{experiments/pcp-expidx456.tex}
+    %\input{experiments/pcp-torso-head-expidx456.tex}
+    \midrule
+    %\input{experiments_dense/pcp-expidx675.tex}
+    %\input{experiments_dense/pcp-expidx685.tex}
+    %Dense \multb~\etad{11/2} \\
+    \input{pcp-unary-expidx509.tex}
+    \input{pcp-expidx694.tex}
+    %Dense \multbc~+ torso \etad{11/2} \\
+    \midrule
+    Ghiasi et. al.~\cite{ghiasi14cvpr}  & -      & -      & -      & -         & 63.6  &  74.0 \\
+    Eichner\&Ferrari~\cite{eichner10eccv}   & 97.6   & 68.2  &   48.1     &86.1    &69.4   & 80.0 \\
+    Chen\&Yuille~\cite{Chen:2015:POC}  & 98.5 &   77.2 &  71.3 &   \textbf{88.5} &   80.7 &   84.9 \\
+    \bottomrule
+  \end{tabular}
+    \vspace{0.1em}
+  \caption[]{Pose estimation results ($m$PCP) on WAF dataset.}
+    \vspace{-1.0em}
+  \label{tab:multicut:waf}
+\end{table}

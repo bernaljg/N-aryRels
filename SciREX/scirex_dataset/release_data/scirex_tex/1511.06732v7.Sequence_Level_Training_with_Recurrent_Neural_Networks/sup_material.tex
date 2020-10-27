@@ -1,0 +1,223 @@
+\section{Supplementary Material}
+
+
+\subsection{Experiments}
+
+
+\subsubsection{Qualitative Comparison}
+\begin{figure}[h!]
+\tiny{
+\begin{verbatim}
+
+
+CONTEXT:      a chinese government official on sunday dismissed reports that the government was delaying the issuing
+              of third generation -lrb- #g -rrb- mobile phone licenses in order to give a developing <unk> system an
+              advantage
+GROUND TRUTH: foreign phone operators to get equal access to china 's #g market
+XENT:         china dismisses report of #g mobile phone phone
+DAD:          china denies <unk> <unk> mobile phone licenses
+E2E:          china 's mobile phone licenses delayed
+MIXER:        china official dismisses reports of #g mobile licenses
+
+CONTEXT:      greece risks bankruptcy if it does not take radical extra measures to fix its finances , prime minister
+              george papandreou warned on tuesday , saying the country was in a `` wartime situation
+GROUND TRUTH: greece risks bankruptcy without radical action
+XENT:         greece warns <unk> measures to <unk> finances
+DAD:          greece says no measures to <unk> <unk>
+E2E:          greece threatens to <unk> measures to <unk> finances
+MIXER:        greece does not take radical measures to <unk> deficit
+
+CONTEXT:      the indonesian police were close to identify the body parts resulted from the deadly explosion in front
+              of the australian embassy by the dna test , police chief general <unk> <unk> said on wednesday
+GROUND TRUTH: indonesian police close to <unk> australian embassy bomber
+XENT:         indonesian police close to <unk>
+DAD:          indonesian police close to <unk>
+E2E:          indonesian police close to monitor deadly australia
+MIXER:        indonesian police close to <unk> parts of australian embassy
+
+CONTEXT:      hundreds of catholic and protestant youths attacked security forces with <unk> bombs in a flashpoint
+              area of north belfast late thursday as violence erupted for the second night in a row , police said
+GROUND TRUTH: second night of violence erupts in north belfast
+XENT:         urgent hundreds of catholic and <unk> <unk> in <unk>
+DAD:          hundreds of belfast <unk> <unk> in n. belfast
+E2E:          hundreds of catholic protestant , <unk> clash with <unk>
+MIXER:        hundreds of catholic <unk> attacked in north belfast
+
+CONTEXT:      uganda 's lord 's resistance army -lrb- lra -rrb- rebel leader joseph <unk> is planning to join his
+              commanders in the ceasefire area ahead of talks with the government , ugandan army has said
+GROUND TRUTH: rebel leader to move to ceasefire area         
+XENT:         uganda 's <unk> rebel leader to join ceasefire
+DAD:          ugandan rebel leader to join ceasefire talks
+E2E:          ugandan rebels <unk> rebel leader
+MIXER:        ugandan rebels to join ceasefire in <unk>
+
+CONTEXT:      a russian veterinary official reported a fourth outbreak of dead domestic poultry in a suburban
+              moscow district sunday as experts tightened <unk> following confirmation of the presence of the 
+              deadly h#n# bird flu strain
+GROUND TRUTH: tests confirm h#n# bird flu strain in # <unk> moscow <unk>
+XENT:         russian official reports fourth flu in <unk>
+DAD:          bird flu outbreak in central china
+E2E:          russian official official says outbreak outbreak outbreak in <unk>
+MIXER:        russian official reports fourth bird flu
+
+CONTEXT:      a jewish human rights group announced monday that it will offer <unk> a dlrs ##,### reward for 
+              information that helps them track down those suspected of participating in nazi atrocities during 
+              world war ii
+GROUND TRUTH: jewish human rights group offers reward for information on nazi suspects in lithuania
+XENT:         jewish rights group announces <unk> to reward for war during world war
+DAD:          rights group announces <unk> dlrs dlrs dlrs reward
+E2E:          jewish rights group offers reward for <unk>
+MIXER:        jewish human rights group to offer reward for <unk>
+
+CONTEXT:      a senior u.s. envoy reassured australia 's opposition labor party on saturday that no decision 
+              had been made to take military action against iraq and so no military assistance had been sought 
+              from australia
+GROUND TRUTH: u.s. envoy meets opposition labor party to discuss iraq
+XENT:         australian opposition party makes progress on military action against iraq
+DAD:          australian opposition party says no military action against iraq
+E2E:          us envoy says no decision to take australia 's labor
+MIXER:        u.s. envoy says no decision to military action against iraq
+
+CONTEXT:      republican u.s. presidential candidate rudy giuliani met privately wednesday with iraqi president 
+              jalal talabani and indicated that he would keep a u.s. presence in iraq for as long as necessary , 
+              campaign aides said
+GROUND TRUTH: giuliani meets with iraqi president , discusses war
+XENT:         <unk> meets with president of iraqi president
+DAD:          republican presidential candidate meets iraqi president
+E2E:          u.s. president meets with iraqi president
+MIXER:        u.s. presidential candidate giuliani meets with iraqi president
+\end{verbatim}
+}
+\caption{Examples of greedy generations after conditioning on sentences from the test summarization dataset. The "$<$unk$>$" token is produced by our tokenizer and it replaces rare words.} 
+\label{fig:generation}
+\end{figure}
+
+
+\subsubsection{Hyperparameters}
+\begin{table}[!h]
+\caption{Best scheduling parameters found by hyper-parameter search of MIXER.}
+\begin{tabular}{l || l | l | l}
+      \multicolumn{1}{c||}{\emph{TASK} }  & 
+      \multicolumn{1}{c|}{$N^{\mbox{\small XENT}}$} & 
+      \multicolumn{1}{c|}{$N^{\mbox{\small XE+R}}$} & \multicolumn{1}{c}{$\Delta$} \\
+      \hline
+      \hline
+      {\em summarization} & 20 & 5 & 2  \\
+      \hline
+      {\em machine translation} & 25 & 5 & 3 \\
+      \hline
+      {\em image captioning} & 20 & 5 & 2  \\
+    \end{tabular}
+\label{tab:scheduling}
+\end{table}
+
+\subsubsection{Relative Gains}
+
+
+\begin{figure}[!h]
+\begin{center}
+ \includegraphics[width=0.6\linewidth]{summarization_bleu_rouge.pdf}
+ \end{center}
+\caption{Relative gains on summarization with respect to the XENT baseline. Left: relative BLEU score. Right: relative ROUGE-2.
+The models are: DAD, E2E, MIXER trained for the objective used at test time (method proposed in this paper), and MIXER trained with a different metric.
+When evaluating for BLEU, the last column on the left reports the evaluation of MIXER trained using ROUGE-2.
+When evaluating for ROUGE-2, the last column on the right reports the evaluation of MIXER trained using BLEU.}
+\label{fig:summarization_bleu_rouge}
+\end{figure}
+
+
+
+\vspace{0.3in}
+\input{comparison_figure.tex}
+
+
+\subsection{The Attentive Encoder}
+\label{sup-material:encoder}
+Here we explain in detail how we generate the conditioning vector $\bc_t$ 
+for our RNN using the source sentence and the current hidden state $\bh_t$. 
+Let us denote by $\bs$ the source sentence which is composed of a sequence 
+of $M$ words $\bs = [w_1, \ldots, w_M]$. 
+With a slight overload of notation let $w_i$ also denote the $d$ dimensional 
+learnable embedding of the $i$-th word ($w_i \in \setr^d$). In addition the 
+position $i$ of the word $w_i$ is also associated with a learnable embedding $l_i$ 
+of size $d$ ($l_i \in \setr^d$). Then the full embedding for 
+the $i$-th word in the input sentence is given by $a_i = w_i + l_i$. 
+In order for the embeddings to capture local context, we associate an 
+aggregate embedding $z_i$ to each word in the source sentence. 
+In particular for a word in the $i$-th position, its aggregate embedding 
+$z_i$ is computed by taking a window of $q$ consecutive words centered 
+at position $i$ and averaging the embeddings of all the words in this window. More precisely, the aggregate embedding $z_i$ is given by: 
+\begin{equation}
+z_i = \frac{1}{q} \sum_{h = -q/2}^{q/2} a_{i + h}. 
+\end{equation}
+In our experiments the width $q$ was set to $5$. 
+In order to account for the words at the two boundaries of the input 
+sentence we first pad the sequence on both sides with dummy words before 
+computing the aggregate vectors $z_i$s. Given these aggregate vectors of words, we compute 
+the context vector $c_t$ (the final output of the encoder) as: 
+\begin{equation}
+c_t = \sum_{j=1}^M \alpha_{j,t} w_j, 
+\end{equation}
+where the weights $\alpha_{j, t}$ are computed as 
+\begin{equation}
+\alpha_{j, t} = \frac{\exp(z_j \cdot \bh_{t})}{\sum_{i=1}^M \exp(z_i \cdot \bh_{t})}.
+\end{equation}
+
+
+
+\subsection{Beam Search Algorithm}
+\label{sup-material:beam_search}
+Equation~\ref{eq:greedy_gen} always chooses the highest scoring next word candidate
+at each time step. At test time we can reduce the effect of search error 
+by pursuing not only one but $k$ next word candidates at each point, which 
+is commonly known as {\it beam search}.
+While still approximate, this strategy can recover higher scoring sequences 
+that are often also better in terms of our final evaluation metric.
+The algorithm maintains the $k$ highest scoring partial
+sequences, where $k$ is a hyper-parameter.
+Setting $k=1$ reduces the algorithm to a greedy left-to-right search 
+(Eq.~\eqref{eq:greedy_gen}). 
+%The downside of such an exploration of multiple paths is that it significantly slows down the generation process. The time complexity 
+%grows linearly in $k$ because we need to perform $k$ forward passes for our network which is the most time intensive operation. 
+%As a result, beam search generation is $k$ times slower than greedy search (Eq.~\eqref{eq:greedy_gen}). 
+\begin{algorithm}[!h]
+  \KwIn{model $p_{\theta}$, beam size $k$}
+  \KwResult{sequence of words $[w_1^g, w_2^g, \dots, w_n^g]$}
+  empty heaps $\{\mathcal{H}_t\}_{t = 1, \dots T}$\;
+  an empty hidden state vector $\bh_1$\;
+  $\mathcal{H}_1.\mbox{push}(1, [[\varnothing], \bh_1])$\;
+  \For{$t\leftarrow 1$ \KwTo $T - 1$}{	
+    \For{$i\leftarrow 1$ \KwTo $\min(k, \#\mathcal{H}_t)$}{
+      $(p, [[w_1, w_2, \dots, w_t], \bh]) \leftarrow \mathcal{H}_t.\mbox{pop}()$\;  
+      $\bh' = \phi_\theta(w, \bh)$ \;      
+      \For{$w' \leftarrow$ $k$-most likely words $w'$ from $p_\theta(w' | w_t, \bh)$}{
+        $p' = p * p_\theta(w' | w, \bh)$\;
+        $\mathcal{H}_{t + 1}.\mbox{push}(p', [[w_1, w_2, \dots, w_t, w'], \bh'])$\;
+      }
+    }
+  }
+  $(p, [[w_1, w_2, \dots, w_T], \bh]) \leftarrow \mathcal{H}_T.\mbox{pop}()$\;
+  \KwOut{$[w_1, w_2, \dots, w_T]$}
+ 
+ \caption{Pseudo-code of beam search with beam size $k$.}
+  \label{alg:beam} 
+\end{algorithm}
+
+
+\newpage
+
+
+
+
+
+
+\subsection{Notes}
+The current version of the paper updates the first version uploaded on arXiv as follows:
+\begin{itemize}
+\item on the summarization task, we report results using both ROUGE-2 and BLEU to demonstrate that MIXER can work with any metric.
+\item on machine translation and image captioning we use LSTM instead of Elman RNN to demonstrate the MIXER can work with any underlying parametric model.
+\item BLEU is evaluated using up to 4-grams, and it is computed at the corpus level (except in the image captioning case) as this seems the most common practice
+in the summarization and machine translation literature.
+\item we have added several references as suggested by our reviewers
+\item we have shortened the paper by moving some content to the Supplementary Material. 
+\end{itemize}

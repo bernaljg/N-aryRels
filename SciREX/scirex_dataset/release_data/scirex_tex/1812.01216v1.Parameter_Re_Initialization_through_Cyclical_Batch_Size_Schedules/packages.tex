@@ -1,0 +1,104 @@
+
+
+% if you need to pass options to natbib, use, e.g.:
+% \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading nips_2018
+
+% ready for submission
+% to compile a preprint version, e.g., for submission to arXiv, add
+% add the [preprint] option:
+% \usepackage[preprint]{nips_2018}
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+% \usepackage[final]{nips_2018}
+
+% to avoid loading the natbib package, add option nonatbib:
+% \usepackage[nonatbib]{nips_2018}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+% Recommended, but optional, packages for figures and better typesetting:
+%\usepackage{microtype}
+\usepackage{graphicx}
+%\usepackage{subfigure}
+\usepackage{subcaption}
+\usepackage{booktabs} % for professional tables
+%\usepackage{natbib}
+\usepackage[square,sort,comma,numbers]{natbib}
+
+% Attempt to make hyperref and algorithmic work together better:
+%\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Use the following line for the initial blind version submitted for review:
+\usepackage[final]{nips_2018}
+
+\usepackage{here}
+%\usepackage{sectsty}
+\usepackage{graphicx}
+%\usepackage{gnuplottex}
+%\usepackage{authblk}
+\usepackage{caption}
+\usepackage[ruled,noend]{algorithm2e}
+\usepackage{amsmath,amssymb,amsfonts,amsbsy,amsfonts,latexsym}
+\usepackage{amsthm}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage[labelfont=bf,textfont=it,belowskip=0pt,aboveskip=5pt,tableposition=top]{caption}
+%\usepackage[table]{xcolor}
+\usepackage{xcolor}
+\usepackage{colortbl}
+
+\usepackage{wrapfig}
+%\usepackage{cleveref}
+%\newcommand{\cref}{\ref}
+
+\definecolor{colorA}{RGB}{189,201,225}
+\definecolor{colorB}{RGB}{103,169,207}
+\definecolor{colorC}{RGB}{ 28,144,153}
+\definecolor{colorD}{RGB}{  1,108, 89}
+
+\newcolumntype{R}{>{\columncolor{gray!40}}r}
+\newcolumntype{L}{>{\columncolor{gray!40}}l}
+\newcolumntype{C}{>{\columncolor{gray!40}}c}
+\newcommand{\highlightrow}{\rowcolor{gray!20}}
+
+
+
+
+%table
+\usepackage{tabularx,colortbl,xcolor}
+\usepackage{multirow}
+\usepackage[normalem]{ulem}
+\useunder{\uline}{\ul}{}
+
+% color
+\newcommand\Ga{}
+\newcommand\Gb{\rowcolor{gray!15}}
+\newcommand\Gc{\rowcolor{gray!30}}
+\newcommand\Gd{\rowcolor{gray!45}}
+\newcommand\Ge{\rowcolor{gray!60}}
+\newcommand\Gf{\rowcolor{gray!75}}
+
+%-
+\newcommand\hy{\textrm{-}}
+
+\usepackage{enumitem}
+
+\usepackage{xparse}% http://ctan.org/pkg/xparse
+
+\captionsetup[table]{name=Table}
+\graphicspath{{figs}}
+\DeclareGraphicsExtensions{.pdf,.png}
+\usepackage{pgfplots, pgfplotstable}
+%\usepackage[colorlinks=true,
+%filecolor=black,
+%citecolor=blue,
+%linkcolor=blue,
+%urlcolor=blue]{hyperref}
+
+%\usepackage{hyperref}       % hyperlinks

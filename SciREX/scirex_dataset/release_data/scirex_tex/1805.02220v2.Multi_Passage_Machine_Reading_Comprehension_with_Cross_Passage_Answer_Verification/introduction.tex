@@ -1,0 +1,149 @@
+\section{Introduction}
+\label{introduction}
+
+%1. reading comprehention -> squad -> new trend to solve real world problem
+%2. multi-passage reading challenge -> multiple valid answers exist -> human comprehenstion
+%3. Based on similar idea, we propose to cross-checking among answers. Intuitive methods (tf-idf). example not so evident. we should model the content.
+%4. how to model the content. we add additional supervision here. side benefits.
+%5. The overall framework. 
+
+% BEGIN LIUKAI
+%Machine Reading Comprehension (MRC) endows computers with the ability to acquire knowledge from passages, which is a basic ability of human beings. We believe it is one of the crucial abilities machine has to have to acquire knowledge through reading the whole web and answer open domain questions. 
+%
+%Recent years have seen the rapid development of MRC technologies \cite{cnn-dm-examination, rnet, dcn+}, and the MRC ability appear to outperform human beings \cite{http://...} on SQuAD \cite{squad} dataset which investigates the MRC ability on single document. And reading a single document is inadequate when the machine aim to read the whole web, among where knowledge spreads different noisy documents.
+
+% END LIUKAI
+
+Machine reading comprehension (MRC), empowering computers with the ability to acquire knowledge and answer questions from textual data, is believed to be a crucial step in building a general intelligent agent \cite{cnn-dm-examination}. Recent years have seen rapid growth in the MRC community. With the release of various datasets, the MRC task has evolved from the early cloze-style test \cite{cnn-dm,cbt} to answer extraction from a single passage \cite{squad} and to the latest more complex question answering on web data \cite{marco, searchqa, dureader}. 
+
+%Existing studies focus on designing models to answer question based on a single passage. 
+Great efforts have also been made to develop models for these MRC tasks 
+%\cite{cnn-dm-examination, dcn+, snet}
+, especially for the answer extraction on single passage \cite{match-lstm, bidaf, memen}. A significant milestone is that several MRC models have exceeded the performance of human annotators on the SQuAD dataset\footnote{https://rajpurkar.github.io/SQuAD-explorer/} \cite{squad}. However, this success on single Wikipedia passage is still not adequate, considering the ultimate goal of reading the whole web. Therefore, several latest datasets \cite{marco, dureader, searchqa} attempt to design the MRC tasks in more realistic settings by involving search engines. For each question, they use the search engine to retrieve multiple passages and the MRC models are required to read these passages in order to give the final answer.
+
+%Recent years have seen rapid growth in the MRC technologies , especially after the release of SQuAD dataset \cite{squad}. On the latest leaderboard of SQuAD \footnote{https://rajpurkar.github.io/SQuAD-explorer/}, several models have exceeded the performance of human annotators, which is regarded as a milestone of MRC. 
+
+
+%Meanwhile, we also see that the community is developing towards a more pragmatic direction and try to apply reading comprehension to real-world data that are more complicated than SQuAD \cite{searchqa, marco, dureader}. In this work, we specifically focus on two such datasets, the MS-MARCO \cite{marco} and DuReader \cite{dureader}. Both of them are designed by using the real-world user questions from search engines (Bing and Baidu, respectively) and contain large number of passages from the whole Web. 
+
+%a new trend in this field is to apply reading comprehension to real world data so that this technology can really power industrial applications \cite{marco, dureader, searchqa}. 
+
+%One intrinsic challenge of these datasets is that they provide multiple passages retrieved by the search engines for each question. 
+
+One of the intrinsic challenges for such multi-passage MRC is that since all the passages are question-related but usually independently written, it's probable that multiple confusing answer candidates (correct or incorrect) exist. \tabref{tab:example} shows an example from MS-MARCO. We can see that all the answer candidates have semantic matching with the question while they are literally different and some of them are even incorrect. As is shown by \newcite{adversarial-examples}, these confusing answer candidates could be quite difficult for MRC models to distinguish. Therefore, special consideration is required for such multi-passage MRC problem.
+
+\begin{comment}
+\begin{table*}[htbp]
+
+\centering
+\begin{tabular}{p{\textwidth}}
+\hline
+\textbf{Question: }What are overtones in music? \\
+\hline
+\textbf{Passages:} \\
+
+
+\textbf{[1]} \ldots  full definition of overtone: 1. \textbf{one of the higher tones produced simultaneously with the fundamental and that with the fundamental comprise a complex musical tone} 2. the color of the light reflected (as by a paint) \ldots \\
+
+
+\textbf{[2]} \textbf{The term overtone is used to refer to any resonant frequency above the fundamental frequency-an overtone may or may not be a harmonic.} Many of the instruments of the orchestra, those utilizing strings or air columns, produce the fundamental frequency and harmonics. \\
+
+\textbf{[3]} \textbf{An overtone is any frequency higher than the fundamental frequency of a sound.} Using the model of Fourier analysis, the fundamental and the overtones together are called partials \ldots \\
+%the word overtone is often used in a related but particular manner. It refers to a psychoacoustic effect in which a listener hears an audible pitch that is higher than, and different from, the fundamentals of the four pitches being sung by the quartet. \\
+
+\textbf{[4]} \textbf{Overtones Music Studio is a place where you are invited to come experience music for life. Overtones offers a unique musical experience that opens the world of music to people of all ages in a fun, creative, affordable and exciting way.} \ldots 
+%Through both our group and private lesson settings a unique musical experience is waiting for you. Please contact us for any questions not answered there. Kidzrock is a music program that teaches children as young as 4 how to play an instrument in the setting of a real rock band. Band members rotate on drums, electric guitar, and keyboard as they prepare to sing and play in a rock concert. \\
+
+%\textbf{[5]} For most string instruments and other long and thin instruments such as a bassoon, the first few overtones are quite close to integer multiples of the fundamental frequency, producing an approximation to a harmonic series. Thus, \textbf{in music, overtones are often called harmonics.} However, some overtones in some instruments may not be of a close integer multiplication of the fundamental frequency, thus causing a small dissonance. \ldots \\ 
+
+% In barbershop music, the word overtone is often used in a related but particular manner. It refers to a psychoacoustic effect in which a listener hears an audible pitch that is higher than, and different from, the fundamentals of the four pitches being sung by the quartet. \\
+
+\textbf{[5]} Let Overtones Music Studio provide a unique musical experience for your classroom, early learning center, 
+ Please contact us for any questions not answered there. \textbf{Kidzrock is a music program that teaches children as young as 4 how to play an instrument in the setting of a real rock band.}  \\
+%
+%\textbf{[7]} overtone. n. 1. (often plural) additional meaning or nuance: overtones of despair. 2. (Classical Music) \textbf{music acoustics any of the tones, with the exception of the fundamental, that constitute a musical sound and contribute to its quality, each having a frequency that is a multiple of the fundamental frequency.} \ldots \\
+%%1. An ulterior, usually implicit meaning or quality; an implication or a hint: an overtone of anger barely masked; praise with overtones of envy. 2. See harmonic. (ˈəʊvəˌtəʊn). \\
+%
+%\textbf{[8]} Field trips. Having fun and learning has never sounded so good! \textbf{Let Overtones Music Studio share one of three unique musical experiences with your Daycare, Children's Group, or Elementary School! Group rates are available. } Download our information flyer to find out more! \\
+
+$\cdots$ $\cdots$ \\
+\hline
+\textbf{Gold Answer:} Any frequency higher than the fundamental frequency of a sound. \\
+\hline
+\end{tabular}
+\caption{An example from MS-MARCO. The text in bold is the top-1 predicted answer candidate from each passage according to the boundary model. The candidate from passage [4] is chosen as the final prediction by the model, while the correct answer is from passage [3] and can be verified by the answers from [1], [2]. } \label{tab:example}
+\end{table*}
+\end{comment}
+
+
+\begin{table*}[htbp]
+\small
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{p{\textwidth}}
+\hline
+\textbf{Question: } What is the difference between a mixed and pure culture? \\
+\hline
+\textbf{Passages:} \\
+
+[1] \textbf{A culture is a society's total way of living and a society is a group that live in a defined territory and participate in common culture.} While the answer given is in essence … true, societies originally form for the express purpose to enhance \ldots \\
+
+[2] \ldots There has been resurgence in the economic system known as capitalism during the past two decades. 4. \textbf{The mixed economy is a balance between socialism and capitalism.} As a result, some institutions are owned and maintained by \ldots \\
+
+[3] \textbf{A pure culture is one in which only one kind of microbial species is found whereas in mixed culture two or more microbial species formed colonies.} Culture on the other hand, is the lifestyle that the people in the country \ldots \\
+
+[4] Best Answer: \textbf{A pure culture comprises a single species or strains. A mixed culture is taken from a source and may contain multiple strains or species.} A contaminated culture contains organisms that derived from some place \ldots \\
+
+[5] \ldots It will be at that time when we can truly obtain a pure culture. \textbf{A pure culture is a culture consisting of only one strain.} You can obtain a pure culture by picking out a small portion of the mixed culture \ldots \\
+
+[6] \textbf{A pure culture is one in which only one kind of microbial species is found whereas in mixed culture two or more microbial species formed colonies.} A pure culture is a culture consisting of only one strain. \ldots \\
+
+$\cdots$ $\cdots$ \\
+\hline
+\textbf{Reference Answer:} A pure culture is one in which only one kind of microbial species is found whereas in mixed culture two or more microbial species formed colonies. \\
+\hline
+\end{tabular}
+\caption{An example from MS-MARCO. The text in bold is the predicted answer candidate from each passage according to the boundary model. The candidate from [1] is chosen as the final answer by this model, while the correct answer is from [6] and can be verified by the answers from [3], [4], [5]. } \label{tab:example}
+\end{table*}
+
+
+%Machine Reading Comprehension (MRC), which endows computers with the ability to read passages and answer questions \cite{cnn-dm, squad}, has achieved great success recently \cite{cnn-dm-examination, rnet, dcn+}. A new trend in this field is to apply this technology to real-world question answering, such as search engines or personal assistants \cite{marco, triviaqa, dureader}. In such cases, multiple documents are usually retrieved from the web and MRC models are expected to give the final accurate answer based on the comprehension of this collection of documents. In this paper, we will specifically focus on the MS-MARCO \cite{marco} and DuReader \cite{dureader} datasets, which are both comprehensively designed to include real-world questions, multiple retrieved documents and high-quality answers generated by human.
+%
+%Previous studies on these two datasets mainly follow the models proposed for single document \cite{match-lstm, reasonet, rnet} but are still at an early stage on exploring the multi-document characteristics \cite{snet}. On the one hand, since all the documents are question-related but independently written, it's probable that multiple confusing answers (correct or wrong) exist in different passages, which could be extremely challenging for existing reading comprehension models to distinguish. On the other hand, it's expected that multiple documents could provide more evidence for the correct answer, so an intelligent agent, like human, usually can conclude the final answer by comparing the answers from different passages and choosing the most likely one.
+
+%Therefore even human beings cannot achieve high agreement on the answer annotation. 
+
+In this paper, we propose to leverage the answer candidates from different passages to verify the final correct answer and rule out the noisy incorrect answers. 
+%Therefore, we propose a similar cross-checking mechanism for the answers from different documents. Since we only extract one answer from each document, we regard these answers as independent, which is the prerequisite for cross-checking. 
+Our hypothesis is that the correct answers could occur more frequently in those passages and usually share some commonalities, while incorrect answers are usually different from one another. The example in \tabref{tab:example} demonstrates this phenomenon. We can see that the answer candidates extracted from the last four passages are all valid answers to the question and they are semantically similar to each other, while the answer candidates from the other two passages are incorrect and there is no supportive information from other passages. As human beings usually compare the answer candidates from different sources to deduce the final answer, we hope that MRC model can also benefit from the cross-passage answer verification process.
+
+%A detailed analysis of the answer statistics will be shown in Section \ref{experiments}. 
+
+The overall framework of our model is demonstrated in \figref{fig:architecture} , which consists of three modules. First, we follow the boundary-based MRC models \cite{bidaf,match-lstm} to find an answer candidate for each passage by identifying the start and end position of the answer (\figref{fig:content}). Second, we model the meanings of the answer candidates extracted from those passages and use the content scores to measure the quality of the candidates from a second perspective. Third, we conduct the answer verification by enabling each answer candidate to attend to the other candidates based on their representations. We hope that the answer candidates can collect supportive information from each other according to their semantic similarities and further decide whether each candidate is correct or not. Therefore, the final answer is determined by three factors: the boundary, the content and the cross-passage answer verification. The three steps are modeled using different modules, which can be jointly trained in our end-to-end framework. 
+
+%with three modules for three different tasks: finding the answer boundary, modeling the content of the answer and calculating the cross-passage verification score among the answer candidates. We will show that these three tasks can all get supervised end-to-end training by transforming the original answer labels. Moreover, our experimental results prove that jointly training them can provide additional benefits. 
+%Specifically, we first follow the boundary-based MRC model \cite{bidaf} to find an answer candidate for each passage, and then  enable the answer candidates to verify each other by two steps. Firstly, we model the meaning of the candidate from each passage. We argue that attention should be paid to the content of the answer in order to do answer verification, while the boundary model mainly focus on the start and end position of the answer (\figref{fig:content}). Therefore, we propose another answer content model that measures the quality of the content and computes the answer representation based on the content scores. 
+%However, as we show in \figref{fig:content}, existing boundary models mainly focus on finding the boundary of the answer and it's not suitable to directly compute the answer representation based on the prediction of these models. Therefore, we propose an answer content model that computes the probability of each word to be included in the content of the answer. The answer representation is computed as a weighted sum of the embeddings of each word based on the prediction of our content model. 
+
+
+
+
+We conduct extensive experiments on the MS-MARCO \cite{marco} and DuReader \cite{dureader} datasets. The results show that our answer verification MRC model outperforms the baseline models by a large margin and achieves the state-of-the-art performance on both datasets. 
+% Moreover, our experimental results prove that jointly training them can provide additional benefits. 
+
+
+
+
+%Previous work formulates the answering process as finding the start and end positions (i.e. boundary) of the answer. This takes effect by matching the query with the context of the answer (i.e. how much $->$ \$, what is XXX $->$ XXX is), and models based it have achieved great success on many datasets (i.e. SQuAD). However, this kind of boundary matching becomes much hard in real world settings, when several gold answers and multiple confusing candidates exist in the given passages. Two disadvantage: during training, penalize as long as the boundary position is predicted wrong; during predicting, only matching the context is not enough to distinguish between confusing answers.
+
+%In this work, we focus on two datasets designed for real-world applications, the MS-MARCO and DuReader datasets. 
+
+%Our contributions can be summarized as follows:
+%
+%1. We propose a mixed objective for training RC model, which considers the exact match of the answer, partially matched answer, semantic relevance of the answer.
+%
+%2. During testing, we propose to not only consider the boundary of the answers, but also verify the answers by their content. A traditional RankNet model is trained to select among the best predicted answers from all passages by not only considering the boundary, but also consider the content score.
+%
+%3. Our model achieves the second place on MARCO and first place on DuReader. 
+
+

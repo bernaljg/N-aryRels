@@ -1,0 +1,55 @@
+%%%% ijcai17.tex
+%\typeout{IJCAI-17 Instructions for Authors}
+
+\documentclass{article}
+\pdfoutput=1
+% The file ijcai17.sty is the style file for IJCAI-17 (same as ijcai07.sty).
+\usepackage{ijcai17}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{threeparttable}
+\usepackage{multirow}
+\title{DeepFM: A Factorization-Machine based Neural Network for CTR Prediction}
+
+\author{Huifeng Guo\thanks{This work is done when Huifeng Guo worked as intern at Noah's Ark Research Lab, Huawei.}$^1$ , Ruiming Tang$^2$, Yunming Ye\thanks{Corresponding Author.}$^1$, Zhenguo Li$^2$, Xiuqiang He$^2$\\
+$^1$Shenzhen Graduate School, Harbin Institute of Technology, China\\
+$^2$Noah's Ark Research Lab, Huawei, China\\
+$^1$huifengguo@yeah.net, yeyunming@hit.edu.cn\\
+$^2$\{tangruiming, li.zhenguo, hexiuqiang\}@huawei.com
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Learning sophisticated feature interactions behind user behaviors is critical in maximizing CTR for recommender systems.
+%For instance, as we observe in a mainstream apps market, people tend to download apps for food delivery at meal-time, which indicates that the interaction of app category and time-stamp is highly predictive of CTR.
+%In general, CTR can be affected by profound feature interactions that are hard to engineering and have to be learned automatically from data.
+Despite great progress, existing methods seem to have a strong bias towards low- or high-order interactions, or require expertise feature engineering. In this paper, we show that it is possible to derive an end-to-end learning model that emphasizes both low- and high-order feature interactions. The proposed model, DeepFM, combines the power of factorization machines for recommendation and deep learning for feature learning in a new neural network architecture. Compared to the latest Wide \& Deep model from Google, DeepFM has a shared input to its ``wide'' and ``deep'' parts, with no need of feature engineering besides raw features. Comprehensive experiments are conducted to demonstrate the effectiveness and efficiency of DeepFM over the existing models for CTR prediction, on both benchmark data and commercial data.
+
+%
+%CTR prediction is a crucial task in recommender systems. The key of CTR prediction model is the ability of learning feature interactions, which is the weakness of the widely used linear model. Factorization machine (FM) is desined to learn feature interactions automatically. Unfortunately, FM needs specify the order of feature interactions and is complicated to capture high-order feature interactions. Different with linear model and FM, for the purpose of seizing high-order feature interactions, several deep models are proposed recently. However, almost existing CTR models lack the ability to learn both low- and high-order feature interactions. Although Wide \& Deep has this capability, it need two input and the input of the ``wide'' part requires additional feature engineering. Therefore, in this paper, taking the advantages of FM and DNN, we propose Factorization-Machine based Neural network, namely DeepFM, to capture both low- and high-order feature interactions automatically. Moreover, DeepFM does not need any pre-training for the network, as needed in some other networks. We compare the network structure of DeepFM and the others in detail. Comprehensive experiments are conducted to empirically demonstrate the effectiveness and efficiency of DeepFM over the existing models for CTR prediction.
+
+%CTR prediction is a crucial task in recommender systems.Factorization Machines (FM) are designed to learn pairwise feature interactions automatically, however, it is complicated to learn high-order feature interactions with FM. Deep Neural Networks (DNN) utilize network structures and non-linear activation functions to learn high-order feature interactions, while low-order feature interactions are ignored.  As a very similar work, proposed by Google combines logistic regression (LR) and DNN to achieve the similar goal as ours, however, expertise feature engineering is still needed in the ``wide" part of their framework. In contrast, our proposed DeepFM needs no feature engineering for the input. Moreover, DeepFM does not need any pre-training for the network, as needed in some other networks. We compare the network structure of DeepFM and the others in detail. Comprehensive experiments are conducted to empirically demonstrate the effectiveness and efficiency of DeepFM over the existing models for CTR prediction.
+\end{abstract}
+
+\input{intro.tex}
+
+\input{models.tex}
+
+\input{experiments.tex}
+
+\input{related.tex}
+
+\input{conclusion.tex}
+
+%\newpage
+%% The file named.bst is a bibliography style file for BibTeX 0.99c
+\bibliographystyle{named}
+%\bibliographystyle{abbrv}
+\bibliography{complete}
+
+\end{document}
+

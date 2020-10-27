@@ -1,0 +1,89 @@
+%\usepackage{smrdefaults}
+\usepackage{mathptmx}
+
+\renewcommand{\baselinestretch}{1}
+
+\usepackage{xspace}
+\usepackage{color}
+\usepackage{colortbl}
+%\usepackage{multirow}
+%\usepackage{hyperref}
+
+\usepackage{booktabs}                   % Publication quality tables
+
+
+\definecolor{gray}{rgb}{0.35,0.35,0.35}
+\definecolor{yellow}{rgb}{1,1,0.25}
+\definecolor{MyBlue}{rgb}{0,0.2,0.8}
+\definecolor{MyRed}{rgb}{0.8,0.2,0}
+\definecolor{Red}{rgb}{1,0,0}
+\definecolor{LightCyan}{rgb}{0.88,1,1}
+\definecolor{MyGreen}{rgb}{0.0,0.5,0.1}
+\definecolor{LightGray}{rgb}{0.9,0.9,0.9}
+\def\newtext#1{\textcolor{MyBlue}{#1}}
+\def\torevise#1{\textcolor{Red}{#1}}
+%\def\torevise#1{#1} % temporary used for submission
+\def\red#1{\textcolor{red}{#1}}
+\def\blue#1{\textcolor{blue}{#1}}
+\def\green#1{\textcolor{green}{#1}}
+\newcommand{\ul}[1]{\underline{\smash{#1}}}
+
+
+\newlength\paramargin
+\newlength\figmargin
+\newlength\secmargin
+
+\setlength{\paramargin}{-1.0mm}
+\setlength{\figmargin}{-1.5mm}
+\setlength{\secmargin}{-2.5mm}
+
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+%% Some useful macros:
+\long\def\ignorethis#1{}
+\def\@onedot{\ifx\@let@token.\else.\null\fi\xspace}
+\def\ie{i.e.}
+\def\eg{e.g.}
+\def\etal{et~al.\xspace}
+\def\Naive{Na\"{\i}ve}
+\def\naive{na\"{\i}ve}
+\newcommand {\minghsuan}[1]{{\color{red}\bf{Ming-Hsuan: }#1}\normalfont}
+\newcommand {\jason}[1]{{\color{magenta}\textbf{Jason: }#1}\normalfont}
+\newcommand {\jiabin}[1]{{\color{blue}\textbf{Jia-Bin: }#1}\normalfont}
+\newcommand {\Paragraph}[1]{\noindent\paragraph{#1}}
+% symbols using in math
+
+\setlength{\fboxsep}{0pt}
+\def\padg{{\color{white}g}}
+
+\newcommand{\jbox}[2]{
+  \fbox{%
+  	\begin{minipage}{#1}%
+  		\hfill\vspace{#2}%
+  	\end{minipage}%
+  }}
+
+\newcommand{\jblock}[2]{%
+	\begin{minipage}[t]{#1}\vspace{0cm}\centering%
+	#2%
+	\end{minipage}%
+	}
+
+
+\newcommand{\figref}[1]{Figure~\ref{fig:#1}}% type "\figref{}" to reference figure
+\newcommand{\tabref}[1]{Table~\ref{tab:#1}} % type "\tabref{}" to reference table
+\newcommand{\eqnref}[1]{\eqref{eq:#1}}
+\newcommand{\secref}[1]{Section~\ref{sec:#1}}
+
+\newcommand{\tb}[1]{\textbf{#1}}
+\newcommand{\mb}[1]{\mathbf{#1}}
+\newcommand{\TODO}{{\textbf{\color{red}[TODO]\,}}}
+\newcommand{\n}{\vskip\baselineskip}
+
+\renewcommand{\paragraph}[1]{\noindent\textbf{#1}}

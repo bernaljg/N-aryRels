@@ -1,0 +1,121 @@
+\begin{tikzpicture}[heapgraph,scale=.9]
+  \def\rowSep{.35}
+  \def\colSep{.1}
+  \def\nodeStep{1}
+  \node[colLabel] (labelStep)  at (0,0)                        {Step};
+  \node[colLabel] (labelGraph) at ($(labelStep) + (3.05,0)$)   {Labeled Graph};
+  \node[colLabel] (labelOut)   at ($(labelGraph) + (2.35,0)$)  {Out\phantom{p}};
+
+  \node[stepLabel,anchor=north]               (0labelStep) at ($(labelStep.south) + (0, -\rowSep)$) {Input};
+  \node[anchor=west,list,label=90:\texttt{b}] (0b)         at ($(0labelStep.east) + (\colSep,0)$)   {$1$};
+  \node[list]                                 (0bn)        at ($(0b)              + (\nodeStep,0)$) {$2$};
+  \node[list]                                 (0t)         at ($(0bn)             + (\nodeStep,0)$) {$3$};
+  \node[list]                                 (0tn)        at ($(0t)              + (\nodeStep,0)$) {$4$};
+  \node[anchor=west,outLabel]                 (0labelOut)  at ($(0tn.east)        + (\colSep,0)$)   {};
+  \path[->, thick]
+    (0b)  edge node[below,heapEdgeLabel] {$0$} (0bn)
+    (0bn) edge node[below,heapEdgeLabel] {$0$} (0t)
+    (0t)  edge node[below,heapEdgeLabel] {$0$} (0tn)
+    (0tn) edge[bend right] node[above,heapEdgeLabel] {$0$} (0t)
+  ;
+
+  \node[stepLabel,anchor=north]               (1labelStep) at ($(0labelStep.south)+ (0, -\rowSep)$) {Line 3/$(\dagger)$};
+  \node[anchor=west,list,label=90:\texttt{b}] (1b)         at ($(1labelStep.east) + (\colSep,0)$)   {$1$};
+  \node[list]                                 (1bn)        at ($(1b)              + (\nodeStep,0)$) {$2$};
+  \node[list,label=90:$\phantom{t}$]          (1t)         at ($(1bn)             + (\nodeStep,0)$) {$3$};
+  \node[list]                                 (1tn)        at ($(1t)              + (\nodeStep,0)$) {$4$};
+  \node[anchor=west,outLabel]                 (1labelOut)  at ($(1tn.east)        + (\colSep,0)$)   {};
+  \path[->, thick]
+    (1b)  edge node[below,heapEdgeLabel] {$0$} (1bn)
+    (1bn) edge node[below,heapEdgeLabel] {$0$} (1t)
+    (1t)  edge node[below,heapEdgeLabel] {$0$} (1tn)
+    (1tn) edge[bend right] node[above,heapEdgeLabel] {$0$} (1t)
+  ;
+
+  \node[stepLabel,anchor=north]               (2labelStep) at ($(1labelStep.south)+ (0, -\rowSep)$) {Line 4-7/$(\ddagger)$};
+  \node[anchor=west,list,label=90:\texttt{b}] (2b)         at ($(2labelStep.east) + (\colSep,0)$)   {$1$};
+  \node[list]                                 (2bn)        at ($(2b)              + (\nodeStep,0)$) {$2$};
+  \node[list,label=90:$t$]                    (2t)         at ($(2bn)             + (\nodeStep,0)$) {$3$};
+  \node[list]                                 (2tn)        at ($(2t)              + (\nodeStep,0)$) {$4$};
+  \node[anchor=west,outLabel]                 (2labelOut)  at ($(2tn.east)        + (\colSep,0)$)   {$\exists t .$};
+  \path[->, thick]
+    (2b)  edge node[below,heapEdgeLabel] {$0$} (2bn)
+    (2bn) edge node[below,heapEdgeLabel] {$0$} (2t)
+    (2t)  edge node[below,heapEdgeLabel] {$0$} (2tn)
+    (2tn) edge[bend right] node[above,heapEdgeLabel] {$0$} (2t)
+  ;
+
+  \node[stepLabel,anchor=north]               (3labelStep) at ($(2labelStep.south)+ (0, -\rowSep)$) {Line 10 (for \texttt{b})};
+  \node[anchor=west,list,active,label=90:\texttt{b}] (3b)  at ($(3labelStep.east) + (\colSep,0)$)   {$1$};
+  \node[list]                                 (3bn)        at ($(3b)              + (\nodeStep,0)$) {$2$};
+  \node[list,label=90:$t$]                    (3t)         at ($(3bn)             + (\nodeStep,0)$) {$3$};
+  \node[list]                                 (3tn)        at ($(3t)              + (\nodeStep,0)$) {$4$};
+  \node[anchor=west,outLabel]                 (3labelOut)  at ($(3tn.east)        + (\colSep,0)$)   {$\exists t .$};
+  \path[->, thick]
+    (3b)  edge node[below,heapEdgeLabel] {$0$} (3bn)
+    (3bn) edge node[below,heapEdgeLabel] {$0$} (3t)
+    (3t)  edge node[below,heapEdgeLabel] {$0$} (3tn)
+    (3tn) edge[bend right] node[above,heapEdgeLabel] {$0$} (3t)
+  ;
+
+  \draw[-] ($(labelOut.north east) + (.1, 0)$) -- ($(labelOut.north east) + (.1, -4.6)$);
+  \node[colLabel] (labelStep')  at ($(labelOut.east) + (1.6,0)$) {Step};
+  \node[colLabel] (labelGraph') at ($(labelStep') + (3.05,0)$)   {Labeled Graph};
+  \node[colLabel] (labelOut')   at ($(labelGraph') + (2.6,0)$)  {Out\phantom{p}};
+
+  \node[stepLabel,anchor=west]                (4labelStep) at ($(0labelStep.east) + (4.9, 0)$)      {Line 11/$(\star)$};
+  \node[anchor=west,list,active,label=90:\texttt{b}] (4b)  at ($(4labelStep.east) + (\colSep,0)$)   {$1$};
+  \node[list]                                 (4bn)        at ($(4b)              + (\nodeStep,0)$) {$2$};
+  \node[list,label=90:$t$]                    (4t)         at ($(4bn)             + (\nodeStep,0)$) {$3$};
+  \node[list]                                 (4tn)        at ($(4t)              + (\nodeStep,0)$) {$4$};
+  \node[anchor=west,outLabel]                 (4labelOut)  at ($(4tn.east)        + (\colSep,0)$)   {$\exists t . \phantom{\SLls(\texttt{b},t)}$};
+  \path[->, thick]
+    (4b)  edge node[below,heapEdgeLabel] {$0$} (4bn)
+    (4bn) edge node[below,heapEdgeLabel] {$0$} (4t)
+    (4t)  edge node[below,heapEdgeLabel] {$0$} (4tn)
+    (4tn) edge[bend right] node[above,heapEdgeLabel] {$0$} (4t)
+  ;
+
+  \node[stepLabel,anchor=west]                (5labelStep) at ($(1labelStep.east) + (4.9, 0)$)      {Line 13,14/$(\heartsuit)$};
+  \node[anchor=west,list,active,label=90:\texttt{b}] (5b)  at ($(5labelStep.east) + (\colSep,0)$)   {$1$};
+  \node[list]                                 (5bn)        at ($(5b)              + (\nodeStep,0)$) {$2$};
+  \node[list,label=90:$t$]                    (5t)         at ($(5bn)             + (\nodeStep,0)$) {$3$};
+  \node[list]                                 (5tn)        at ($(5t)              + (\nodeStep,0)$) {$4$};
+  \node[anchor=west,align=left,outLabel]      (5labelOut)  at ($(5tn.east)        + (\colSep,0)$)   {$\exists t . \SLls(\texttt{b},t) \ast$};
+  \path[->, thick]
+    (5b)  edge node[below,heapEdgeLabel] {$0$} (5bn)
+    (5bn) edge node[below,heapEdgeLabel] {$0$} (5t)
+    (5t)  edge node[below,heapEdgeLabel] {$0$} (5tn)
+    (5tn) edge[bend right] node[above,heapEdgeLabel] {$0$} (5t)
+  ;
+
+  \node[stepLabel,anchor=west]                (6labelStep) at ($(2labelStep.east) + (4.9, 0)$)      {Line 18/$(\spadesuit)$};
+  \node[anchor=west,list,explained,label=90:\texttt{b}] (6b) at ($(6labelStep.east)+(\colSep,0)$)   {$1$};
+  \node[list,explained]                       (6bn)        at ($(6b)              + (\nodeStep,0)$) {$2$};
+  \node[list,label=90:$t$]                    (6t)         at ($(6bn)             + (\nodeStep,0)$) {$3$};
+  \node[list]                                 (6tn)        at ($(6t)              + (\nodeStep,0)$) {$4$};
+  \node[anchor=west,align=left,outLabel]      (6labelOut)  at ($(6tn.east)        + (\colSep,0)$)   {$\exists t . \SLls(\texttt{b},t) \ast$};
+  \path[->, thick]
+    (6b)  edge node[below,heapEdgeLabel] {$0$} (6bn)
+    (6bn) edge node[below,heapEdgeLabel] {$0$} (6t)
+    (6t)  edge node[below,heapEdgeLabel] {$0$} (6tn)
+    (6tn) edge[bend right] node[above,heapEdgeLabel] {$0$} (6t)
+  ;
+
+  \node[stepLabel,anchor=west]                (7labelStep) at ($(3labelStep.east) + (4.9, 0)$)      {Line 10 (for $t$)};
+  \node[anchor=west,list,explained,label=90:\texttt{b}] (7b) at ($(7labelStep.east)+(\colSep,0)$)   {$1$};
+  \node[list,explained]                       (7bn)        at ($(7b)              + (\nodeStep,0)$) {$2$};
+  \node[list,active,label=90:$t$]             (7t)         at ($(7bn)             + (\nodeStep,0)$) {$3$};
+  \node[list]                                 (7tn)        at ($(7t)              + (\nodeStep,0)$) {$4$};
+  \node[anchor=west,align=left,outLabel]      (7labelOut)  at ($(7tn.east)        + (\colSep,0)$)   {$\exists t . \SLls(\texttt{b},t) \ast$};
+  \path[->, thick]
+    (7b)  edge node[below,heapEdgeLabel] {$0$} (7bn)
+    (7bn) edge node[below,heapEdgeLabel] {$0$} (7t)
+    (7t)  edge node[below,heapEdgeLabel] {$0$} (7tn)
+    (7tn) edge[bend right] node[above,heapEdgeLabel] {$0$} (7t)
+  ;
+\end{tikzpicture}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

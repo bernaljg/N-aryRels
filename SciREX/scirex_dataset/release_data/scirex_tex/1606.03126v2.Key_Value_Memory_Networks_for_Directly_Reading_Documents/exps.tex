@@ -1,0 +1,270 @@
+\begin{table}[t!]
+	\begin{center}
+	\label{tab:WikiMoviesres}
+   	\resizebox{1\linewidth}{!}{{
+	\renewcommand{\arraystretch}{1.0}
+    	\begin{tabular}{l|c|c|c|}
+      		Method &  KB   &  IE  & Doc \\
+      		\hline
+		\citep{bordes2014question} QA system & 93.5 & 56.5 & N/A \\
+		Supervised Embeddings         & 54.4 & 54.4 & 54.4 \\
+		Memory Network                    & 78.5 & 63.4 & 69.9 \\ %69.9
+		Key-Value Memory Network  & \textbf{93.9} & \textbf{68.3} & \textbf{76.2} \\ % 73.9
+    	\end{tabular}
+    	}}
+    	\caption{
+          \label{table:main-res}
+          { Test results (\% hits@1)
+on \WikiMovies, comparing human-annotated KB (KB), information extraction-based KB (IE),
+and directly reading Wikipedia documents (Doc).}}
+  	\end{center}
+%  \vspace{-3ex}
+\end{table}
+
+
+\begin{table}[t!]
+	\begin{center}
+    	\resizebox{1\linewidth}{!}{{
+	\renewcommand{\arraystretch}{1.0}
+    	\begin{tabular}{l|c|c|c|}
+      		Memory Representation  &   Doc \\
+      		\hline
+		Sentence-level               &  52.4 \\  % dev-kv:52.4        dev-memnn:?
+		Window-level                 &  66.8 \\  % dev-kv:66.77 test-kv:66.4   dev-memnn:?
+		Window-level + Title      &  74.1 \\  % dev-kv:74.1 test-kv:73.9      dev-memnn:?
+		Window-level + Center Encoding + Title & \textbf{76.9} \\ % dev-kv:76.9 test-kv:76.2 dev-memnn:?
+    	\end{tabular}
+    	}}
+    	\caption{
+          \label{table:memkv-res}
+{Development set performance (\% hits@1) with different document memory representations for KV-MemNNs. }}
+  	\end{center}
+%  \vspace{-3ex}
+\end{table}
+
+
+
+
+
+
+
+This section describes our experiments %with KV-MemNNs
+ on \WikiMovies and
+{\sc WikiQA}.
+
+\subsection{WikiMovies} \label{sec:WikiMovies}
+
+We conducted experiments on the \WikiMovies~ dataset described
+in Sec. \ref{sec:data}. Our main goal is to
+compare the performance of KB, IE and Wikipedia (Doc) sources when
+trying varying learning methods.
+%and the ability of different learning methods on them.
+We compare four approaches:
+(i) the QA system of
+\cite{bordes2014question} that performs well on existing datasets
+WebQuestions \citep{berant2013semantic} and SimpleQuestions \citep{bordes2015large} that use KBs only; % \citep{bordes2015large},
+(ii) supervised embeddings that do not make use of a KB at all
+but learn question-to-answer embeddings directly
+and hence act as a sanity check \citep{dodge2015evaluating};
+(iii) Memory Networks; and (iv) Key-Value
+Memory Networks.
+Performance is reported using the accuracy of the top hit (single answer)
+over all possible answers (all entities), i.e. the hits@1 metric measured in percent.
+In all cases hyperparameters are optimized on the development set, including
+the memory representations of Sec. \ref{sec:featuremap} for MemNNs and KV-MemNNs.
+As MemNNs do not support key-value pairs, we concatenate key and value together
+when they differ instead.
+%
+%The best choice of hops was $H=1$ for MemNNs and $H=2$ for KV-MemNNs.
+
+
+The main results are given in Table \ref{table:main-res}.
+The  QA system of \cite{bordes2014question} outperforms Supervised Embeddings
+and Memory Networks for KB and IE-based KB representations, but is designed
+to work with a KB, not with documents (hence the N/A in that column).
+%Key-Value Memory Networks outperform Memory Networks and all other methods
+%on all three data source types.
+However, Key-Value Memory Networks outperform all other methods
+on all three data source types.
+Reading from Wikipedia documents directly (Doc) outperforms an IE-based KB (IE),
+which is an encouraging result towards automated machine reading though a
+gap to a human-annotated KB still remains (93.9 vs. 76.2).
+The best memory representation for directly reading
+documents uses ``Window-level + Center Encoding + Title''
+($W=7$ and $H=2$);
+see Table \ref{table:memkv-res} for a comparison of results for different
+representation types.
+Both center encoding and title features help the window-level representation, while
+sentence-level is inferior.
+
+\begin{table}[t!]
+	\begin{center}
+    	\resizebox{0.75\linewidth}{!}{{
+    	\begin{tabular}{l|c|c|c|}
+      		Question Type  & KB & IE & Doc \\
+      		\hline
+		Writer to Movie           &  97  &  72  &  91  \\
+		Tag to Movie               &  85  &  35  &  49  \\
+		Movie to Year             &  95   &  75  &  89  \\
+		Movie to Writer           &  95   &  61  &  64  \\
+		Movie to Tags             &  94   &  47  &  48  \\
+		Movie to Language     &  96   &  62  &  84  \\
+		Movie to IMDb Votes   &  92   &  92  &  92  \\
+		Movie to IMDb Rating  &  94   &  75  &  92  \\
+		Movie to Genre           &  97   &  84  &  86  \\
+		Movie to Director        &  93   &  76  &  79  \\
+		Movie to Actors           &  91   &  64  &  64  \\
+		Director to Movie        &  90   &  78  &   91  \\
+		Actor to Movie            &  93   &   66  &  83  \\
+    	\end{tabular}
+    	}}
+    	\caption{
+	\label{table:breakdown}
+{Breakdown of test results (\% hits@1) on \WikiMovies for
+Key-Value Memory Networks
+%KV-MemNNs
+using different
+knowledge representations.}}
+ 	\end{center}
+%  \vspace{-3ex}
+\end{table}
+
+
+
+\paragraph{QA Breakdown}
+A breakdown by question type comparing the different data sources for KV-MemNNs is given
+in Table \ref{table:breakdown}. IE loses out especially to Doc (and KB) on
+Writer, Director and Actor to Movie, perhaps because coreference is difficult in these cases --
+although it has other losses elsewhere too. Note that only 56\% of
+subject-object pairs in IE match the triples in the original KB, so losses are expected.
+Doc loses out to KB particularly on Tag to Movie, Movie to Tags, Movie to Writer and
+Movie to Actors. Tag questions
+are hard because they can reference more or less any word in the entire
+Wikipedia document; see Table \ref{fig:blade}. Movie to Writer/Actor are hard
+because there is likely only one or a few references to the answer across all documents, whereas
+for Writer/Actor to Movie there are more possible answers to find.
+
+
+\begin{table}[t!]
+	\begin{center}
+          \begin{small}
+  	\begin{tabular}{l|c|c|}
+      	    Knowledge Representation   &  KV-MemNN  \\
+     	    \hline
+       	KB                               &   93.9    \\
+      	One Template Sentence            &   82.9    \\
+       	All Templates Sentences          &   80.0        \\
+       	One Template + Coreference      &   76.0         \\
+       	One Template + Conjunctions       &   74.0        \\
+       	All Templates + Conj. + Coref.   &   72.5       \\
+       	Wikipedia Documents              &    76.2   \\
+  	 \end{tabular}
+ %   	}}
+    	\caption{
+	\label{tab:templateres}
+              { Analysis of test set results (\% hits@1) for KB vs. Synthetic Docs on \WikiMovies.}}
+          \end{small}
+  	\end{center}
+%  \vspace{-3ex}
+\end{table}
+
+
+
+\paragraph{KB vs. Synthetic Document Analysis}
+%\textcolor{red}{TODO: talk about templates (or not)}
+To further understand the difference between using a KB versus reading documents directly,
+we conducted an experiment where we constructed synthetic documents using the KB.
+For a given movie, we use a simple grammar to construct a synthetic ``Wikipedia'' document
+based on the KB triples: for each relation type we have a set of template phrases
+(100 in total)  used to generate the fact, e.g.
+``Blade Runner came out in 1982'' for the entry {\sc Blade Runner release\_year 1982}.
+We can then parameterize the complexity of our synthetic documents:
+(i) using one template, or all of them;
+(ii) using conjunctions to combine facts into single sentences or not;
+and (iii) using coreference between sentences where we replace the movie name with ``it''.\footnote{This data is also part of the \WikiMovies benchmark.}
+The purpose of this experiment is to find which aspects are responsible for the gap
+in performance to a KB.
+The results are given in Table \ref{tab:templateres}.
+They indicate that some of the loss (93.9\% for KB to 82.9\% for One Template Sentence)
+ in performance is due directly to representing in sentence form, making the subject, relation
+and object harder to extract.
+Moving to a larger number of templates does not deteriorate performance much (80\%).
+ The remaining performance drop seems to be split roughly
+equally between conjunctions (74\%) and coreference (76\%).
+%When combined, which is the hardest synthetic dataset (All Templates + Conj. + Coref.), this
+The hardest synthetic dataset combines these (All Templates + Conj. + Coref.) and
+is actually harder than using the real Wikipedia documents (72.5\% vs. 76.2\%).
+This is possibly because the amount of conjunctions and coreferences we make are artificially
+too high (50\% and 80\% of the time, respectively).
+
+
+\begin{table}[t!]
+	\begin{center}
+    	\resizebox{1\linewidth}{!}{{
+	\begin{tabular}{l|c|c|}
+      		Method & MAP & MRR \\
+      		\hline
+		Word Cnt                                                 &  0.4891 & 0.4924 \\
+		Wgt Word Cnt                                          &  0.5099 & 0.5132 \\
+		2-gram CNN    \citep{yang2015wikiqa}    & 0.6520 & 0.6652 \\
+		AP-CNN  \citep{santos2016attentive}      & 0.6886 & 0.6957  \\
+		Attentive LSTM \citep{miao2015neural}          & 0.6886  & 0.7069 \\
+		Attentive CNN \citep{yin2015convolutional}    & 0.6921  & 0.7108 \\
+		L.D.C. \citep{wang2016sentence}  & 0.7058  & 0.7226 \\
+		\hline
+      		Memory Network                     &       0.5170  &       0.5236  \\
+      		Key-Value Memory Network   & {\bf 0.7069} & {\bf 0.7265} \\
+    	\end{tabular}
+    	}}
+    	\caption{
+	\label{tab:wikiqares}
+              { Test results on WikiQA.}}
+  	\end{center}
+%  \vspace{-3ex}
+\end{table}
+
+
+\subsection{WikiQA} \label{sec:wikiqa}
+
+{\sc WikiQA} \citep{yang2015wikiqa} is an existing dataset for answer sentence selection
+using Wikipedia as the knowledge source. The task is, given a question, to select
+the sentence coming from a Wikipedia document that best answers the question,
+where performance is measured using mean average precision (MAP) and mean reciprocal rank (MRR)
+of the ranked set of answers. The dataset uses a pre-built
+information retrieval step and hence provides a fixed set of candidate sentences per question,
+ so systems do not have to consider ranking all of Wikipedia.
+In contrast to \WikiMovies, the training set size is small ($\sim$1000 examples) while
+the topic is much more broad (all of Wikipedia, rather than just movies) and the
+questions can only be answered by reading the documents, so no comparison to the use
+of KBs can be performed. However, a wide range of methods have already been tried on
+{\sc WikiQA}, thus providing a useful benchmark to test if the same results
+found on \WikiMovies carry across to {\sc WikiQA}, in particular the performance
+of Key-Value Memory Networks.
+
+
+Due to the size of the training set, following many
+other works \citep{yang2015wikiqa,santos2016attentive,miao2015neural}
+we pre-trained the word vectors (matrices $A$ and $B$ which are constrained to be identical)
+before training KV-MemNNs.
+We employed Supervised Embeddings \citep{dodge2015evaluating}
+for that goal, training on all of Wikipedia while
+treating the input as a random sentence and the target as the subsequent sentence.
+We then trained KV-MemNNs with dropout regularization:
+we sample words from the question, memory representations and the answers,
+choosing the dropout rate using the development set.
+Finally, again following other successful methods \citep{yin2015convolutional},
+we combine our approach
+with exact matching word features between question and answers.
+Key hashing was not used as candidates were already pre-selected.
+To represent the memories, we used the Window-Level representation (the best choice on
+the dev set was $W=7$) as the key and the whole sentence as the value, as the value should match the answer which in this case is a sentence.
+Additionally, in the representation
+all numbers in the text and the phrase ``how many'' in the question
+were replaced with the feature ``\_number\_''.
+The best choice of hops was also $H=2$ for KV-MemNNs.
+
+The results are given in Table \ref{tab:wikiqares}.
+Key-Value Memory Networks outperform a large set of other methods,
+although the results of the L.D.C. method of \citep{wang2016sentence} are very similar.
+Memory Networks, which cannot easily pair windows to sentences, perform much worse,
+highlighting the importance of key-value memories.

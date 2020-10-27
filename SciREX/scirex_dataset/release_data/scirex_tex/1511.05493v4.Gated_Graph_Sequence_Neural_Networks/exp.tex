@@ -1,0 +1,302 @@
+\section{Explanatory Applications}
+
+In this section we present example applications that concretely illustrate the use of \OurMethodShorts.
+We focus on a selection of bAbI artificial intelligence (AI) tasks \citep{weston2015towards} and two graph algorithm learning tasks.
+
+\subsection{bAbI Tasks}
+The bAbI tasks are meant to test reasoning capabilities that AI systems should be capable of.
+In the bAbI suite, there are 20 tasks that test basic forms of reasoning like deduction, induction, counting,
+and path-finding.
+
+We have defined a basic transformation procedure that maps bAbI tasks
+to \OurMethodMinorShorts~or \OurMethodShorts. We use the \texttt{--symbolic} option from the
+released bAbI code to get stories that just involve sequences
+of relations between entities, which are then converted into a graph. Each entity is mapped to a
+node, and each relation is mapped to an edge with edge label given by the
+relation. The full story is consumed and mapped to a single
+graph.  Questions are marked by \texttt{eval} in the data and are comprised
+of a question type (e.g., \texttt{has\_fear}), and some
+argument (e.g., one or more nodes). The arguments are converted into
+initial node annotations, with the $i$-th bit of the $i$-th argument node's
+annotation vector set to 1.
+For example, if the \texttt{eval} line is \texttt{eval E > A true}, then \texttt{E} gets
+initial annotation $\labelsv_E^{(1)}=[1,0]^\top$, \texttt{A} gets
+$\labelsv_A^{(1)}=[0,1]^\top$, and for all other nodes $\node$,
+$\labelsv_\node^{(1)}=[0,0]^\top$. Question type is 1 (for
+`\texttt{>}') and output is class 1 (for `true').
+Some tasks have multiple question types, for example Task 4 which has 4
+question types: \texttt{e}, \texttt{s}, \texttt{w}, \texttt{n}. For such tasks
+we simply train a separate \OurMethodMinorShort~for each task.
+We do not use the strong supervision labels or give the \OurMethodShorts~any
+intermediate annotations in any experiments.
+
+While simple, this transformation does not preserve all
+information about the story (e.g., it discards temporal order of the
+inputs), and it does not easily handle ternary and higher order
+relations (e.g., \texttt{Yesterday John went to the garden} is not
+easily mapped to a simple edge).
+We also emphasize that it is a non-trivial task to map general natural language to symbolic form,\footnote{Although the bAbI data is quite templatic, so it is straightforward to hand-code a parser that will work for the bAbI data; the symbolic option removes the need for this.}
+so we could not directly apply this approach to arbitrary natural language.
+Relaxing these restrictions is left for future work.
+
+However, even with this simple transformation, there are a variety of
+bAbI tasks that can be formulated, including Task 19 (Path Finding),
+which is arguably the hardest task. We provide baselines to show that
+the symbolic representation does not help RNNs or LSTMs significantly,
+and show that \OurMethodShorts~solve the problem with a small number
+of training instances. We also develop two new bAbI-like tasks that
+involve outputting sequences on graphs: shortest paths, and a simple
+form of Eulerian circuits (on random connected 2-regular graphs).
+The point of these experiments is to illustrate the capabilities
+of \OurMethodShorts~across a variety of problems.
+
+
+\paragraph{Example 1. }
+As an example, below is an instance from the symbolic dataset for bAbI task 15, Basic
+Deduction.
+\begin{framed}
+\begin{alltt}
+D is A
+B is E
+A has_fear F
+G is F
+E has_fear H
+F has_fear A
+H has_fear A
+C is H
+eval B has_fear      H
+eval G has_fear      A
+eval C has_fear      A
+eval D has_fear      F
+\end{alltt}
+\end{framed}
+Here the first 8 lines describe the facts, the \OurMethodMinorShort~will use
+these facts to build a graph.  Capital letters are nodes, \texttt{is} and
+\texttt{has\_fear} are interpreted as edge labels or edge types. The last 4
+lines are 4 questions asked for this input data. \texttt{has\_fear} in these
+lines are interpreted as a question type. For this task, in each question only
+one node is special, e.g. the \texttt{B} in \texttt{eval B has\_fear}, and we
+assign a single value 1 to the annotation vector for this special node and 0
+to all the other nodes.
+
+For RNN and LSTM the data is converted into token
+sequences like below:
+\begin{framed}
+    \texttt{n6 e1 n1 eol n6 e1 n5 eol n1 e1 n2 eol n4 e1 n5 eol n3 e1 n4 eol
+    n3 e1 n5 eol n6 e1 n4 eol q1 n6 n2 ans 1}
+\end{framed}
+where \texttt{n<id>} are nodes, \texttt{e<id>} are edges, \texttt{q<id>} are
+question types, extra tokens \texttt{eol} (end-of-line) and \texttt{ans}
+(answer) are added to give the RNN \& LSTM access to the complete information
+available in the dataset. The final number is the class label.
+
+\paragraph{Example 2. }
+As a second example, below is an instance from the symbolic dataset for bAbI task 19, Path Finding.
+\begin{framed}
+\begin{alltt}
+E s A
+B n C
+E w F
+B w E
+eval path B A w,s
+\end{alltt}
+\end{framed}
+Here the first 4 lines describe edges, \texttt{s}, \texttt{n}, \texttt{w},
+\texttt{e} (\texttt{e} does not appear in this example) are all different edge types. The last line
+is a path question, the answer is a sequence of directions \texttt{w,s}, as
+the path going from \texttt{B} to \texttt{A} is to first go west to \texttt{E}
+then go south to \texttt{A}. The \texttt{s}, \texttt{n}, \texttt{w},
+\texttt{e} in the question lines are treated as output classes.
+
+\paragraph{More Training Details. }
+For all tasks in this section, we generate 1000 training examples and 1000 test examples,
+50 of the training examples are used for validation.
+When evaluating model performance, for all bAbI tasks that contain more than
+one questions in one example, the predictions for different questions were
+evaluated independently.  As there is randomness
+in the dataset generation process, we generated 10 such datasets for each
+task, and report the mean and standard deviation of the evaluation
+performance across the 10 datasets.
+
+For all explanatory tasks, we start by training different models on only 50
+training examples, and gradually increase the number of training examples to
+100, 250, 500, and 950 (50 of the training examples are reserved for
+validation) until the model's test accuracy reaches 95\% or above, a success by
+bAbI standard \cite{weston2015towards}. For each method, we report the minimum number of
+training examples it needs to reach 95\% accuracy along with the accuracy it
+reaches with that amount of training examples.
+In all these cases, we unrolled the propagation process for 5 steps.
+For bAbI task 4, 15, 16, 18, 19, we used \OurMethodMinorShort~with the size of node
+vectors $\hv^{(t)}_v$ set to $D=4$, $D=5$, $D=6$, $D=3$ and $D=6$ respectively.
+For all the GGS-NNs in this section we used the simpler variant in which
+$\GNNOut{k}$ and $\GNNLabel{k}$ share a single propagation model. For shortest path and Eulerian circuit tasks, we used $D=20$.
+All models are trained long enough with Adam \citep{kingma2014adam}, and the validation set is used to choose
+the best model to evaluate and avoid models that are overfitting.
+
+
+
+\subsubsection{Single Step Outputs}
+We choose four bAbI tasks that are suited to the restrictions
+described above and require single step outputs:~4 (Two Argument Relations), 
+15 (Basic Deduction), 16 (Basic Induction), and 18 (Size Reasoning).
+For Task 4, 15 and 16, a node selection \OurMethodMinorShort~is used. For Task 18
+we used a graph-level classification version. All the GGNN networks
+contain less than 600 parameters\footnote{For bAbI task 4, we treated `e',
+`s', `w', `n' as 4 question types and trained one \OurMethodMinorShort~for
+each question type, so strictly speaking for bAbI task 4 our
+\OurMethodMinorShort~model has 4
+times the number of parameters of a single \OurMethodMinorShort~model.  In our experiments we
+used a \OurMethodMinorShort~with 271 parameters for each question type which means 1084
+parameters in total.}.
+
+As baselines, we train RNN and LSTM models on the symbolic
+data in raw sequence form. The RNNs and LSTMs use 50 dimensional
+embeddings and 50 dimensional hidden layers; they predict a single
+output at the end of the sequences and the output is treated as a
+classification problem, the loss is cross entropy. The RNNs and LSTMs contain
+around 5k and 30k parameters, respectively.
+
+%\begin{wraptable}[10]{r}{7.6cm}
+\begin{table}[h]
+  \centering
+  %\vspace{-2ex}
+    \begin{tabular}{@{}lccc@{}}
+        \toprule
+        Task    & RNN   & LSTM  & \OurMethodMinorShort \\
+        \midrule
+        bAbI Task \phantom{1}4 & 97.3$\pm$1.9 (250) & 97.4$\pm$2.0 (250) &
+        100.0$\pm$0.0 (50) \\
+        bAbI Task 15 & 48.6$\pm$1.9 (950) & 50.3$\pm$1.3 (950) & 100.0$\pm$0.0 (50) \\
+        bAbI Task 16 & 33.0$\pm$1.9 (950) & 37.5$\pm$0.9 (950) & 100.0$\pm$0.0 (50) \\
+        bAbI Task 18 & 88.9$\pm$0.9 (950) & 88.9$\pm$0.8 (950) & 100.0$\pm$0.0 (50) \\
+        \bottomrule
+    \end{tabular}
+    %\vspace{-1.5ex}
+    \caption{Accuracy in percentage of different models for different tasks.
+    Number in parentheses is number of training examples required to reach shown
+    accuracy.}
+  \label{table:single-step-babi}
+\end{table}
+%\end{wraptable}
+Test results appear in Table~\ref{table:single-step-babi}. For all tasks
+\OurMethodMinorShort~achieves perfect test accuracy using only 50 training
+examples, while the RNN/LSTM baselines either use more training examples (Task
+4) or fail to solve the tasks (Task 15, 16 and 18).
+
+In Table~\ref{table:task4-breakdown}, we further break down performance of the baselines for task 4 as the amount
+of training data varies. While both the RNN and LSTM are able to solve the task
+almost perfectly, the \OurMethodMinorShort~reaches 100\% accuracy with much less
+data.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{@{}lccccc@{}}
+        \toprule
+        \#Training Examples    & 50    & 100   & 250   & 500   & 950 \\
+        \midrule
+        RNN  & 76.7$\pm$3.8 & 90.2$\pm$4.0 & 97.3$\pm$1.9 & 98.4$\pm$1.3 & 99.7$\pm$0.4 \\
+        LSTM & 73.5$\pm$5.2 & 86.4$\pm$3.8 & 97.4$\pm$2.0 & 99.2$\pm$0.8 & 99.6$\pm$0.8 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Performance breakdown of RNN and LSTM on bAbI task 4 as the
+    amount of training data changes.}
+  \label{table:task4-breakdown}
+\end{table}
+
+
+
+\subsubsection{Sequential Outputs}
+
+The bAbI Task 19 (Path Finding) is arguably the hardest task among all bAbI
+tasks (see
+e.g., \citep{sukhbaatar2015end}, which reports an accuracy of less than 20\% for
+all methods that do not use the strong supervision). We apply a \OurMethodShort~to
+this problem, again on the symbolic form of the data (so results are not comparable
+to those in \citep{sukhbaatar2015end}).
+%At every step in the sequence, a graph level classification network computes the output for this step, and an
+%annotation network computes the new annotation to use for the next step. The
+%networks at each step share the same set of parameters.  The whole network is
+%trained jointly with backprop, without intermediate annotation labels for every step.
+An extra `end' class is added to the end of each output sequence;
+at test time the network
+will keep making predictions until it predicts the `end' class.
+
+%Similarly, an `end' class is added when preprocessing data for the RNN/LSTM
+%baselines.  For each output time step, `ans' token is used as input.
+
+The results for this task are given in Table \ref{table:seq-tasks}.
+Both RNN and LSTM fail on this task. However, with only 50
+training examples, our \OurMethodShorts~achieve much better test
+accuracy than RNN and LSTM.
+% With 200 training examples the GNN accuracy went over 90\%.
+
+%\begin{table}[h]
+%    \centering
+%    \begin{tabular}{c|c|c|c|c|c|c}
+%        \hline\hline
+%        & RNN & LSTM & \multicolumn{4}{c}{\OurMethodShorts} \\
+%        \hline
+%        \#Training Examples & 950 & 950  & 50 & 100 & 200 & 500 \\
+%        \hline
+%        Test Accuracy & 24.5 & 29.4 & 60.9 & 80.3 & 92.1 & 99.7 \\
+%        \hline\hline
+%    \end{tabular}
+%    \caption{Performance of different models on bAbI Task 19.}
+%    \label{table:task19}
+%\end{table}
+
+\subsection{Learning Graph Algorithms}
+
+\begin{table}[h]
+\small
+    \centering
+    \begin{tabular}{@{}l|c|c|ccc@{}}
+        \toprule
+        Task & RNN & LSTM & \multicolumn{3}{c}{\OurMethodShorts} \\
+        \midrule
+        bAbI Task 19     & 24.7$\pm$2.7 (950) & 28.2$\pm$1.3 (950) & \phantom{1}71.1$\pm$14.7 (50) & 92.5$\pm$5.9 (100) & 99.0$\pm$1.1 (250) \\
+        Shortest Path    & \phantom{0}9.7$\pm$1.7 (950) & 10.5$\pm$1.2 (950) & \multicolumn{3}{l}{100.0$\pm$\phantom{0}0.0 (50)} \\
+        Eulerian Circuit & \phantom{0}0.3$\pm$0.2 (950) & \phantom{0}0.1$\pm$0.2 (950) & \multicolumn{3}{l}{100.0$\pm$\phantom{0}0.0 (50)} \\
+        \bottomrule
+    \end{tabular}
+    \caption{Accuracy in percentage of different models for different tasks.
+    The number in parentheses is number of training examples required to reach that
+    level of accuracy.}
+    \label{table:seq-tasks}
+\end{table}
+
+We further developed two new bAbI-like tasks based on algorithmic problems
+on graphs:~Shortest Paths, and Eulerian Circuits. For the first, we generate
+random graphs and produce a story that lists all edges in the graphs. 
+Questions come from choosing two random nodes $A$ and $B$ and asking for the shortest
+path (expressed as a sequence of nodes) that connects the two chosen nodes.
+We constrain the data generation to only produce questions where there is a
+unique shortest path from $A$ to $B$ of length at least 2. For Eulerian circuits,
+we generate a random two-regular connected graph and a separate random distractor
+graph. The question gives two nodes $A$ and $B$ to start  the circuit, then
+the question is to return the Eulerian circuit (again expressed as a sequence of nodes)
+on the given subgraph that starts by going from $A$ to $B$. Results are shown
+in the Table \ref{table:seq-tasks}.  RNN and LSTM fail
+on both tasks, but \OurMethodShorts~learns to make perfect predictions using
+only 50 training examples.
+
+%\begin{table}[h]
+%    \centering
+%    \begin{tabular}{c|c|c|c}
+%        \hline\hline
+%        Task & RNN & LSTM & \OurMethodShorts \\
+%        \hline
+%        Shortest Path & 11.1 (950) & 10.7 (950) & 100.0 (50) \\
+%        Eulerian Circuit & 0.5 (950) & 0.4 (950) & 100.0 (50) \\
+%        \hline\hline
+%    \end{tabular}
+%    \caption{Performance of different models on two bAbI-like tasks.}
+%    \label{table:babi-graph-algs}
+%\end{table}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

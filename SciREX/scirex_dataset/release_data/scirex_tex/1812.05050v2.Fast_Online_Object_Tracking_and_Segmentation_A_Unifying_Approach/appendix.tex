@@ -1,0 +1,175 @@
+\appendix
+\section{Architectural details}
+\label{sec:appendix_architecture}
+\mypar{Network backbone.} 
+Table~\ref{tab:backbone} illustrates the details of our \emph{backbone} architecture ($f_{\theta}$ in the main paper).
+For both variants, we use a ResNet-50~\cite{he2016deep} until the final convolutional layer of the 4-th stage.
+In order to obtain a higher spatial resolution in deep layers, we reduce the output stride to 8 by using convolutions with stride 1. 
+Moreover, we increase the receptive field by using dilated convolutions~\cite{chen2018deeplab}.
+Specifically, we set the stride to 1 and the dilation rate to 2 in the $3{\times}3$ conv layer of \texttt{conv4\_1}. 
+Differently to the original ResNet-50, there is no downsampling in \texttt{conv4\_x}.
+We also add to the backbone an \emph{adjust} layer (a $1{\times}1$ convolutional layer with 256 output channels). 
+Examplar and search patches share the network's parameters from \texttt{conv1} to \texttt{conv4\_x}, while the parameters of the \textit{adjust} layer are not shared.
+The output features of the adjust layer are then depth-wise cross-correlated, resulting a feature map of size 17{$\times$}17.
+
+\mypar{Network heads.} 
+The network architecture of the branches of both variants are shows in Table~\ref{tab:three} and~\ref{tab:two}.
+The \texttt{conv5} block in both variants contains a normalisation layer and ReLU non-linearity while \texttt{conv6} only consists of a $1{\times}1$ convolutional layer.
+
+\mypar{Mask refinement module.} 
+With the aim of producing a more accurate object mask, we follow the strategy of~\cite{SharpMask}, which merges low and high resolution features using multiple~\textit{refinement} modules made of upsampling layers and skip connections.
+Figure~\ref{fig:u} gives an example of refinement module $U_3$, while Figure~\ref{fig:rm} illustrates how a mask is generated with stacked refinement modules.
+
+
+
+\newcommand{\blocka}[2]{\multirow{3}{*}{\(\left[\begin{array}{c}\text{3$\times$3, #1}\\[-.1em] \text{3$\times$3, #1} \end{array}\right]\)$\times$#2}
+}
+\newcommand{\blockb}[3]{\multirow{3}{*}{\(\left[\begin{array}{c}\text{1$\times$1, #2}\\[-.1em] \text{3$\times$3, #2}\\[-.1em] \text{1$\times$1, #1}\end{array}\right]\)$\times$#3}
+}
+\renewcommand\arraystretch{1.1}
+\setlength{\tabcolsep}{2pt}
+\begin{table}[h]
+\begin{center}
+\resizebox{1\linewidth}{!}{
+\begin{tabular}{c|c|c|c}
+\hline
+\textit{block} & \textit{examplar} output size  & \textit{search} output size & \textit{backbone} \\
+\hline
+conv1 & 61$\times$61 & 125$\times$125 & 7$\times$7, 64, stride 2\\
+\hline
+\multirow{4}{*}{conv2\_x} &\multirow{4}{*}{31$\times$31} & \multirow{4}{*}{63$\times$63} & 3$\times$3 max pool, stride 2 \\
+  &  &  &\blockb{256}{64}{3} \\
+  &  &  \\
+  &  &  \\
+\hline
+\multirow{3}{*}{conv3\_x} &\multirow{3}{*}{15$\times$15}  &\multirow{3}{*}{31$\times$31}  & \blockb{512}{128}{4} \\
+  &  &  \\
+  &  &  \\
+\hline
+\multirow{3}{*}{conv4\_x} &\multirow{3}{*}{15$\times$15} &\multirow{3}{*}{31$\times$31}   & \blockb{1024}{256}{6} \\
+  &  &   \\
+  &  &   \\
+\hline
+		\textit{adjust} & $15{\times}15$ & $31{\times}31$ & $1{\times}1$, 256\\
+\hline
+xcorr&   \multicolumn{2}{c|}{17 $\times$ 17} & depth-wise \\
+\hline
+\end{tabular}
+}
+\end{center}
+\caption{Backbone architecture. Details of each building block are shown in square brackets.
+}
+\label{tab:backbone}
+\vspace{-0.2cm}
+\end{table}
+
+
+
+\renewcommand\arraystretch{1.1}
+\setlength{\tabcolsep}{2pt}
+\begin{table}
+\begin{center}
+\resizebox{0.75\linewidth}{!}{
+\begin{tabular}{c|c|c|c}
+\hline
+\textit{block}  & score   & box  & mask\\
+\hline
+conv5& 1 $\times$ 1, 256  &  1 $\times$ 1, 256  & 1 $\times$ 1, 256  \\
+
+\hline
+conv6 & 1 $ \times $ 1, 2$k$ & 1 $\times$ 1, 4$k$  & 1 $\times$ 1, (63 $ \times $ 63) \\
+
+\hline
+\end{tabular}
+}
+\end{center}
+\caption{Architectural details of the \textit{three-branch} head.
+$k$ denotes the number of anchor boxes per RoW.
+}
+\label{tab:three}
+\vspace{-0.2cm}
+\end{table}
+
+
+
+
+
+\renewcommand\arraystretch{1.1}
+\setlength{\tabcolsep}{2pt}
+\begin{table}
+\begin{center}
+\resizebox{0.6\linewidth}{!}{
+\begin{tabular}{c|c|c}
+\hline
+\textit{block} & score  & mask\\
+\hline
+conv5& 1 $\times$ 1, 256  &  1 $\times$ 1, 256    \\
+
+\hline
+conv6 & 1 $ \times $ 1, 1 & 1 $\times$ 1, (63 $ \times $ 63) \\
+
+\hline
+\end{tabular}
+}
+\end{center}
+\caption{Architectural details of the \textit{two-branch} head.
+}
+\label{tab:two}
+\vspace{-0.2cm}
+\end{table}
+
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.4\textwidth]{img/u.pdf}
+\end{center}
+\vspace{-0.2cm}
+\caption{Example of a refinement module $U_3$.}
+\label{fig:u}
+\end{figure}
+
+\section{Further qualitative results}
+\label{sec:appendix_qualitative}
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.47 \textwidth]{supp/heatmap_loc.pdf}
+\end{center}
+\vspace{-0.2cm}
+\caption{Score maps from the mask branch at different locations.}
+\label{fig:map}
+\end{figure}
+
+\mypar{Different masks at different locations.}
+Our model generates a mask for each RoW.
+During inference, we rely on the score branch to select the final output mask (using the location attaining the maximum score).
+The example of Figure~\ref{fig:map} illustrates the multiple output masks produced by the mask branch, each corresponding to a different RoW.
+
+\mypar{Benchmark sequences.}
+More qualitative results for VOT and DAVIS sequences are shown in Figure~\ref{fig:appendix_vot18} and~\ref{fig:appendix_davis16}.
+
+\begin{figure*}[h]
+\begin{center}
+\includegraphics[width=0.9 \textwidth]{img/rm.pdf}
+\end{center}
+\vspace{-0.2cm}
+\caption{Schematic illustration of the stacked refinement modules.}
+\label{fig:rm}
+\end{figure*}
+
+\begin{figure*}
+\centering
+\input{supp/vot2018/make_vot2018}
+\vspace{-0.2cm}
+\caption{Further qualitative results of our method on sequences from the visual object tracking benchmark VOT-2018~\cite{VOT2018}.}
+\label{fig:appendix_vot18}
+\end{figure*}
+
+
+\begin{figure*}
+\centering
+\input{supp/davis16/make_davis16}
+\caption{Further qualitative results of our method on sequences from the semi-supervised video object segmentation benchmarks DAVIS-2016~\cite{perazzi2016benchmark} and DAVIS-2017~\cite{pont2017davis}.
+Multiple masks are obtained from different inferences (with different initialisations).
+}
+\label{fig:appendix_davis16}
+\end{figure*}

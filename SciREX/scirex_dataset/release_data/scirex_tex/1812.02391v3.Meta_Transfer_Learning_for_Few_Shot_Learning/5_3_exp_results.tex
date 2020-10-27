@@ -1,0 +1,79 @@
+
+\subsection{Results and analysis}
+\label{sec_result}
+
+\input{5_3_table_ablation.tex}
+\input{5_3_table_mini.tex}
+\input{5_3_table_fc100.tex}
+
+
+Table~\ref{tab_ablation_study}, Table~\ref{table_mini} and Table~\ref{table_fc100} present the overall results on miniImageNet and FC100 datasets. 
+Extensive comparisons are done with ablative methods and the state-of-the-arts. 
+Note that tables present the highest accuracies for which the iterations were chosen
+by validation. For the miniImageNet, iterations for 1-shot and 5-shot are at $17k$ and $14k$, respectively. For the FC100, iterations are all at $1k$.
+%
+Figure~\ref{fig_mini_fc100} shows the performance gap between \emph{with} and \emph{without} HT meta-batch in terms of accuracy and converging speed.
+
+
+\myparagraph{Result overview on miniImageNet.} 
+%
+In Table~\ref{table_mini}, we can see that the proposed MTL with \emph{SS} $[\Theta; \theta]$, HT meta-batch and ResNet-12(pre) achieves the best few-shot classification performance with $61.2\%$ for (5-class, 1-shot). Besides, it tackles the (5-class, 5-shot) tasks with an accuracy of $75.5\%$ that is comparable to the state-of-the-art results, i.e. $76.7\%$, reported by TADAM~\cite{OreshkinNIPS18} whose model used $72$ additional FC layers in the ResNet-12 arch.
+%
+In terms of the network arch, it is obvious that
+models using ResNet-12 (pre) outperforms those using 4CONV by large margins, e.g. 4CONV models have the best 1-shot result with $50.44\%$~\cite{SungCVPR2018} which is $10.8\%$ lower than our best.
+
+%
+\myparagraph{Result overview on FC100.}
+In Table~\ref{table_fc100}, we give the results of TADAM using their reported numbers in the paper~\cite{OreshkinNIPS18}. 
+%
+We used the public code of MAML~\cite{FinnAL17} to get its results for this new dataset. 
+%
+Comparing these methods, we can see that MTL consistently outperforms MAML by large margins, i.e. around $7\%$ in all tasks; and surpasses TADAM by a relatively larger number of $5\%$ for 1-shot, and with $1.5\%$ and $1.8\%$ respectively for 5-shot and 10-shot tasks. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+\myparagraph{MTL \emph{vs}. No meta-learning.}
+%
+Table~\ref{tab_ablation_study} shows the results of \emph{No meta-learning} on the top block.
+Compared to these, our approach achieves significantly better performance even \emph{without} HT meta-batch,
+e.g. the largest margins are $10.2\%$ for 1-shot and $8.6\%$ for 5-shot on miniImageNet.
+%
+This validates the effectiveness of our meta-learning method for tackling few-shot learning problems.
+%
+Between two \emph{No meta-learning} methods, we can see that updating both feature extractor $\Theta$ and classifier $\theta$ is inferior to updating $\theta$ only, e.g. around $5\%$ reduction on miniImageNet 1-shot.
+One reason is that in few-shot settings, there are too many parameters to optimize with little data.
+This supports our motivation to learn only $\theta$ during base-learning.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\myparagraph{Performance effects of MTL components.} 
+MTL with full components, \emph{SS} $[\Theta; \theta]$, HT meta-batch and ResNet-12(pre), achieves the best performances for all few-shot settings on both datasets, see Table~\ref{table_mini} and Table~\ref{table_fc100}. 
+%
+We can conclude that our large-scale network training on deep CNN significantly boost the few-shot learning performance. This is an important gain brought by the transfer learning idea in our MTL approach. 
+It is interesting to note that this gain on FC100 is not as large as for miniImageNet: only $1.7\%$, $1.0\%$ and $4.0\%$. 
+The possible reason is that FC100 tasks for meta-train and meta-test are clearly split according to super-classes. The data domain gap is larger than that for miniImageNet, which makes transfer more difficult.
+
+HT meta-batch and ResNet-12(pre) in our approach can be generalized to other meta-learning models. 
+MAML 4CONV with HT meta-batch gains averagely $1\%$ on two datasets. When changing 4CONV by deep ResNet-12 (pre)
+it achieves significant improvements, e.g. $10\%$ and $9\%$ on miniImageNet.
+Compared to MAML variants, our MTL results are consistently higher, e.g. $2.5\% \sim 3.3\%$ on FC100.
+%
+People may argue that MAML fine-tuning(\emph{FT}) all network parameters is likely to overfit to few-shot data. In the middle block of Table~\ref{tab_ablation_study},
+we show the ablation study of freezing low-level pre-trained layers and meta-learn only the high-level layers (e.g. the $4$-th residual block of ResNet-12) by the \emph{FT} operations of MAML.
+These all yield inferior performances than using our \emph{SS}. 
+An additional observation is that \emph{SS}* performs consistently better than \emph{FT}*.
+%
+
+\myparagraph{Speed of convergence of MTL.}
+%
+MAML~\cite{FinnAL17} used $240k$ tasks to achieve the best performance on miniImageNet.
+Impressively, our MTL methods used only $8k$ tasks, see Figure~\ref{fig_mini_fc100}(a)(b) (note that each iteration contains 2 tasks). 
+%
+This advantage is more obvious for FC100 on which MTL methods need at most $2k$ tasks, Figure~\ref{fig_mini_fc100}(c)(d)(e).
+%
+We attest this to two reasons. First, MTL starts from the pre-trained ResNet-12. 
+And second, \emph{SS} (in MTL) needs to learn only $< \tfrac{2}{9}$ parameters of the number of \emph{FT} (in MAML) when using ResNet-12. 
+%
+
+\myparagraph{Speed of convergence of HT meta-batch.} 
+Figure~\ref{fig_mini_fc100} shows 1) MTL with HT meta-batch consistently achieves higher performances than MTL with the conventional meta-batch~\cite{FinnAL17}, in terms of the recognition accuracy in all settings; 
+and 2) it is impressive that MTL with HT meta-batch achieves top performances early, after \eg about $2k$ iterations for 1-shot, $1k$ for 5-shot and $1k$ for 10-shot, on the more challenging dataset -- FC100. 
+

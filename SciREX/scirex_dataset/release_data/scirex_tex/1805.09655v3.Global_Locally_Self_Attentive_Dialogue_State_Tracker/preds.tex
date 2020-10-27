@@ -1,0 +1,76 @@
+\begin{table*}[t]
+\centering
+\begin{tabular}{@{}p{6.5cm}p{4.3cm}l@{}}
+\toprule
+
+%%%%%%%%%%%%% HEADER
+System actions in previous turn
+&
+User utterance
+&
+Predicted turn belief state
+\\ \midrule
+
+%%%%%%%%%%%%% EXAMPLE 1
+
+N/A
+&
+I would like Polynesian food in the South part of town. Please send me phone number and address.
+&
+\begin{tabular}[t]{@{}l@{}}
+request(phone)\\ request(address)\\ inform(food=polynesian)\\ inform(area=south)
+\end{tabular}
+\\ \midrule
+
+%%%%%%%%%%%%% EXAMPLE 2
+
+\begin{tabular}[t]{@{}p{6.5cm}@{}}
+request(address)\\ request(phone)
+\\\\
+There is a moderately priced italian place called Pizza hut at cherry hilton. would you like the address and phone number?
+\end{tabular}
+&
+Yes please.
+&
+\begin{tabular}[t]{@{}l@{}}
+request(phone)\\ request(address)
+\end{tabular}
+\\ \midrule
+
+%%%%%%%%%%%%% EXAMPLE 3
+
+\begin{tabular}[t]{@{}p{6.5cm}@{}}
+request(food)\\ request(price range)
+\\
+\\
+ok I can help you with that. Are you looking for a particular type of food, or within a specific price range?
+\end{tabular}
+&
+I just want to eat at a cheap restaurant in the south part of town. What food types are available, can you also provide some phone numbers?
+&
+\begin{tabular}[t]{@{}l@{}}
+  request(phone)\\ inform(price range=cheap)\\ inform(area=south)\\ {\color{red} -inform(food=dontcare)}\\ {\color{blue} +request(food)}
+\end{tabular}
+
+% \\ \midrule
+% \begin{tabular}[t]{@{}p{7cm}@{}}
+% inform(food=mediterranean)\\ request(price range)
+% \\\\
+% We have three Mediterranean restaurants in the area. What is your price range?
+% \end{tabular}
+% &
+% I don't have a price range. May I have a list of those restaurants along with their addresses, phone numbers and postcodes?
+% &
+% \begin{tabular}[t]{@{}l@{}}
+% request(postcode)\\ request(phone)\\ request(address)\\ inform(price range=dontcare)\\ -inform(food=mediterranean)
+% \end{tabular}
+\\ \bottomrule
+\end{tabular}%
+\caption{
+Example predictions by \modelname~on the development split of the WoZ restaurant reservation dataset.
+Model predicted slot-value pairs that are not in the ground truth (e.g. {\color{blue} false positives}) are prefaced with a ``{\color{blue} +}'' symbol.
+Ground truth slot-value pairs that are not predicted by the model (e.g. {\color{red} false negatives}) are prefaced with a ``{\color{red} -}'' symbol.
+}
+\label{tb:preds}
+\vspace{-0.3cm}
+\end{table*}

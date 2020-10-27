@@ -1,0 +1,19 @@
+Our experiments with fractal networks provide strong evidence that path length
+is fundamental for training ultra-deep neural networks; residuals are
+incidental.  Key is the shared characteristic of {\fracnet} and {\resnet}:
+large nominal network depth, but effectively shorter paths for gradient
+propagation during training.  Fractal architectures are arguably the simplest
+means of satisfying this requirement, and match residual networks
+in experimental performance.  Fractal networks are resistant to being too deep;
+extra depth may slow training, but does not impair accuracy.
+
+With {\droppath}, regularization of extremely deep fractal networks is
+intuitive and effective.  {\Droppath} doubles as a method of enforcing speed
+(latency) vs.~accuracy tradeoffs.  For applications where fast responses have
+utility, we can obtain fractal networks whose partial evaluation yields good
+answers.
+
+Our analysis connects the internal behavior of fractal networks with phenomena
+engineered into other networks.  Their substructure resembles hand-crafted
+modules used as components in prior work.  Their training evolution may emulate
+deep supervision and student-teacher learning.

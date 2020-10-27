@@ -1,0 +1,37 @@
+%\renewcommand{\tabcolsep}{0.15cm}
+\tabcolsep 1.5pt
+\begin{table*}[tbp]
+ \scriptsize
+  \centering
+  \begin{tabular}{@{} l c ccc cc cc|c@{}}
+    \toprule
+    Setting& Head   & Sho  & Elb & Wri & Hip & Knee & Ank & PCK & AUC\\
+    \midrule
+    %\cmidrule(r){1-1} \cmidrule(lr){2-9} \cmidrule(lr){10-10}
+    %\input{experiments/pck-torso-expidx527-2.tex}
+    %\midrule
+    %\input{experiments/pck-torso-expidx534.tex}
+    %\midrule    
+    \input{pck-torso-expidx0-2.tex}
+    \input{pck-torso-expidx1-2.tex}
+    \input{pck-torso-expidx26.tex}
+    \input{pck-torso-expidx34.tex}
+    \input{pck-torso-expidx98.tex}
+    \input{pck-torso-expidx148-2.tex}
+    %\input{experiments/pck-torso-expidx118.tex}
+    \input{pck-torso-expidx166-2.tex}
+    \midrule
+    \input{pck-torso-expidx176-2.tex} 
+    %\input{experiments/pck-torso-expidx179.tex}
+    \input{pck-torso-expidx201-3.tex}
+    %\input{experiments/pck-torso-expidx227.tex} 
+    %\input{experiments/pck-torso-expidx505.tex}
+    %\input{experiments/pck-torso-expidx507.tex}    
+    \bottomrule \end{tabular} 
+    \vspace{0.3em} 
+    \caption[]{PCK performance of $\rcnn$ (unary) on LSP (PC)
+    dataset. $\rcnn$ is finetuned from ImageNet on MPII (lines 1-6,
+    8), and then finetuned on LSP (lines 7, 9).}
+\vspace{-1.5em} 
+\label{tab:unary-large:rcnn}
+\end{table*}

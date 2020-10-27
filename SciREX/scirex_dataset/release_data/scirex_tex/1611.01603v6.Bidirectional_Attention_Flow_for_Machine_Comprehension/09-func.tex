@@ -1,0 +1,71 @@
+\begin{table}[htbp] %{0.4\textwidth}
+%\parbox{.45\linewidth}{
+    \centering
+    \scalebox{0.9}{
+    \begin{tabular}{lcc}
+         & EM & F1\\
+        \hline
+        \hline
+        Eqn.~\ref{eqn:sim}: dot product & 65.5 & 75.5\\
+        Eqn.~\ref{eqn:sim}: linear & 59.5 & 69.7\\
+        Eqn.~\ref{eqn:sim}: bilinear & 61.6 & 71.8 \\ 
+        Eqn.~\ref{eqn:sim}: linear after MLP & 66.2 & 76.4 \\
+        \hline
+        Eqn.~\ref{eqn:flow}: MLP after concat & 67.1 & 77.0\\
+        \hline
+        \sysshort\ (single) & 68.0 & 77.3 \\
+    \end{tabular}
+    }
+    \caption{Variations of similarity function $\alpha$ (Equation~\ref{eqn:sim}) and fusion function ${\bm \beta}$ (Equation~\ref{eqn:flow}) and their performance on the dev data of SQuAD. See Appendix~\ref{app:var} for the details of each variation.}
+    \label{tab:var}
+%}
+\end{table}
+
+In this appendix section, we experimentally demonstrate how different choices of the similarity function $\alpha$ (Equation~\ref{eqn:sim}) and the fusion function ${\bm \beta}$ (Equation~\ref{eqn:flow}) impact the performance of our model.
+Each variation is defined as following:
+
+\paragraph{Eqn.~\ref{eqn:sim}: dot product.} 
+Dot product $\alpha$ is defined as
+\begin{equation}
+\alpha({\bf h}, {\bf u}) = {\bf h}^\top {\bf u}
+\end{equation}
+where $\top$ indicates matrix transpose.
+Dot product has been used for the measurement of similarity between two vectors by~\cite{hill2015goldilocks}.
+
+\paragraph{Eqn.~\ref{eqn:sim}: linear.} 
+Linear $\alpha$ is defined as
+\begin{equation}
+\alpha({\bf h}, {\bf u}) = {\bf w}_\textup{lin}^\top[{\bf h}; {\bf u}]
+\end{equation}
+where ${\bf w}^\top_\textup{lin} \in \mathbb{R}^{4d}$ is a trainable weight matrix.
+This can be considered as the simplification of Equation~\ref{eqn:sim} by dropping the term ${\bf h} \circ {\bf u}$ in the concatenation. 
+
+\paragraph{Eqn.~\ref{eqn:sim}: bilinear.} 
+Bilinear $\alpha$ is defined as
+\begin{equation}
+\alpha({\bf h}, {\bf u}) = {\bf h}^\top {\bf W}_\textup{bi} {\bf u}
+\end{equation}
+where ${\bf W}_\textup{bi} \in \mathbb{R}^{2d \times 2d}$ is a trainable weight matrix. 
+Bilinear term has been used by~\cite{thorough}.
+
+\paragraph{Eqn.~\ref{eqn:sim}: linear after MLP.} 
+We can also perform linear mapping after single layer of perceptron:
+\begin{equation}
+\alpha({\bf h}, {\bf u}) = {\bf w}_\textup{lin}^\top \tanh({\bf W}_\textup{mlp} [{\bf h}; {\bf u}] + {\bf b}_\textup{mlp})
+\end{equation}
+where ${\bf W}_\textup{mlp}$ and ${\bf b}_\textup{mlp}$ are trainable weight matrix and bias, respectively.
+Linear mapping after perceptron layer has been used by~\cite{Hermann2015TeachingMT}.
+
+\paragraph{Eqn.~\ref{eqn:flow}: MLP after concatenation.}
+We can define ${\bm \beta}$ as
+\begin{equation}
+{\bm \beta}({\bf h}, \tilde{\bf u}, \tilde{\bf h}) = \max(0, {\bf W}_\textup{mlp} [{\bf h}; \tilde{\bf u}; {\bf h} \circ \tilde{\bf u}; {\bf h} \circ \tilde{\bf h}] + {\bf b}_\textup{mlp})
+\end{equation}
+where ${\bf W}_\textup{mlp} \in \mathbb{R}^{2d \times 8d}$ and ${\bf b}_\textup{mlp} \in \mathbb{R}^{2d}$ are trainable weight matrix and bias.
+This is equivalent to adding ReLU after linearly transforming the original definition of ${\bm \beta}$.
+Since the output dimension of ${\bm \beta}$ changes, the input dimension of the first LSTM of the modeling layer will change as well.
+
+
+The results of these variations on the dev data of SQuAD are shown in Table~\ref{tab:var}.
+It is important to note that there are non-trivial gaps between our definition of $\alpha$ and other definitions employed by previous work.
+Adding MLP in ${\bm \beta}$ does not seem to help, yielding slightly worse result than ${\bm \beta}$ without MLP.

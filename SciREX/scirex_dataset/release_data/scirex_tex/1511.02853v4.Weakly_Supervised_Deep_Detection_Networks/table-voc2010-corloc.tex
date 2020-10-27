@@ -1,0 +1,18 @@
+\begin{table*}[t!]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\renewcommand{\tabcolsep}{1.2mm}
+\resizebox{\linewidth}{!}{
+  \begin{tabular}{@{}L{3.5cm}|*{20}{x}|x@{}}
+    method & aero      & bike      & bird      & boat      & bottle     & bus        & car        & cat        & chair      & cow        & table      & dog        & horse      & mbike      & persn     & plant      & sheep      & sofa       & train      & tv         & mean       \\
+    \midrule
+    WSDDN Ensemble & \bf{77.4} & \bf{73.2} & \bf{61.9} & 39.6 & \bf{50.8} & \bf{84.4} & 67.5 & \bf{49.6} & 38.6 & \bf{73.4} & 30.4 & \bf{53.2} & 72.9 & \bf{84.1} & 30.3 & \bf{53.1} & \bf{76.6} & 48.5 & 61.6 & \bf{66.7} & \bf{59.7}\\
+    \midrule
+    Cinbis \etal \cite{Cinbis15} &  61.1 & 65.0 & 59.2 & \bf{44.3} & 28.3 & 80.6 & \bf{69.7} & 31.2 & \bf{42.8} & 73.3 & \bf{38.3} & 50.2 & \bf{74.9} & 70.9 & \bf{37.3} & 37.1 & 65.3 & \bf{55.3} & \bf{61.7} & 58.2 & 55.2\\
+  \end{tabular}
+  }
+  \vspace{0.2em}
+  \caption{{\bf VOC 2010 trainval} correct localization (CorLoc \cite{Deselaers12}) on positive \textit{trainval} images (\%).}
+  \vspace{2em}
+  \label{tab:voc2010corloc}
+\end{table*}

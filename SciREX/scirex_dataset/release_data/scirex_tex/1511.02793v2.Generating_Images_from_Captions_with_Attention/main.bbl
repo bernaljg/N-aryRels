@@ -1,0 +1,187 @@
+\begin{thebibliography}{29}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Bachman \& Precup(2015)Bachman and Precup]{bachman_sdm}
+Bachman, Philip and Precup, Doina.
+\newblock Data generation as sequential decision making.
+\newblock In \emph{NIPS}, 2015.
+
+\bibitem[Bahdanau et~al.(2015)Bahdanau, Cho, and Bengio]{bahdanau_mt}
+Bahdanau, D., Cho, K., and Bengio, Y.
+\newblock Neural machine translation by jointly learning to align and
+  translate.
+\newblock In \emph{ICLR}, 2015.
+
+\bibitem[Bastien et~al.(2012)Bastien, Lamblin, Pascanu, Bergstra, Goodfellow,
+  Bergeron, Bouchard, Warde{-}Farley, and Bengio]{theano}
+Bastien, Fr{\'{e}}d{\'{e}}ric, Lamblin, Pascal, Pascanu, Razvan, Bergstra,
+  James, Goodfellow, Ian~J., Bergeron, Arnaud, Bouchard, Nicolas,
+  Warde{-}Farley, David, and Bengio, Yoshua.
+\newblock Theano: new features and speed improvements.
+\newblock \emph{CoRR}, abs/1211.5590, 2012.
+
+\bibitem[Cho et~al.(2014)Cho, van Merrienboer, G{\"{u}}l{\c{c}}ehre, Bahdanau,
+  Bougares, Schwenk, and Bengio]{cho_mt}
+Cho, K., van Merrienboer, B., G{\"{u}}l{\c{c}}ehre, {\c{C}}., Bahdanau, D.,
+  Bougares, F., Schwenk, H., and Bengio, Y.
+\newblock Learning phrase representations using {RNN} encoder-decoder for
+  statistical machine translation.
+\newblock In \emph{EMNLP}, 2014.
+
+\bibitem[Denton et~al.(2015)Denton, Chintala, Szlam, and Fergus]{denton_lapgan}
+Denton, Emily~L., Chintala, Soumith, Szlam, Arthur, and Fergus, Robert.
+\newblock Deep generative image models using a laplacian pyramid of adversarial
+  networks.
+\newblock In \emph{NIPS}, 2015.
+
+\bibitem[Gers et~al.(2000)Gers, Schmidhuber, and Cummins]{gers_forget}
+Gers, Felix, Schmidhuber, J{\"u}rgen, and Cummins, Fred.
+\newblock Learning to forget: Continual prediction with lstm.
+\newblock \emph{Neural Computation}, 2000.
+
+\bibitem[Goodfellow et~al.(2014)Goodfellow, Pouget{-}Abadie, Mirza, Xu,
+  Warde{-}Farley, Ozair, Courville, and Bengio]{goodfellow_gan}
+Goodfellow, Ian~J., Pouget{-}Abadie, Jean, Mirza, Mehdi, Xu, Bing,
+  Warde{-}Farley, David, Ozair, Sherjil, Courville, Aaron~C., and Bengio,
+  Yoshua.
+\newblock Generative adversarial nets.
+\newblock In \emph{NIPS}, 2014.
+
+\bibitem[Graves et~al.(2013)Graves, Jaitly, and Mohamed]{graves_speech}
+Graves, A., Jaitly, N., and Mohamed, A.{-}r.
+\newblock Hybrid speech recognition with deep bidirectional {LSTM}.
+\newblock In \emph{{IEEE} Workshop on Automatic Speech Recognition and
+  Understanding}, 2013.
+
+\bibitem[Gregor et~al.(2015)Gregor, Danihelka, Graves, and
+  Wierstra]{gregor_draw}
+Gregor, Karol, Danihelka, Ivo, Graves, Alex, and Wierstra, Daan.
+\newblock {DRAW:} {A} recurrent neural network for image generation.
+\newblock In \emph{ICML}, 2015.
+
+\bibitem[Gutmann \& Hyv{\"{a}}rinen(2010)Gutmann and
+  Hyv{\"{a}}rinen]{gutmann_nce}
+Gutmann, Michael and Hyv{\"{a}}rinen, Aapo.
+\newblock Noise-contrastive estimation: {A} new estimation principle for
+  unnormalized statistical models.
+\newblock In \emph{AISTATS}, 2010.
+
+\bibitem[Hinton et~al.(2006)Hinton, Osindero, and Teh]{hinton_dbn}
+Hinton, Geoffrey~E., Osindero, Simon, and Teh, Yee~Whye.
+\newblock A fast learning algorithm for deep belief nets.
+\newblock \emph{Neural Computation}, 2006.
+
+\bibitem[Hochreiter \& Schmidhuber(1997)Hochreiter and
+  Schmidhuber]{hochreiter_lstm}
+Hochreiter, Sepp and Schmidhuber, J{\"u}rgen.
+\newblock Long short-term memory.
+\newblock \emph{Neural Computation}, 1997.
+
+\bibitem[Karpathy \& Li(2015)Karpathy and Li]{karpathy_captions}
+Karpathy, Andrej and Li, Fei{-}Fei.
+\newblock Deep visual-semantic alignments for generating image descriptions.
+\newblock In \emph{CVPR}, 2015.
+
+\bibitem[Kingma \& Welling(2014)Kingma and Welling]{kingma_vae}
+Kingma, Diederik~P. and Welling, Max.
+\newblock Auto-encoding variational bayes.
+\newblock In \emph{ICLR}, 2014.
+
+\bibitem[Kiros et~al.(2014{\natexlab{a}})Kiros, Salakhutdinov, and
+  Zemel]{kiros_icml14}
+Kiros, R., Salakhutdinov, R., and Zemel, R.
+\newblock Multimodal neural language models.
+\newblock In \emph{ICML}, 2014{\natexlab{a}}.
+
+\bibitem[Kiros et~al.(2014{\natexlab{b}})Kiros, Salakhutdinov, and
+  Zemel]{kiros_captions}
+Kiros, Ryan, Salakhutdinov, Ruslan, and Zemel, Richard~S.
+\newblock Unifying visual-semantic embeddings with multimodal neural language
+  models.
+\newblock \emph{CoRR}, abs/1411.2539, 2014{\natexlab{b}}.
+
+\bibitem[Kiros et~al.(2015)Kiros, Zhu, Salakhutdinov, Zemel, Torralba, Urtasun,
+  and Fidler]{kiros_skipthought}
+Kiros, Ryan, Zhu, Yukun, Salakhutdinov, Ruslan, Zemel, Richard~S., Torralba,
+  Antonio, Urtasun, Raquel, and Fidler, Sanja.
+\newblock Skip-thought vectors.
+\newblock In \emph{NIPS}, 2015.
+
+\bibitem[Krizhevsky(2009)]{krizhevsky_cifar}
+Krizhevsky, Alex.
+\newblock Learning multiple layers of features from tiny images.
+\newblock \emph{Master's Thesis, Department of Computer Science, University of
+  Toronto}, 2009.
+
+\bibitem[Krizhevsky et~al.(2012)Krizhevsky, Sutskever, and
+  Hinton]{krizhevsky_imagenet}
+Krizhevsky, Alex, Sutskever, Ilya, and Hinton, Geoffrey~E.
+\newblock Imagenet classification with deep convolutional neural networks.
+\newblock In \emph{NIPS}, 2012.
+
+\bibitem[Lin et~al.(2014)Lin, Maire, Belongie, Hays, Perona, Ramanan,
+  Doll{\'a}r, and Zitnick]{mscoco}
+Lin, T.Y., Maire, M., Belongie, S., Hays, J., Perona, P., Ramanan, D.,
+  Doll{\'a}r, P., and Zitnick, C.~L.
+\newblock Microsoft {COCO}: Common objects in context.
+\newblock In \emph{ECCV}, 2014.
+
+\bibitem[Rezende et~al.(2014)Rezende, Mohamed, and Wierstra]{rezende_vae}
+Rezende, Danilo~J., Mohamed, Shakir, and Wierstra, Daan.
+\newblock Stochastic backpropagation and variational inference in deep latent
+  gaussian models.
+\newblock In \emph{ICML}, 2014.
+
+\bibitem[Salakhutdinov \& Hinton(2009)Salakhutdinov and Hinton]{russ_dbm}
+Salakhutdinov, Ruslan and Hinton, Geoffrey~E.
+\newblock Deep boltzmann machines.
+\newblock In \emph{AISTATS}, 2009.
+
+\bibitem[Simonyan \& Zisserman(2015)Simonyan and Zisserman]{simonyan_convnet}
+Simonyan, Karen and Zisserman, Andrew.
+\newblock Very deep convolutional networks for large-scale image recognition.
+\newblock In \emph{ICLR}, 2015.
+
+\bibitem[Smolensky(1986)]{smolensky_rbm}
+Smolensky, Paul.
+\newblock Information processing in dynamical systems: foundations of harmony
+  theory.
+\newblock \emph{Parallel Distributed Processing: Explorations in the
+  Microstructure of Cognition}, 1986.
+
+\bibitem[Srivastava et~al.(2015)Srivastava, Mansimov, and
+  Salakhutdinov]{nitish_video}
+Srivastava, Nitish, Mansimov, Elman, and Salakhutdinov, Ruslan.
+\newblock Unsupervised learning of video representations using {LSTM}s.
+\newblock In \emph{ICML}, 2015.
+
+\bibitem[Sutskever et~al.(2014)Sutskever, Vinyals, and Le]{ilya_mt}
+Sutskever, Ilya, Vinyals, Oriol, and Le, Quoc~V.
+\newblock Sequence to sequence learning with neural networks.
+\newblock In \emph{NIPS}, 2014.
+
+\bibitem[Vinyals et~al.(2015)Vinyals, Toshev, Bengio, and
+  Erhan]{vinyals_captions}
+Vinyals, Oriol, Toshev, Alexander, Bengio, Samy, and Erhan, Dumitru.
+\newblock Show and tell: {A} neural image caption generator.
+\newblock In \emph{CVPR}, 2015.
+
+\bibitem[Wang et~al.(2004)Wang, Bovik, Sheikh, and Simoncelli]{wang_ssi}
+Wang, Zhou, Bovik, Alan~C., Sheikh, Hamid~R., and Simoncelli, Eero~P.
+\newblock Image quality assessment: from error visibility to structural
+  similarity.
+\newblock \emph{{IEEE} Transactions on Image Processing}, 2004.
+
+\bibitem[Xu et~al.(2015)Xu, Ba, Kiros, Cho, Courville, Salakhutdinov, Zemel,
+  and Bengio]{xu_captions}
+Xu, Kelvin, Ba, Jimmy, Kiros, Ryan, Cho, Kyunghyun, Courville, Aaron~C.,
+  Salakhutdinov, Ruslan, Zemel, Richard~S., and Bengio, Yoshua.
+\newblock Show, attend and tell: Neural image caption generation with visual
+  attention.
+\newblock In \emph{ICML}, 2015.
+
+\end{thebibliography}

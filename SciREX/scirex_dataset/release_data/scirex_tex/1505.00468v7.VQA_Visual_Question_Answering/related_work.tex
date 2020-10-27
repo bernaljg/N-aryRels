@@ -1,0 +1,95 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\vspace{\sectionReduceTop}
+\section{Related Work}
+%\vspace{\sectionReduceBot}
+\label{sec:related}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textbf{VQA Efforts.}
+%Several papers have studied
+% A few
+%Most relevant to our work are
+Several recent papers have begun to study visual question answering~\cite{geman,fritz,SongChun_video_queries,vizwiz}.
+However, unlike our work, these are fairly restricted (sometimes synthetic) settings with small datasets.
+%However, they do not require free-form natural language answers.
+For instance,~\cite{fritz} only considers
+questions whose answers come from a predefined closed world of
+16 basic colors or 894 object categories.
+%For instance,~\cite{fritz} only considers
+%questions whose answers are either one of 16 basic colors, one of 894 object categories,
+%or a set of categories.
+%Moreover, many of the questions were synthetically generated via templates.
+\cite{geman}
+also considers questions generated from templates from a fixed vocabulary of objects, attributes,
+relationships between objects, \etc.
+In contrast, our proposed task involves \emph{open-ended}, \emph{free-form}
+questions and answers provided by humans.
+Our goal is to increase the diversity of knowledge and
+kinds of reasoning needed to provide correct answers.
+\begin{comment}
+Our task is unconstrained, since it does not
+provide ground-truth image annotations to help the answering system (human or machine).
+For instance, in \cite{geman}, a question
+might be \quotes{Is there a person in the \emph{designated region}?}, whereas in VQA, the question
+might be \quotes{Is there a person to the left of the brown chair?}. Thus, our task requires a
+deeper understanding of the textual and visual worlds along with their complex interaction.
+\end{comment} 
+Critical to
+achieving success on this more difficult and unconstrained task, our VQA dataset is \emph{two orders of magnitude} larger than \cite{geman,fritz}
+($>$250,000 \vs 2,591 and 1,449 images respectively). The proposed VQA task has connections to other related work:  ~\cite{SongChun_video_queries} has studied joint parsing of videos and corresponding text to answer queries on two datasets containing 15 video clips each. ~\cite{vizwiz} uses crowdsourced workers to answer questions about visual content asked by visually-impaired users.
+%Recent efforts include \cite{Malinowski_2015_ICCV}, which proposes a model for VQA that combines an LSTM for the question with a CNN for the image to generate an answer. 
+In concurrent work, \cite{Malinowski_2015_ICCV} proposed combining an LSTM for the question 
+with a CNN for the image to generate an answer. In their model, the LSTM question representation is conditioned on the CNN image features at each time step, and the final LSTM hidden state is used to sequentially decode the answer phrase. In contrast, the model developed in this paper explores ``late fusion'' -- \ie, the LSTM question representation and the CNN image features are computed independently, \emph{fused} via an element-wise multiplication, and then passed through fully-connected layers to generate a softmax distribution over output answer classes.
+\cite{Lin_2015_CVPR} generates abstract scenes to capture visual common sense relevant to answering (purely textual) fill-in-the-blank and visual paraphrasing questions. \cite{Sadeghi_2015_CVPR} and \cite{Vendantam_2015_ICCV} use visual information to assess the plausibility of common sense assertions. \cite{Yu_2015_ICCV} introduced a dataset of 10k images and prompted captions that describe specific aspects of a scene (\eg, individual objects, what will happen next). 
+Concurrent with our work, \cite{baiduVQA} collected questions \& answers in Chinese (later translated to English by humans) for COCO images. \cite{Ren_2015_NIPS} automatically generated four types of questions (object, count, color, location) using COCO captions.
+
+
+% ~\cite{SongChun_video_queries} has studied joint parsing of videos and corresponding text to answer queries on two datasets containing 15 video clips each. ~\cite{vizwiz} uses crowdsourced workers to answer questions about visual content asked by visually-impaired users.
+
+%\larry{Is it really 2 orders of mag larger? Might be best to give explicit numbers.}
+
+\textbf{Text-based Q\&A}
+%Text-based QA
+is a well studied problem in the NLP and text processing communities (recent examples
+being~\cite{zettlemoyer_kdd14,zettleymoyer_acl13,weston_qa,richardson2013mctest}).
+Other related textual tasks include sentence
+completion (\eg,~\cite{richardson2013mctest} with multiple-choice answers).
+These approaches provide inspiration for VQA techniques.
+One key concern in text is the \emph{grounding} of questions.
+For instance, \cite{weston_qa} synthesized textual descriptions and QA-pairs
+grounded in a simulation of actors and objects in a fixed set of locations.
+%Recently, \cite{weston_qa} synthesize textual descriptions (based on a simulation of actors and
+%objects in a fixed set of locations) from which questions and answers are generated.
+VQA is naturally grounded in images -- requiring the understanding of both
+text (questions) and vision (images).
+%different in that our task is also visual -- it requires the understanding of an image
+%to answer a question.
+Our questions are generated by humans, making the need for commonsense
+knowledge and complex reasoning more essential.
+
+\textbf{Describing Visual Content.}
+Related to VQA are the tasks of image tagging~\cite{deng,AlexNet}, image
+captioning~\cite{babytalk,FarhadiSentencesECCV2010,MitchellEtAl12,captioning_xinlei,captioning_msr,captioning_google,captioning_berkeley,captioning_stanford,captioning_baidu_ucla,captioning_toronto} and video captioning~\cite{video,youtube2text}, where words or sentences are
+generated to describe visual content. While these tasks require both visual and semantic knowledge,
+captions can often be non-specific (e.g., observed by \cite{captioning_google}). % and lack specific image details.
+%The VQA task typically requires deeper image understanding.
+%Interestingly,
+The questions in VQA require detailed specific information about the image for which generic
+image captions are of little use \cite{vizwiz}.
+
+\textbf{Other Vision+Language Tasks.} Several recent papers have explored tasks at the intersection of vision and language
+that are easier to evaluate than image captioning,
+%are exploring alternative tasks that involve understanding the connections
+%between images and language, but are easier to evaluate than image captioning,
+such as
+coreference resolution~\cite{nounCoref2014,peopleCoref2014}
+%Another such task, more pertinent to VQA, is that of
+or generating referring expressions~\cite{referit,mitchell2013generating}  %. This involves
+%generating a referring expression
+for a particular object in an image that would allow a human to identify
+which object is being referred to (\eg, ``the one in a red shirt'',
+``the dog on the left'').
+While task-driven and concrete, a limited set of visual concepts
+(\eg, color, location) tend to be captured by referring expressions. As we demonstrate, a
+richer variety of visual concepts emerge from visual questions and their answers.
+%We note that understanding referring expressions is often a critical sub-task in answering visual questions.
+%\larry{This was wordy, remove text if paper is too long.}

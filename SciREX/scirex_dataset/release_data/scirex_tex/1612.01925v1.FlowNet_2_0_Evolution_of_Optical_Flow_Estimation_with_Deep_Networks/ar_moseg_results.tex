@@ -1,0 +1,66 @@
+    \resizebox{0.91\linewidth}{!}{%
+        \begin{tabular}{|l||c|c||c|}%
+            \hline%
+                                   & \multicolumn{2}{c||}{Motion Seg.}       & Action Recog. \\%
+%                                   & \multicolumn{1}{c||}{Segmentation} & Recog. \\%
+                                   \cline{2-4} 
+                                   & F-Measure & Extracted             & Accuracy \\%
+                                   &           & Objects               &          \\%
+            \hline \hline 
+            LDOF-CPU \cite{ldof} & 
+            $79.51\%$ &
+            $28/65$ & 
+            $\phantom{^\dagger}79.91\%^\dagger$ \\%
+            
+            DeepFlow \cite{deepflow} & 
+            $\textbf{80.18}\%$ &
+            $29/65$ & 
+            \textbf{81.89}\% \\%
+            
+            EpicFlow \cite{epicflow} & 
+            $78.36\%$ & 
+            $27/65$ & 
+            $78.90\%$ \\
+            
+            FlowFields \cite{flowfields}& 
+            $79.70\%$ & 
+            $\textbf{30/65}$ & 
+            -- \\%
+            
+            \hline 
+            
+            FlowNetS~\cite{DFIB15} & 
+            $\phantom{^\ddagger}56.87\%^\ddagger$ & 
+            $\phantom{^\ddagger}\pz3/62^\ddagger$ & 
+            $55.27\%$ \\%
+            
+            \hline
+            
+            % % 48a1g: 
+            % FlowNet2-SD & 
+            % $75.57\%$ & 
+            % $27/65$ & 
+            % $75.52$\\%
+
+            % 04a1b10: 
+            FlowNet2-css-ft-sd & 
+            $77.88\%$ & 
+            $26/65$ & 
+            -- \\%
+            
+            % 60a: 
+            FlowNet2-CSS-ft-sd & 
+            $79.52\%$ &
+            $30/65$ & 
+            $\textbf{79.64\%}$ \\%
+            
+            % 60b: 
+            \rowcolor{gray!15}
+            FlowNet2 &
+            $\textbf{79.92\%}$ &
+            $\textbf{32/65}$ & 
+            $79.51\%$ \\%
+            
+            \hline%
+        \end{tabular}
+    }

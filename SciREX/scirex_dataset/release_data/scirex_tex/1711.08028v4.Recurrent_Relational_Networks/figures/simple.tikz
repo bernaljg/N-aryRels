@@ -1,0 +1,42 @@
+\begin{tikzpicture}
+  \begin{scope}[every node/.style={circle,draw}]
+      \node[very thick, draw=green] (1) at (0,0) {$h_1^t$};
+	  \node[draw=red] (x1) at (0,-1.25) {$x_1$};
+      \node[draw=blue] (o1) at (-1.25,0) {$o_1^t$};
+                       
+      \node[very thick, draw=green] (2) at (4,0) {$h_2^t$};
+      \node[draw=red] (x2) at (4,-1.25) {$x_2$};
+      \node[draw=blue] (o2) at (5.25,0) {$o_2^t$};
+      
+      \node[very thick, draw=green] (3) at (2,3) {$h_3^t$};   
+      \node[draw=red] (x3) at (1.116,3.884) {$x_3$};
+      \node[draw=blue] (o3) at (2.884,3.884) {$o_3^t$};      
+  \end{scope}
+  \begin{scope}[>={Stealth[black]},
+                every node/.style={fill=white, circle, pos=0.50, inner sep=1},
+                every edge/.style={draw=black}]
+
+      \path [->] (1) edge[dashed, out=140, in=110, looseness=8] (1);
+      \path [->] (2) edge[dashed, out=60, in=30, looseness=8] (2);
+      \path [->] (3) edge[dashed, loop above] (3);
+      
+      \path [->] (x1) edge (1);
+      \path [->] (1) edge (o1);
+      
+      \path [->] (x2) edge (2);
+      \path [->] (2) edge (o2);
+      
+      \path [->] (x3) edge (3);
+      \path [->] (3) edge (o3);
+      
+      \path [->] (1) edge[bend left=20] node {$m_{12}^t$} (2);
+      \path [->] (2) edge[bend left=20] node {$m_{21}^t$} (1);
+      
+      \path [->] (1) edge[bend left=20] node {$m_{13}^t$} (3);   
+      \path [->] (3) edge[bend left=20] node {$m_{31}^t$} (1);
+      
+      \path [->] (2) edge[bend left=20] node {$m_{23}^t$} (3);  
+      \path [->] (3) edge[bend left=20] node {$m_{32}^t$} (2);           
+
+  \end{scope}
+  \end{tikzpicture}

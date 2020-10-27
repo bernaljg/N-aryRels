@@ -1,0 +1,155 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\pdfoutput=1
+\hyphenpenalty=2000
+\textwidth=6.5in
+\textheight=9.0in
+\evensidemargin=0.0in
+\oddsidemargin=0.0in
+\topmargin=-0.5in
+\clubpenalty=4000
+\widowpenalty=4000
+\displaywidowpenalty=500
+
+\newlength\minalignvsep
+
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{pbox}
+\usepackage{epstopdf}
+\usepackage{subfigure}
+\usepackage{xspace}
+\usepackage{comment}
+\usepackage{lipsum}
+\usepackage{jeffe}
+\usepackage{booktabs}
+\usepackage{bm}
+\usepackage{bbm}
+
+
+\newcommand{\cmt}[2]{[#1: #2]}
+\newcommand{\todo}[1]{\cmt{{\bf TODO}}{{\bf \color{blue} #1}}}
+\newcommand{\hao}[1]{\cmt{{\bf Hao}}{{\bf \color{red} #1}}}
+\newcommand{\eric}[1]{\cmt{{\bf Eric}}{{\bf \color{green} #1}}}
+\newcommand{\leo}[1]{\cmt{{\bf Leo}}{{\bf \color{cyan} #1}}}
+
+\newcommand{\myvec}[1]{\bm{#1}}
+
+% Include other packages here, before hyperref.
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+% \usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+\newcommand{\shape}{S}
+\newcommand{\image}{I}
+\newcommand{\network}{\mathbb{G}}
+\newcommand{\prob}{\mathcal{P}}
+\newcommand{\graph}{\mathcal{G}}
+\newcommand{\vertex}{\mathcal{V}}
+\newcommand{\edge}{\mathcal{E}}
+
+\newcommand{\para}[1]{\noindent{\bf #1}}
+
+\newcommand{\softpara}{\paragraph}
+\newcommand{\mypara}{\vspace*{-15pt}\paragraph}
+\newcommand{\myparaly}{\vspace*{-5pt}\paragraph}
+
+\newcommand{\bmemo}[1]{\noindent{\color{blue}{\sf [[#1]]}}}
+
+\newcommand{\denselist}{\itemsep 0pt\parsep=0pt\partopsep 0pt\vspace{-2pt}}
+\newcommand{\bitem}{\begin{itemize}\denselist}
+\newcommand{\eitem}{\end{itemize}}
+\newcommand{\benum}{\begin{enumerate}\denselist}
+\newcommand{\eenum}{\end{enumerate}}
+\newcommand{\bdescr}{\begin{description}\denselist}
+\newcommand{\edescr}{\end{description}}
+
+\newcommand{\Remark}[1]     {{\sf [#1]}}
+
+\setlength{\abovedisplayskip}{0pt}
+\setlength{\belowdisplayskip}{0pt}
+\cvprfinalcopy % *** Uncomment this line for the final submission
+
+\def\cvprPaperID{832} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+\ifcvprfinal\pagestyle{empty}\fi
+\begin{document}
+
+%%%%%%%%% TITLE
+%\title{SyncSpecCNN: Synchronized Spectral CNN for 3D Shape Segmentation\\
+%Supplementary Material}
+\title{SyncSpecCNN: Synchronized Spectral CNN for 3D Shape Segmentation}
+
+\author{Li Yi$^1$ \qquad Hao Su$^1$ \qquad Xingwen Guo$^2$ \qquad Leonidas Guibas$^1$\\$^1$Stanford University \qquad $^2$The University of Hong Kong}
+
+\iffalse
+\author{Li Yi\\
+Stanford University\\
+{\tt\small ericyi@stanford.edu}
+% For a paper whose authors are all at the same institution,
+% omit the following lines up until the closing ``}''.
+% Additional authors and addresses can be added with ``\and'',
+% just like the second author.
+% To save space, use either the email address or home page, not both
+\and
+Hao Su\\
+Stanford University\\
+{\tt\small haosu@cs.stanford.edu}
+\and
+Xingwen Guo\\
+The University of Hong Kong\\
+{\tt\small emily.xw.guo@gmail.com}
+\and
+Leonidas Guibas\\
+Stanford University\\
+{\tt\small guibas@cs.stanford.edu}
+}
+\fi
+
+
+\maketitle
+
+%\input{./tex/supp}
+%\iffalse
+%\thispagestyle{empty}
+%%%%%%%%% ABSTRACT
+\begin{abstract}
+  \input{./tex/abstract}
+\end{abstract}
+
+%%%%%%%%% BODY TEXT
+\section{Introduction}
+\input{./tex/intro}
+
+\section{Background}
+\input{./tex/related}
+
+\section{Problem}
+\input{./tex/problem}
+
+\section{Approach}
+\input{./tex/approach}
+
+\section{Experiment}
+\input{./tex/exp}
+
+%\section{Discussion}
+%\input{./tex/discussion}
+
+\section{Conclusion}
+\input{./tex/conclusion}
+%\fi
+
+{\small
+\bibliographystyle{ieee}
+\bibliography{acme}
+}
+
+\end{document}

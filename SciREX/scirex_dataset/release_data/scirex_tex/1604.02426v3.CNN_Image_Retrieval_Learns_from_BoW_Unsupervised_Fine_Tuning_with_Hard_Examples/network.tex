@@ -1,0 +1,78 @@
+\section{Network architecture and image representation}
+\label{sec:network}
+%
+In this section we describe the derived image representation that is based on CNN and we present the network architecture used to perform the end-to-end learning in a siamese fashion.
+Finally, we describe how, after fine-tuning, we use the same training data to learn projections that appear to be an effective post-processing step.
+
+\subsection{Image representation}
+\vspace{-2pt}
+We adopt a compact representation that is derived from activations of convolutional layers and is shown to be effective for particular object retrieval~\cite{ARSM+14,TSJ16}.
+We assume that a network is fully convolutional~\cite{PKS15} or that all fully connected layers are discarded.
+Now, given an input image, the output is a 3D tensor $\cX$ of $W\times H \times K$ dimensions, where $K$ is the number of feature maps in the last layer. 
+Let $\cX_k$ be the set of all $W\times H$ activations for feature map $k \in \{1 \ldots K$\}.
+The network output consists of $K$ such sets of activations.
+The image representation, called Maximum Activations of Convolutions (MAC)~\cite{RSMC14,TSJ16}, is simply constructed by max-pooling over all dimensions per feature map and is given by
+%
+\vspace{-2pt}
+\begin{equation}
+\vspace{-2pt}
+\vf = [\f_1 \ldots \f_k \ldots \f_K]^\top \text{,~with~} \f_k = \max_{x\in \cX_{k}}~x \cdot \mathds{1}(x>0).
+\label{equ:mac}
+\end{equation}
+%
+\noindent
+The indicator function $\mathds{1}$ takes care that the feature vector $\vf$ is non-negative, as if the last network layer was a Rectified Linear Unit (ReLU).
+The feature vector finally consists of the maximum activation per feature map and its dimensionality  is equal to $K$.
+For many popular networks this is equal to 256 or 512, which makes it a compact image representation.
+MAC vectors are subsequently \l2-normalized and similarity between two images is evaluated with inner product. 
+The contribution of a feature map to the image similarity is measured by the product of the corresponding MAC vector components. 
+In Figure~\ref{fig:mac_matches} we show the image patches in correspondence that contribute most to the similarity. 
+Such implicit correspondences are improved after fine-tuning. Moreover, the CNN fires less to ImageNet classes, \eg cars and bicycles. 
+%
+\input{fig_correspondences}
+%
+\vspace{-6pt}
+\subsection{Network and siamese learning}
+%
+The proposed approach is applicable to any CNN that consists of only convolutional layers. 
+In this paper, we focus on re-training (\ie fine-tuning) state-of-the-art CNNs for classification, in particular AlexNet and VGG. 
+Fully connected layers are discarded and the pre-trained networks constitute the initialization for our convolutional layers.
+Now, the last convolutional layer is followed by a MAC layer that performs MAC vector computation (\ref{equ:mac}).
+The input of a MAC layer is a 3D tensor of activation and the output is a non-negative vector. 
+Then, an \l2-normalization block takes care that output vectors are normalized. 
+In the rest of the paper, MAC corresponds to the \l2-normalized vector $\mac$.
+
+We adopt a siamese architecture and train a two branch network. 
+Each branch is a clone of the other, meaning that they share the same parameters. 
+Training input consists of image pairs $(i,j)$ and labels $Y(i,j)\in \{0, 1\}$ declaring whether a pair is non-matching (label 0) or matching (label 1). 
+We employ the contrastive loss~\cite{CHL05} that acts on the (non-)matching pairs and is defined as
+%
+\begin{equation}
+\small
+\loss(i,j) = \frac{1}{2}\left(Y(i,j) ||\mac(i)-\mac(j)||^2 + \left(1-Y(i,j)\right) \left(\max\{0, \tau - ||\mac(i)-\mac(j)||\}\right)^2\right),
+\end{equation}
+%
+where $\mac(i)$ is the \l2-normalized MAC vector of image $i$, and $\tau$ is a parameter defining when non-matching pairs have large enough distance in order not to be taken into account in the loss.
+We train the network using Stochastic Gradient Descent (SGD) and a large training set created automatically (see Section~\ref{sec:dataset}). 
+%
+\subsection{Whitening and dimensionality reduction}
+\label{ref:projections}
+\vspace{-5pt}
+%
+In this section, the post-processing of fine-tuned MAC vectors is considered. 
+%
+Previous methods~\cite{BL15,TSJ16} use PCA of an independent set for whitening and dimensionality reduction, that is the covariance matrix of all descriptors is analyzed. We propose to take advantage of the labeled data provided by the 3D models and use linear discriminant projections originally proposed by Mikolajczyk and Matas~\cite{MM07}. The projection is decomposed into two parts, whitening and rotation. 
+The whitening part is the inverse of the square-root of the intraclass (matching pairs) covariance matrix $C_S^{-\frac{1}{2}}$, where 
+\vspace{-6pt}
+\begin{equation}
+% \small
+C_S = \sum_{Y(i,j)=1} \left(\mac(i) - \mac(j)\right)\left(\mac(i) - \mac(j)\right)^\top.
+\end{equation}
+The rotation part is the PCA of the interclass (non-matching pairs) covariance matrix in the whitened space $\mathrm{eig}(C_S^{-\frac{1}{2}} C_D C_S^{-\frac{1}{2}})$, where 
+\vspace{-6pt}
+\begin{equation}
+% \small
+C_D = \sum_{Y(i,j)=0} \left(\mac(i) - \mac(j)\right)\left(\mac(i) - \mac(j)\right)^\top.
+\end{equation}
+The projection $P = C_S^{-\frac{1}{2}} \mathrm{eig}(C_S^{-\frac{1}{2}} C_D C_S^{-\frac{1}{2}})$ is then applied as $P^\top (\mac(i)-\mu)$, where $\mu$ is the mean MAC vector to perform centering. To reduce the descriptor dimensionality to $D$ dimensions, only eigenvectors corresponding to $D$ largest eigenvalues are used.
+Projected vectors are subsequently \l2-normalized.

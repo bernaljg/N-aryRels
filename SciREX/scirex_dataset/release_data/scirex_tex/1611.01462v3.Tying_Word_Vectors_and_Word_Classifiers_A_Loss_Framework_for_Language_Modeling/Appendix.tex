@@ -1,0 +1,80 @@
+\appendix
+\chapter{\LARGE APPENDIX}
+
+\iffalse
+\section{More detailed justification of Equation \eqref{eqn:Jaug_matching_logits}}
+Here we use a more general approach to derive \eqref{eqn:Jaug_matching_logits} and we show that in contrast to approach of section \ref{section:RE}, the new approach works for any value of $\tau>0$. Recall from section \ref{section:RE} that the gradient of $\Jaug_t$ is equal to
+\begin{equation*}
+\mathop{\nabla}\Jaug_t
+=\frac{1}{\tau}(\yhat_t-\ytilde_t).
+\end{equation*}
+Now putting the gradient equal to zero implies that $\yhat_{t,i}=\ytilde_{t,i}$ which is equivalent to
+\begin{equation*}
+\frac{\xp{\<h_t,w_i\>/\tau} }{\sum_{j\in V}\xp{\<h_t,w_j\>/\tau}} = \frac{\xp{\<u_t,l_i\>/\tau} }{\sum_{j\in V}\xp{\<u_t,l_j\>/\tau}}.
+\end{equation*}
+Letting
+\begin{align*}
+a_i &= \xp{\<h_t,w_i\>/\tau},\\
+b_i &= \xp{\<u_t,l_i\>/\tau}, \\
+\end{align*}
+this turns into
+\begin{equation*}
+\frac{a_i}{\sum_{j \in V} a_j}=\frac{b_i}{\sum_{j \in V} b_j} \Longrightarrow \frac{a_i}{b_i} = \frac{\sum_{j \in V} a_j}{\sum_{j \in V} b_j},
+\end{equation*}
+for $i \in V$. This essentially means that the ratio $a_i/b_i=C$ is fixed over the entire vocabulary. By taking logarithm from this equation and by using the definition of $a_i$ and $b_i$, we obtain that
+\begin{equation*}
+\<h_t,w_i\>/\tau - \<u_t,l_i\>/\tau = \log C,
+\end{equation*}
+which immediately implies
+\begin{equation*}
+Wh_t - L^T u_t = D \mathbf{1},
+\end{equation*}
+where $D= \tau \log C$.
+\fi
+
+\section{Model and Training Details}
+\label{section:Train-details}
+We begin training with a learning rate of $1$ and start decaying it with a constant rate after a certain epoch.
+This is $5$, $10$, and $1$ for the small, medium, and large networks respectively.
+The decay rate is $0.9$ for the small and medium networks, and $0.97$ for the large network. 
+
+For both PTB and Wikitext-2 datasets, we unroll the network for $35$ steps for backpropagation.
+
+We use gradient clipping \citep{pascanu2013difficulty}; i.e. we rescale the gradients using the global norm if it exceeds a certain value.
+For both datasets, this is $5$ for the small and the medium network, and $6$  for the large network.
+
+We use the dropout method introduced in \citet{gal2015theoretically}; particularly, we use the same dropout mask for each example through the unrolled network.
+Differently from what was proposed in \citet{gal2015theoretically}, we tie the dropout weights for hidden states further, and we use the same mask when they are propagated as states in the current layer and when they are used as inputs for the next layer.
+We don't use dropout in the input embedding layer, and we use the same dropout probability for inputs and hidden states.
+For PTB, dropout probabilities are $0.7$, $0.5$ and $0.35$ for small, medium and large networks respectively. For Wikitext-2, probabilities are $0.8$ for the small and $0.6$ for the medium networks.
+
+When training the networks with the augmented loss (AL), we use a temperature  $\tau=20$. We have empirically observed that setting $\alpha$, the weight of the augmented loss, according to $\alpha=\gamma \tau$ for all the networks works satisfactorily. We set $\gamma$ to values between $0.5$ and $0.8$ for the PTB dataset, and between $1.0$ and $1.5$ for the Wikitext-2 dataset. We would like to note that we have not observed sudden deteriorations in the performance with respect to moderate variations in either $\tau$ or $\alpha$.
+
+\section{Metric for Calculating Subspace Distances}
+\label{section:subspace-dist}
+In this section, we detail the metric used for computing the subspace distance between two matrices. 
+The computed metric is closely related with the principle angles between subspaces, first defined in \citet{jordan1875essai}.
+
+Our aim is to compute a metric distance between two given matrices, $X$ and $Y$. We do this in three steps:
+\begin{enumerate}[label={(\arabic*)}]\itemsep1pt
+\item Obtain two matrices with orthonormal columns, $U$ and $V$, such that span$(U)$=span$(X)$ and span$(V)$=span$(Y)$. $U$ and $V$ could be obtained with a QR decomposition.
+\item Calculate the projection of either one of $U$ and $V$ onto the other; e.g. do  $S = UU^TV$, where $S$ is the projection of $V$ onto $U$. Then calculate the residual matrix as $R=V-S$.
+\item Let $\|.\|_{Fr}$ denote the frobenious norm, and let $C$ be the number of columns of $R$. Then the distance metric is found as $d$ where  $d^2 = \frac{1}{C}\|R\|_{Fr}^2 = \frac{1}{C}\text{Trace}(R^TR)$.
+\end{enumerate}
+We note that $d$ as calculated above is a valid metric up to the equivalence set of matrices which span the same column space, although we are not going to show it. Instead, we will mention some metric properties of $d$, and relate it to the principal angles between the subspaces. We first work out an expression for $d$:
+
+\eq{
+\label{eqn:d-expression}
+Cd^2&=\text{Trace}(R^TR)=\text{Trace}\left((V-UU^TV)^T(V-UU^TV)\right) \nonumber\\
+&=\text{Trace}\left(V^T(I-UU^T)(I-UU^T)V\right) \nonumber\\
+&=\text{Trace}\left(V^T(I-UU^T)V\right)\nonumber \\
+&=\text{Trace}\left((I-UU^T)VV^T\right)\nonumber \\
+&=\text{Trace}(V^TV)-\text{Trace}\left(UU^TVV^T\right)\nonumber \\
+&=C-\text{Trace}\left(UU^TVV^T\right) \nonumber\\
+&= C - \text{Trace}\left((U^TV)^T(U^TV)\right)\nonumber \\
+&= C - \|U^TV\|_{Fr}^2 \nonumber \\
+&= \sum_{i=1}^C 1-\rho_i^2,
+}
+where $\rho_i$ is the $i^\text{th}$ singular value of $U^TV$, commonly referred to as  the $i^\text{th}$ principle angle between the subspaces of $X$ and $Y$, $\theta_i$. In above, we used the cyclic permutation property of the trace in the third and the fourth lines.
+
+Since $d^2$ is  $\frac{1}{C}\text{Trace}(R^TR)$, it is always nonnegative, and it is only zero when the residual is zero, which is the case when $\text{span}(X)=\text{span(Y)}$. Further, it is symmetric between $U$ and $V$ due to the form of \eqref{eqn:d-expression} (singular values of $V^TU$ and $V^TU$ are the same). Also, $d^2=\frac{1}{C}\sum_{i=1}^C \sin^2(\theta_i)$, namely the average of the sines of the principle angles, which is a quantity between $0$ and $1$.

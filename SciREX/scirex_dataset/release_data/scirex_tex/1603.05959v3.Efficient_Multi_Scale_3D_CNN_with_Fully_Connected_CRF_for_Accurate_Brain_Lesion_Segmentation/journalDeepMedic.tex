@@ -1,0 +1,88 @@
+\documentclass[preprint,authoryear,12pt]{elsarticle}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+%\usepackage{subfigure} Deprecated. This is what Ben originally had. Replaced with subcaption, which is updated, which is what I had in Isles and ESR.
+\usepackage{subcaption}
+\usepackage{xspace}
+\usepackage{bm}
+\usepackage[colorlinks=true,citecolor=blue,urlcolor=black]{hyperref}
+
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{lineno}
+
+%For the tables
+\usepackage{booktabs}
+% for specifying width of tabular columns.
+\usepackage{array}
+%for the table notes
+\usepackage[flushleft]{threeparttable}
+%------------------------------------
+
+% use this for a full-stop in a stand-alone equation
+\newcommand{\eqfs}{\textrm{ .}}
+
+% use this for a comma in a stand-alone equation
+\newcommand{\eqcm}{\textrm{ ,}}
+
+\newcommand{\quot}[1]{``#1''}
+
+\renewcommand{\vec}[1]{\bm{#1}}
+
+\newcommand{\comment}[1]{\textcolor{red}{\bf[#1]}}
+\newcommand{\ignore}[1]{} %for inline hidden comments
+
+% -----------------------------------------------------------------------------
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Efficient Multi-Scale 3D CNN with fully connected CRF for Accurate Brain Lesion Segmentation}
+
+\author[ICL]{Konstantinos Kamnitsas}
+\author[ICL]{Christian Ledig}
+\author[UDA,WB]{Virginia F.J. Newcombe}
+\author[UDA]{Joanna P. Simpson}
+\author[UDA]{Andrew D. Kane}
+\author[UDA,WB]{David K. Menon}
+\author[ICL]{\\Daniel Rueckert}
+\author[ICL]{Ben Glocker}
+
+\address[ICL]{Biomedical Image Analysis Group, Imperial College London, UK}
+\address[UDA]{University Division of Anaesthesia, Department of Medicine, Cambridge University, UK}
+\address[WB]{Wolfson Brain Imaging Centre, Cambridge University, UK}
+
+\begin{abstract}
+We propose a dual pathway, 11-layers deep, three-dimensional Convolutional Neural Network for the challenging task of brain lesion segmentation. The devised architecture is the result of an in-depth analysis of the limitations of current networks proposed for similar applications. To overcome the computational burden of processing 3D medical scans, we have devised an efficient and effective dense training scheme which joins the processing of adjacent image patches into one pass through the network while automatically adapting to the inherent class imbalance present in the data. Further, we analyze the development of deeper, thus more discriminative 3D CNNs. In order to incorporate both local and larger contextual information, we employ a dual pathway architecture that processes the input images at multiple scales simultaneously. For post-processing of the network's soft segmentation, we use a 3D fully connected Conditional Random Field which effectively removes false positives. Our pipeline is extensively evaluated on three challenging tasks of lesion segmentation in multi-channel MRI patient data with traumatic brain injuries, brain tumors, and ischemic stroke. We improve on the state-of-the-art for all three applications, with top ranking performance on the public benchmarks BRATS 2015 and ISLES 2015. Our method is computationally efficient, which allows its adoption in a variety of research and clinical settings. The source code of our implementation is made publicly available.
+\end{abstract}
+
+\begin{keyword}
+3D Convolutional Neural Network \sep Fully Connected CRF \sep Segmentation \sep Brain Lesions \sep Deep Learning
+\end{keyword}
+
+\end{frontmatter}
+
+%\linenumbers
+
+\input{sections/introduction}
+
+\input{sections/method}
+
+\input{sections/validationOfTheArchitecture}
+
+\input{sections/evaluation}
+
+\input{sections/discussion}
+
+\input{sections/acknowledgements}
+
+\input{sections/appendix}
+
+\bibliographystyle{elsarticle-harv}
+\bibliography{journalDeepMedic}
+
+\end{document}
+
+%%
+%% End of file `elsarticle-template-harv.tex'.

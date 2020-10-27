@@ -1,0 +1,140 @@
+\appendix
+
+%\maketitle
+%\section*{Graph-Structured Representations for\\Visual Question Answering}
+\section*{Supplementary material}
+
+%====================================================================================================================
+\section{Implementation}
+\label{implDetails}
+
+\noindent
+We provide below practical details of our implementation of the proposed method.
+
+\begin{enumerate}[topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1.5ex,label={\tiny$\bullet$},leftmargin=2.0ex]
+\item Size of vector embeddings of node features, edge features, and all hidden states within the network: $H$\sheq300. Note that smaller values such as $H$\sheq200 also give very good results (not reported in this paper) at a fraction of the training time.
+\item Number of recurrent iterations to update graph node representations: $T^\symbQ$=$T^\symbS$\sheq4. Anecdotally, we observed that processing the scene graph benefits from more iterations than the question graph, for which performance nearly saturates with 2 or more iterations. As reported in the ablative evaluation (\tab\ref{tab:balanced}), the use of at least a single iteration has a stronger influence than its exact number.
+\item All weights except word embeddings are initialized randomly following \cite{glorot2010understanding}.
+\item Word embeddings are initialized with Glove vectors \cite{pennington2014glove} of dimension 300 available publicly \cite{gloveWebsite}, trained for 6 billion words on Wikipedia and Gigaword. The word embeddings are fine-tuned with a learning rate of $1/10$ of the other weights.
+\item Dropout with ratio 0.3 is applied between the weighted sum over scene elements (\eq\ref{eq:out2}) and the final classifier (\eq\ref{eq:out3}).
+\item Weights are optimized with Adadelta \cite{zeiler2012adadelta} with mini-batches of 128 questions. We run optimization until convergence (typically 20 epochs on the ``abstract scenes'', 100 epochs on the ``balanced'' dataset) and report performance on the test set from the epoch with the highest performance on the validation set (measured by VQA score on the ``abstract scenes'' dataset, and accuracy over pairs on the ``balanced'' dataset).
+
+\item The edges between word nodes in the input question graph are labeled with the dependency labels identified by the Stanford parser \cite{demarneffe2008parser,stanfordParserWebsite}. These dependencies are directed, and we supplement all of them with their symmetric, albeit tagged with a different set of labels. The output of the parser includes the propagation of conjunct dependencies (its default setting). This yields quite densely connected graphs.
+
+\item The input features of the object nodes are those directly available in the datasets. They represent: the object category (human, animal, small or large object) as one one-hot vector, the object type (table, sun, dog window, ...) as a one-hot vector, the expression/pose/type (various depictions being possible for each object type) as a one-hot vector, and 10 scalar values describing the pose of human figures (the X/Y position of arms, legs, and head relative to the torso). They form altogether a feature vector of dimension 159. The edge features between objects represent: the signed difference in their X/Y position, the inverse of their absolute difference in X/Y position, and their relative position on depth planes as +1 if closer (potentially occluding the other), -1 otherwise. %Graph edges are directed and the relative depth position is thus not symmetric.
+
+\item All input features are normalized for zero mean and unit variance.
+\item When training for the ``balanced'' dataset, care is taken to keep each pair of complementary scenes in a same mini-batch when shuffling training instances. This has a noticeable effect on the stability of the optimization.
+\item In the open-ended setting, the output space is made of all answers that appear at least 5 times in the training set. These correspond to 623 possible answers, which cover 96\% of the training questions.
+\item Our model was implemented in Matlab from scratch. Training takes in the order of 5 to 10 hours on one CPU, depending on the dataset and on the size $H$ of the internal representations.
+
+%Code is available upon request.
+%graphs: edges represented simply as connectivity matrices; dense connectivity so this incurs little waste compared to sparse representations
+%vector embeddings for word nodes and dependency edges are implemented by lookup tables
+
+\end{enumerate}
+
+
+
+
+%====================================================================================================================
+\section{Additional details}
+
+\noindent\textbf{\textit{Why do we choose to focus on abstract scenes ? Does this method extend to real images ?}}
+
+%(graph representation of image components (objects) possible because such representation is provided)
+%-> model applicable for real world images ?? especially considering questionable effect of graph representation
+
+%(the dataset of balanced real images VQA v2.0 was not available yet)
+
+\noindent
+The balanced dataset of abstract scenes was the only one allowing evaluation free from dataset biases. Abstract scenes also enabled removing confounding factors (visual recognition). It is not unreasonable to view the scene descriptions (provided with abstract scenes) as the output of a ``perfect'' vision system. The proposel model could be extended to real images by building graphs of the images where scene nodes are candidates from an object detection algorithm.
+
+
+
+\vspace{5pt}
+\noindent\textbf{\textit{The multiple-choice (M.C.) setting should be easier than open-ended (O.E.). Therefore, why is the accuracy not better for binary and number questions in the M.C setting (rather than O.E.) ?}}
+% Multiple choice VQA task is an easier version of Open Ended VQA task (18 options vs ~1000 options)
+%doesn't seem to be the case for Yes/no and Number type questions. The authors should look more into why this is the case
+%disappointed complicated approach worse than global image features for Open Ended "other" type questions
+
+\noindent
+This intuition is incorrect in practice. The wording of binary and number questions (``\textit{How many ...}'') can easily narrow down the set of possible answers, whether evaluated in a M.C. or O.E. setting. One thus cannot qualify one as strictly easier than the other. Other factors can then influence the performance either way. Note also that, for example that most choices of number questions are not numbers.
+
+
+\vspace{5pt}
+\noindent\textbf{\textit{In Table 1, why is there a large improvement of the metric over balanced pairs of scenes, but not of the metric over individual scenes ?}}
+
+\noindent
+The metric over pairs is much harder to satisfy and should be regarded as more meaningful. The other metric (over scenes) essentially saturates at the same point between the two methods.
+
+\vspace{5pt}
+\noindent\textbf{\textit{How are precison/recall curves helping better understand model compared to a simple accuracy number ?}}
+
+\noindent
+A P/R curve shows the confidence of the model in its answers. A practical VQA system will need to provide an indication of certainty, including the possibility of ``I don't know''. Reporting P/R is a step in that direction. P/R curves also contain more information and can show differences between methods (\eg Fig.3 left) that may otherwise not be appreciable through an aggregate metric.
+
+\vspace{5pt}
+\noindent\textbf{\textit{Why is attention computed with pre-GRU node features ?}}
+
+\noindent
+This performed slightly better than the alternative. The intuition is that the identity of each node is sufficient, and the context (transfered by the GRU from neighbouring nodes) is probably less useful to compute attention.
+
+\vspace{5pt}
+\noindent\textbf{\textit{Why are the largest performance gains obtained with ``number'' questions ?}}
+
+\noindent
+We could not draw definitive conclusions. Competing methods seem to rely on dataset biases (predominance of \textit{2} and \textit{3} as answers). Ours was developed (cross-validated) for the balanced dataset, which requires \emph{not} to rely on such biases, and may simply be better at utilizing the input and not biases. This may in turn explain minimal gains on other questions, which could benefit from using biases (because of a larger pool of reasonable answers).
+
+
+
+%====================================================================================================================
+\section{Additional results}
+
+We provide below additional example results in the same format as in \fig\ref{fig:qualitative}.
+%selected at random, 
+
+\clearpage
+
+\subsection{Additional results: abstract scenes dataset}
+\vspace{10mm}
+
+%\resultsAttentionAbstractPage{20020}{20046}{20200}{20220}{20331}{20427}{20474}{20781}
+%\resultsAttentionAbstractPage{21098}{21322}{21326}{21358}{21392}{21547}{21553}{21768}
+%\resultsAttentionAbstractPage{21900}{22056}{22060}{22088}{22264}{22479}{22746}{22769}
+%\resultsAttentionAbstractPage{23911}{23966}{24278}{24374}{24453}{24508}{24775}{24915}
+%\resultsAttentionAbstractPage{25081}{25147}{25248}{25300}{25302}{25345}{25459}{25506}
+%\resultsAttentionAbstractPage{25841}{25883}{26002}{26132}{26216}{26447}{26616}{26722}
+%\resultsAttentionAbstractPage{26817}{27250}{27555}{27578}{27709}{27778}{28492}{29403}
+
+\resultsAttentionAbstractPageSix{26817}{27250}{27555}{27578}{27709}{27778} \clearpage %{28492}{29403}
+\resultsAttentionAbstractPage{29551}{29627}{29685}{29758}{29804}{29819}{29865}{29907} \clearpage
+\resultsAttentionAbstractPage{22937}{23128}{23273}{23301}{23328}{23359}{23429}{23521} \clearpage
+
+\clearpage
+\subsection{Additional results: balanced dataset}
+\vspace{10mm}
+
+%\resultsAttentionBalancedPage{10873-13131}{10874-900131310}{1123-12079}{1124-900120790}{11323-10510}{11324-900105102}{11366-10372}{11367-900103721}
+%\resultsAttentionBalancedPage{11657-4819}{11658-900048190}{11958-8858}{11959-900088580}{11983-4002}{11984-900040022}{12225-1930}{12226-900019300}
+%\resultsAttentionBalancedPage{12459-16227}{12460-900162272}{12532-16383}{12533-900163832}{12552-8490}{12553-900084901}{12599-3843}{12600-900038431}
+%\resultsAttentionBalancedPage{1278-5264}{1279-900052642}{13058-3390}{13059-900033900}{13427-13615}{13428-900136151}{13557-12188}{13558-900121882}
+%\resultsAttentionBalancedPage{14434-9530}{14435-900095302}{14504-17659}{14505-900176591}{148-8470}{149-900084701}{14901-15544}{14902-900155441}
+%\resultsAttentionBalancedPage{16192-5870}{16193-900058702}{16205-17429}{16206-900174291}{1623-6519}{1624-900065190}{16619-3622}{16620-900036220}
+%\resultsAttentionBalancedPage{16745-2820}{16746-900028202}{16831-14053}{16832-900140531}{16840-11055}{16841-900110550}{16936-17607}{16937-900176072}
+%\resultsAttentionBalancedPage{17333-8625}{17334-900086252}{17804-12203}{17805-900122032}{18066-5025}{18067-900050252}{18173-7759}{18174-900077591}
+%\resultsAttentionBalancedPage{18324-6762}{18325-900067621}{18399-13857}{18400-900138571}{18417-1879}{18418-900018792}{18773-505}{18774-900005050}
+%\resultsAttentionBalancedPage{19527-9248}{19528-900092482}{20079-13794}{20080-900137942}{20447-15749}{20448-900157491}{20642-8769}{20643-900087690}
+%\resultsAttentionBalancedPage{20814-9405}{20815-900094050}{20882-6603}{20883-900066030}{2099-11890}{2100-900118900}{21111-13283}{21112-900132831}
+%\resultsAttentionBalancedPage{21382-14671}{21383-900146711}{21788-7343}{21789-900073431}{2919-19778}{2920-900197782}{2930-2634}{2931-900026342}
+%\resultsAttentionBalancedPage{3148-11816}{3149-900118161}{3175-18362}{3176-900183621}{3351-87}{3352-900000872}{343-10451}{344-900104510}
+%\resultsAttentionBalancedPage{3616-11169}{3617-900111690}{3821-16937}{3822-900169371}{3825-11652}{3826-900116520}{3897-10133}{3898-900101331}
+%\resultsAttentionBalancedPage{4352-18589}{4353-900185892}{4393-18336}{4394-900183361}{4688-15266}{4689-900152662}{5176-7412}{5177-900074122}
+%\resultsAttentionBalancedPage{5277-13578}{5278-900135780}{5522-8679}{5523-900086791}{5597-6127}{5598-900061271}{6000-8226}{6001-900082261}
+%\resultsAttentionBalancedPage{629-6464}{630-900064642}{6415-206}{6416-900002061}{6442-6382}{6443-900063820}{6495-3730}{6496-900037302}
+%\resultsAttentionBalancedPage{6644-12328}{6645-900123282}{6891-10878}{6892-900108780}{7108-17397}{7109-900173971}{7166-837}{7167-900008371}
+%\resultsAttentionBalancedPage{7269-14758}{7270-900147580}{7309-18242}{7310-900182422}{7586-16901}{7587-900169010}{77-17312}{78-900173122}
+
+\resultsAttentionBalancedPageSix{7269-14758}{7270-900147580}{7309-18242}{7310-900182422}{7586-16901}{7587-900169010} \clearpage %{77-17312}{78-900173122}
+\resultsAttentionBalancedPage{8057-11746}{8058-900117462}{8458-5536}{8459-900055360}{8466-14578}{8467-900145780}{9149-3819}{9150-900038192} \clearpage
+\resultsAttentionBalancedPage{14965-5372}{14966-900053720}{14967-10677}{14968-900106771}{15752-7867}{15753-900078671}{16088-4845}{16089-900048451}

@@ -1,0 +1,88 @@
+% last updated in April 2002 by Antje Endemann
+% Based on CVPR 07 and LNCS, with modifications by DAF, AZ and elle, 2008 and AA, 2010, and CC, 2011; TT, 2014; AAS, 2016
+
+\documentclass[runningheads]{llncs}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb} % define this before the line numbering.
+% \usepackage{ruler}
+\usepackage{color}
+% \usepackage[width=122mm,left=12mm,paperwidth=146mm,height=193mm,top=12mm,paperheight=217mm]{geometry}
+
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{microtype}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{eso-pic}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+\usepackage{hyperref}
+
+\begin{document}
+% \renewcommand\thelinenumber{\color[rgb]{0.2,0.5,0.8}\normalfont\sffamily\scriptsize\arabic{linenumber}\color[rgb]{0,0,0}}
+% \renewcommand\makeLineNumber {\hss\thelinenumber\ \hspace{6mm} \rlap{\hskip\textwidth\ \hspace{6.5mm}\thelinenumber}}
+% \linenumbers
+% \pagestyle{headings}
+% \mainmatter
+% \def\ECCV18SubNumber{547}  % Insert your submission number here
+
+% \title{DU-Net: Densely Connected U-Nets for Human and Face Landmark Localization}
+\title{Quantized Densely Connected U-Nets for Efficient Landmark Localization}
+
+\titlerunning{Quantized Densely Connected U-Nets for Efficient Landmark Localization}
+% Replace with a meaningful short version of your title
+%
+% \author{Zhiqiang Tang\inst{1} \and
+% Xi Peng\inst{2} \and
+% Shijie Geng\inst{1} \and Lingfei Wu\inst{3} \and Shaoting Zhang\inst{4} \and Dimitris N. Metaxas\inst{1}}
+\author{Zhiqiang Tang$^1$ \and
+Xi Peng$^2$ \and
+Shijie Geng$^1$ \and Lingfei Wu$^3$ \and \\Shaoting Zhang$^4$ \and Dimitris Metaxas$^1$}
+%
+%Please write out author names in full in the paper, i.e. full given and family names. 
+%If any authors have names that can be parsed into FirstName LastName in multiple ways, please include the correct parsing, in a comment to the volume editors:
+%\index{Lastnames, Firstnames}
+%(Do not uncomment it, because you may introduce extra index items if you do that, we will use scripts for introducing index entries...)
+\authorrunning{Tang et al.}
+% Replace with shorter version of the author list. If there are more authors than fits a line, please use A. Author et al.
+%
+
+% \institute{Rutgers University, NJ, USA\\ \email{\{zt53, sg1309, dnm\}@rutgers.edu}
+% \and
+% Binghamton University, NY, USA\\
+% \email{xpeng@binghamton.edu}\\
+% \and
+% IBM T. J. Watson Research Center, NY, USA\\
+% \email{lwu@email.wm.edu}
+% \and
+% University of North Carolina at Charlotte, NC, USA\\
+% \email{rutgers.shaoting@gmail.com}}
+\institute{
+$^1$Rutgers University, 
+\email{\{zt53, sg1309, dnm\}@rutgers.edu}\\
+$^2$Binghamton University, \email{xpeng@binghamton.edu}\\
+$^3$IBM T. J. Watson, 
+\email{lwu@email.wm.edu}\\
+$^4$SenseTime,
+\email{zhangshaoting@sensetime.com}\\
+}
+
+%
+\maketitle
+
+\input{abstract}
+\input{introduction}
+\input{related_work}
+\input{method}
+% \input{implementation}
+\input{experiment}
+\input{conclusion}
+\input{acknowledgment}
+
+\clearpage
+
+\bibliographystyle{splncs04}
+\bibliography{egbib}
+\end{document}

@@ -1,0 +1,40 @@
+\section{Conclusion and Future Work}
+We have presented an end-to-end trainable framework for solving pixel-labeling
+vision problems based on two novel contributions: a pixel-pairwise loss based
+on spherical max-margin embedding and a variant of mean shift grouping embedded
+in a recurrent architecture. These two components mesh closely to provide a
+framework for robustly recognizing variable numbers of instances without
+requiring heuristic post-processing or hyperparameter tuning to account for
+widely varying instance size or class-imbalance. The approach is simple and
+amenable to theoretical analysis, and when coupled with standard architectures
+yields instance proposal generation which substantially outperforms
+state-of-the-art. Our experiments demonstrate the potential for instance
+embedding and open many opportunities for future work including learn-able
+variants of mean-shift grouping, extension to other pixel-level domains such as
+encoding surface shape, depth and figure-ground and multi-task embeddings.
+
+%While architecture-wise agnostic, conceptually simple, computationally
+%efficient, practically effective, and theoretically abundant, the framework can
+%be purposed for boundary detection, object proposal detection, generic and
+%instance-level segmentation, spanning low-, mid- and high-level vision tasks.
+%Thorough experiments demonstrate that the new framework achieves
+%state-of-the-art performance compared to literature on all these tasks.
+
+%This generical framework provides many opportunities for future open research.
+%For example, other than purely relying on the mean shift grouping, one can
+%train a ``learn-to-optimize'' model to group pixels.  Moreover, it is also
+%worth extending the our pixel pair embedding loss to deal with continuous
+%pixel-level vision problems, like depth estimation and surface normal
+%prediction.  While our framework is powerful and general for various pixel
+%level vision problems, how to train a single sharable backend but with
+%task-specific frontend branches is also a research direction worth exploring.
+
+
+%\section*{Acknowledgement}
+%{
+%\small
+%\paragraph{Acknowledgement}
+%This project is supported by NSF grants
+%IIS-1618806, IIS-1253538, DBI-1262547 and a hardware donation
+%from NVIDIA.
+%}

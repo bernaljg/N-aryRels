@@ -1,0 +1,205 @@
+\section{Problem Formulation}
+\label{section:problem}
+%
+In this section,
+the problem of estimating articulated poses of an unknown number of people in an image
+is cast as an optimization problem.
+%
+The goal of this formulation is to state three problems jointly:
+%
+1.~The selection of a subset of body parts from a set $D$ of \emph{body part candidates},
+estimated from an image as described in Section~\ref{section:unary}
+and depicted as nodes of a graph in Fig.~\ref{fig:overview}(a).
+%
+2.~The \emph{labeling} of each selected body part with one of $C$ \emph{body part classes},
+e.g., ``arm'', ``leg'', ``torso'',
+as depicted in Fig.~\ref{fig:overview}(c).
+%
+3.~The \emph{partitioning} of body parts that belong to the same person,
+as depicted in Fig.~\ref{fig:overview}(b).
+% pg: make sure the references (a),(b),(c) are correct
+
+
+\subsection{Feasible Solutions}
+\label{section:feasible-solutions}
+%
+% In order to encode solutions to these three problems,
+% we consider as feasible solutions of the optimization problem
+% triples $(x,y,z)$ of 01-labelings
+% $x: D \times C \to \{0,1\}$,
+% $y: \tbinom{D}{2} \to \{0,1\}$ and
+% $z: \tbinom{D}{2} \times C^2 \to \{0,1\}$.
+We encode labelings of the three problems jointly through
+triples $(x,y,z)$ of binary random variables with domains
+$x\in\{0,1\}^{D\times C}, y\in\{0,1\}^{\tbinom{D}{2}}$ and $z\in\{0,1\}^{\tbinom{D}{2} \times C^2}$.
+Here, $x_{dc} = 1$ indicates that body part candidate $d$ is of class $c$,
+$y_{dd'} = 1$ indicates that the body part candidates $d$ and $d'$ belong to the same person,
+% and $z_{dd'cc'}$ is constrained such that $z_{dd'cc'} = x_{dc} x_{d'c'} y_{dd'}$.
+and $z_{dd'cc'}$ are auxiliary variables to relate $x$ and $y$ through $z_{dd'cc'} = x_{dc} x_{d'c'} y_{dd'}$.
+Thus, $z_{dd'cc'} = 1$ indicates that
+body part candidate $d$ is of class $c$ ($x_{dc}=1$),
+body part candidate $d'$ is of class $c'$ ($x_{d'c'}=1$),
+and body part candidates $d$ and $d'$ belong to the same person ($y_{dd'}=1$).
+
+In order to constrain the 01-labelings $(x,y,z)$ to well-defined articulated poses of one or more people,
+we impose the linear inequalities
+\eqref{eq:constraint-map}--\eqref{eq:constraint-cycle}
+stated below.
+%
+% pg: Maybe the next section can be ordered more nicely?
+%
+Here, the inequalities
+\eqref{eq:constraint-map}
+guarantee that every body part is labeled with at most one body part class.
+(If it is labeled with no body part class, it is suppressed).
+%
+The inequalities
+\eqref{eq:constraint-suppression-1}
+guarantee that distinct body parts $d$ and $d'$ belong to the same person only if neither $d$ nor $d'$ is suppressed.
+%
+The inequalities
+\eqref{eq:constraint-cycle}
+guarantee, for any three pairwise distinct body parts, $d$, $d'$ and $d''$, if $d$ and $d'$ are the same person (as indicated by $y_{dd'} = 1$) and $d'$ and $d''$ are the same person (as indicated by $y_{d'd''} = 1$), then also $d$ and $d''$ are the same person ($y_{dd''} = 1$),
+that is, transitivity,
+cf.~\cite{chopra-1993}.
+%
+Finally, the inequalities
+\eqref{eq:constraint-aux-1}
+guarantee, for any $dd' \in \tbinom{D}{2}$ and any $cc' \in C^2$ that $z_{dd'cc'} = x_{dc} x_{d'c'} y_{dd'}$.
+These constraints allow us to write an objective function as a linear form in $z$ that would otherwise be written as a cubic form in $x$ and $y$.
+%
+We denote by $X_{DC}$ the set of all $(x,y,z)$ that satisfy all inequalities,
+i.e., the set of feasible solutions.
+%
+\begin{align}
+\forall d \in D \forall cc' \in \tbinom{C}{2}:
+    & \quad x_{dc} + x_{dc'} \leq 1
+    \label{eq:constraint-map}\\
+\forall dd' \in \tbinom{D}{2}:
+    & \quad y_{dd'} \leq \sum_{c \in C} x_{dc}
+    \nonumber\\
+    & \quad y_{dd'} \leq \sum_{c \in C} x_{d'c}
+    \label{eq:constraint-suppression-1}\\
+\forall dd'd'' \in \tbinom{D}{3}:
+    & \quad y_{dd'} + y_{d'd''} - 1 \leq y_{dd''}
+    \label{eq:constraint-cycle}\\
+\forall dd' \in \tbinom{D}{2} \forall cc' \in C^2:
+    & \quad x_{dc} + x_{d'c'} + y_{dd'} - 2 \leq z_{dd'cc'}
+    \nonumber\\
+    & \quad z_{dd'cc'} \leq x_{dc}
+    \nonumber\\
+    & \quad z_{dd'cc'} \leq x_{d'c'}
+    \nonumber\\
+    & \quad z_{dd'cc'} \leq y_{dd'}
+    \label{eq:constraint-aux-1}
+\end{align}
+
+When at most one person is in an image,
+we further constrain the feasible solutions to a well-defined pose of a single person.
+This is achieved by an additional class of inequalities which guarantee, for any two distinct body parts that are not suppressed, that they must be clustered together:
+%
+\begin{align}
+\forall dd' \in \tbinom{D}{2} \forall cc' \in C^2:
+    \quad x_{dc} + x_{d'c'} - 1 \leq y_{dd'}
+    \label{eq:constraint-single-person}
+\end{align}
+
+
+
+
+\subsection{Objective Function}
+% pg: I'd remove this, just stating what follows.
+%
+% We define an objective function on the feasible set with respect to the probabilities introduced below.
+% The estimation of these probabilities from images is discussed in
+% Section~\ref{sec:unary-and-pairwise}.
+
+% p\in (0,1) or [0,1]
+For every pair $(d, c) \in D \times C$, we will estimate a probability $p_{dc} \in [0,1]$ of the body part $d$ being of class $c$.
+In the context of CRFs, these probabilities are called \emph{part unaries} and we will detail their estimation in Section~\ref{section:unary}.
+
+For every $dd' \in \tbinom{D}{2}$ and every $cc' \in C^2$, we consider a probability
+$p_{dd'cc'} \in (0,1)$ of the conditional probability of $d$
+and $d'$ belonging to the same person, given that $d$ and $d'$ are
+body parts of classes $c$ and $c'$, respectively.
+%
+For $c \neq c'$, these probabilities $p_{dd'cc'}$ are the \emph{pairwise terms} in a graphical model of the human body.
+In contrast to the classic pictorial structures model, our model allows for a {\em fully connected graph} where each body part is connected to all other parts in the entire set $D$ by a pairwise term.
+%
+% pg: do not understand this.
+For $c = c'$, $p_{dd'cc'}$ is the probability of the part candidates
+$d$ and $d'$ representing the same part of the same person. This
+facilitates \textit{clustering} of multiple part candidates of the
+same part of the same person and a \textit{repulsive} property that
+prevents nearby part candidates of the same type to be associated to
+different people.
+%On the other hand, transitivity property~\eqref{eq:constraint-cycle} facilitates \textit{partitioning} of body parts that belong to the same person.
+
+% Our model also implements the ``repulsive interaction'' between the body parts. 
+% R1 "pairwise terms between body parts of people adjacent to each other": the model already includes
+% such terms, e.g. the graph in Fig. 2 (d) shows connections between body parts of adjacent
+% people. The "repulsive interaction" is implemented via cost defined in Eq.14. Note that for the same
+% part class the features used to define this cost are based on image proximity and bounding box
+% overlap (see Eq. 12). Assigning two detections d and d' of same class to different people requires
+% setting z_dd'cc' to 0 (see definition of z on line 284). This will have high cost for detections in
+% close proximity.
+
+The optimization problem that we call the \emph{subset partition and labeling problem} is the ILP that minimizes over the set of feasible solutions $X_{DC}$:
+%
+\begin{align}
+\min_{(x,y,z) \in X_{DC}} \ \
+    & \langle \alpha, x \rangle + \langle \beta, z \rangle,
+    \label{eq:ilp}
+\end{align}
+%
+% with $X_{DC}$ the set of feasible solutions defined in
+% Section~\ref{section:feasible-solutions}
+where we used the short-hand notation
+%
+\begin{align}
+\alpha_{dc}
+    & := \log \frac{1 - p_{dc}}{p_{dc}}
+    \label{eq:cost-definition-1} \\
+\beta_{dd'cc'}
+    & := \log \frac{1 - p_{dd'cc'}}{p_{dd'cc'}}
+    \label{eq:cost-definition-2}\\
+%\end{align}
+%%
+%and
+%%
+%\begin{align}
+\langle \alpha, x \rangle
+    & := \sum_{d \in D} \sum_{c \in C} \alpha_{dc} \, x_{dc}\\
+\langle \beta, z \rangle
+    & := \sum_{d d' \in \tbinom{D}{2}} \sum_{c,c' \in C} \beta_{dd'cc'} \, z_{dd'cc'}
+\enspace .
+\label{eq:beta-z}
+\end{align}
+
+The objective \eqref{eq:ilp}--\eqref{eq:beta-z} is the MAP estimate of
+a probability measure of joint detections $x$ and clusterings $y,z$ of
+body parts, where prior probabilities $p_{dc}$ and $p_{dd'cc'}$ are
+estimated \emph{independently} from data, and the likelihood is a
+positive constant if $(x,y,z)$ satisfies
+\eqref{eq:constraint-map}--\eqref{eq:constraint-aux-1}, and is 0,
+otherwise. The exact form \eqref{eq:ilp}--\eqref{eq:beta-z} is
+obtained when minimizing the negative logarithm of this probability measure.
+
+\subsection{Optimization}
+%
+In order to obtain feasible solutions of the ILP
+\eqref{eq:ilp}
+with guaranteed bounds,
+we separate the inequalities \eqref{eq:constraint-map}--\eqref{eq:constraint-single-person}
+in the branch-and-cut loop of the state-of-the-art ILP solver Gurobi.
+More precisely, we solve a sequence of relaxations of the problem
+\eqref{eq:ilp},
+starting with the (trivial) unconstrained problem.
+Each problem is solved using the cuts proposed by Gurobi.
+Once an integer feasible solution is found,
+we identify violated inequalities
+\eqref{eq:constraint-map}--\eqref{eq:constraint-single-person},
+if any, by breadth-first-search, add these to the constraint pool and re-solve the tightened relaxation.
+Once an integer solution satisfying all inequalities is found,
+together with a lower bound that certifies an optimality gap below 1\%,
+we terminate.

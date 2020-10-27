@@ -1,0 +1,621 @@
+    \resizebox{\textwidth}{!}{%
+      %% This table needs the {hhline} package
+      \begin{tabular}{|c|l||cc|cc||cc|ccc||cc||cc|}%
+        \hline 
+               & Method
+               & \multicolumn{2}{c|}{Sintel \textit{clean}}%
+               & \multicolumn{2}{c||}{Sintel \textit{final}}%
+               & \multicolumn{2}{c|}{KITTI 2012}%
+               & \multicolumn{3}{c||}{KITTI 2015}%
+               & \multicolumn{2}{c||}{Middlebury}%
+               & \multicolumn{2}{c|}{Runtime}%
+               \\%
+               
+               &
+               & \multicolumn{2}{c|}{AEE}%
+               & \multicolumn{2}{c||}{AEE}%
+               & \multicolumn{2}{c|}{AEE}%
+               & AEE
+               & Fl-all
+               & Fl-all
+               & \multicolumn{2}{c||}{AEE}%
+               & \multicolumn{2}{c|}{ms per frame}%
+               \\%
+               
+               &
+               & \textit{train} & \textit{test}%
+               & \textit{train} & \textit{test}%
+               & \textit{train} & \textit{test}%
+               & \textit{train}&\textit{train}&\textit{test}%
+               & \textit{train} & \textit{test}%
+               & CPU & GPU%
+               \\%
+               
+        \hline \hline 
+
+        \multirow{6}{*}{\rotatebox[origin=c]{90}{Accurate}} &
+        EpicFlow$^\dagger$ \cite{epicflow}%
+        & $2.27$ & $4.12$ %Sintel-clean
+        & $3.56$ & $\pz6.29$ %Sintel-final
+        & $\pz\textbf{3.09}$ & $\pz\textbf{3.8}$ %Kitti-2012
+        & $\pz9.27$ & $27.18\%$ & $\textbf{27.10}\%$ %Kitti-2015
+        & $0.31$ & $0.39$ %Middlebury-AEE
+        %& $\pz3.24$ & $3.55$ %Middlebury-AAE
+        & $42,\!600$ & -- %Sintel-runtime
+        \\%
+
+        &
+        DeepFlow$^\dagger$ \cite{deepflow}%
+        & $2.66$ & $5.38$  %Sintel-clean
+        & $3.57$ & $\pz7.21$ %Sintel-final
+        & $\pz4.48$ & $\pz5.8$ %Kitti-2012
+        & $10.63$ & $26.52\%$ & $29.18\%$ %Kitti-2015
+        & $\textbf{0.25}$ & $0.42$ %Middlebury-AEE
+        %& $\pz\textbf{3.04}$ & $4.22$ %Middlebury-AAE
+        & $51,\!940$ & -- %Sintel-runtime
+        \\%
+
+        &
+        FlowFields \cite{flowfields}%
+        & $\textbf{1.86}$ & $\textbf{3.75}$  %Sintel-clean
+        & $\textbf{3.06}$ & $\pz\textbf{5.81}$ %Sintel-final
+        & $\pz3.33$ & $\pz3.5$ %Kitti-2012
+        & $\pz\textbf{8.33}$ & $\textbf{24.43\%}$ & -- %Kitti-2015
+        & $0.27$ & $\textbf{0.33}$ %Middlebury-AEE
+        %& $\pz3.22$ & $\textbf{3.18}$ %Middlebury-AAE
+        & $22,\!810$ & -- %Sintel-runtime
+        \\%
+
+        &
+        LDOF (CPU) \cite{ldof}%
+        & $4.64$ & $7.56$  %Sintel-clean
+        & $5.96$ & $\pz9.12$%Sintel-final
+        & $10.94$ & $12.4$ %Kitti-2012
+        & $18.19$ & $38.11\%$ & -- %Kitti-2015
+        & $0.44$ & $0.56$ %Middlebury-AEE
+        %& $\pz5.32$ & $4.55$ %Middlebury-AAE
+        & $64,\!900$ & -- %Sintel-runtime
+        \\%
+
+        &
+        LDOF (GPU) \cite{ldof-gpu}%
+        & $4.76$ & --  %Sintel-clean
+        & $6.32$ & -- %Sintel-final
+        & $10.43$ & -- %Kitti-2012
+        & $18.20$ & $38.05\%$ & -- %Kitti-2015
+        & $0.36$ & -- %Middlebury-AEE
+        %& $\pz4.52$ & -- %Middlebury-AAE
+        & -- & $\phantom{,}6,\!270$ %Sintel-runtime
+        \\%
+
+        &
+        PCA-Layers \cite{pcaflowlayers}%
+        & $3.22$ & $ 5.73$  %Sintel-clean
+        & $4.52$ & $\pz7.89$ %Sintel-final
+        & $\pz5.99$ & $\pz5.2$ %Kitti-2012
+        & $12.74$ & $27.26\%$ & -- %Kitti-2015
+        & $0.66$ & -- %Middlebury-AEE
+        %& $\pz8.54$ & -- %Middlebury-AAE
+        & $\pz\textbf{3,300}$ & -- %Sintel-runtime
+        \\%
+
+        \hline \hline 
+
+        \multirow{5}{*}{\rotatebox[origin=c]{90}{Fast}} &
+        EPPM \cite{eppm}%
+        & -- & $\textbf{6.49}$  %Sintel-clean
+        & -- & $\pz\textbf{8.38}$ %Sintel-final
+        & -- & $\pz9.2$ %Kitti-2012
+        & -- & -- & -- %Kitti-2015
+        & -- & $\textbf{0.33}$ %Middlebury-AEE
+        %& -- & $\textbf{3.36}$ %Middlebury-AAE
+        & -- & $\pz\pz200$ %Sintel-runtime
+        \\%
+
+        &
+        PCA-Flow \cite{pcaflowlayers}%
+        & $\textbf{4.04}$ & $6.83$  %Sintel-clean
+        & $\textbf{5.18}$ & $\pz8.65$ %Sintel-final
+        & $\pz\textbf{5.48}$ & $\pz\textbf{6.2}$ %Kitti-2012
+        & $\textbf{14.01}$ & $\textbf{39.59\%}$ & -- %Kitti-2015
+        & $\textbf{0.70}$ & -- %Middlebury-AEE
+        %& $\pz8.85$ & -- %Middlebury-AAE
+        & $\pz\pz\phantom{,}140$ & -- %Sintel-runtime
+        \\%
+
+        &
+        DIS-Fast \cite{dis-fast}%
+        & $5.61$ & $9.35$  %Sintel-clean
+        & $6.31$ & $10.13$ %Sintel-final
+        & $11.01$ & $14.4$ %Kitti-2012
+        & $21.20$ & $53.73\%$ & -- %Kitti-2015
+        & $0.92$ & -- %Middlebury-AEE
+        %& $10.94$ & -- %Middlebury-AAE
+        & $\pz\pz\phantom{,}\pz70$ & -- %Sintel-runtime
+        \\%
+
+        &
+        FlowNetS \cite{DFIB15}%
+        & $4.50$ & $\phantom{^\ddagger}6.96^\ddagger$  %Sintel-clean
+        & $5.45$ & $\pz\phantom{^\ddagger}7.52^\ddagger$  %Sintel-final
+        & $\pz8.26$ & -- %Kitti-2012
+        & -- & -- & --%Kitti-2015
+        & $1.09$ & -- %Middlebury-AEE
+        %& $13.28$ & -- %Middlebury-AAE
+        & -- & $\pz\pz\pz\textbf{18}$ %Sintel-runtime
+        \\%
+        % kitti timing: 0.019
+        
+        % FlowNetS+ft (sintel) \cite{DFIB15}%
+        % & ($3.66$) & $6.96$ & ($4.44$) & 7.76 & -- & $0.018$ 
+        % & $7.52$ & $9.1$ & -- & -- & -- & -- & -- & --\\%
+        % % kitti timing: 0.019
+
+        &
+        FlowNetC \cite{DFIB15}%
+        & $4.31$ & $\phantom{^\ddagger}6.85^\ddagger$  %Sintel-clean
+        & $5.87$ & $\pz\phantom{^\ddagger}8.51^\ddagger$ %Sintel-final
+        & $\pz9.35$ & -- %Kitti-2012
+        & -- & -- & --%Kitti-2015
+        & $1.15$ & -- %Middlebury-AEE
+        %& $15.64$ & -- %Middlebury-AAE
+        & -- & $\pz\pz\pz32$ %Sintel-runtime
+        \\%
+        % kitti timing: 0.034
+
+        % FlowNetC+ft (sintel) \cite{DFIB15}%
+        % & ($3.78$)  & $6.85$ & ($5.28$) & $8.51$ & -- & $0.032$ 
+        % & $8.79$ & -- & -- & -- & -- & -- & -- & --\\%
+        % % kitti timing: 0.034
+
+        \hline \hline 
+
+        % net: 15k0a_FlyingChairsShort_0.375_long @ 02_net1_FlyingStuff3D:500000
+        \multirow{10}{*}{\rotatebox[origin=c]{90}{FlowNet 2.0}} &
+        FlowNet2-s  
+        & $4.55$ & --  %Sintel-clean
+        & $5.21$  & -- %Sintel-final
+        & $\pz8.89$ & -- %Kitti-2012
+        & $16.42$ & $56.81\%$ & -- %Kitti-2015
+        & $1.27$ & -- %Middlebury-AEE
+        %& $18.14$ & -- %Middlebury-AAE
+        & -- & $\pz\pz\pz\pz\textbf{7}$%Sintel-runtime
+        \\%
+        % kitti timing: 0.007
+
+        % net: 15k0a_FlyingChairsShort_0.375_long @ 04_net2_FlyingStuff3D:500000
+        &
+        FlowNet2-ss 
+        & $3.22$ & -- %Sintel-clean
+        & $3.85$ & -- %Sintel-final
+        & $\pz5.45$ & -- %Kitti-2012
+        & $12.84$ & $41.03\%$ & -- %Kitti-2015
+        & $0.68$ & -- %Middlebury-AEE
+        %& $\pz9.83$ & -- %Middlebury-AAE
+        & -- & $\pz\pz\pz14$%Sintel-runtime
+        \\%
+        % kitti timing: 0.014
+
+        % net: 04bc1_c01_corrnet-on-chairs_long @ 06_net3_FlyingStuff3D:500000
+        &
+        FlowNet2-css 
+        & $2.51$ & -- %Sintel-clean
+        & $3.54$ & -- %Sintel-final
+        & $\pz4.49$ & -- %Kitti-2012
+        & $11.01$ & $35.19\%$ & -- %Kitti-2015
+        & $0.54$ & -- %Middlebury-AEE
+        %& $\pz7.25$ & -- %Middlebury-AAE
+        & -- & $\pz\pz\pz31$%Sintel-runtime
+        \\%
+        % kitti timing: 0.030
+
+        % net: 04bc10_c01_corrnet-on-chairs_long_ft_SD
+        &
+        FlowNet2-css-ft-sd
+        & $2.50$ & -- %Sintel-clean
+        & $3.50$ & -- %Sintel-final
+        & $\pz4.71$ & -- %Kitti-2012
+        & $11.18$ & $34.10\%$ & -- %Kitti-2015
+        & $0.43$ & -- %Middlebury-AEE
+        %& $\pz5.56$ & -- %Middlebury-AAE
+        & -- & $\pz\pz\pz31$%Sintel-runtime
+        \\%
+        % kitti timing: 0.030
+
+        % net: 28bx0___dumbnet_on_dumbnet_on_corrnet_04a_finetuned_on_FlyingStuff3D_fixed
+        &
+        FlowNet2-CSS 
+        & $2.10$ & -- %Sintel-clean
+        & $3.23$ & -- %Sintel-final
+        & $\pz\textbf{3.55}$ & -- %Kitti-2012
+        & $\textbf{\pz8.94}$ & $29.77\%$ & -- %Kitti-2015
+        & $0.44$ & -- %Middlebury-AEE
+        %& $\pz7.25$ & -- %Middlebury-AAE
+        & -- & $\pz\pz\pz69$%Sintel-runtime
+        \\%
+        % kitti timing: 0.068
+
+        % net: 60a_final_FNC3
+        &
+        FlowNet2-CSS-ft-sd 
+        & $2.08$  & -- %Sintel-clean \textcolor{cyan}{$2.78$}
+        & $3.17$  & -- %Sintel-final \textcolor{cyan}{$4.30$}
+        & $\pz4.05$ & -- %Kitti-2012
+        & $10.07$ & $30.73\%$ & -- %Kitti-2015
+        & $0.38$ & -- %Middlebury-AEE
+        %& $\pz4.84$ & -- %Middlebury-AAE
+        & -- & $\pz\pz\pz69$%Sintel-runtime
+        \\%
+        % kitti timing: 0.068
+
+        % % net: 48a1g_FTSDBoring_ver1_short
+        % FlowNet2-SD   
+        % & $7.57$ & -- %Sintel-clean
+        % & $7.65$ & -- %Sintel-final
+        % & $17.49$  & --  %Kitti-2012
+        % & \tce{\todo $24.19$} & -- %Kitti-2015
+        % & $0.58$ & -- %Middlebury-AEE
+        % & $6.15$ & -- %Middlebury-AAE
+        % & -- & $\pz\pz27$%Sintel-runtime
+        % \\%
+        % % kitti timing: 0.029
+
+        % net: 60b_final_fused
+        &
+        FlowNet2     
+        \cellcolor{gray!15}%
+        & \cellcolor{gray!15}$\textbf{2.02}$ & \cellcolor{gray!15}$\textbf{3.96}$ %Sintel-clean
+        & \cellcolor{gray!15}$\textbf{3.14}$ & \cellcolor{gray!15}$6.02$ %Sintel-final
+        & \cellcolor{gray!15}$\pz4.09$  & \cellcolor{gray!15}--  %Kitti-2012
+        & \cellcolor{gray!15}$10.06$ & \cellcolor{gray!15}$30.37\%$ & \cellcolor{gray!15}-- %Kitti-2015
+        & \cellcolor{gray!15}$\textbf{0.35}$ & \cellcolor{gray!15}$\textbf{0.52}$ %Middlebury-AEE
+        %& \cellcolor{gray!15}$\pz\textbf{4.59}$ & \cellcolor{gray!15}$\textbf{5.87}$ %Middlebury-AAE
+        & \cellcolor{gray!15}-- & \cellcolor{gray!15}$\pz\pz123$%Sintel-runtime
+        \\%
+        % kitti timing: 0.128
+
+        % net: 60a0a_final_FNC3_ft_sintel_low_lr
+        &
+        FlowNet2-ft-sintel  
+        & ($1.45$) & $4.16$ %Sintel-clean
+        %\textcolor{cyan}{$2.73$} / \textcolor{cyan}{$2.84$} & \tce{\todo} 
+        & ($2.01$) & $\textbf{5.74}$ %Sintel-final 
+        %\textcolor{cyan}{$4.23$} / \textcolor{cyan}{$4.09$} & \tce{\todo} 
+        & $\pz3.61$ & -- %Kitti-2012
+        & $\pz9.84$ & $\textbf{28.20\%}$ & -- %Kitti-2015
+        & $0.35$ & -- %Middlebury-AEE
+        %& $\pz4.55$ & -- %Middlebury-AAE
+        & -- & $\pz\pz123$%Sintel-runtime
+        \\%
+        % kitti timing: 0.128
+
+        % net: 
+        &
+        FlowNet2-ft-kitti
+        & $3.43$ & -- %Sintel-clean
+        & $4.66$ & -- %Sintel-final
+        & $\pz$($1.28$) & \textbf{1.8} %Kitti-2012
+        & $\pz$($2.30$) & $\pz$($8.61\%$) & $\textbf{11.48\%}$ %Kitti-2015
+        & $0.56$ & -- %Middlebury-AEE
+        %& $\pz7.07$ & -- %Middlebury-AAE
+        & -- & $\pz\pz123$%Sintel-runtime
+        \\%
+        % kitti timing: 0.128
+
+
+
+        \hline 
+      \end{tabular}%
+    }%
+
+%    \resizebox{\textwidth}{!}{%
+%      %% This table needs the {hhline} package
+%      \begin{tabular}{|c|l||cc|cc||cc|ccc||cc|cc||cc|}%
+%        \hhline{|-|-T--|--T--|---T--|--||--|}%
+%               & Method
+%               & \multicolumn{2}{c|}{Sintel \textit{clean}}%
+%               & \multicolumn{2}{c||}{Sintel \textit{final}}%
+%               & \multicolumn{2}{c|}{KITTI 2012}%
+%               & \multicolumn{3}{c||}{KITTI 2015}%
+%               & \multicolumn{4}{c||}{Middlebury}%
+%               & \multicolumn{2}{c|}{Runtime}%
+%               \\%
+%               
+%               &
+%               & \multicolumn{2}{c|}{AEE}%
+%               & \multicolumn{2}{c||}{AEE}%
+%               & \multicolumn{2}{c|}{AEE}%
+%               & AEE
+%               & Fl-all
+%               & Fl-all
+%               & \multicolumn{2}{c|}{AEE}%
+%               & \multicolumn{2}{c||}{AAE}%
+%               & \multicolumn{2}{c|}{ms per frame}%
+%               \\%
+%               
+%               &
+%               & \textit{train} & \textit{test}%
+%               & \textit{train} & \textit{test}%
+%               & \textit{train} & \textit{test}%
+%               & \textit{train}&\textit{train}&\textit{test}%
+%               & \textit{train} & \textit{test}%
+%               & \textit{train} & \textit{test}%
+%               & CPU & GPU%
+%               \\%
+%               
+%        \hhline{|=|=#==|==#==|===#==|==||==|}%
+%
+%        \multirow{6}{*}{\rotatebox[origin=c]{90}{Accurate}} &
+%        EpicFlow$^\dagger$ \cite{epicflow}%
+%        & $2.27$ & $4.12$ %Sintel-clean
+%        & $3.56$ & $\pz6.29$ %Sintel-final
+%        & $\pz\textbf{3.09}$ & $\pz\textbf{3.8}$ %Kitti-2012
+%        & $\pz9.27$ & $27.18\%$ & $\textbf{27.10}\%$ %Kitti-2015
+%        & $0.31$ & $0.39$ %Middlebury-AEE
+%        & $\pz3.24$ & $3.55$ %Middlebury-AAE
+%        & $42,600$ & -- %Sintel-runtime
+%        \\%
+%
+%        &
+%        DeepFlow$^\dagger$ \cite{deepflow}%
+%        & $2.66$ & $5.38$  %Sintel-clean
+%        & $3.57$ & $\pz7.21$ %Sintel-final
+%        & $\pz4.48$ & $\pz5.8$ %Kitti-2012
+%        & $10.63$ & $26.52\%$ & $29.18\%$ %Kitti-2015
+%        & $\textbf{0.25}$ & $0.42$ %Middlebury-AEE
+%        & $\pz\textbf{3.04}$ & $4.22$ %Middlebury-AAE
+%        & $51,940$ & -- %Sintel-runtime
+%        \\%
+%
+%        &
+%        FlowFields \cite{flowfields}%
+%        & $\textbf{1.86}$ & $\textbf{3.75}$  %Sintel-clean
+%        & $\textbf{3.06}$ & $\pz\textbf{5.81}$ %Sintel-final
+%        & $\pz3.33$ & $\pz3.5$ %Kitti-2012
+%        & $\pz\textbf{8.33}$ & $\textbf{24.43\%}$ & -- %Kitti-2015
+%        & $0.27$ & $\textbf{0.33}$ %Middlebury-AEE
+%        & $\pz3.22$ & $\textbf{3.18}$ %Middlebury-AAE
+%        & $22,810$ & -- %Sintel-runtime
+%        \\%
+%
+%        &
+%        LDOF (CPU) \cite{ldof}%
+%        & $4.64$ & $7.56$  %Sintel-clean
+%        & $5.96$ & $\pz9.12$%Sintel-final
+%        & $10.94$ & $12.4$ %Kitti-2012
+%        & $18.19$ & $38.11\%$ & -- %Kitti-2015
+%        & $0.44$ & $0.56$ %Middlebury-AEE
+%        & $\pz5.32$ & $4.55$ %Middlebury-AAE
+%        & $64,900$ & -- %Sintel-runtime
+%        \\%
+%
+%        &
+%        LDOF (GPU) \cite{ldof-gpu}%
+%        & $4.76$ & --  %Sintel-clean
+%        & $6.32$ & -- %Sintel-final
+%        & $10.43$ & -- %Kitti-2012
+%        & $18.20$ & $38.05\%$ & -- %Kitti-2015
+%        & $0.36$ & -- %Middlebury-AEE
+%        & $\pz4.52$ & -- %Middlebury-AAE
+%        & -- & $6,270$ %Sintel-runtime
+%        \\%
+%
+%        &
+%        PCA-Layers \cite{pcaflowlayers}%
+%        & $3.22$ & $ 5.73$  %Sintel-clean
+%        & $4.52$ & $\pz7.89$ %Sintel-final
+%        & $\pz5.99$ & $\pz5.2$ %Kitti-2012
+%        & $12.74$ & $27.26\%$ & -- %Kitti-2015
+%        & $0.66$ & -- %Middlebury-AEE
+%        & $\pz8.54$ & -- %Middlebury-AAE
+%        & $\pz\textbf{3,300}$ & -- %Sintel-runtime
+%        \\%
+%
+%        \hhline{|-|-x--|--|--|---|--|--||--|}%
+%
+%        \multirow{5}{*}{\rotatebox[origin=c]{90}{Fast}} &
+%        EPPM \cite{eppm}%
+%        & -- & $\textbf{6.49}$  %Sintel-clean
+%        & -- & $\pz\textbf{8.38}$ %Sintel-final
+%        & -- & $\pz9.2$ %Kitti-2012
+%        & -- & -- & -- %Kitti-2015
+%        & -- & $\textbf{0.33}$ %Middlebury-AEE
+%        & -- & $\textbf{3.36}$ %Middlebury-AAE
+%        & -- & $\pz\pz200$ %Sintel-runtime
+%        \\%
+%
+%        &
+%        PCA-Flow \cite{pcaflowlayers}%
+%        & $\textbf{4.04}$ & $6.83$  %Sintel-clean
+%        & $\textbf{5.18}$ & $\pz8.65$ %Sintel-final
+%        & $\pz\textbf{5.48}$ & $\pz\textbf{6.2}$ %Kitti-2012
+%        & $\textbf{14.01}$ & $\textbf{39.59\%}$ & -- %Kitti-2015
+%        & $\textbf{0.70}$ & -- %Middlebury-AEE
+%        & $\pz8.85$ & -- %Middlebury-AAE
+%        & $\pz\pz\pz140$ & -- %Sintel-runtime
+%        \\%
+%
+%        &
+%        DIS-Fast \cite{dis-fast}%
+%        & $5.61$ & $9.35$  %Sintel-clean
+%        & $6.31$ & $10.13$ %Sintel-final
+%        & $11.01$ & $14.4$ %Kitti-2012
+%        & $21.20$ & $53.73\%$ & -- %Kitti-2015
+%        & $0.92$ & -- %Middlebury-AEE
+%        & $10.94$ & -- %Middlebury-AAE
+%        & $\pz\pz\pz\pz70$ & -- %Sintel-runtime
+%        \\%
+%
+%        &
+%        FlowNetS \cite{DFIB15}%
+%        & $4.50$ & $\phantom{^\ddagger}6.96^\ddagger$  %Sintel-clean
+%        & $5.45$ & $\pz\phantom{^\ddagger}7.52^\ddagger$  %Sintel-final
+%        & $\pz8.26$ & -- %Kitti-2012
+%        & -- & -- & --%Kitti-2015
+%        & $1.09$ & -- %Middlebury-AEE
+%        & $13.28$ & -- %Middlebury-AAE
+%        & -- & $\pz\pz\pz\textbf{18}$ %Sintel-runtime
+%        \\%
+%        % kitti timing: 0.019
+%        
+%        % FlowNetS+ft (sintel) \cite{DFIB15}%
+%        % & ($3.66$) & $6.96$ & ($4.44$) & 7.76 & -- & $0.018$ 
+%        % & $7.52$ & $9.1$ & -- & -- & -- & -- & -- & --\\%
+%        % % kitti timing: 0.019
+%
+%        &
+%        FlowNetC \cite{DFIB15}%
+%        & $4.31$ & $\phantom{^\ddagger}6.85^\ddagger$  %Sintel-clean
+%        & $5.87$ & $\pz\phantom{^\ddagger}8.51^\ddagger$ %Sintel-final
+%        & $\pz9.35$ & -- %Kitti-2012
+%        & -- & -- & --%Kitti-2015
+%        & $1.15$ & -- %Middlebury-AEE
+%        & $15.64$ & -- %Middlebury-AAE
+%        & -- & $\pz\pz\pz32$ %Sintel-runtime
+%        \\%
+%        % kitti timing: 0.034
+%
+%        % FlowNetC+ft (sintel) \cite{DFIB15}%
+%        % & ($3.78$)  & $6.85$ & ($5.28$) & $8.51$ & -- & $0.032$ 
+%        % & $8.79$ & -- & -- & -- & -- & -- & -- & --\\%
+%        % % kitti timing: 0.034
+%
+%        \hhline{|-|-x--|--|--|---|--|--||--|}%
+%
+%        % net: 15k0a_FlyingChairsShort_0.375_long @ 02_net1_FlyingStuff3D:500000
+%        \multirow{10}{*}{\rotatebox[origin=c]{90}{FlowNet 2.0}} &
+%        FlowNet2-s  
+%        & $4.55$ & --  %Sintel-clean
+%        & $5.21$  & -- %Sintel-final
+%        & $\pz8.89$ & -- %Kitti-2012
+%        & $16.42$ & $56.81\%$ & -- %Kitti-2015
+%        & $1.27$ & -- %Middlebury-AEE
+%        & $18.14$ & -- %Middlebury-AAE
+%        & -- & $\pz\pz\pz\pz\textbf{7}$%Sintel-runtime
+%        \\%
+%        % kitti timing: 0.007
+%
+%        % net: 15k0a_FlyingChairsShort_0.375_long @ 04_net2_FlyingStuff3D:500000
+%        &
+%        FlowNet2-ss 
+%        & $3.22$ & -- %Sintel-clean
+%        & $3.85$ & -- %Sintel-final
+%        & $\pz5.45$ & -- %Kitti-2012
+%        & $12.84$ & $41.03\%$ & -- %Kitti-2015
+%        & $0.68$ & -- %Middlebury-AEE
+%        & $\pz9.83$ & -- %Middlebury-AAE
+%        & -- & $\pz\pz\pz14$%Sintel-runtime
+%        \\%
+%        % kitti timing: 0.014
+%
+%        % net: 04bc1_c01_corrnet-on-chairs_long @ 06_net3_FlyingStuff3D:500000
+%        &
+%        FlowNet2-css 
+%        & $2.51$ & -- %Sintel-clean
+%        & $3.54$ & -- %Sintel-final
+%        & $\pz4.49$ & -- %Kitti-2012
+%        & $11.01$ & $35.19\%$ & -- %Kitti-2015
+%        & $0.54$ & -- %Middlebury-AEE
+%        & $\pz7.25$ & -- %Middlebury-AAE
+%        & -- & $\pz\pz\pz31$%Sintel-runtime
+%        \\%
+%        % kitti timing: 0.030
+%
+%        % net: 04bc10_c01_corrnet-on-chairs_long_ft_SD
+%        &
+%        FlowNet2-css-ft-sd
+%        & $2.50$ & -- %Sintel-clean
+%        & $3.50$ & -- %Sintel-final
+%        & $\pz4.71$ & -- %Kitti-2012
+%        & $11.18$ & $34.10\%$ & -- %Kitti-2015
+%        & $0.43$ & -- %Middlebury-AEE
+%        & $\pz5.56$ & -- %Middlebury-AAE
+%        & -- & $\pz\pz\pz31$%Sintel-runtime
+%        \\%
+%        % kitti timing: 0.030
+%
+%        % net: 28bx0___dumbnet_on_dumbnet_on_corrnet_04a_finetuned_on_FlyingStuff3D_fixed
+%        &
+%        FlowNet2-CSS 
+%        & $2.10$ & -- %Sintel-clean
+%        & $3.23$ & -- %Sintel-final
+%        & $\pz\textbf{3.55}$ & -- %Kitti-2012
+%        & $\textbf{\pz8.94}$ & $29.77\%$ & -- %Kitti-2015
+%        & $0.44$ & -- %Middlebury-AEE
+%        & $\pz7.25$ & -- %Middlebury-AAE
+%        & -- & $\pz\pz\pz69$%Sintel-runtime
+%        \\%
+%        % kitti timing: 0.068
+%
+%        % net: 60a_final_FNC3
+%        &
+%        FlowNet2-CSS-ft-sd 
+%        & $2.08$  & -- %Sintel-clean \textcolor{cyan}{$2.78$}
+%        & $3.17$  & -- %Sintel-final \textcolor{cyan}{$4.30$}
+%        & $\pz4.05$ & -- %Kitti-2012
+%        & $10.07$ & $30.73\%$ & -- %Kitti-2015
+%        & $0.38$ & -- %Middlebury-AEE
+%        & $\pz4.84$ & -- %Middlebury-AAE
+%        & -- & $\pz\pz\pz69$%Sintel-runtime
+%        \\%
+%        % kitti timing: 0.068
+%
+%        % % net: 48a1g_FTSDBoring_ver1_short
+%        % FlowNet2-SD   
+%        % & $7.57$ & -- %Sintel-clean
+%        % & $7.65$ & -- %Sintel-final
+%        % & $17.49$  & --  %Kitti-2012
+%        % & \tce{\todo $24.19$} & -- %Kitti-2015
+%        % & $0.58$ & -- %Middlebury-AEE
+%        % & $6.15$ & -- %Middlebury-AAE
+%        % & -- & $\pz\pz27$%Sintel-runtime
+%        % \\%
+%        % % kitti timing: 0.029
+%
+%        % net: 60b_final_fused
+%        &
+%        FlowNet2     
+%        \cellcolor{gray!15}%
+%        & \cellcolor{gray!15}$\textbf{2.02}$ & \cellcolor{gray!15}$\textbf{3.96}$ %Sintel-clean
+%        & \cellcolor{gray!15}$\textbf{3.14}$ & \cellcolor{gray!15}$6.02$ %Sintel-final
+%        & \cellcolor{gray!15}$\pz4.09$  & \cellcolor{gray!15}--  %Kitti-2012
+%        & \cellcolor{gray!15}$10.06$ & \cellcolor{gray!15}$30.37\%$ & \cellcolor{gray!15}-- %Kitti-2015
+%        & \cellcolor{gray!15}$\textbf{0.35}$ & \cellcolor{gray!15}$\textbf{0.52}$ %Middlebury-AEE
+%        & \cellcolor{gray!15}$\pz\textbf{4.59}$ & \cellcolor{gray!15}$\textbf{5.87}$ %Middlebury-AAE
+%        & \cellcolor{gray!15}-- & \cellcolor{gray!15}$\pz\pz123$%Sintel-runtime
+%        \\%
+%        % kitti timing: 0.128
+%
+%        % net: 60a0a_final_FNC3_ft_sintel_low_lr
+%        &
+%        FlowNet2-ft-sintel  
+%        & ($1.45$) & $4.16$ %Sintel-clean
+%        %\textcolor{cyan}{$2.73$} / \textcolor{cyan}{$2.84$} & \tce{\todo} 
+%        & ($2.01$) & $\textbf{5.74}$ %Sintel-final 
+%        %\textcolor{cyan}{$4.23$} / \textcolor{cyan}{$4.09$} & \tce{\todo} 
+%        & $\pz3.61$ & -- %Kitti-2012
+%        & $\pz9.84$ & $\textbf{28.20\%}$ & -- %Kitti-2015
+%        & $0.35$ & -- %Middlebury-AEE
+%        & $\pz4.55$ & -- %Middlebury-AAE
+%        & -- & $\pz\pz123$%Sintel-runtime
+%        \\%
+%        % kitti timing: 0.128
+%
+%        % net: 
+%        &
+%        FlowNet2-ft-kitti
+%        & $3.43$ & -- %Sintel-clean
+%        & $4.66$ & -- %Sintel-final
+%        & $\pz$($1.28$) & \textbf{1.8} %Kitti-2012
+%        & $\pz$($2.30$) & $\pz$($8.61\%$) & $\textbf{11.48\%}$ %Kitti-2015
+%        & $0.56$ & -- %Middlebury-AEE
+%        & $\pz7.07$ & -- %Middlebury-AAE
+%        & -- & $\pz\pz123$%Sintel-runtime
+%        \\%
+%        % kitti timing: 0.128
+%
+%
+%
+%        \hhline{|-|-x--|--|--|---|--|--||--|}%
+%      \end{tabular}%
+%    }%

@@ -1,0 +1,38 @@
+\begin{table}[t]
+\caption{
+ }
+  %Attention models are quite efficient for cross-positional communications when sequence length is smaller than channel depth.
+\label{tab:op_complexities}
+\begin{center}
+\vspace{-1mm}
+%\scalebox{0.75}{
+
+\begin{tabular}{lcccc}
+\toprule
+Model Type Type & \multicolumn{4}{c}{Log Likelihoods}  \\
+           & Cars & Trucks  & Horses  & Birds \\
+\hline
+Cond. Generation & & & & \\
+Cond. Completion & & & & \\
+% \rule{0pt}{2.0ex}Self-Attention & $O(n^2 \cdot d)$ & $O(1)$ & $O(1)$ \\
+% Recurrent & $O(n \cdot d^2)$ & $O(n)$ & $O(n)$ \\
+
+% Convolutional & $O(k \cdot n \cdot d^2)$ & $O(1)$ & $O(log_k(n))$ \\
+% %\cmidrule
+% Self-Attention (restricted)& $O(r \cdot n \cdot d)$ & $O(1)$ & $O(n/r)$ \\
+
+%Convolutional (separable) & $O(k \cdot n \cdot d + n \cdot d^2)$ & $O(1)$ & $O(log_k(n))$ \\
+
+%Position-wise Feed-Forward & $O(n \cdot d^2)$ & $O(1)$ & $\infty$ \\
+
+%Fully Connected & $O(n^2 \cdot d^2)$ & $O(1)$ & $O(1)$ \\
+%Convolutional (separable) & $O(k \cdot n \cdot d + n \cdot d^2)$ & $O(1)$ & $O(log_k(n))$ \\
+
+%Position-wise Feed-Forward & $O(n \cdot d^2)$ & $O(1)$ & $\infty$ \\
+
+%Fully Connected & $O(n^2 \cdot d^2)$ & $O(1)$ & $O(1)$ \\
+\bottomrule
+\end{tabular}
+%}
+\end{center}
+\end{table}

@@ -1,0 +1,38 @@
+% !TEX root = ../multi_task.tex
+
+\begin{proof}
+We begin by showing that if the optimum value of \ref{eq:approx} is 0, so is the optimum value of (\ref{eq:kkt_opt}). This shows the first case of the theorem. Then, we will show the second part.
+
+If the optimum value of \ref{eq:approx} is $0$,
+\begin{equation}
+\sum_{t=1}^T \alpha^t \nabla_{\btheta^{sh}}  \hat{\lL}^t(\btheta^{sh},\btheta^t) = \frac{\partial \mathbf{Z}}{\partial \mathbf{\theta}^{sh}} \sum_{t=1}^T \alpha^t \nabla_{\mathbf{Z}} \hat{\mathcal{L}^t} = \sum_{t=1}^T \alpha^t \nabla_{\mathbf{\theta}^{sh}} \hat{\mathcal{L}^t}=0
+\end{equation}
+
+Hence $\alpha^1,\ldots,\alpha^T$ is the solution of (\ref{eq:kkt_opt}) and the optimal value of (\ref{eq:kkt_opt}) is $0$. This proves the first case of the theorem. Before we move to the second case, we state a straightforward corollary. Since $ \frac{\partial \mathbf{Z}}{\partial \mathbf{\theta}^{sh}}$ is  full rank, this equivalence is bi-directional. In other words, if $\alpha^1,\ldots,\alpha^T$ is the solution of (\ref{eq:kkt_opt}), it is the solution of \ref{eq:approx} as well. Hence, both formulations completely agree on Pareto stationarity.
+
+
+In order to prove the second case, we need to show that the resulting descent direction computed by solving \ref{eq:approx} does not increase any of the loss functions. Formally, we need to show that
+
+\begin{equation}
+\left(\sum_{t=1}^T \alpha^t \nabla_{\mathbf{\theta}^{sh}} \hat{\mathcal{L}}^t\right)^\intercal \left( \nabla_{\mathbf{\theta}^{sh}} \hat{\mathcal{L}}^{t^\prime}  \right) \geq 0 \quad \forall ~t^\prime \in \{1, \ldots, T\}
+\end{equation}
+
+This condition is equivalent to
+\begin{equation}
+\left(\sum_{t=1}^T \alpha^t \nabla_{\mathbf{Z}} \hat{\mathcal{L}}^t\right)^\intercal \mathbf{M} \left(\nabla_{\mathbf{Z}} \hat{\mathcal{L}}^{t^\prime}\right) \geq 0 \quad \forall ~ t^\prime \in \{1, \ldots, T\}
+\end{equation}
+where $\mathbf{M}=\big(\frac{\partial \mathbf{Z}}{\partial \mathbf{\theta}^{sh}}\big)^\intercal\big(\frac{\partial \mathbf{Z}}{\partial \mathbf{\theta}^{sh}}\big)$. Since $\mathbf{M}$ is positive definite (following the assumption), this is further equivalent to
+\begin{equation}
+\left(\sum_{t=1}^T \alpha^t \nabla_{\mathbf{Z}} \hat{\mathcal{L}}^t\right)^\intercal  \left(\nabla_{\mathbf{Z}} \hat{\mathcal{L}}^{t^\prime}\right) \geq 0 \quad \forall ~ t^\prime \in \{1, \ldots, T\}
+\end{equation}
+
+We show that this follows from the optimality conditions for \ref{eq:approx}. The Lagrangian of \ref{eq:approx} is
+\begin{equation}
+\left(\sum_{t=1}^T \alpha^t \nabla_{\mathbf{Z}} \hat{\mathcal{L}}^t\right)^\intercal\left(\sum_{t=1}^T \alpha^t \nabla_{\mathbf{Z}} \hat{\mathcal{L}}^t\right) - \lambda \left(\sum_i \alpha^i - 1\right) \text{ where } \lambda\geq 0.
+\end{equation}
+
+The KKT condition for this Lagrangian yields the desired result as
+\begin{equation}
+ \left(\sum_{t=1}^T \alpha^t \nabla_{\mathbf{Z}} \hat{\mathcal{L}}^t\right)^\intercal \left( \nabla_{\mathbf{Z}} \hat{\mathcal{L}}^t \right) = \frac{\lambda}{2} \geq 0
+ \end{equation}
+\end{proof}

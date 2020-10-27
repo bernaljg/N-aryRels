@@ -1,0 +1,198 @@
+
+\section{Language Modeling as Matrix Factorization}\label{sec:rank}
+
+As discussed in Section \ref{sec:intro}, with the autoregressive factorization, language modeling can be reduced to modeling the conditional distribution of the next token $x$ given the context $c$. Though one might argue that a natural language allows an infinite number of contexts due to its compositionality \citep{pinker1994language}, we proceed with our analysis by considering a finite set of possible contexts. The unboundedness of natural language does not affect our conclusions, which will be discussed later.
+
+We consider a natural language as a finite set of pairs of a context and its conditional next-token distribution\footnote{We use capital letters for variables and small letters for constants.} $\mathcal{L} = \{(c_1, P^*(X | c_1)), \cdots, (c_N, P^*(X | c_N))\}$, where $N$ is the number of possible contexts. We assume $P^* > 0$ everywhere to account for errors and flexibility in natural language. Let $\{x_1, x_2, \cdots, x_M\}$ denote a set of $M$ possible tokens in the language $\mathcal{L}$. The objective of a language model is to learn a model distribution $P_\theta(X | C)$ parameterized by $\theta$ to match the true data distribution $P^*(X | C)$.
+
+In this work, we study the expressiveness of the parametric model class $P_\theta(X | C)$.
+In other words, we are asking the following question: given a natural language $\mathcal{L}$, does there exist a parameter $\theta$ such that $P_\theta(X | c) = P^*(X | c)$ for all $c$ in $\mathcal{L}$?
+
+We start by looking at a Softmax-based model class since it is widely used.
+
+\subsection{Softmax}
+
+The majority of parametric language models use a Softmax function operating on a context vector (or hidden state) $\mathbf{h}_c$ and a word embedding $\mathbf{w}_x$ to define the conditional distribution $P_\theta(x | c)$. More specifically, the model distribution is usually written as
+\begin{equation}\label{eqn:softmax}
+P_\theta(x | c) = \frac{\exp \mathbf{h}^\top_c \mathbf{w}_x}{\sum_{x'} \exp \mathbf{h}^\top_c \mathbf{w}_{x'}}
+\end{equation}
+where $\mathbf{h}_c$ is a function of $c$, and $\mathbf{w}_x$ is a function of $x$. Both functions are parameterized by $\theta$. Both the context vector $\mathbf{h}_c$ and the word embedding $\mathbf{w}_x$ have the same dimension $d$. The dot product $\mathbf{h}_c^\top \mathbf{w}_x$ is called a {\em logit}.
+
+To help discuss the expressiveness of Softmax, we define three matrices:
+\[
+\mathbf{H}_\theta = \begin{bmatrix}
+\mathbf{h}_{c_1}^\top \\
+\mathbf{h}_{c_2}^\top \\
+\cdots \\
+\mathbf{h}_{c_N}^\top
+\end{bmatrix}; ~~
+\mathbf{W}_\theta = \begin{bmatrix}
+\mathbf{w}_{x_1}^\top \\
+\mathbf{w}_{x_2}^\top \\
+\cdots \\
+\mathbf{w}_{x_M}^\top
+\end{bmatrix}; ~~
+\mathbf{A} = \begin{bmatrix}
+\log P^* (x_1 | c_1),& \log P^* (x_2 | c_1)& \cdots& \log P^*(x_M | c_1) \\
+\log P^* (x_1 | c_2),& \log P^* (x_2 | c_2)& \cdots& \log P^* (x_M | c_2) \\
+\vdots& \vdots& \ddots& \vdots \\
+\log P^* (x_1 | c_N),& \log P^* (x_2 | c_N)& \cdots& \log P^* (x_M | c_N)
+\end{bmatrix}
+\]
+where $\mathbf{H}_\theta \in \mathbb{R}^{N \times d}$, $\mathbf{W}_\theta \in \mathbb{R}^{M \times d}$, $\mathbf{A} \in \mathbb{R}^{N \times M}$, and the rows of $\mathbf{H}_\theta$, $\mathbf{W}_\theta$, and $\mathbf{A}$ correspond to context vectors, word embeddings, and log probabilities of the true data distribution respectively. 
+We use the subscript $\theta$ because $(\mathbf{H}_\theta, \mathbf{W}_\theta)$ is effectively a function indexed by the parameter $\theta$, from the joint function family $\mathcal{U}$.
+Concretely, $\mathbf{H}_\theta$ is implemented as deep neural networks, such as a recurrent network, while $\mathbf{W}_\theta$ is instantiated as an embedding lookup.
+
+We further specify a set of matrices formed by applying {\em row-wise shift} to $\mathbf{A}$
+\[
+F(\mathbf{A}) = \{\mathbf{A} + \mathbf{\Lambda} \mathbf{J}_{N,M} | \text{$\mathbf{\Lambda}$ is diagonal and } \mathbf{\Lambda} \in \mathbb{R}^{N \times N}\},
+\]
+where $\mathbf{J}_{N,M}$ is an all-ones matrix with size $N \times M$. Essentially, the row-wise shift operation adds an arbitrary real number to each row of $\mathbf{A}$. Thus, $F(\mathbf{A})$ is an infinite set. Notably, the set $F(\mathbf{A})$ has two important properties (see Appendix \ref{sec:a-proof} for the proof), which are key to our analysis.
+\begin{property}\label{property_1}
+    For any matrix $\mathbf{A}'$, $\mathbf{A}' \in F(\mathbf{A})$ if and only if $~\textrm{Softmax}(\mathbf{A}') = P^*$.
+    In other words, $F(\mathbf{A})$ defines the set of \textbf{all} possible logits that correspond to the true data distribution.
+\end{property}
+\begin{property}\label{property_2}
+	For any $\mathbf{A}_1 \neq \mathbf{A}_2 \in F(\mathbf{A})$, $|\textrm{rank}(\mathbf{A}_1) - \textrm{rank}(\mathbf{A}_2)| \leq 1$. In other words, all matrices in $F(\mathbf{A})$ have similar ranks, with the maximum rank difference being 1.
+\end{property}
+Based on the Property \ref{property_1} of $F(\mathbf{A})$, we immediately have the following Lemma.
+\begin{lemma} \label{lemma}
+Given a model parameter $\theta$, $\mathbf{H}_\theta \mathbf{W}^\top_\theta \in F(\mathbf{A})$ if and only if $P_\theta(X | c) = P^*(X | c)$ for all $c$ in $\mathcal{L}$.
+\end{lemma}
+Now the expressiveness question becomes: does there exist a parameter $\theta$ and $\mathbf{A}' \in F(\mathbf{A})$ such that 
+\[ \mathbf{H}_\theta \mathbf{W}^\top_\theta = \mathbf{A}'.\]
+This is essentially a matrix factorization problem. We want the model to learn matrices $\mathbf{H}_\theta$ and $\mathbf{W}_\theta$ that are able to factorize some matrix $\mathbf{A}' \in F(\mathbf{A})$.
+First, note that for a valid factorization to exist, the rank of $\mathbf{H}_\theta \mathbf{W}_\theta^\top$ has to be at least as large as the rank of $\mathbf{A}'$. 
+Further, since $\mathbf{H}_\theta \in \mathbb{R}^{N \times d}$ and $\mathbf{W}_\theta \in \mathbb{R}^{M \times d}$, the rank of $\mathbf{H}_\theta \mathbf{W}_\theta^\top$ is strictly upper bounded by the embedding size $d$.
+As a result, if $d \geq \text{rank}(\mathbf{A}')$, a universal approximator can theoretically recover $\mathbf{A}'$.
+However, if $d < \text{rank}(\mathbf{A}')$, no matter how expressive the function family $\mathcal{U}$ is,  no $(\mathbf{H}_\theta, \mathbf{W}_\theta)$ can even theoretically recover $\mathbf{A}'$.
+%Only in this case, a deep neural network, as a universal function approximator, can theoretically recover these matrices.
+We summarize the reasoning above as follows (see Appendix \ref{sec:a-proof} for the proof).
+\begin{prop}\label{prop}
+	Given that the function family $\mathcal{U}$ is a universal approximator, there exists a parameter $\theta$ such that $P_\theta(X | c) = P^*(X | c)$ for all $c$ in $\mathcal{L}$ if and only if
+	$d \geq \min_{\mathbf{A}' \in F(\mathbf{A})} \text{rank}(\mathbf{A}')$.
+\end{prop}
+
+Combining Proposition \ref{prop} with the Property \ref{property_2} of $F(\mathbf{A})$, we are now able to state the \textit{Softmax Bottleneck} problem formally.
+\begin{coro}
+\textbf{(Softmax Bottleneck)}
+If $d < \text{rank}(\mathbf{A}) - 1$, for any function family $\mathcal{U}$ and any model parameter $\theta$, there exists a context $c$ in $\mathcal{L}$ such that $P_\theta(X | c) \not= P^*(X | c)$.
+\end{coro}
+The above corollary indicates that when the dimension $d$ is too small, Softmax does not have the capacity to express the true data distribution. Clearly, this conclusion is not restricted to a finite language $\mathcal{L}$. When $\mathcal{L}$ is infinite, one can always take a finite subset and the Softmax bottleneck still exists.
+Next, we discuss why the Softmax bottleneck is an issue by presenting our hypothesis that $\mathbf{A}$ is high-rank for natural language.
+
+%We further specify a {\em row-wise shift} operation
+%\[
+%F(\mathbf{A}) = \{\mathbf{A} + \mathbf{\Lambda} \mathbf{J}_{N,M} | \text{$\mathbf{\Lambda}$ is diagonal and } \mathbf{\Lambda} \in \mathbb{R}^{N \times N}\}
+%\]
+%where $\mathbf{J}_{N,M}$ is an all-ones matrix with size $N \times M$. Given any matrix $\mathbf{A}$, the row-wise shift operation adds a real number to each row, and this results in an infinite set $F(\mathbf{A})$. A property of $F(\mathbf{A})$ is that if we treat the elements in each row of $\mathbf{A}$ as logits, then the probability distribution in each row is invariant w.r.t. the $F$ transformation.
+%
+%With the above notions, we show that given a parameter $\theta$, $\mathbf{H}_\theta \mathbf{W}^\top_\theta \in F(\mathbf{A})$ is a necessary and sufficient condition of $P_\theta = P^*$.
+%
+%\begin{lemma}
+%Given a model parameter $\theta$, $\mathbf{H}_\theta \mathbf{W}^\top_\theta \in F(\mathbf{A})$ if and only if $P_\theta(x | c) = P^*(x | c)$ for all $c$ in $\mathcal{L}$.
+%\end{lemma}
+%
+%Intuitively, by computing $\mathbf{H}_\theta \mathbf{W}_\theta^\top$ we obtain the logits that correspond to the model distribution. On the other hand, $F(\mathbf{A})$ defines a set of possible logits that correspond to the true data distribution. Therefore, $\mathbf{H}_\theta \mathbf{W}^\top_\theta \in F(\mathbf{A})$ indicates that the model can express the true data distribution, and vice versa.
+%
+%Now the expressiveness question becomes: does there exist a parameter $\theta$ such that $\mathbf{H}_\theta \mathbf{W}^\top_\theta \in F(\mathbf{A})$? To answer this question, we show that the existence of such $\theta$ is determined by both $d$ and the ranks of the matrices in $F(\mathbf{A})$.
+%
+%\begin{prop}
+%There exists a parameter $\theta$ such that $P_\theta(x | c) = P^*(x | c)$ for all $c$ in $\mathcal{L}$ if and only if
+%$d \geq \min_{\mathbf{A}' \in F(\mathbf{A})} \text{rank}(\mathbf{A}')$.
+%\end{prop}
+%
+%Intuitively, to express the true data distribution, the model needs to learn matrices $\mathbf{H}_\theta$ and $\mathbf{W}_\theta$ that are able to factorize a matrix $\mathbf{A}' \in F(\mathbf{A})$. Therefore the ranks of $\mathbf{H}_\theta$ and $\mathbf{W}_\theta$ have to be at least as large as the rank of the matrix $\mathbf{A}'$. On the other hand, when $d > \text{rank}(\mathbf{A}')$, such matrices $\mathbf{H}_\theta$ and $\mathbf{W}_\theta$ exist, and a deep neural network as a universal function approximator has the capacity to recover these matrices.
+
+%Moreover, by realizing that the matrices in $F(\mathbf{A})$ should have similar ranks (difference between ranks of any two matrices is smaller than 1), we can directly relate the expressiveness problem to the rank of $\mathbf{A}$, rather than a set $F(\mathbf{A})$.
+%
+%\begin{coro}
+%\textbf{(Softmax Bottleneck)}
+%If $d < \text{rank}(\mathbf{A}) - 1$, for any model parameter $\theta$, there exists a context $c$ in $\mathcal{L}$ such that $P_\theta(x | c) \not= P^*(x | c)$.
+%\end{coro}
+
+%The above corollary indicates that when the dimension $d$ is too small, Softmax does not have the capacity to express the true data distribution. We call this effect as the Softmax bottleneck. More importantly, this conclusion does not only apply to a finite language $\mathcal{L}$. When $\mathcal{L}$ is infinite, one can always take a finite subset and the Softmax bottleneck still exists.
+%
+%Next, we discuss why the Softmax bottleneck is an issue by presenting our hypothesis that $\mathbf{A}$ is high-rank for natural language.
+
+\subsection{Hypothesis: Natural Language is High-Rank}
+
+We hypothesize that for a natural language $\mathcal{L}$, the log probability matrix $\mathbf{A}$ is a high-rank matrix. It is difficult (if possible) to rigorously prove this hypothesis since we do not have access to the true data distribution of a natural language. 
+%Instead, we substantiate our hypothesis with the following evidence and/or intuitions:
+However, it is suggested by the following intuitive reasoning and empirical observations:
+\begin{itemize}[leftmargin=1.5em,label=$\bullet$]
+\item Natural language is highly context-dependent \citep{mikolov2012context}. For example, the token ``north'' is likely to be followed by ``korea'' or ``korean'' in a news article on international politics, which however is unlikely in a textbook on U.S. domestic history. We hypothesize that such subtle context dependency should result in a high-rank matrix $\mathbf{A}$.
+% , because it would be hard to find a set of bases such that the conditional log probabilities can always be expressed as a linear combination of the bases.
+\item If $\mathbf{A}$ is low-rank, it means humans only need a limited number (e.g. a few hundred) of bases, and all semantic meanings can be created by (potentially) negating and (weighted) averaging these bases. However, it is hard to find a natural concept in linguistics and cognitive science that corresponds to such bases, which questions the existence of such bases. For example, semantic meanings might not be those bases since a few hundred meanings may not be enough to cover everyday meanings, not to mention niche meanings in specialized domains.
+
+%\item It is possible to construct a high-rank log-probability matrix with reasonable context-target pairs. 
+%Consider the sentence template \texttt{\small ``Now, I'm going to teach you a new word , which is [X]. Ok , let me repeat the word for you , [X]''}, where the two placeholders \texttt{\small [X]} correspond to the same word.
+%There are two properties of the template. (1) Almost every word can be inserted into the template to substitute \texttt{\small [X]} and form a reasonable sentence; (2) Treating all tokens before the second \texttt{\small [X]} as the context, the ideal next-word distribution is simply \textit{a single-point distribution} at \texttt{\small [X]}.
+%Hence, we can enumerate the vocabulary of size $M$, insert each token into the template, obtain the $M$ single-point distributions, and stack the $M$ corresponding log probabilities into the log-probability matrix $\mathbf{A}$. 
+%Obviously, $\mathbf{A}$ is a full rank matrix in this case. 
+
+% \item If $\mathbf{A}$ is low-rank, it means humans only need a limited number (e.g. a few hundred) of distinct basic semantic meanings, and all other semantic meanings can be created by (potentially) negating and (weighted) averaging these basic meanings. However, a few hundred meanings may not be enough to cover everyday meanings, not to mention niche meanings in specialized domains. Also, there is no evidence showing that semantic meanings are fully linearly correlated.
+% \item If the matrix $\mathbf{A}$ is not high-rank, it is possible to recreate a vocabulary that uses only the low-rank bases. However, it is hard to imagine a way to reduce the vocabulary size significantly while still being able to retain the flexibility and subtlety of natural language.
+% \item There is no evidence supporting that the conditional log probabilities given different contexts are linearly correlated. In fact, the linear correlation in the log space is simply an assumption induced by Softmax for mathematical convenience.
+\item Empirically, our high-rank language model outperforms conventional low-rank language models on several benchmarks, as shown in Section \ref{sec:exp}. We also provide evidences in Section \ref{sec:exp-rank} to support our hypothesis that learning a high-rank language model is important.
+\end{itemize}
+
+Given the hypothesis that natural language is high-rank, it is clear that the Softmax bottleneck limits the expressiveness of the models. In practice, the embedding dimension $d$ is usually set at the scale of $10^2$, while the rank of $\mathbf{A}$ can possibly be as high as $M$ (at the scale of $10^5$), which is orders of magnitude larger than $d$. Softmax is effectively learning a low-rank approximation to $\mathbf{A}$, and our experiments suggest that such approximation loses the ability to model context dependency, both qualitatively and quantitatively (Cf. Section \ref{sec:exp}).
+
+\subsection{Easy Fixes?} \label{sec:fixes}
+Identifying the Softmax bottleneck immediately suggests some possible ``easy fixes''.
+%Seemingly, there might be two easy fixes to the Softmax bottleneck. 
+First, as considered by a lot of prior work, one can employ a non-parametric model, namely an Ngram model \citep{kneser1995improved}. Ngram models are not constrained by any parametric forms so it can universally approximate any natural language, given enough parameters.
+Second, it is possible to increase the dimension $d$ (e.g., to match $M$) so that the model can express a high-rank matrix $\mathbf{A}$.
+
+However, these two methods increase the number of parameters dramatically, compared to using a low-dimensional Softmax. More specifically, an Ngram needs $(N \times M)$ parameters in order to express $\mathbf{A}$, where $N$ is potentially unbounded. Similarly, a high-dimensional Softmax requires $(M \times M)$ parameters for the word embeddings. Increasing the number of model parameters easily leads to overfitting. In past work, \cite{kneser1995improved} used back-off to alleviate overfitting. Moreover, as deep learning models were tuned by extensive hyper-parameter search, increasing the dimension $d$ beyond several hundred is not helpful\footnote{This is also confirmed by our preliminary experiments.} \citep{merity2017regularizing,melis2017state,krause2017dynamic}.
+
+Clearly there is a tradeoff between expressiveness and generalization on language modeling. Naively increasing the expressiveness hurts generalization. Below, we introduce an alternative approach that increases the expressiveness without exploding the parametric space. % while leading to better generalization.
+
+\subsection{Mixture of Softmaxes: A High-Rank Language Model}
+
+We propose a high-rank language model called Mixture of Softmaxes (MoS) to alleviate the Softmax bottleneck issue. MoS formulates the conditional distribution as
+\[
+P_\theta(x | c) = \sum_{k = 1}^K \pi_{c,k} \frac{\exp \mathbf{h}_{c,k}^\top \mathbf{w}_x}{\sum_{x'} \exp \mathbf{h}_{c,k}^\top \mathbf{w}_{x'}}; ~~\text{s.t.}~\sum_{k = 1}^K \pi_{c,k} = 1
+\]
+where $\pi_{c,k}$ is the {\em prior} or {\em mixture weight} of the $k$-th component, and $\mathbf{h}_{c,k}$ is the $k$-th context vector associated with context $c$. In other words, MoS computes $K$ Softmax distributions and uses a weighted average of them as the next-token probability distribution. Similar to prior work on recurrent language modeling \citep{merity2017regularizing,melis2017state,krause2017dynamic}, we first apply a stack of recurrent layers on top of $\mathbf{X}$ to obtain a sequence of hidden states $(\mathbf{g}_1, \cdots, \mathbf{g}_T)$. The prior and the context vector for context $c_t$ are parameterized as
+% $
+% \pi_{c_t,k} = \frac{\exp \mathbf{w}_{\pi,k}^\top \mathbf{g}_t}{\sum_{k'=1}^K \exp \mathbf{w}_{\pi,k'}^\top \mathbf{g}_t}; ~~~\mathbf{h}_{c_t,k} = \text{tanh}(\mathbf{W}_{h,k} \mathbf{g}_t)
+% $
+$\pi_{c_t,k} = \frac{\exp \mathbf{w}_{\pi,k}^\top \mathbf{g}_t}{\sum_{k'=1}^K \exp \mathbf{w}_{\pi,k'}^\top \mathbf{g}_t}$ and $\mathbf{h}_{c_t,k} = \text{tanh}(\mathbf{W}_{h,k} \mathbf{g}_t)$
+where $\mathbf{w}_{\pi,k}$ and $\mathbf{W}_{h,k}$ are model parameters.
+
+Our method is simple and easy to implement, and has the following advantages:
+\begin{itemize}[leftmargin=1.5em,label=$\bullet$]
+\item \textit{Improved expressiveness} (compared to Softmax). MoS is theoretically more (or at least equally) expressive compared to Softmax given the same dimension $d$. This can be seen by the fact that MoS with $K=1$ is reduced to Softmax. More importantly, MoS effectively approximates $\mathbf{A}$ by
+\[
+\hat{\mathbf{A}}_\text{MoS} = \log \sum_{k = 1}^K \mathbf{\Pi}_k \exp (\mathbf{H}_{\theta,k} \mathbf{W}_\theta^\top)
+\]
+% <<<<<<< HEAD
+% where $\mathbf{\Pi}_k$ is an $(N \times N)$ diagonal matrix with elements being the prior $\pi_{c,k}$. Because $\hat{\mathbf{A}}_{MoS}$ is a nonlinear function ({\em log\_sum\_exp}) of the context vectors and the word embeddings, $\hat{\mathbf{A}}_{MoS}$ can be arbitrarily high-rank. As a result, MoS does not suffer from the rank limitation, compared to Softmax.
+% \item \textit{Improved generalization} (compared to Ngram). Ngram models and high-dimensional Softmax (Cf. Section \ref{sec:fixes}) improve the expressiveness but does not generalize well. In contrast, MoS does not have a generalization issue due to the following reasons. First, MoS defines the following generative process: a discrete latent variable $k$ is first sampled from $\{1, \cdots, K\}$, and then the next token is sampled based on the $k$-th Softmax component. By doing so we introduce an inductive bias that the next token is generated based on a latent discrete decision (e.g., a topic), which is often safe in language modeling~\citep{blei2003latent}. Second, since $\hat{\mathbf{A}}_{MoS}$ is defined by a nonlinear function and not restricted by the rank bottleneck, in practice it is possible to reduce $d$ to compensate for the increase of model parameters brought by the mixture structure. As a result, MoS has a similar model size compared to Softmax and thus is not prone to overfitting.
+% =======
+where $\mathbf{\Pi}_k$ is an $(N \times N)$ diagonal matrix with elements being the prior $\pi_{c,k}$. Because $\hat{\mathbf{A}}_\text{MoS}$ is a nonlinear function ({\em log\_sum\_exp}) of the context vectors and the word embeddings, $\hat{\mathbf{A}}_\text{MoS}$ can be arbitrarily high-rank. As a result, MoS does not suffer from the rank limitation, compared to Softmax.
+
+\item \textit{Improved generalization} (compared to Ngram). Ngram models and high-dimensional Softmax (Cf. Section \ref{sec:fixes}) improve the expressiveness but do not generalize well. In contrast, MoS does not have a generalization issue due to the following reasons. First, MoS defines the following generative process: a discrete latent variable $k$ is first sampled from $\{1, \cdots, K\}$, and then the next token is sampled based on the $k$-th Softmax component. By doing so we introduce an inductive bias that the next token is generated based on a latent discrete decision (e.g., a topic), which is often safe in language modeling~\citep{blei2003latent}. Second, since $\hat{\mathbf{A}}_\text{MoS}$ is defined by a nonlinear function and not restricted by the rank bottleneck, in practice it is possible to reduce $d$ to compensate for the increase of model parameters brought by the mixture structure. As a result, MoS has a similar model size compared to Softmax and thus is not prone to overfitting.
+% >>>>>>> 62574f62e549a9cd537ef5cb92ecf44a265a260e
+\end{itemize}
+
+
+\subsection{Mixture of Contexts: A Low-Rank Baseline}
+Another possible approach is to directly mix the context vectors (or logits) before taking the Softmax, rather than mixing the probabilities afterwards as in MoS. Specifically, the conditional distribution is parameterized as
+\vspace{-0.5em}
+\begin{equation}\label{eqn:moc}
+P_\theta(x | c) 
+= \frac{\exp \left( \sum_{k=1}^{K} \pi_{c,k}\mathbf{h}_{c,k} \right)^\top \mathbf{w}_x }{\sum_{x'} \exp \left( \sum_{k=1}^{K} \pi_{c,k} \mathbf{h}_{c,k} \right)^\top \mathbf{w}_{x'} }
+= \frac{\exp \left( \sum_{k=1}^{K} \pi_{c,k}\mathbf{h}_{c,k}^\top \mathbf{w}_x \right) }{\sum_{x'} \exp \left( \sum_{k=1}^{K} \pi_{c,k} \mathbf{h}_{c,k}^\top \mathbf{w}_{x'} \right) },
+\end{equation}
+where $\mathbf{h}_{c,k}$ and $\pi_{c,k}$ share the same parameterization as in MoS.
+Despite its superficial similarity to MoS, this model, which we refer to as mixture of contexts (MoC), actually suffers from the same rank limitation problem as Softmax.
+This can be easily seen by defining $\mathbf{h'}_{c} = \sum_{k=1}^{K} \pi_{c,k} \mathbf{h}_{c,k}$, which turns the MoC parameterization \eqref{eqn:moc} into 
+$
+P_\theta(x | c) = \frac{\exp \mathbf{h'}^\top_c \mathbf{w}_x}{\sum_{x'} \exp \mathbf{h'}^\top_c \mathbf{w}_{x'}}
+$. Note that this is equivalent to the Softmax parameterization \eqref{eqn:softmax}.
+Thus, performing mixture in the feature space can only make the function family $\mathcal{U}$ more expressive, but does not change the fact that the rank of $\mathbf{H}_{\theta} \mathbf{W}_\theta^\top$ is upper bounded by the embedding dimension $d$.
+In our experiments, we implement MoC as a baseline and compare it experimentally to MoS.
+

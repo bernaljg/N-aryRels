@@ -1,0 +1,66 @@
+\begin{figure}[t!]
+\centering
+\extdata{fig/data/sample}
+\begin{tabular}{cc}
+\extfig{dimRedOxf}{ 
+\begin{tikzpicture}
+\begin{semilogxaxis}[%
+	width=0.5\linewidth,
+	height=0.45\linewidth,
+	xlabel={Dimensionality},
+	ylabel={mAP},
+	title={Oxford105k},
+	legend pos=south east,
+    legend style={cells={anchor=west}, font =\tiny, fill opacity=0.7, row sep=-1pt},	
+    ymax = 80,
+    ymin = 20,
+    xmin = 8,
+    xmax = 512,
+    grid=both,
+    xtick={8,16,32,64,128,256,512},    
+    xticklabels={8,16,32,64,128,256,512},
+    ytick={20,30,...,80},
+ 	 y label style={at={(axis description cs:.1,.5)}},
+ 	 x label style={at={(axis description cs:.5,.05)}} 	        
+]
+	\addplot[color=red,    solid,  mark=*,  mark size=1.5, line width=1.0] table[x=D, y expr={100*\thisrow{macVGGp}}]  \dimRedOxf;\leg{MAC \cpl2};
+	\addplot[color=red,    dashed, mark options={solid}, mark=*,  mark size=1.5, line width=1.0] table[x=D, y expr={100*\thisrow{macVGGw}}]  \dimRedOxf;\leg{MAC \pcawhiten};
+	\addplot[color=orange, mark=star, only marks, mark size = 2.5, line width = 1] coordinates {(512,72.71)}; \leg{MAC};
+	
+\end{semilogxaxis}
+\end{tikzpicture}
+}
+&
+\extfig{dimRedPar}{ 
+\begin{tikzpicture}
+\begin{semilogxaxis}[%
+	width=0.5\linewidth,
+	height=0.45\linewidth,
+	xlabel={Dimensionality},
+	ylabel={mAP},
+	title={Paris106k},
+	legend pos=south east,
+    legend style={cells={anchor=west}, font =\tiny, fill opacity=0.7, row sep=-1pt},	
+    ymax = 80,
+    ymin = 20,
+    xmin = 8,
+    xmax = 512,
+    grid=both,
+    xtick={8,16,32,64,128,256,512},    
+    xticklabels={8,16,32,64,128,256,512},
+    ytick={20,30,...,80},
+ 	 y label style={at={(axis description cs:.1,.5)}},
+ 	 x label style={at={(axis description cs:.5,.05)}} 	        
+]
+	\addplot[color=red,    solid,  mark=*,  mark size=1.5, line width=1.0] table[x=D, y expr={100*\thisrow{macVGGp}}]  \dimRedPar;\leg{MAC \cpl2};
+	\addplot[color=red,    dashed, mark options={solid}, mark=*,  mark size=1.5, line width=1.0] table[x=D, y expr={100*\thisrow{macVGGw}}]  \dimRedPar;\leg{MAC \pcawhiten};
+	\addplot[color=orange, mark=star, only marks, mark size = 2.5, line width = 1] coordinates {(512,69.63)}; \leg{MAC};
+	
+\end{semilogxaxis}
+\end{tikzpicture}
+}
+\end{tabular}
+\vspace{-15pt}
+\caption{Performance comparison of the dimensionality reduction performed by \pcawhiten and our \cpl2 on fine-tuned VGG MAC on Oxford105k and Paris106k datasets.
+\label{fig:dimreduce}}
+\end{figure}

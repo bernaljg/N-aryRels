@@ -1,0 +1,17 @@
+%
+
+\section{Conclusion}\label{sec:conc}
+In this work we have introduced 
+MultiGrain, a unified embedding for image classification and instance retrieval.
+MultiGrain relies on a classical convolutional neural network trunk, with a GeM layer topped with two heads at training time.
+We have discovered that by adjusting this pooling layer we are able to increase the resolution of images used a inference time, while maintaining a small resolution at training time. 
+We have shown that MultiGrain embeddings can perform well on classification and retrieval. 
+Interestingly, MultiGrain also sets a new state of the art on pure classification compared to all results obtained with the same convolutional trunk.
+%
+Overall, our results show that retrieval and classification tasks can benefit from each other. 
+
+An implementation of our method is open-sourced at \url{https://github.com/facebookresearch/multigrain}.
+
+%
+%
+

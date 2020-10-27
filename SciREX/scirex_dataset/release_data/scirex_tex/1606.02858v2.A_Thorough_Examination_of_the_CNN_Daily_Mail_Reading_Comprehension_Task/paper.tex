@@ -1,0 +1,119 @@
+%
+% File ACL2016.tex
+%
+
+\documentclass[11pt]{article}
+
+\usepackage{microtype}
+\usepackage{acl2016}
+\usepackage{url}
+
+% \makeatletter
+% \def\url@itstyle{%
+%  \@ifundefined{selectfont}{\def\UrlFont{\it}}{\def\UrlFont{\itshape}}}
+% \makeatother
+% \urlstyle{it}
+
+\makeatletter
+\newcommand{\@BIBLABEL}{\@emptybiblabel}
+\newcommand{\@emptybiblabel}[1]{}
+\makeatother
+\interfootnotelinepenalty=10000
+
+\usepackage[hidelinks]{hyperref}
+
+% \usepackage{newtxtext,newtxmath}
+\usepackage{times}
+\usepackage{color}
+\usepackage{enumerate}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{multirow}
+\usepackage{latexsym}
+\usepackage{array}
+\usepackage{tikz}
+\usepackage{booktabs}
+
+
+
+\aclfinalcopy % Uncomment this line for the final submission
+% \def\aclpaperid{***} %  Enter the acl Paper ID here
+
+\newcommand\BibTeX{B{\sc ib}\TeX}
+
+%\title{Towards A Better Understanding on Reading Comprehension}
+\title{A Thorough Examination of the \\ CNN\slash Daily Mail Reading Comprehension Task}
+
+\author{Danqi Chen \and Jason Bolton \and Christopher D. Manning\\
+            Computer Science
+	    Stanford University\\
+	    Stanford, CA 94305-9020, USA\\
+	    {\tt \{danqi,jebolton,manning\}@cs.stanford.edu}}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\sigm}{sigm}
+\DeclareMathOperator*{\softmax}{softmax}
+\newcommand{\notate}[1]{\textcolor{red}{\textbf{[#1]}}}
+\newcommand{\comment}[1]{\textcolor{gray}{\textbf{[#1]}}}
+\newcommand{\mf}[1]{\mathbf{#1}}
+\newcommand{\tf}[1]{\textbf{#1}}
+\newcommand{\ti}[1]{\textit{#1}}
+\newcommand{\ttt}[1]{\texttt{#1}}
+\newcommand\R{\mathbb{R}}
+\newcommand{\specialcell}[2][c]{%
+
+\begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\gray}[1]{\textcolor{gray}{#1}}
+\newcommand{\finalcnn}{73.6\%}
+\newcommand{\finaldm}{76.6\%}
+
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcommand{\figref}[1]{Figure~\ref{fig:#1}}
+\hyphenation{At-ten-tive-Reader}
+\hyphenation{Lamb-da-MART}
+
+\renewcommand\floatpagefraction{.9}
+\renewcommand\dblfloatpagefraction{.9}
+\renewcommand\textfraction{.05}
+
+
+\date{}
+
+\def\allfiles{}
+
+\begin{document}
+\def\tinyweeny{\fontsize{6pt}{8pt}\selectfont}
+
+\maketitle
+
+\begin{abstract}
+
+Enabling a computer to understand a document so that it can answer comprehension questions is a central, yet unsolved goal of NLP\@. A key factor impeding its solution by machine learned systems is the limited availability of human-annotated data. \newcite{hermann2015teaching} seek to solve this problem by creating over a million training examples by pairing \ti{CNN} and \ti{Daily Mail} news articles with their summarized bullet points, and show that a neural network can then be trained to give good performance on this task. In this paper, we conduct a thorough examination of this new reading comprehension task. Our primary aim is to understand what depth of language understanding is required to do well on this task. We approach this from one side by doing a careful hand-analysis of a small subset of the problems and from the other by showing that simple, carefully designed systems can obtain accuracies of {\finalcnn} and {\finaldm} on these two datasets, exceeding current state-of-the-art results by {7}--{10}\%  and approaching what we believe is the ceiling for performance on this task.\footnote{Our code is available at \url{https://github.com/danqi/rc-cnn-dailymail}.}
+\end{abstract}
+
+\input{intro}
+\input{task}
+% \input{arch}
+\input{systems}
+\input{experiments}
+\input{analysis}
+\input{discussion}
+\input{conclusion}
+
+
+\section*{Acknowledgments}
+
+We thank the anonymous reviewers for their thoughtful feedback. Stanford University gratefully acknowledges the support of the Defense Advanced Research Projects Agency (DARPA) Deep Exploration and Filtering of Text (DEFT) Program under Air Force Research Laboratory (AFRL) contract no. FA8750-13-2-0040. Any opinions, findings, and conclusion or recommendations expressed in this material are those of the authors and do not necessarily reflect the view of the DARPA, AFRL, or the US government.
+
+\bibliography{refs}
+\bibliographystyle{acl2016}
+
+\appendix
+\input{supp}
+
+\end{document}

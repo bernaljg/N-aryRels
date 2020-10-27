@@ -1,0 +1,157 @@
+
+\section{Networks}\label{subsec::nets}
+
+In CoGAN, the generative models are based on the fractional length convolutional (FCONV) layers, while the discriminative models are based on the standard convolutional (CONV) layers with the exceptions that the last two layers are based on the fully-connected (FC) layers. The batch normalization (BN) layers~\cite{ioffe2015batch} are applied after each convolutional layer, which are followed by the parameterized rectified linear unit (PReLU) processing~\cite{he2015delving}. The sigmoid units and the hyperbolic tangent units are applied to the output layers of the generative models for generating images with desired pixel range values.
+
+% Table~\ref{tbl::mnist_g} shows the CoGAN architecture for the digit generation experiments. Table~\ref{tbl::face_g} shows the CoGAN architecture for the face image generation experiments~\cite{liu2015deep}. Table~\ref{tbl::rgbd_g} and~\ref{tbl::nyu_g} shows the CoGAN architecture for the generation of color and depth images experiments for the RGBD object dataset~\cite{lai2011large}and the NYU indoor scene dataset~\cite{silberman2012indoor}, respectively. The triplets followed the FCONV or CONV denote the parameters of the convolutional layers. In each triplet, the first number denotes the number of neurons, the second number denotes the kernel size of each filter in the layer, and the third number denotes the stride length of each filter in the layer.
+
+\begin{table*}[thb!]
+\small
+\centering
+{
+\caption{CoGAN for digit generation}
+\label{tbl::mnist_g}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{Generative models}\\
+\hline\rule{0pt}{2ex}    
+Layer &  Domain 1 & Domain 2 & Shared? \\
+\hline 
+1 &  FCONV-(N1024,K4x4,S1), BN, PReLU & FCONV-(N1024,K4x4,S1), BN, PReLU & Yes\\
+2 &  FCONV-(N512,K3x3,S2), BN, PReLU & FCONV-(N512,K3x3,S2), BN, PReLU &Yes\\
+3 &  FCONV-(N256,K3x3,S2), BN, PReLU & FCONV-(N256,K3x3,S2), BN, PReLU &Yes\\
+4 &  FCONV-(N128,K3x3,S2), BN, PReLU & FCONV-(N128,K3x3,S2), BN, PReLU &Yes\\
+5 &  FCONV-(N1,K6x6,S1), Sigmoid & FCONV-(N1,K6x6,S1), Sigmoid & No\\
+\hline
+\hline
+\multicolumn{4}{|c|}{Discriminative models}\\
+\hline\rule{0pt}{2ex} 
+Layer &  Domain 1 & Domain 2 & Shared? \\
+\hline
+1 & CONV-(N20,K5x5,S1), POOL-(MAX,2) & CONV-(N20,K5x5,S1), POOL-(MAX,2) &No\\
+2 & CONV-(N50,K5x5,S1), POOL-(MAX,2) & CONV-(N50,K5x5,S1), POOL-(MAX,2) &Yes\\
+3 & FC-(N500), PReLU & FC-(N500), PReLU &Yes\\
+4 & FC-(N1), Sigmoid & FC-(N1), Sigmoid &Yes\\
+\hline
+\end{tabular}
+}
+\end{table*}
+
+
+\begin{table*}[thb!]
+\small
+\centering
+{
+\caption{CoGAN for face generation}
+\label{tbl::face_g}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{Generative models}\\
+\hline\rule{0pt}{2ex}    
+Layer &  Domain 1 & Domain 2 & Shared? \\
+\hline 
+1 &  FCONV-(N1024,K4x4,S1), BN, PReLU & FCONV-(N1024,K4x4,S1), BN, PReLU & Yes\\
+2 &  FCONV-(N512,K4x4,S2), BN, PReLU & FCONV-(N512,K4x4,S2), BN, PReLU & Yes\\
+3 &  FCONV-(N256,K4x4,S2), BN, PReLU & FCONV-(N256,K4x4,S2), BN, PReLU & Yes\\
+4 &  FCONV-(N128,K4x4,S2), BN, PReLU & FCONV-(N128,K4x4,S2), BN, PReLU & Yes\\
+5 &  FCONV-(N64,K4x4,S2), BN, PReLU & FCONV-(N64,K4x4,S2), BN, PReLU & Yes\\
+6 &  FCONV-(N32,K4x4,S2), BN, PReLU & FCONV-(N32,K4x4,S2), BN, PReLU & No\\
+7 &  FCONV-(N3,K3x3,S1), TanH & FCONV-(N3,K3x3,S1), TanH & No\\
+\hline
+\hline
+\multicolumn{4}{|c|}{Discriminative models}\\
+\hline\rule{0pt}{2ex} 
+Layer &  Domain 1 & Domain 2 & Shared? \\
+\hline
+1 & CONV-(N32,K5x5,S2), BN, PReLU & CONV-(N32,K5x5,S2), BN, PReLU &No\\
+2 & CONV-(N64,K5x5,S2), BN, PReLU & CONV-(N64,K5x5,S2), BN, PReLU &No\\
+3 & CONV-(N128,K5x5,S2), BN, PReLU & CONV-(N128,K5x5,S2), BN, PReLU &Yes\\
+4 & CONV-(N256,K3x3,S2), BN, PReLU & CONV-(N256,K3x3,S2), BN, PReLU &Yes\\
+5 & CONV-(N512,K3x3,S2), BN, PReLU & CONV-(N512,K3x3,S2), BN, PReLU &Yes\\
+6 & CONV-(N1024,K3x3,S2), BN, PReLU & CONV-(N1024,K3x3,S2), BN, PReLU &Yes\\
+7 & FC-(N2048), BN, PReLU & FC-(N2048), BN, PReLU &Yes\\
+8 & FC-(N1), Sigmoid & FC-(N1), Sigmoid &Yes\\
+\hline
+\end{tabular}
+}
+\end{table*}
+
+
+\begin{table*}[thb!]
+\small
+\centering
+{
+\caption{CoGAN for color and depth image generation for the RGBD object dataset}
+\label{tbl::rgbd_g}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{Generative models}\\
+\hline\rule{0pt}{2ex}    
+Layer &  Domain 1 & Domain 2 & Shared? \\
+\hline 
+1 &  FCONV-(N1024,K4x4,S1), BN, PReLU & FCONV-(N1024,K4x4,S1), BN, PReLU & Yes\\
+2 &  FCONV-(N512,K4x4,S2), BN, PReLU & FCONV-(N512,K4x4,S2), BN, PReLU & Yes\\
+3 &  FCONV-(N256,K4x4,S2), BN, PReLU & FCONV-(N256,K4x4,S2), BN, PReLU & Yes\\
+4 &  FCONV-(N128,K4x4,S2), BN, PReLU & FCONV-(N128,K4x4,S2), BN, PReLU & Yes\\
+5 &  FCONV-(N64,K4x4,S2), BN, PReLU & FCONV-(N64,K4x4,S2), BN, PReLU & Yes\\
+6 &  FCONV-(N32,K3x3,S1), BN, PReLU & FCONV-(N32,K3x3,S1), BN, PReLU & No\\
+7 &  FCONV-(N3,K3x3,S1), TanH & FCONV-(N1,K3x3,S1), Sigmoid & No\\
+\hline
+\hline
+\multicolumn{4}{|c|}{Discriminative models}\\
+\hline\rule{0pt}{2ex} 
+Layer &  Domain 1 & Domain 2 & Shared? \\
+\hline
+1 & CONV-(N32,K5x5,S2), BN, PReLU & CONV-(N32,K5x5,S2), BN, PReLU &No\\
+2 & CONV-(N64,K5x5,S2), BN, PReLU & CONV-(N64,K5x5,S2), BN, PReLU &No\\
+3 & CONV-(N128,K5x5,S2), BN, PReLU & CONV-(N128,K5x5,S2), BN, PReLU &Yes\\
+4 & CONV-(N256,K3x3,S2), BN, PReLU & CONV-(N256,K3x3,S2), BN, PReLU &Yes\\
+5 & CONV-(N512,K3x3,S2), BN, PReLU & CONV-(N512,K3x3,S2), BN, PReLU &Yes\\
+6 & CONV-(N1024,K3x3,S2), BN, PReLU & CONV-(N1024,K3x3,S2), BN, PReLU &Yes\\
+7 & FC-(N2048), BN, PReLU & FC-(N2048), BN, PReLU &Yes\\
+8 & FC-(N1), Sigmoid & FC-(N1), Sigmoid &Yes\\
+\hline
+\end{tabular}
+}
+\end{table*}
+
+
+\begin{table*}[thb!]
+\small
+\centering
+{
+\caption{CoGAN for color and depth image generation for the NYU indoor scene dataset}
+\label{tbl::nyu_g}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{Generative models}\\
+\hline\rule{0pt}{2ex}    
+Layer &  Domain 1 & Domain 2 & Shared? \\
+\hline
+1 &  FCONV-(N1024,K4x4,S1), BN, PReLU & FCONV-(N1024,K4x4,S1), BN, PReLU & Yes\\
+2 &  FCONV-(N512,K4x4,S2), BN, PReLU & FCONV-(N512,K4x4,S2), BN, PReLU & Yes\\
+3 &  FCONV-(N256,K4x4,S2), BN, PReLU & FCONV-(N256,K4x4,S2), BN, PReLU & Yes\\
+4 &  FCONV-(N128,K4x4,S2), BN, PReLU & FCONV-(N128,K4x4,S2), BN, PReLU & Yes\\
+5 &  FCONV-(N64,K4x4,S2), BN, PReLU & FCONV-(N64,K4x4,S2), BN, PReLU & Yes\\
+6 &  FCONV-(N32,K4x4,S2), BN, PReLU & FCONV-(N32,K4x4,S2), BN, PReLU & No\\
+7 &  FCONV-(N3,K3x3,S1), TanH & FCONV-(N1,K3x3,S1), Sigmoid & No\\
+\hline
+\hline
+\multicolumn{4}{|c|}{Discriminative models}\\
+\hline\rule{0pt}{2ex} 
+Layer &  Domain 1 & Domain 2 & Shared? \\
+\hline
+1 & CONV-(N32,K5x5,S2), BN, PReLU & CONV-(N32,K5x5,S2), BN, PReLU &No\\
+2 & CONV-(N64,K5x5,S2), BN, PReLU & CONV-(N64,K5x5,S2), BN, PReLU &No\\
+3 & CONV-(N128,K5x5,S2), BN, PReLU & CONV-(N128,K5x5,S2), BN, PReLU &Yes\\
+4 & CONV-(N256,K3x3,S2), BN, PReLU & CONV-(N256,K3x3,S2), BN, PReLU &Yes\\
+5 & CONV-(N512,K3x3,S2), BN, PReLU & CONV-(N512,K3x3,S2), BN, PReLU &Yes\\
+6 & CONV-(N1024,K3x3,S2), BN, PReLU & CONV-(N1024,K3x3,S2), BN, PReLU &Yes\\
+7 & FC-(N2048), BN, PReLU & FC-(N2048), BN, PReLU &Yes\\
+8 & FC-(N1), Sigmoid & FC-(N1), Sigmoid &Yes\\
+\hline
+\end{tabular}
+}
+\end{table*}
+
+\clearpage

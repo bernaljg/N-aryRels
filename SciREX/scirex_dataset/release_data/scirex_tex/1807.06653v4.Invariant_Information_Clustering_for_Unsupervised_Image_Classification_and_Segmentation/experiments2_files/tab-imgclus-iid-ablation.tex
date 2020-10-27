@@ -1,0 +1,38 @@
+\begin{table}[t]
+\footnotesize    
+\begin{tabular}{lc}
+\toprule
+& STL10 \\
+\midrule
+No auxiliary overclustering & 43.8 \cmt{692}\\
+Single sub-head ($h=1$) & 57.6\cmt{693}\\
+No sample repeats ($r=1$) & 47.0\cmt{694}\\
+Unlabelled data segment ignored & 49.9\cmt{695}\\
+\midrule
+Full setting & \textbf{59.6} \cmt{569}\\
+\bottomrule
+\end{tabular}
+\caption{\textbf{Ablations of \methodnameshort (unsupervised setting).} Each row shows a single change from the full setting. The full setting has auxiliary overclustering, 5 initialisation heads, 5 sample repeats, and uses the unlabelled data subset of STL10.}
+\label{t:iid_imgclus_ablation}
+\end{table}
+
+% \begin{table}[h]
+% \footnotesize 
+% \begin{center}
+% \begin{tabular}{lc}
+% \toprule
+% & STL10 \\
+% \midrule
+% No auxiliary overclustering & 39.9 \cmt{418}\\
+% Single sub-head ($h=1$) & 50.7\cmt{419}\\
+% No sample repeats ($r=1$) & 51.4\cmt{420}\\
+% Unlabelled data segment ignored & 50.5\cmt{421}\\
+% \midrule
+% Full setting & \textbf{60.4} \cmt{247}\\
+% \bottomrule
+% \end{tabular}
+% \end{center}
+% \vspace{-1em}
+% \caption{Ablation for IID. Each row contains one change from the full setting with all else equal. Full setting: with auxiliary overclustering, 5 initialisation heads, 5 sample repeats, unlabelled data segment used.}
+% \label{t:iid_imgclus_ablation}
+% \end{table}

@@ -1,0 +1,17 @@
+\label{sec:problem}
+Given a 3D shape $\shape$ represented as a shape graph $\graph=(\vertex,\edge)$, we seek for a per-vertex label $l$, such as segmentation or keypoints. These labels are represented as vertex functions $f$ on $\graph$, i.e., $f:\vertex\rightarrow \R^K$. We precompute a set of 3D features for each vertex $v \in \vertex$ and use them as input vertex functions. These features capture location, curvature, and local context properties of each vertex $v$ and we use the publicly available implementation \cite{kim2014shape2pose}. To represent the functional space on shape graphs $\graph$, we also construct the graph laplacian $L$ of each shape $\shape$, compute the spectral frequency $\myvec{\lambda}=\{\lambda_i\}$ and corresponding bases $\myvec{B}=\{\myvec{b}_i\}$ through eigendecomposition. We note that a basis $\myvec{b}_i$ is also a vertex function. Therefore, our neural network takes the laplacian $L$ of a graph $\graph$ and vertex functions of local geometric features as input, and predicts a vertex function $f$ such as segmentation or keypoint indicator function.
+%spectral bases $\myvec{B}$
+
+%We use $\myvec{\alpha}=\{\alpha_i\}$ to denote the spectral representation of a vertex function $f$ under the spectral bases $\myvec{B}$, namely $f=\sum_i\alpha_i\myvec{b}_i$. Also we use $\Lambda=\{\lambda_i\}$ to denote the eigenvalues corresponding to $\myvec{B}$, which can be interpreted as frequency. In this work, we use a symmetric normalized graph laplacian to represent $\graph$ so that the eigenvalues satisfy $0\le \lambda_i\le2$. $C$ denotes a functional map which acts on $\alpha$ to transform the spectral domain of $\graph$.
+\iffalse
+\todo{
+  \begin{itemize}
+    \item given a 3D shape represented as a shape graph, we seek for a per-vertex label, such as segmentation or keypoints. these labels are representated as functions on the shape graph
+    \item in order to use a graph CNN for this problem, we have to feed it with a graph with vertex function. 
+    \item we precompute a set of 3D features for each point of the shape and use them as the vertex function. these features capture the location, curvature, and local context properties. Refer to CITATION for details.
+    \item in order to use spectral CNN, we also construct the graph laplacian of each shape and compute the spectral bases through eigendecomposition. 
+    \item therefore, our neural network takes the spectral bases of a graph and a vertex function defined on it as input, and predicts a vertex function of segmentation or keypoints. specifically, the predicted function at each vertex is a one-hot vector. 
+    %\item for clarity of presentation, we use Forward Transform (FT) to denote the transformation from a vertex function to its spectral representation, and Backward Transform (BT) for its inverse.
+  \end{itemize}
+}
+\fi

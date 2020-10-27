@@ -1,0 +1,23 @@
+\section{Related Work}
+In this section, we review the recent developments on designing convolutional network architectures, quantizing the neural networks, human pose estimation and facial landmark localization.
+% This section reviews related work on network architecture, human pose estimation and facial landmark localization.
+
+{\bf Network Architecture.}
+The identity mappings make it possible to train very deep ResNet \cite{he2016deep}. The popular stacked U-Nets \cite{newell2016stacked} are designed based on the residual modules. More recently, the DenseNet \cite{huang2016densely} outperforms the ResNet in the image classification task, benefitting from its dense connections. We would like to use the dense connectivity into multiple U-Nets.
+
+% The research on network architectures have been active since AlexNet \cite{alex2012alexnet} appeared. First, by using smaller filters, the VGG \cite{simonyan2014very} network become several times deeper than the AlexNet and obtain much better performance. Then the Highway Networks \cite{srivastava2015training} could extend its depths to more than 100 layers with the shortcut connections.
+
+{\bf Network Quantization.}
+Training deep neural networks usually consumes a large amount of computational resources, which makes it hard to deploy on mobile devices. Recently, network quantization approaches \cite{courbariaux2016binarized,li2016ternary,zhou2016dorefa,wu2018training,rastegari2016xnor} offer an efficient solution to reduce the size of network through cutting down high precision operations and operands. In the recent binarized convolutional landmark localizer (BCLL)~\cite{bulat2017binarized} architecture, XNOR-Net \cite{rastegari2016xnor} was utilized for network binarization. However, BCLL only quantizes weights for inference and bring in real-value scaling factors. Due to its high precision demand in training, it cannot save training memory and improve training efficiency. To this end, we explore to quantize our DU-Net in training and inference simultaneously.
+
+{\bf Human Pose Estimation.}
+Starting from the DeepPose \cite{toshev2014deeppose}, CNNs based approaches \cite{wei2016convolutional,carreira2016human,bulat2016human,pishchulin2016deepcut,insafutdinov2016deepercut,lifshitz2016human,belagiannis2017recurrent,zhao2018learning} become the mainstream in human pose estimation and prediction. Recently, the architecture of stacked hourglasses \cite{newell2016stacked} has obviously beaten all the previous ones in terms of usability and accuracy. Therefore, all recent state-of-the-art methods \cite{chu2017multi,yang2017learning,yu2017adversarial,peng2018jointly} build on its architecture. They replace the residual modules with more sophisticated ones, add graphical models to get better inference, or use an additional network to provide adversarial supervisions or do adversarial data augmentation \cite{peng2018jointly}. In contrast, we design a simple yet very effective connectivity pattern for stacked U-Nets.
+
+{\bf Facial Landmark Localization.}
+Similarly, CNNs have largely reshaped the field of facial landmark localization. Traditional methods could be easily outperformed by the CNNs based \cite{zhang2014coarse,zhang2014facial,lv2017deep,peng2016recurrent,peng2018red}. In the recent Menpo Facial Landmark Localization Challenge \cite{zafeiriou2017menpo}, stacked hourglasses \cite{newell2016stacked} achieves state-of-the-art performance. The proposed $order$-$K$ connected U-Nets could produce even better results but with much fewer parameters.
+
+% TWN \cite{li2016ternary} utilize two symmetric thresholds to ternarize the weights to +1, 0, or -1.
+% DoReFa-Net \cite{zhou2016dorefa} quantizes gradients to low bit-width numbers.
+% WAGE \cite{wu2018training} propose an integer-based implementation for training and inference simultaneously.
+% XNOR-Net \cite{rastegari2016xnor} uses a scaling factor to approximate the real-value weights and inputs
+%G%

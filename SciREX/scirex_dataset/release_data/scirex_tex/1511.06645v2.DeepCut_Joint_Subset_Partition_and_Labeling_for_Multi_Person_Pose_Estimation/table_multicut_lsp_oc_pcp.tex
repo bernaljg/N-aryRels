@@ -1,0 +1,29 @@
+%\renewcommand{\tabcolsep}{0.15cm}
+\tabcolsep 1.5pt
+\begin{table}[tbp]
+ \scriptsize
+  \centering
+  \begin{tabular}{@{} l cc ccc ccc@{}}
+    \toprule
+    &Torso & Upper & Lower & Upper & Fore- & Head  & PCP \\
+    &   & Leg   & Leg& Arm   & arm   &       &       \\
+    \midrule
+%%     \input{experiments/pcp-torso-expidx201-2.tex}
+%%     \input{experiments/pcp-torso-expidx276.tex}
+%%     \input{experiments/pcp-torso-expidx266.tex}
+%%     \input{experiments/pcp-torso-expidx480.tex} 
+    $\rcnn$ (unary) & 92.9  & 86.3  & 79.8  & 77.0  & 64.2  & 91.8 & 79.9 \\   
+    \midrule
+    $\dense$ (unary)          & \textbf{96.0}  & \textbf{91.0}  & \textbf{83.5}  & \textbf{82.8}  & \textbf{71.8}  & \textbf{96.2} & \textbf{85.0} \\
+    \midrule
+    Chen\&Yuille~\cite{chen14nips}& 92.7  & 82.9  & 77.0  & 69.2  & 55.4  & 87.8 & 75.0 \\
+    Ouyang et al.~\cite{ouyang14cvpr}& 88.6  & 77.8  & 71.9  & 61.9  & 45.4  & 84.3 & 68.7 \\
+    Pishchulin et.~\cite{pishchulin13iccv}& 88.7  & 78.9  & 73.2  & 61.8  & 45.0  & 85.1 & 69.2 \\
+    Kiefel\&Gehler~\cite{kiefel14eccv}& 84.3  & 74.5  & 67.6  & 54.1  & 28.3  & 78.3 & 61.2 \\
+    Ramakrishna et al.~\cite{ramakrishna14eccv}& 88.1  & 79.0  & 73.6  & 62.8  & 39.5  & 80.4 & 67.8 \\
+    \bottomrule
+  \end{tabular}
+  \caption[]{Pose estimation results (PCP) on LSP (OC) dataset.}
+    \vspace{-1.5em}
+  \label{tab:multicut:lsp-oc-pcp}
+\end{table}

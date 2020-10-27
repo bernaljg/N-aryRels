@@ -1,0 +1,117 @@
+%
+% File acl2018.tex
+%
+%% Based on the style files for ACL-2017, with some changes, which were, in turn,
+%% Based on the style files for ACL-2015, with some improvements
+%%  taken from the NAACL-2016 style
+%% Based on the style files for ACL-2014, which were, in turn,
+%% based on ACL-2013, ACL-2012, ACL-2011, ACL-2010, ACL-IJCNLP-2009,
+%% EACL-2009, IJCNLP-2008...
+%% Based on the style files for EACL 2006 by 
+%%e.agirre@ehu.es or Sergi.Balari@uab.es
+%% and that of ACL 08 by Joakim Nivre and Noah Smith
+
+\documentclass[11pt,a4paper]{article}
+\usepackage{authblk}
+\usepackage{blindtext}
+% \usepackage[draft]{hyperref}
+\usepackage[hyperref]{acl2018}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage{qtree}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts,amssymb}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{enumitem}
+\usepackage{comment}
+\usepackage{url}
+
+\aclfinalcopy % Uncomment this line for the final submission
+\def\aclpaperid{760} %  Enter the acl Paper ID here
+
+%\setlength\titlebox{5cm}
+% You can expand the titlebox if you need extra space
+% to show all the authors. Please do not make the titlebox
+% smaller than 5cm (the original size); we will check this
+% in the camera-ready version and ask you to change it back.
+\newcommand{\matr}[1]{\mathbf{#1}}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+
+\newcommand{\figref}[1]{Figure \ref{#1}}
+\newcommand{\tabref}[1]{Table \ref{#1}}
+\newcommand{\secref}[1]{Section \ref{#1}}
+% \newcommand{\YZ}[1]{\textcolor{purple}{Yizhong: #1}}
+
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\maketitle}
+ {\def\@makefnmark}
+ {\def\@makefnmark{}\def\useless@macro}
+ {}{}
+\makeatother
+ 
+
+\title{Multi-Passage Machine Reading Comprehension \\ with Cross-Passage Answer Verification}
+
+
+\author[1 *]{Yizhong Wang\thanks{\llap{\textsuperscript{*}}This work was done while the first author was doing internship at Baidu Inc.}}
+\author[2]{Kai Liu}
+\author[2]{Jing Liu}
+\author[2]{Wei He}
+\author[2]{\\Yajuan Lyu}
+\author[2]{Hua Wu}
+\author[1]{Sujian Li}
+\author[2]{Haifeng Wang}
+\affil[1]{Key Laboratory of Computational Linguistics, Peking University, MOE, China}
+\affil[2]{Baidu Inc., Beijing, China}
+% \affil[ ]{\texttt{\{yizhong, lisujian\}@pku.edu.cn}}
+\affil[ ]{\tt {\{yizhong, lisujian\}@pku.edu.cn, \{liukai20, liujing46, }}
+\affil[ ]{\tt {hewei06, lvyajuan, wu\_hua, wanghaifeng\}@baidu.com}}
+\renewcommand\Authands{ and }
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+
+Machine reading comprehension (MRC) on real web data usually requires the machine to answer a question by analyzing multiple passages retrieved by search engine. 
+Compared with MRC on a single passage, multi-passage MRC is more challenging, since we are likely to get multiple confusing answer candidates from different passages.
+To address this problem, we propose an end-to-end neural model that enables those answer candidates from different passages to verify each other based on their content representations.
+% To address this problem, we propose an end-to-end neural model by leveraging the content representations of the candidate answers to verify each other. 
+% Specifically, our model employs joint training and predicting the final answer by combining the confidence scores from three aspects: the answer boundary, the answer content and the cross-passage answer verification. 
+Specifically, we jointly train three modules that can predict the final answer based on three factors: the answer boundary, the answer content and the cross-passage answer verification. 
+The experimental results show that our method outperforms the baseline by a large margin and achieves the state-of-the-art performance on the English MS-MARCO dataset and the Chinese DuReader dataset, both of which are designed for MRC in real-world settings. 
+
+% Machine reading comprehension (MRC) on real web data usually requires the model to answer the question given multiple passages retrieved by search engines. 
+% % Compared with single-passage MRC,  there are probably multiple confusing answer candidates coming from different passages, which are extremely challenging for MRC models to distinguish. 
+% Compared with the MRC on single passage, multi-passage MRC is more challenging since there are likely multiple confusing answer candidates coming from different passages.
+% In this work, we propose an end-to-end framework that enables those answer candidates from different passages to verify each other based on their content representation. Our model  predicts the final answer from three aspects: the answer boundary, the answer content and the cross-passage answer verification. Experiments show that our method outperforms the baseline model by a large margin and achieves state-of-the-art performance on both the English MS-MARCO dataset and the Chinese DuReader dataset. 
+\end{abstract}
+
+\input{introduction}
+
+\input{approach}
+
+\input{experiments}
+
+\input{analysis}
+
+\input{related}
+
+\input{conclusion}
+
+\section*{Acknowledgments}
+This work is supported by the National Basic Research Program of China (973 program, No. 2014CB340505) and Baidu-Peking University Joint Project.
+We thank the Microsoft MSMARCO team for evaluating our results on the anonymous test set. We also thank Ying Chen, Xuan Liu and the anonymous reviewers for their constructive criticism of the manuscript.
+
+
+% include your own bib file like this:
+%\bibliographystyle{acl}
+%\bibliography{acl2018}
+\bibliography{ref}
+\bibliographystyle{acl_natbib}
+
+\end{document}

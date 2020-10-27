@@ -1,0 +1,33 @@
+\section{Experiments}
+\label{sec:experiments}
+
+To demonstrate the flexibility and modeling power of our approach, we provide
+experimental results on a diverse set of structured prediction tasks.
+We apply our approach to POS tagging, syntactic dependency parsing, and sentence
+compression.
+
+While directly optimizing the global model defined by Eq.~\eqref{eq:global-cost} works well,
+we found that training the model in two steps
+achieves the same precision much faster:
+we first pretrain the network using the local objective given in Eq.~\eqref{eq:local-beam-cost},
+and then perform additional training steps using the global objective given in Eq.~\eqref{eq:global-beam}.
+We pretrain all layers except the softmax layer in this way.
+We purposefully abstain from complicated hand engineering
+of input features, 
+which might improve performance further \cite{durrett-klein:2015:ACL}.
+
+We use the training recipe from \newcite{weiss-etAl:2015:ACL} for each training
+stage of our model. Specifically, we use averaged stochastic gradient descent
+with momentum, and we tune the learning rate, learning rate schedule,
+momentum, and early stopping time using a separate held-out corpus for each
+task. We tune again with a different set of hyperparameters for training with
+the global objective. 
+
+\input{tex/experiments-tagging}
+\input{tex/experiments-parsing}
+\input{tex/experiments-compression}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% End:

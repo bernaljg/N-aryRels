@@ -1,0 +1,71 @@
+\section{Introduction}
+
+Neural network approaches have taken the field of
+natural language processing (NLP) by storm.
+In particular, variants of long short-term memory (LSTM)
+networks \cite{hochreiter1997} have produced impressive
+results on some of the classic NLP tasks such as
+part-of-speech tagging \cite{ling-EtAl:2015:EMNLP},
+syntactic parsing \cite{grammarAsForeign} and
+semantic role labeling \cite{zhou-xu:2015:ACL}.
+One might speculate that it is the recurrent nature
+of these models that enables these results.
+
+In this work we demonstrate that simple feed-forward networks without
+any recurrence can achieve comparable or better accuracies than LSTMs,
+as long as they are globally normalized.  Our model, described in
+detail in Section \ref{sec:model}, uses a transition system
+\cite{Nivre:2006} and feature embeddings as introduced by
+\newcite{chen-manning:2014:EMNLP}.  We do not use any recurrence, but
+perform beam search for maintaining multiple hypotheses and introduce
+global normalization with a conditional random field (CRF) objective
+\cite{bottou-97,lecun-98h,crf,collobert2011natural}
+to overcome the label bias problem that locally normalized models
+suffer from.  Since we use beam inference, we approximate
+the partition function by summing over the elements in the beam,
+and use early updates
+\cite{collins-roark:2004:ACL,zhou-etAl:2015:ACL}. We compute gradients
+based on this approximate global normalization and perform full
+backpropagation training of all neural network parameters based on the
+CRF loss.
+
+In Section~\ref{sec:label_bias} we revisit the label bias problem and the implication that
+globally normalized models are strictly more expressive than
+locally normalized models.
+Lookahead features can partially mitigate this discrepancy, but cannot fully
+compensate for it---a point to which we return later.
+To empirically demonstrate the effectiveness of global normalization, we evaluate our model
+on part-of-speech tagging, syntactic dependency parsing
+and sentence compression (Section~\ref{sec:experiments}).
+Our model achieves state-of-the-art accuracy on all of these tasks,
+matching or outperforming LSTMs while being significantly faster.
+In particular for dependency parsing on the Wall Street Journal
+we achieve the best-ever published unlabeled
+attachment score of 94.61\%.
+
+As discussed in more detail in Section \ref{sec:discussion},
+we also outperform previous structured training
+approaches used for neural network transition-based parsing.
+Our ablation experiments show that
+we outperform \newcite{weiss-etAl:2015:ACL} and \newcite{alberti-EtAl:2015:EMNLP}
+because we do global backpropagation training of all model parameters, while
+they fix the neural network parameters when training the global part of their model.
+We also outperform \newcite{zhou-etAl:2015:ACL} despite using a smaller beam.
+To shed additional light on the label bias problem in practice,
+we provide a sentence compression example where the local model completely fails.
+We then demonstrate that a globally normalized parsing model without any lookahead
+features is almost as accurate as our best model,
+while a locally normalized model loses more than 10\% absolute in accuracy
+because it cannot effectively incorporate evidence as it becomes available.
+
+Finally, we provide an open-source implementation of our method, called
+SyntaxNet,\footnote{http://github.com/tensorflow/models/tree/master/syntaxnet}
+which we have integrated into the popular TensorFlow\footnote{http://www.tensorflow.org} 
+framework. We also provide a pre-trained,
+state-of-the art English dependency parser called ``Parsey McParseface,'' which
+we tuned for a balance of speed, simplicity, and accuracy.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% End:

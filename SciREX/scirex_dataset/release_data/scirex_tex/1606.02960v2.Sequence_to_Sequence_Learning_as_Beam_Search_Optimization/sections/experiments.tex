@@ -1,0 +1,208 @@
+\section{Data and Methods}
+We run experiments on three different tasks, comparing our approach to
+the seq2seq baseline, and to other relevant baselines.
+
+\subsection{Model}
+While the method we describe applies to seq2seq RNNs in general,
+for all experiments we use the global attention model of \newcite{luong15effective} ---
+which consists of an LSTM~\cite{hochreiter1997lstm} encoder and an
+LSTM decoder with a global attention model --- as both the baseline
+seq2seq model (i.e., as the model that computes the $g$ in
+Section~\ref{sec:background}) and as the model that computes our
+sequence-scores $f(w_{t}, \boldh_{t-1}, \boldx)$. As in \newcite{luong15effective}, we also use
+``input feeding,'' which involves feeding the attention distribution
+from the previous time-step into the decoder at the current step. 
+This model architecture has been found to be highly performant for neural
+machine translation and other seq2seq tasks. 
+
+To distinguish the models we refer to our system as BSO (beam search
+optimization) and to the baseline as seq2seq. When we apply constrained training (as discussed in Section~\ref{sec:forward}), we refer to the model as ConBSO. In providing results we also distinguish between the
+beam size $K_{tr}$ with which the model is trained, and the beam size
+$K_{te}$ which is used at test-time. In general, if we plan on
+evaluating with a beam of size $K_{te}$ it makes sense to train with a
+beam of size $K_{tr} = K_{te} \, {+} \, 1$, since our objective requires the
+gold sequence to be scored higher than the \textit{last} sequence on
+the beam.
+
+\subsection{Methodology}
+Here we detail additional techniques we found necessary to ensure the model learned effectively. First, we found that the model failed to learn when trained
+from a random initialization.\footnote{This may be because there is relatively little signal in the sparse, sequence-level gradient, but this point requires further investigation.} We therefore found it necessary to pre-train the model using a standard,
+word-level cross-entropy loss as described in
+Section~\ref{sec:background}. The necessity of pre-training in this instance is consistent with the findings of other authors who train non-local neural models~\cite{kingsbury09lattice,sak14sequence,andor16globally,ranzato16sequence}.\footnote{\newcite{andor16globally} found, however, that pre-training only increased convergence-speed, but was not necessary for obtaining good results.}
+
+Similarly, it is clear that the smaller the beam used in training is, the less room the model has to make erroneous predictions without running afoul of the margin loss. Accordingly, we also found it useful to use a ``curriculum beam'' strategy in training, whereby the size of the beam  is increased gradually during training. In particular, given a desired training beam size $K_{tr}$, we began training with a beam of size 2, and increased it by 1 every 2 epochs until reaching $K_{tr}$. 
+
+Finally, it has been established that \textit{dropout}~\cite{srivastava14dropout} regularization improves the performance of LSTMs~\cite{pham14dropout,zaremba14rnn}, and in our experiments we run beam search under dropout.\footnote{However, it is important to ensure that the same mask applied at each time-step of the forward search is also applied at the corresponding step of the backward pass. We accomplish this by pre-computing masks for each time-step, and sharing them between the partial sequence LSTMs.}
+
+For all experiments, we trained both seq2seq and BSO  models with mini-batch Adagrad~\cite{duchi2011adaptive} (using batches of size 64), and we renormalized all gradients so they did not exceed 5 before updating parameters. We did not extensively tune learning-rates, but we found initial rates of 0.02 for the encoder and decoder LSTMs, and a rate of 0.1 or 0.2 for
+the final linear layer (i.e., the layer tasked with making word-predictions at each
+time-step) to work well across all the tasks we considered. Code implementing the experiments described below can be found at \url{https://github.com/harvardnlp/BSO}.\footnote{Our code is based on Yoon Kim's seq2seq code, \url{https://github.com/harvardnlp/seq2seq-attn}.}
+
+\subsection{Tasks and Results}
+\label{sec:tasks}
+Our experiments are primarily intended to evaluate the
+effectiveness of beam search optimization over standard seq2seq training. As such, we run experiments with the same model across three very different problems: word ordering, dependency parsing, and machine translation. While we do not include all the features and extensions necessary to
+reach state-of-the-art performance, even the baseline seq2seq model is generally quite performant.
+
+\paragraph{Word Ordering}
+The task of correctly ordering the words in a shuffled sentence has recently gained some
+attention as a way to test the (syntactic) capabilities of
+text-generation
+systems~\cite{zhang11syntax,zhang15discriminative,liu15transition,schmaltz16word}. 
+We cast this task as seq2seq problem by viewing a shuffled sentence as
+a source sentence, and the correctly ordered sentence as the
+target. While word ordering is a somewhat synthetic task, it has two interesting properties for our purposes. First, it is a task which plausibly requires search (due to the exponentially many possible orderings), and, second, there is a clear hard constraint on output sequences, namely, that they be a permutation of the source sequence. For both the baseline and BSO models we
+enforce this constraint at test-time. However, we also experiment with
+constraining the BSO model during training, as described in Section~\ref{sec:forward}, by defining the $\suk$ function to only allow successor sequences containing un-used words in the source sentence.
+
+For experiments, we use the same PTB dataset (with the standard training,
+development, and test splits) and evaluation procedure as in
+\newcite{zhang15discriminative} and later work, with performance reported in terms of BLEU
+score with the correctly ordered sentences. For all word-ordering
+experiments we use 2-layer encoder and decoder LSTMs, each with 256
+hidden units, and dropout with a rate of 0.2 between LSTM layers. We use simple 0/1 costs in defining the $\Delta$ function.  
+
+We show our test-set results
+in Table~\ref{tab:wo}. We see that on this task there is a large improvement at 
+each beam size from switching to BSO, and a further improvement from using 
+the constrained model.
+
+\begin{table}
+  \centering
+  \begin{tabular}{lccc}
+    \toprule
+     & \multicolumn{3}{c}{Word Ordering (BLEU) } \\ 
+          & $K_{te}$ = 1 & $K_{te}$ = 5 & $K_{te}$ = 10 \\ 
+    \midrule
+    seq2seq & 25.2 & 29.8 & 31.0 \\
+    BSO     & 28.0 & 33.2 & 34.3 \\
+    ConBSO & \textbf{28.6} & \textbf{34.3} & \textbf{34.5} \\
+    \midrule
+    LSTM-LM & 15.4 &  - & 26.8 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Word ordering. BLEU Scores of seq2seq, BSO, constrained BSO, and a vanilla LSTM language model (from Schmaltz et al, 2016). All experiments above have $K_{tr}\,{=}\,6$.}
+  \label{tab:wo}
+\end{table}
+
+Inspired by a similar analysis in \newcite{daume05learning}, we further examine the relationship between $K_{tr}$ and $K_{te}$ when training with ConBSO in Table~\ref{tab:wosizeexp}. We see that larger $K_{tr}$ hurt greedy inference, but that results continue to improve, at least initially, when using a $K_{te}$ that is (somewhat) bigger than $K_{tr}-1$.
+\begin{table}
+  \centering
+  \begin{tabular}{lccc}
+    \toprule
+    & \multicolumn{3}{c}{Word Ordering Beam Size (BLEU) } \\ 
+    &  $K_{te}$ = 1 & $K_{te}$ = 5 & $K_{te}$ = 10 \\ 
+    \midrule
+    $K_{tr}$ = 2 & 30.59 & 31.23 & 30.26 \\
+    $K_{tr}$ = 6 & 28.20 & 34.22 & 34.67 \\
+    $K_{tr}$ = 11 & 26.88 & 34.42 & 34.88 \\   
+    \midrule
+    seq2seq & 26.11 & 30.20 & 31.04 \\         
+    \bottomrule
+  \end{tabular}
+  \caption{Beam-size experiments on word ordering development set. All numbers reflect training with constraints (ConBSO).}
+  \label{tab:wosizeexp}
+\end{table}
+% There, we compare with....
+
+
+\paragraph{Dependency Parsing}
+% (in the style of \newcite{chen14fast} and \newcite{weiss15structured})
+We next apply our model to dependency parsing, which also has hard constraints and plausibly benefits from search. We treat dependency parsing with arc-standard transitions as a seq2seq task by attempting to map from a source sentence to a target sequence of source sentence words interleaved with the arc-standard, reduce-actions in its parse. For example, we attempt to map the source sentence \begin{quote}
+But it was the Quotron problems that  ...
+\end{quote} to the target sequence \begin{quote}
+But it was @L\_SBJ @L\_DEP the Quotron problems @L\_NMOD @L\_NMOD that ...
+\end{quote}
+We use the standard Penn Treebank dataset splits with Stanford dependency labels, and the standard UAS/LAS evaluation metric (excluding punctuation) following  \newcite{chen14fast}. All models thus see only the words in the source and, when decoding, the actions it has emitted so far; no other features are used. We use 2-layer encoder and decoder LSTMs with 300 hidden units per layer and dropout with a rate of 0.3 between LSTM layers. We replace singleton words in the training set with an UNK token, normalize digits to a single symbol, and initialize word embeddings for both source and target words from the publicly available \texttt{word2vec}~\cite{mikolov2013distributed} embeddings. We use simple 0/1 costs in defining the $\Delta$ function. 
+
+As in the word-ordering case, we also experiment with modifying the $\suk$ function in order to train under hard constraints, namely, that the emitted target sequence be a valid parse. In particular, we constrain the output at each time-step to obey the stack constraint, and we ensure words in the source are emitted in order. 
+
+We show results on the test-set in Table~\ref{tab:dep}. BSO and ConBSO both show significant improvements over seq2seq, with ConBSO improving most on UAS, and BSO improving most on LAS. We achieve a reasonable final score of 91.57 UAS, which lags behind the state-of-the-art, but is promising for a general-purpose, word-only model.
+\begin{table}
+  \centering
+  %\hspace*{-0.3cm}
+  \begin{tabular}{@{}l@{\hspace{4pt}}ccc}
+    \toprule
+    & \multicolumn{3}{c}{Dependency Parsing (UAS/LAS) } \\ 
+          & $K_{te}$ = 1 & $K_{te}$ = 5 & $K_{te}$ = 10 \\ 
+    \midrule
+    seq2seq & \textbf{87.33/82.26} & 88.53/84.16 & 88.66/84.33\\
+    BSO & 86.91/82.11 & 91.00/\textbf{87.18} & 91.17/\textbf{87.41} \\
+    ConBSO & 85.11/79.32 & \textbf{91.25}/86.92 & \textbf{91.57}/87.26 \\
+    \midrule
+    Andor & 93.17/91.18 & - & - \\ 
+    \bottomrule
+  \end{tabular}
+  \caption{Dependency parsing. UAS/LAS of  seq2seq, BSO, ConBSO and baselines on PTB test set. Andor is the current state-of-the-art model for this data set (Andor et al. 2016), and we note that with a beam of size 32 they obtain 94.41/92.55. All experiments above have $K_{tr}\,{=}\,6$.}
+  \label{tab:dep}
+\end{table}
+
+\paragraph{Translation}
+We finally evaluate our model on a small machine translation dataset, which allows us to experiment with a cost function that is not 0/1, and to consider other baselines that attempt to mitigate exposure bias in the seq2seq setting. We use the dataset from the work of \newcite{ranzato16sequence}, which uses data from the German-to-English portion of the IWSLT 2014 machine translation evaluation campaign~\cite{cettolo14report}. The data comes from translated TED talks, and the dataset contains roughly 153K training sentences, 7K development sentences, and 7K test sentences. We use the same preprocessing and dataset splits as \newcite{ranzato16sequence}, and like them we also use a single-layer LSTM decoder with 256 units. We also use dropout with a rate of 0.2 between each LSTM layer. We emphasize, however, that while our decoder LSTM is of the same size as that of \newcite{ranzato16sequence}, our results are not directly comparable, because we use an LSTM encoder (rather than a convolutional encoder as they do), a slightly different attention mechanism, and input feeding~\cite{luong15effective}.
+
+For our main MT results, we set $\Delta(\beampred{t}{k})$ to $1 \,{-}\,\mathrm{SB}(\hat{y}_{r+1:t}^{({K})}, y_{r+1:t})$, where $r$ is the last margin violation and $\mathrm{SB}$ denotes smoothed, sentence-level BLEU \cite{chen14systematic}. This setting of $\Delta$ should act to penalize erroneous predictions with a relatively low sentence-level BLEU score more than those with a relatively high sentence-level BLEU score. In Table~\ref{tab:mtfinal} we show our final results and those from \newcite{ranzato16sequence}.\footnote{Some results from personal communication.} While we start with an improved baseline, we see similarly large increases in accuracy as those obtained by DAD and MIXER, in particular when $K_{te} > 1$. 
+
+\begin{table}[t!]
+  \centering
+  \begin{tabular}{lccc}
+    \toprule
+    & \multicolumn{3}{c}{Machine Translation (BLEU) } \\ 
+    &  $K_{te}$ = 1 & $K_{te}$ = 5 & $K_{te}$ = 10 \\ 
+    \midrule
+    seq2seq & 22.53 & 24.03 & 23.87 \\
+    BSO, SB-$\Delta$ & \textbf{23.83} & \textbf{26.36} & \textbf{25.48} \\
+    \midrule
+    XENT & 17.74 & 20.10 & 20.28 \\
+    DAD & 20.12 & 22.25 & 22.40 \\ 
+    MIXER & 20.73 & 21.81 & 21.83 \\    
+    \bottomrule
+  \end{tabular}
+  \caption{Machine translation experiments on test set; results below middle line are from MIXER model of Ranzato et al. (2016). SB-$\Delta$ indicates sentence BLEU costs are used in defining $\Delta$.  XENT is similar to our seq2seq model but with a convolutional encoder and simpler attention. DAD trains seq2seq with scheduled sampling (Bengio et al., 2015). BSO, SB-$\Delta$ experiments above have $K_{tr} \niceq 6$.}
+  \label{tab:mtfinal}
+\end{table}
+
+We further investigate the utility of these sequence-level costs in Table~\ref{tab:mtdelt}, which compares using sentence-level BLEU costs in defining $\Delta$ with using 0/1 costs.
+\begin{table}[t!]
+  \centering
+  \begin{tabular}{lccc}
+    \toprule
+    & \multicolumn{3}{c}{Machine Translation (BLEU)} \\ 
+     &  $K_{te}$ = 1 & $K_{te}$ = 5 & $K_{te}$ = 10 \\ 
+    \midrule
+    0/1-$\Delta$ & 25.73  & 28.21 & 27.43  \\  
+        SB-$\Delta$ & 25.99  & 28.45 & 27.58 \\  
+    \bottomrule
+  \end{tabular}
+  \caption{BLEU scores obtained on the machine translation development data when training with $\Delta(\beampred{t}{k}) \niceq 1$ (top) and $\Delta(\beampred{t}{k}) \niceq 1 \,{-}\,\mathrm{SB}(\hat{y}_{r+1:t}^{({K})}, y_{r+1:t})$ (bottom), and $K_{tr}$ = 6. }
+\label{tab:mtdelt}
+\end{table}
+We see that the more sophisticated sequence-level costs have a moderate effect on BLEU score.
+
+%Finally, in Table~\ref{tab:mtsizeexp}
+%
+%\begin{table}
+%  \centering
+%  \begin{tabular}{lccc}
+%    \toprule
+%    & \multicolumn{3}{c}{MT Beam Size (BLEU) } \\ 
+%    &  $K_{te}$ = 1 & $K_{te}$ = 5 & $K_{te}$ = 10 \\ 
+%    \midrule
+%    $K_{tr}$ = 2 & 24.86 & 23.20 & 20.54 \\
+%    $K_{tr}$ = 6 & 25.73 & 28.21 & 27.43 \\
+%    $K_{tr}$ = 11 & 25.03 & 28.42 & 27.92 \\   
+%    \midrule
+%    seq2seq & 24.90 & 26.34 & 26.02 \\         
+%    \bottomrule
+%  \end{tabular}
+%  \caption{Beam-size experiments on translation development set. All numbers reflect training with $\Delta(\beampred{t}{k})=1$.}
+%  \label{tab:mtsizeexp}
+%\end{table}
+\paragraph{Timing}
+Given Algorithm~\ref{alg:treebp}, we would expect training time to increase linearly with the size of the beam. On the above MT task, our highly tuned seq2seq baseline processes an average of 13,038 tokens/second (including both source and target tokens) on a GTX 970 GPU. For beams of size $K_{tr}$ = 2, 3, 4, 5, and 6, our implementation processes on average 1,985, 1,768, 1,709, 1,521, and 1,458 tokens/second, respectively. Thus, we appear to pay an initial constant factor of $\approx 3.3$ due to the more complicated forward and backward passes, and then training scales with the size of the beam. Because we batch beam predictions on a GPU, however, we find that in practice training time scales sub-linearly with the beam-size. 
+
+\section{Conclusion}
+We have introduced a variant of seq2seq and an associated beam search training scheme, which addresses exposure bias as well as label bias, and moreover allows for both training with sequence-level cost functions as well as with hard constraints. Future work will examine scaling this approach to much larger datasets.
+
+
+
+

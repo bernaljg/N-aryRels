@@ -1,0 +1,70 @@
+
+
+
+
+
+\section{Related work}
+\label{sec:related}
+
+In the past decades, extensive studies have been conducted to develop various
+ image restoration methods. See detailed reviews in a survey~\cite{DBLP:journals/spm/Milanfar13}.
+Traditional methods such as the BM3D algorithm~\cite{DBLP:journals/tip/DabovFKE07}
+and dictionary learning based methods~\cite{DBLP:journals/tip/WangYWCYH15,
+DBLP:conf/iccv/GuZXMFZ15,DBLP:journals/tip/ChatterjeeM09} have shown very promising
+performance on image restoration topics such as image denoising and super-resolution.
+Due to the ill-posed nature of image restoration, image prior knowledge formulated
+as regularization techniques are widely used. Classic regularization models, such as
+total variation~\cite{Rudin:1992:NTV:142273.142312,Chan05TV,Oli09TV}, are effective
+in removing noise artifacts, but also tend to over-smooth the images. As an alternative,
+sparse representation~\cite{DBLP:journals/tip/EladA06,DBLP:journals/tip/DongZSL13,
+DBLP:journals/tip/DongZSW11,DBLP:journals/pami/KimK10,DBLP:journals/tip/YangWHM10} based
+prior modeling is   popular, too. Mathematically, the sparse representation model
+assumes that a data point $x$ can be linearly reconstructed by an over-completed dictionary,
+and most of the coefficients are zero or close to zero.
+
+An active (and probably more promising) category for image restoration is the neural
+network based methods. The most significant difference between neural network methods
+and other methods is that they typically learn parameters for image restoration directly
+from training data (e.g., pairs of clean and corrupted images) rather than relying on
+pre-defined image priors.
+
+
+Stacked denoising auto-encoder~\cite{DBLP:conf/icml/VincentLBM08} is one of the most well-known
+deep neural network models which can be used for image denoising. Unsupervised pre-training,
+which minimizes the reconstruction error with respect to inputs, is done for one layer at a time.
+Once all layers are pre-trained, the network goes through a fine-tuning stage. Xie et al.~\cite{DBLP:conf/nips/XieXC12}
+combined sparse coding and deep networks pre-trained with denoising auto-encoder for
+low-level vision tasks such as image denoising and inpainting. The main idea is that the
+sparsity-inducing term for regularization is proposed for improved performance. Deep network
+cascade (DNC)~\cite{DBLP:conf/eccv/CuiCSZC14} is a cascade of multiple stacked collaborative
+local auto-encoders for image super-resolution.  High frequency texture enhanced image patches are fed
+into the network to suppress the noises and collaborate the compatibility of the overlapping patches.
+
+
+Other neural network based image restoration methods using networks such as multi-layer perceptron.
+Early works, such as a multi-layer perceptron with a multilevel sigmoidal function
+~\cite{DBLP:journals/tsp/SivakumarD93}, have been proposed and proved to be effective in image
+restoration tasks. Burger et al.~\cite{DBLP:conf/cvpr/BurgerSH12} presented a patch-based algorithm
+learned on a large dataset with a plain multi-layer perceptron and is able to compete with the
+state-of-the-art traditional image denoising methods such as BM3D. They also concluded that with large networks,
+large training data, neural networks can achieve state-of-the-art image denoising performance,
+which is confirmed in the work here.
+
+Compared to auto-encodes and multilayer perceptron, it seems that convolutional neural networks
+have achieved even more significant success in the field of image restoration. Jain and Seung
+~\cite{DBLP:conf/nips/JainS08} proposed fully convolutional CNN for denoising. The network is
+trained by minimizing the loss between a clean image and its corrupted version by adding noises
+on it. They found that CNN works well on both blind and non-blind image denoising, providing
+comparable or even superior performance to wavelet and Markov Random Field (MRF) methods.
+Recently, Dong et al.~\cite{DBLP:journals/pami/DongLHT16} proposed to directly learn an end-to-end
+mapping between the low/high-resolution images for image super-resolution. They observed that
+convolutional neural networks are enseentially related to sparse coding based methods, i.e.,
+the three layers in their network can be viewed as patch representation extractor, non-linear mapping
+and image reconstructor. They also proposed variant networks for other image restoration
+tasks such as JPEG debloking~\cite{DBLP:conf/iccv/DongDLT15}. Wang et al.~\cite{DBLP:conf/iccv/WangLYHH15}
+argued that domain expertise represented by the conventional sparse coding is still valuable
+and can be combined to achieve further improved results in image super-resolution. Instead of
+training with different levels of scaling factors, they proposed to use a cascade structure to
+repeatedly enlarge the low-resolution image by a fixed scale until reaching a desired size.
+In general, DNN-based methods learn restoration parameters directly from data, which tends to
+been more effective in real-world image restoration applications.

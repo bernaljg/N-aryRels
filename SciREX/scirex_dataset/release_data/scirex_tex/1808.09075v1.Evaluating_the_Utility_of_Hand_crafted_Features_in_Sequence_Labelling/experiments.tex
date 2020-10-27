@@ -1,0 +1,64 @@
+\section{Experiments}
+
+In this section, we present our experimental setup and results for name entity recognition over the CoNLL 2003 English NER shared task dataset \cite{tjong2003introduction}. 
+
+\subsection{Experimental Setup}
+\paragraph{Dataset.} 
+We use the CoNLL 2003 NER shared task dataset, consisting of 14,041/3,250/3,453 sentences in the training/development/test set respectively, all extracted from Reuters news articles during the period from 1996 to 1997. 
+The dataset is annotated with four categories of name entities: \textit{PERSON, LOCATION, ORGANIZATION} and \textit{MISC}. 
+We use the \texttt{IOBES} tagging scheme, as previous study have shown that this scheme provides a modest improvement to the model performance \cite{ratinov2009design, chiu2016named, lample2016neural, ma2016end}.
+
+\paragraph{Model configuration.}
+Following the work of \newcite{ma2016end}, we initialise word embeddings with GloVe \cite{pennington2014glove} ($300$-dimensional, trained on a 6B-token corpus).
+Character embeddings are $30$-dimensional and randomly initialised with a uniform distribution in the range $[-\sqrt{\frac{3}{dim}}, +\sqrt{\frac{3}{dim}}]$.
+Parameters are optimised with stochastic gradient descent (SGD) with an initial learning rate of $\eta = 0.015$ and momentum of $0.9$. 
+Exponential learning rate decay is applied every 5 epochs with a factor of $0.8$. 
+To reduce the impact of exploding gradients, we employ gradient clipping at $5.0$ \cite{pascanu2013difficulty}. 
+
+We train our models on a single GeForce GTX TITAN X GPU.
+With the above hyper-parameter setting, training takes approximately $8$ hours for a full run of $40$ epochs.
+
+\paragraph{Evaluation.} 
+We measure model performance with the official CoNLL evaluation script and report span-level named entity F-score on the test set using early stopping based on the performance on the validation set. 
+We report average F-scores and standard deviation over 5 runs for our model.
+
+\paragraph{Baseline.}
+In addition to reporting a number of prior results of competitive baseline models, as listed in \tabref{table1}, we also re-implement the Bi-LSTM-CNN-CRF model by \newcite{ma2016end} (referred to as Neural-CRF in \tabref{table1}) and report its average performance.
+
+
+\subsection{Results}
+\begin{table}[tb]
+\centering
+\small
+\begin{tabular}{lc}
+\toprule
+Model                     & $F_1$ \\
+\midrule
+\citet{chieu2002named} & 88.31 \\
+\citet{florian2003named} & 88.76 \\
+\citet{ando2005framework} & 89.31 \\
+\citet{collobert2011natural}   & 89.59       \\
+\citet{huang2015bidirectional} & 90.10       \\
+\citet{passos2014lexicon}      & 90.90       \\
+\citet{lample2016neural}       & 90.94       \\
+\citet{luo2015joint}           & 91.20       \\
+\citet{ma2016end}              & 91.21       \\
+\citet{yang2017neural}         & 91.62 \\
+\citet{Peters+:2018}           & 90.15 \\
+\citet{Peters+:2018}+ELMo      & \textbf{92.22} ($\pm$ 0.10) \\
+Neural-CRF$\ddagger$           & 91.06 ($\pm$ 0.18)  \\
+Neural-CRF+AE$\ddagger*$       & 91.89 ($\pm$ 0.23)    \\ 
+\midrule
+\citet{ratinov2009design}$\dagger$ & 90.80       \\
+\citet{chiu2016named}$\dagger$     & 91.62       \\ 
+Neural-CRF+AE$\dagger$ $\ddagger$ & \textbf{92.29} ($\pm$ 0.20)\\
+\bottomrule
+\end{tabular}
+\caption{NER Performance on the CoNLL 2003 English NER shared task test set. \textbf{Bold} highlights best performance. $\dagger$ marks models trained on both the training and development sets. $\ddagger$ indicates average performance over 5 runs. $*$ indicates statistical significance on the test set against Neural-CRF by two-sample Student's t-test at level $\alpha=0.05$.}
+\label{table1}
+\end{table}
+
+The experimental results are presented in \tabref{table1}.
+Observe that Neural-CRF+AE, trained either on the training set only or with the addition of the development set, achieves substantial improvements in F-score in both settings, superior to all but one of the benchmark models, highlighting the utility of hand-crafted features incorporated with the proposed auto-encoder loss.
+Compared against the Neural-CRF, a very strong model in itself, our model significantly improves performance, showing the positive impact of our technique for exploiting manually-engineered  features.
+Although \citet{Peters+:2018} report a higher F-score using their ELMo embedding technique, our approach here is orthogonal, and accordingly we would expect a performance increase if we were to incorporate their ELMo representations into our model.

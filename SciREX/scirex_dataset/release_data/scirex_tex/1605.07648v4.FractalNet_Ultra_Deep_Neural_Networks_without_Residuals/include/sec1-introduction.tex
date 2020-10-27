@@ -1,0 +1,102 @@
+Residual networks~\citep{he2015deep}, or {\resnets}, lead a recent and dramatic
+increase in both depth and accuracy of convolutional neural networks,
+facilitated by constraining the network to learn residuals.  {\Resnet}
+variants~\citep{he2015deep,he2016identity,huang2016stochasticdepth} and related
+architectures~\citep{srivastava2015highway} employ the common technique of
+initializing and anchoring, via a pass-through channel, a network to the
+identity function.  Training now differs in two respects.  First, the objective
+changes to learning residual outputs, rather than unreferenced absolute
+mappings.  Second, these networks exhibit a type of deep supervision~\citep{
+lee2014deeply}, as near-identity layers effectively reduce distance to the
+loss.  \cite{he2015deep} speculate that the former, the residual formulation
+itself, is crucial.
+
+\begin{figure}[ht]
+   \begin{center}
+      \includestandalone{include/fig-overview}
+   \end{center}
+   \vspace{-0.02\linewidth}
+   \caption{
+      \textbf{Fractal architecture.}
+      \emph{Left:}
+         A simple expansion rule generates a fractal architecture with $C$
+         intertwined columns.  The base case, $f_1(z)$, has a single layer
+         of the chosen type (\eg~convolutional) between input and output.
+         Join layers compute element-wise mean.
+      \emph{Right:}
+         Deep convolutional networks periodically reduce spatial resolution
+         via pooling.  A fractal version uses $f_C$ as a building block
+         between pooling layers.  Stacking $B$ such blocks yields a network
+         whose total depth, measured in terms of convolution layers, is
+         $B \cdot 2^{C-1}$.  This example has depth $40$ ($B=5$, $C=4$).
+   }
+   \label{fig:fractalnet}
+\end{figure}
+
+We show otherwise, by constructing a competitive extremely deep architecture
+that does not rely on residuals.  Our design principle is pure enough to
+communicate in a single word, fractal, and a simple diagram
+(Figure~\ref{fig:fractalnet}).  Yet, fractal networks implicitly recapitulate
+many properties hard-wired into previous successful architectures.  Deep
+supervision not only arises automatically, but also drives a type of
+student-teacher learning~\citep{ba2014dodeep,urban2016dodeepsfollowup} internal
+to the network.  Modular building blocks of other designs~\citep{
+szegedy2015inception,liao2015competitive} resemble special cases of a fractal
+network's nested substructure.
+
+For fractal networks, simplicity of training mirrors simplicity of design.
+A single loss, attached to the final layer, suffices to drive internal
+behavior mimicking deep supervision.  Parameters are randomly initialized.
+As they contain subnetworks of many depths, fractal networks are robust to
+choice of overall depth; make them deep enough and training will carve out a
+useful assembly of subnetworks.
+
+The entirety of emergent behavior resulting from a fractal design may erode
+the need for recent engineering tricks intended to achieve similar effects.
+These tricks include residual functional forms with identity initialization,
+manual deep supervision, hand-crafted architectural modules, and
+student-teacher training regimes.  Section~\ref{sec:related} reviews this
+large body of related techniques.  Hybrid designs could certainly integrate
+any of them with a fractal architecture; we leave open the question of the
+degree to which such hybrids are synergistic.
+
+Our main contribution is twofold:
+\begin{itemize}
+   \item{
+      We introduce {\fracnet}, the first simple alternative to {\resnet}.
+      {\Fracnet} shows that explicit residual learning is not a requirement
+      for building ultra-deep neural networks.
+   }
+   \item{
+      Through analysis and experiments, we elucidate connections between
+      {\fracnet} and an array of phenomena engineered into previous deep
+      network designs.
+   }
+\end{itemize}
+
+As an additional contribution, we develop {\droppath}, a novel regularization
+protocol for ultra-deep fractal networks.  Without data augmentation, fractal
+networks, trained with {\droppath} and {\dropout}~\citep{dropout}, exceed the
+performance of residual networks regularized via stochastic depth~\citep{
+huang2016stochasticdepth}.  Though, like stochastic depth, it randomly removes
+macro-scale components, {\droppath} further exploits our fractal structure
+in choosing which components to disable.
+
+{\Droppath} constitutes not only a regularization strategy, but also provides
+means of optionally imparting fractal networks with anytime behavior.  A
+particular schedule of dropped paths during learning prevents subnetworks of
+different depths from co-adapting.  As a consequence, both shallow and deep
+subnetworks must individually produce correct output.  Querying a shallow
+subnetwork thus yields a quick and moderately accurate result in advance of
+completion of the full network.
+
+Section~\ref{sec:method} elaborates the technical details of fractal networks
+and {\droppath}.  Section~\ref{sec:results} provides experimental comparisons
+to residual networks across the CIFAR-10, CIFAR-100~\citep{CIFAR}, SVHN~\citep{
+SVHN}, and ImageNet~\citep{deng2009imagenet} datasets.  We also evaluate
+regularization and data augmentation strategies, investigate subnetwork
+student-teacher behavior during training, and benchmark anytime networks
+obtained using {\droppath}.  Section~\ref{sec:discussion} provides synthesis.
+By virtue of encapsulating many known, yet seemingly distinct, design
+principles, self-similar structure may materialize as a fundamental component
+of neural architectures.

@@ -1,0 +1,206 @@
+
+\begin{figure*}[t!]
+\centerline {
+	\epsfxsize=6.5in
+	\epsfbox{KV-Memnn_diagramV2}
+  }
+  \caption{\label{fig:KV-Memnn_diagram} The Key-Value Memory Network model for question answering. See Section~\ref{sec:models} for details.}
+\end{figure*}
+
+
+%We demonstrate its usefulness when applied to the problem of reading documents and
+%answering questions about them.
+% which we apply to the problem of reading documents.
+The Key-Value Memory Network model is based on the  Memory Network (MemNNs)
+model \citep{Weston14,sukhbaatar2015end} which has proven useful for a variety of
+document reading and question answering tasks:
+for reading children's books and answering questions about them \citep{hill2015goldilocks},
+for complex reasoning over simulated stories \citep{weston2015towards}
+and for utilizing KBs to answer questions \citep{bordes2015large}.
+
+Key-value paired memories are a generalization of the way context (e.g. knowledge bases or
+documents to be read) are stored in memory. The lookup (addressing) stage is based on the key
+memory while the reading stage (giving the returned result) uses the value memory.
+%In contrast conventional MemNNs use an
+This gives both (i) greater flexibility for the practitioner to encode prior knowledge
+about their task; and (ii) more effective power in the model via nontrivial
+transforms between key and value.
+The key should be designed with features to help match it to the question,
+while the value should be designed with features to help match it to the response (answer).
+An important property of the model is that the entire model
+can be trained with key-value transforms
+while still using standard backpropagation via stochastic gradient descent.
+
+
+
+\if 0
+Memory Networks \citep{Weston14,sukhbaatar2015end}
+ are a recently introduced model that have proved useful for a variety of
+document reading and question answering tasks:
+for reading children's books and answering questions about them \citep{hill2015goldilocks},
+for complex reasoning over simulated stories \citep{weston2015towards},
+and for utilizing KBs to answer questions \citep{bordes2015large}.
+\fi
+
+\subsection{Model Description}
+
+Our model is based on
+ the end-to-end Memory Network  architecture of \cite{sukhbaatar2015end}.
+%which
+%is a flexible class of models for storing and retrieving the relevant context needed to answer
+%questions that can be trained end-to-end via stochastic gradient descent.
+A high-level view of both models is as follows:
+one defines a memory, which is a possibly very large array of slots
+ which can encode both long-term
+and short-term context.
+%At test time one is given a query (e.g. the question in QA tasks), which is used
+%to iteratively address and read from the memory (these iterations are
+%also referred to as ``hops'')
+ %looking for relevant information to answer the question.
+% where the iterations are termed ``hops''.
+%Finally, after collecting information from the memory,
+%the original query and the retrieved context are combined as features to predict the final response.
+At test time one is given a query (e.g. the question in QA tasks), which is used to iteratively address and read from the memory (these iterations are also referred to as ``hops'') looking for relevant information to answer the question. At each step, the collected information from the memory is cumulatively added to the original query to build context for the next round. At the last iteration, the final retrieved context and the most recent query are combined as features to predict a response from a list of candidates.
+
+%We will first describe this architecture and then detail the simple, but very useful
+%extensions to this method developed in this work.
+%
+Figure~\ref{fig:KV-Memnn_diagram} illustrates the KV-MemNN model architecture.
+
+In KV-MemNNs we define  the memory slots as pairs of vectors $(k_1, v_1)\dots, (k_M, v_M)$
+and denote the question $x$.
+%Following \cite{dodge2015evaluating}
+The addressing and reading of the memory
+ involves three steps:
+\begin{itemize}
+\item {\bf Key Hashing:}
+ the question can be
+ used to pre-select a small subset of the possibly large array. This is done
+using an inverted index that finds a subset $(k_{h_1},v_{h_1}), \dots, (k_{h_N},v_{h_N})$
+ of memories of size $N$ where the key shares at
+least one word with the question with frequency < $F=1000$ (to ignore stop words),
+ following \cite{dodge2015evaluating}.
+%Clearly
+More sophisticated
+retrieval schemes could be used here, see e.g. \cite{manning2008introduction},
+%but this simple scheme sufficed for our needs in the
+%following experiments.
+\item {\bf Key Addressing:} during addressing, each candidate memory is assigned a relevance probability by comparing the question to each key:
+\[
+  p_{h_i} =  \text{Softmax}(A\Phi_X(x) \cdot A\Phi_K(k_{h_i}))
+\]
+where $\Phi_{\cdot}$ are feature maps of dimension $D$, $A$ is a $d \times D$ matrix
+and  $\text{Softmax}(z_i) = e^{z_i} / \sum_j e^{z_j}$.
+We discuss choices of feature map in Sec. \ref{sec:featuremap}.
+
+\item {\bf Value Reading:} in the final reading step, the values of the memories are read by taking their weighted sum using the addressing probabilities, and the vector $o$ is returned:
+\[
+       o = \sum_i p_{h_i}  A\Phi_V(v_{h_i})~.
+\]
+\end{itemize}
+
+The memory access process is conducted  by the ``controller'' neural network
+ using $q = A \Phi_X(x)$ as the query.
+After receiving the result $o$, the query is updated with $q_2 = R_1(q + o)$ where $R$ is a $d \times d$ matrix. The memory access is then repeated (specifically, only the addressing and reading steps, but not the hashing), using a different matrix $R_{j}$ on each hop, $j$. The key addressing equation is transformed accordingly to use the updated query:
+\[
+  p_{h_i} =  \text{Softmax}(q_{j+1}^\top A\Phi_K(k_{h_i}))~.
+\]
+
+The motivation for this is that new evidence can be combined into the query to focus on and
+retrieve more pertinent information in subsequent accesses.
+Finally, after a fixed number $H$ hops, the resulting state of the controller is used to compute a final prediction over the possible outputs:
+\[
+    \hat{a} = \text{argmax}_{i={1,\dots,C}} \text{Softmax}(q_{H+1}^\top B \Phi_Y(y_i))
+\]
+where $y_i$ are the possible candidate outputs, e.g. all the entities in the KB,
+or all possible candidate answer sentences in the case of a dataset like {\sc WikiQA}
+(see Sec. \ref{sec:wikiqa}).
+The $d \times D$ matrix $B$ can also be constrained to be identical to $A$.
+ The whole network is trained end-to-end, and the model
+learns to perform the iterative accesses to output the desired target $a$
+ by minimizing a standard cross-entropy
+loss between $\hat{a}$ and the correct answer $a$.
+Backpropagation and stochastic gradient descent are thus used to learn the matrices
+$A, B$ and $R_1, \dots, R_H$.
+
+
+To obtain the standard End-To-End Memory Network of \cite{sukhbaatar2015end}
+one can simply set the key and value to be the same for all memories.
+Hashing was not used in that paper,
+%  (as well as
+%remove the hashing stage from memory addressing). Key hashing is important for computational
+but is important for computational
+efficiency for large memory sizes, as already shown
+ in \cite{dodge2015evaluating}.
+We will now go on to describe specific applications of
+ key-value memories for the task of reading KBs or documents.
+
+
+\subsection{Key-Value Memories} \label{sec:featuremap}
+
+There are a variety of ways to employ key-value memories %for reading documents
+that can have important effects on overall performance.
+The ability to encode prior knowledge in this way is an important
+ component of KV-MemNNs, and we are free to define $\Phi_X, \Phi_Y, \Phi_K$ and $\Phi_V$
+for the query, answer, keys and values respectively.
+We now describe several possible variants of $\Phi_K$ and $\Phi_V$
+that we tried in our experiments,
+for simplicity we kept $\Phi_X$ and  $\Phi_Y$ fixed as bag-of-words representations.
+
+\paragraph{KB Triple}
+Knowledge base entries have a structure of triple ``subject {\em relation} object'' (see Table~\ref{fig:blade} for examples).
+The representation we consider is simple:
+the key is composed of the left-hand side entity (subject) and the relation,
+and the value is the right-hand side entity (object).
+We double the KB and consider the reversed relation as well
+(e.g. we now have two triples ``Blade Runner {\em directed\_by} Ridley Scott'' and
+``Ridley Scott {\em !directed\_by} Blade Runner'' where {\em !directed\_by} is a
+different entry in the dictionary than {\em directed\_by}). Having the entry both
+ways round is important for answering different kinds of questions
+(``Who directed Blade Runner?'' vs. ``What did Ridley Scott direct?'').
+For a standard MemNN that does not have key-value pairs the whole triple has to
+be encoded into the same memory slot.
+
+\paragraph{Sentence Level}
+For representing a document, one can
+%
+%Documents are
+ split it up into sentences, with each memory slot encoding one
+sentence.  Both the key and the value encode the entire sentence as a
+bag-of-words.  As the key and value are the same in this case, this
+is identical to a standard MemNN and this approach has been used in
+several papers \citep{weston2015towards,dodge2015evaluating}.
+
+\paragraph{Window Level}
+Documents are split up into windows of $W$ words; in our tasks we only include
+windows where the center word is an entity. Windows are represented using bag-of-words.
+Window representations for MemNNs have been shown to work well previously
+\citep{hill2015goldilocks}.
+However, in Key-Value MemNNs we encode the key as the entire window, and the value
+as only the center word, which is not possible in the MemNN architecture.
+This makes sense because the entire window is more likely to be pertinent as a match
+for the question (as the key), whereas the entity at the center is more pertinent
+as a match for the answer (as the value). We will compare these approaches in our
+experiments.
+
+\paragraph{Window + Center Encoding}
+Instead of representing the window as a pure bag-of-words, thus mixing the window center
+with the rest of the window, we can also encode them with different features. Here,
+we double the size, $D$, of the dictionary and encode the center of the window and the value
+ using the second dictionary. This should help the model pick out the relevance
+of the window center (more related to the answer)
+as compared to the words either side of it (more related to the question).
+
+
+\paragraph{Window + Title}
+The title of a document is commonly the answer to a question that relates to the text
+it contains. For example ``What did Harrison Ford star in?'' can be (partially) answered by the
+Wikipedia document with the title ``Blade Runner''. For this reason, we also consider
+a representation where the key is the word window as before,
+but the value is the document title.
+We also keep all the standard (window, center) key-value pairs from the window-level
+representation as well, thus doubling the number of memory slots in comparison.
+To differentiate the two keys with different values we add an extra feature
+``\_window\_'' or ``\_title\_'' to the key, depending on the value.
+The ``\_title\_'' version also includes the actual movie title in the key.
+This representation can be combined with center encoding. Note that this representation is inherently specific to datasets in which there is an apparent or meaningful title for each document.

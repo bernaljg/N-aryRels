@@ -1,0 +1,82 @@
+\newcommand{\ebA}{\texttt{\bf{A}}}
+\newcommand{\ebV}{\texttt{\bf{V}}}
+\newcommand{\ebf}{\texttt{\bf{f}}}
+\newcommand{\our}{$\boldsymbol{\star}$\xspace}
+
+\begin{table}[t!]
+% \centering
+\caption{Performance comparison with the state of the art. Results reported with the use of AlexNet or VGG are marked by (\ebA) or (\ebV), respectively. Use of fine-tuned network is marked by (\ebf), otherwise the off-the-shelf network is implied. \mbox{D:~Dimensionality}. Our methods are marked with \our and they are always accompanied by \cpl2. New state of the art highlighted in \nb{red}, surpassed state of the art in \ob{bold}, state of the art that retained the title in \protect\sb{outline}, and our methods that outperform previous state of the art on a \fcolorbox{gray!15}{gray!15}{gray background}. Best viewed in color.
+\label{tab:stateofart}}
+\vspace{-5pt}
+\footnotesize
+\begin{center}
+\setlength{\tabcolsep}{0.4mm}
+\begin{tabular}{|l@{}r|c|c|c|c|c|c|c|c|c|c|c|}
+    \hline
+     \multicolumn{2}{|c|}{\multirow{2}{*}{Method}}
+     & \multirow{2}{*}{D} & 
+     \multicolumn{2}{c|}{Oxf5k} & \multicolumn{2}{c|}{Oxf105k} &
+     \multicolumn{2}{c|}{Par6k}  & \multicolumn{2}{c|}{Par106k} & 
+     Hol & Hol \\ 
+     \cline{4-11}
+    & & & \tiny{\cropI} & \tiny{\cropA} & \tiny{\cropI} & \tiny{\cropA} & \tiny{\cropI} & \tiny{\cropA} & \tiny{\cropI} & \tiny{\cropA} &  & \scriptsize 101k \\ 
+    \hline 
+    \multicolumn{13}{c}{~} \\[-2ex]
+    \hline
+    \multicolumn{13}{|c|}{Compact representations} \\ \hline 
+    mVoc/BoW~\cite{RJC15}&                  & 128 & 48.8         & --           & 41.4         & --           & --           & --           & --           & --           & 65.6         & --        \\
+    Neural codes$^\dagger$~\cite{BSCL14} 
+                           &(\ebf\ebA)      & 128 & --           & \ob{55.7}    & --           & \ob{52.3}    & --           & --           & --           & --           & \ob{78.9}    & --        \\
+    MAC$^\ddagger$         &(\ebV)          & 128 & 53.5         & \ob{55.7}    & 43.8         & 45.6         & 69.5         & \ob{70.6}    & 53.4         & \ob{55.4}    & 72.6         & \ob{56.7} \\
+    CroW~\cite{KMO15}      &(\ebV)          & 128 & \ob{59.2}    & --           & \ob{51.6}    & --           & \ob{74.6}    & --           & \ob{63.2}    & --           & --           & --        \\ 
+    \our MAC               &(\ebf\ebV)      & 128 & \bo\nb{75.8} & \bo\nb{76.8} & \bo\nb{68.6} & \bo\nb{70.8} & \bo77.6      & \bo78.8      & \bo68.0      & \bo69.0      & 73.2         & \bo58.8      \\
+    \our R-MAC             &(\ebf\ebV)      & 128 & \bo72.5      & \bo76.7      & \bo64.3      & \bo69.7      & \bo\nb{78.5} & \bo\nb{80.3} & \bo\nb{69.3} & \bo\nb{71.2} & \bo\nb{79.3} & \bo\nb{65.2} \\
+    \hline
+    MAC$^\ddagger$         &(\ebV)          & 256 & 54.7         & 56.9         & 45.6         & 47.8         & 71.5         & 72.4    & 55.7         & \ob{57.3}    & 76.5         & \ob{61.3} \\
+    SPoC~\cite{BL15}       &(\ebV)          & 256 & --           & 53.1         & --           & \ob{50.1}    & --           & --           & --           & --           & 80.2         & --        \\
+    R-MAC~\cite{TSJ16}     &(\ebA)          & 256 & 56.1         & --           & 47.0         & --           & 72.9         & --           & 60.1         & --           & --           & --        \\    
+    CroW~\cite{KMO15}      &(\ebV)          & 256 & \ob{65.4}    & --           & \ob{59.3}    & --           & \ob{77.9}    & --           & \ob{67.8}    & --           & 83.1         & --        \\ 
+    NetVlad~\cite{AGTPS15} &(\ebV)          & 256 & --           & 55.5         & --           & --           & --           & 67.7         & --           & --           & \sb{86.0}    & --        \\ 
+    NetVlad~\cite{AGTPS15} &(\ebf\ebV)      & 256 & --           & \ob{63.5}    & --           & --           & --           & \ob{73.5}         & --           & --           & 84.3         & --        \\
+    \our MAC               &(\ebf\ebA)      & 256 & 62.2         & \bo65.4      & 52.8         & \bo58.0      & 68.9         & 72.2         & 54.7         & \bo58.5      & 76.2         & \bo63.8      \\
+    \our R-MAC             &(\ebf\ebA)      & 256 & 62.5         & \bo68.9      & 53.2         & \bo61.2      & 74.4         & \bo76.6      & 61.8         & \bo64.8      & 81.5         & \bo\nb{70.8} \\
+    \our MAC               &(\ebf\ebV)      & 256 & \bo\nb{77.4} & \bo\nb{78.2} & \bo\nb{70.7} & \bo\nb{72.6} & \bo80.8      & \bo81.9      & \bo72.2      & \bo73.4      & 77.3         & \bo62.9      \\
+    \our R-MAC             &(\ebf\ebV)      & 256 & \bo74.9      & \bo\nb{78.2} & \bo67.5      & \bo72.1      & \bo\nb{82.3} & \bo\nb{83.5} & \bo\nb{74.1} & \bo\nb{75.6} & 81.4         & \bo69.4      \\
+    \hline
+    MAC$^\ddagger$         &(\ebV)          & 512 & 56.4         & \ob{58.3}    & 47.8         & \ob{49.2}    & 72.3         & \ob{72.6}    & 58.0         & \ob{59.1}    & 76.7         & \ob{62.7} \\
+    R-MAC~\cite{TSJ16}     &(\ebV)          & 512 & 66.9         & --           & 61.6         & --           & \ob{83.0}    & --           & \ob{75.7}    & --           & --           & --        \\     
+    CroW~\cite{KMO15}      &(\ebV)          & 512 & \ob{68.2}    & --           & \ob{63.2}    & --           & 79.6         & --           & 71.0         & --           & 84.9         & --        \\    
+    \our MAC               &(\ebf\ebV)      & 512 & \bo\nb{79.7} & \bo80.0      & \bo\nb{73.9} & \bo\nb{75.1} & 82.4         & \bo82.9      & 74.6         & \bo75.3      & 79.5         & \bo67.0      \\
+    \our R-MAC             &(\ebf\ebV)      & 512 & \bo77.0      & \bo\nb{80.1} & \bo69.2      & \bo74.1      & \bo\nb{83.8} & \bo\nb{85.0} & \bo\nb{76.4} & \bo\nb{77.9} & 82.5         & \bo\nb{71.5} \\
+    \hline 
+    \multicolumn{13}{c}{~} \\[-2ex]
+    \hline
+    \multicolumn{13}{|c|}{Extreme short codes} \\ \hline 
+    Neural codes$^\dagger$~\cite{BSCL14} 
+                           &(\ebf\ebA)      & 16  & --           & \ob{41.8}    & --           & \ob{35.4}    & --           & --           & --           & --           & \sb{60.9}    & --        \\
+    \our MAC               &(\ebf\ebV)      & 16  & \bo\nb{56.2} & \bo\nb{57.4} & \bo\nb{45.5} & \bo\nb{47.6} & \bo57.3      & \bo62.9      & \bo43.4      & \bo48.5      & 51.3         & \bo25.6      \\
+    \our R-MAC             &(\ebf\ebV)      & 16  & \bo46.9      & \bo52.1      & \bo37.9      & \bo41.6      & \bo\nb{58.8} & \bo\nb{63.2} & \bo\nb{45.6} & \bo\nb{49.6} & 54.4         & \bo\nb{31.7} \\
+    \hline    
+    Neural codes$^\dagger$~\cite{BSCL14} 
+                           &(\ebf\ebA)      & 32  & --           & \ob{51.5}    & --           & \ob{46.7}    & --           & --           & --           & --           & \sb{72.9}    & --        \\
+    \our MAC               &(\ebf\ebV)      & 32  & \bo\nb{65.3} & \bo\nb{69.2} & \bo\nb{55.6} & \bo\nb{59.5} & \bo\nb{63.9} & \bo\nb{69.5} & \bo51.6      & \bo\nb{56.3} & 62.4         & \bo41.8      \\
+    \our R-MAC             &(\ebf\ebV)      & 32  & \bo58.4      & \bo64.2      & \bo50.1      & \bo55.1      & \bo\nb{63.9} & \bo67.4      & \bo\nb{52.7} & \bo55.8      & 68.0         & \bo\nb{49.6} \\
+    \hline 
+    \multicolumn{13}{c}{~} \\[-2ex]
+    \hline
+    \multicolumn{13}{|c|}{Re-ranking (R) and query expansion (QE)} \\ \hline 
+    BoW(1M)+QE~\cite{CMPM11}      &             & --  & 82.7         & --           & 76.7         & --           & 80.5         & --           & 71.0         & --           & --           & --   \\
+    BoW(16M)+QE~\cite{MPCM13}     &        & -- & 84.9         & --           & 79.5         & --           & 82.4         & --           & 77.3         & --           & --           & --   \\
+    HQE(65k)~\cite{TJ14}           &             & -- & \sb{88.0}    & --           & \sb{84.0}    & --           & 82.8         & --           & --           & --           & --           & --   \\
+    R-MAC+R+QE~\cite{TSJ16}  &(\ebV)       & 512 & 77.3         & --           & 73.2         & --           & \sb{86.5}    & --           & \sb{79.8}    & --           & --           & --   \\ 
+    CroW+QE~\cite{KMO15}      &(\ebV)       & 512 & 72.2         & --           & 67.8         & --           & 85.5         & --           & 79.7         & --           & --           & --   \\       
+    \our MAC+R+QE            &(\ebf\ebV)   & 512 & 85.0         & \bo\nb{85.4} & 81.8         & \bo\nb{82.3} & \bo\nb{86.5} & \bo\nb{87.0} & 78.8         & \bo79.6      & --           & --   \\
+    \our R-MAC+R+QE          &(\ebf\ebV)   & 512 & 82.9         & \bo84.5      & 77.9         & \bo80.4      & 85.6         & \bo86.4      & 78.3         & \bo\nb{79.7} & --           & --   \\
+    \hline
+\end{tabular}
+\end{center}
+\vspace{-5pt}
+\scriptsize
+$^\dagger$:~Full images are used as queries making the results not directly comparable on Oxford and Paris. \\
+$^\ddagger$:~Our evaluation of MAC with \pcawhiten as in~\cite{TSJ16} with the off-the-shelf network.
+\end{table}

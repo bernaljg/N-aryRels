@@ -1,0 +1,276 @@
+\begin{thebibliography}{45}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Arbel et~al.(2018)Arbel, Sutherland, Bi{\'n}kowski, and
+  Gretton]{mmd_gp}
+Michael Arbel, Dougal~J. Sutherland, Miko{\l}aj Bi{\'n}kowski, and Arthur
+  Gretton.
+\newblock On gradient regularizers for {MMD} {GAN}s.
+\newblock In \emph{NIPS}, 2018.
+
+\bibitem[Arjovsky et~al.(2017)Arjovsky, Chintala, and Bottou]{wgan}
+Martin Arjovsky, Soumith Chintala, and L{\'e}on Bottou.
+\newblock {W}asserstein generative adversarial networks.
+\newblock In \emph{ICML}, volume~70 of \emph{PMLR}, pp.\  214--223, 2017.
+
+\bibitem[Bi{\'n}kowski et~al.(2018)Bi{\'n}kowski, Sutherland, Arbel, and
+  Gretton]{mmd_gan_t}
+Miko{\l}aj Bi{\'n}kowski, Dougal~J. Sutherland, Michael Arbel, and Arthur
+  Gretton.
+\newblock Demystifying {MMD} {GAN}s.
+\newblock In \emph{ICLR}, 2018.
+
+\bibitem[Coates et~al.(2011)Coates, Ng, and Lee]{stl10}
+Adam Coates, Andrew Ng, and Honglak Lee.
+\newblock An analysis of single-layer networks in unsupervised feature
+  learning.
+\newblock In \emph{AISTATS}, volume~15 of \emph{PMLR}, pp.\  215--223, 2011.
+
+\bibitem[Dumoulin \& Visin(2016)Dumoulin and Visin]{conv_guide}
+Vincent Dumoulin and Francesco Visin.
+\newblock A guide to convolution arithmetic for deep learning, 2016.
+\newblock arxiv:1603.07285.
+
+\bibitem[Dziugaite et~al.(2015)Dziugaite, Roy, and Ghahramani]{gmmn2}
+Gintare~Karolina Dziugaite, Daniel~M. Roy, and Zoubin Ghahramani.
+\newblock Training generative neural networks via maximum mean discrepancy
+  optimization.
+\newblock In \emph{UAI}, pp.\  258--267, 2015.
+
+\bibitem[Genton(2002)]{class_kernel}
+Marc~G. Genton.
+\newblock Classes of kernels for machine learning: A statistics perspective.
+\newblock \emph{J. Mach. Learn. Res.}, 2:\penalty0 299--312, 2002.
+
+\bibitem[Goodfellow et~al.(2014)Goodfellow, Pouget-Abadie, Mirza, Xu,
+  Warde-Farley, Ozair, Courville, and Bengio]{gan}
+Ian~J. Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David
+  Warde-Farley, Sherjil Ozair, Aaron Courville, and Yoshua Bengio.
+\newblock Generative adversarial nets.
+\newblock In \emph{NIPS}, pp.\  2672--2680, 2014.
+
+\bibitem[Gretton et~al.(2012)Gretton, Borgwardt, Rasch, Sch\"{o}lkopf, and
+  Smola]{mmdtest}
+Arthur Gretton, Karsten~M. Borgwardt, Malte~J. Rasch, Bernhard Sch\"{o}lkopf,
+  and Alexander Smola.
+\newblock A kernel two-sample test.
+\newblock \emph{J. Mach. Learn. Res.}, 13:\penalty0 723--773, 2012.
+
+\bibitem[Grinblat et~al.(2017)Grinblat, Uzal, and Granitto]{split}
+Guillermo~L. Grinblat, Lucas~C. Uzal, and Pablo~M. Granitto.
+\newblock Class-splitting generative adversarial networks, 2017.
+\newblock arXiv:1709.07359.
+
+\bibitem[Gulrajani et~al.(2017)Gulrajani, Ahmed, Arjovsky, Dumoulin, and
+  Courville]{wgan_gp}
+Ishaan Gulrajani, Faruk Ahmed, Martin Arjovsky, Vincent Dumoulin, and Aaron
+  Courville.
+\newblock Improved training of {W}asserstein {GAN}s.
+\newblock In \emph{NIPS}, pp.\  5767--5777, 2017.
+
+\bibitem[He et~al.(2016)He, Zhang, Ren, and Sun]{resnet}
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+\newblock Deep residual learning for image recognition.
+\newblock In \emph{CVPR}, pp.\  770--778, 2016.
+
+\bibitem[Heusel et~al.(2017)Heusel, Ramsauer, Unterthiner, Nessler, and
+  Hochreiter]{ttur}
+Martin Heusel, Hubert Ramsauer, Thomas Unterthiner, Bernhard Nessler, and Sepp
+  Hochreiter.
+\newblock {GAN}s trained by a two time-scale update rule converge to a local
+  {Nash} equilibrium.
+\newblock In \emph{NIPS}, pp.\  6626--6637, 2017.
+
+\bibitem[Ho \& Ermon(2016)Ho and Ermon]{reinforce_gan}
+Jonathan Ho and Stefano Ermon.
+\newblock Generative adversarial imitation learning.
+\newblock In \emph{NIPS}, pp.\  4565--4573, 2016.
+
+\bibitem[Huang et~al.(2017)Huang, Li, Poursaeed, Hopcroft, and Belongie]{stack}
+Xun Huang, Yixuan Li, Omid Poursaeed, John~E. Hopcroft, and Serge~J. Belongie.
+\newblock Stacked generative adversarial networks.
+\newblock \emph{CVPR}, pp.\  1866--1875, 2017.
+
+\bibitem[Ioffe \& Szegedy(2015)Ioffe and Szegedy]{batchnorm}
+Sergey Ioffe and Christian Szegedy.
+\newblock Batch normalization: Accelerating deep network training by reducing
+  internal covariate shift.
+\newblock In \emph{ICML}, pp.\  448--456, 2015.
+
+\bibitem[Karras et~al.(2018)Karras, Aila, Laine, and Lehtinen]{pggan}
+Tero Karras, Timo Aila, Samuli Laine, and Jaakko Lehtinen.
+\newblock Progressive growing of {GAN}s for improved quality, stability, and
+  variation.
+\newblock In \emph{ICLR}, 2018.
+
+\bibitem[Kingma \& Ba(2015)Kingma and Ba]{adam}
+Diederik~P. Kingma and Jimmy~Lei Ba.
+\newblock Adam: A method for stochastic optimization.
+\newblock In \emph{ICLR}, 2015.
+
+\bibitem[Krizhevsky \& Hinton(2009)Krizhevsky and Hinton]{cifar10}
+Alex Krizhevsky and Geoffrey Hinton.
+\newblock Learning multiple layers of features from tiny images.
+\newblock \emph{Master's thesis, Department of Computer Science, University of
+  Toronto}, 2009.
+
+\bibitem[Lai et~al.(2017)Lai, Huang, and Yang]{semigan}
+Wei-Sheng Lai, Jia-Bin Huang, and Ming-Hsuan Yang.
+\newblock Semi-supervised learning for optical flow with generative adversarial
+  networks.
+\newblock In \emph{NIPS}, pp.\  354--364, 2017.
+
+\bibitem[Li et~al.(2017{\natexlab{a}})Li, Chang, Cheng, Yang, and
+  Poczos]{mmd_gan_g}
+Chun-Liang Li, Wei-Cheng Chang, Yu~Cheng, Yiming Yang, and Barnabas Poczos.
+\newblock {MMD GAN}: Towards deeper understanding of moment matching network.
+\newblock In \emph{NIPS}, pp.\  2203--2213, 2017{\natexlab{a}}.
+
+\bibitem[Li et~al.(2017{\natexlab{b}})Li, Monroe, Shi, Jean, Ritter, and
+  Jurafsky]{nlpgan}
+Jiwei Li, Will Monroe, Tianlin Shi, S{\'{e}}bastien Jean, Alan Ritter, and Dan
+  Jurafsky.
+\newblock Adversarial learning for neural dialogue generation.
+\newblock In \emph{EMNLP}, pp.\  2157--2169, 2017{\natexlab{b}}.
+
+\bibitem[Li et~al.(2015)Li, Swersky, and Zemel]{gmmn}
+Yujia Li, Kevin Swersky, and Rich Zemel.
+\newblock Generative moment matching networks.
+\newblock In \emph{ICML}, volume~37, pp.\  1718--1727, 2015.
+
+\bibitem[Liu et~al.(2017)Liu, Bousquet, and Chaudhuri]{gan_convergence}
+Shuang Liu, Olivier Bousquet, and Kamalika Chaudhuri.
+\newblock Approximation and convergence properties of generative adversarial
+  learning.
+\newblock In \emph{NIPS}, pp.\  5545--5553, 2017.
+
+\bibitem[Liu et~al.(2015)Liu, Luo, Wang, and Tang]{celeba}
+Ziwei Liu, Ping Luo, Xiaogang Wang, and Xiaoou Tang.
+\newblock Deep learning face attributes in the wild.
+\newblock In \emph{ICCV}, pp.\  3730--3738, 2015.
+
+\bibitem[Miyato \& Koyama(2018)Miyato and Koyama]{cgan}
+Takeru Miyato and Masanori Koyama.
+\newblock c{GAN}s with projection discriminator.
+\newblock In \emph{ICLR}, 2018.
+
+\bibitem[Miyato et~al.(2018)Miyato, Kataoka, Koyama, and Yoshida]{spectral}
+Takeru Miyato, Toshiki Kataoka, Masanori Koyama, and Yuichi Yoshida.
+\newblock Spectral normalization for generative adversarial networks.
+\newblock In \emph{ICLR}, 2018.
+
+\bibitem[Nagarajan \& Kolter(2017)Nagarajan and Kolter]{gan_stable}
+Vaishnavh Nagarajan and J.~Zico Kolter.
+\newblock Gradient descent {GAN} optimization is locally stable.
+\newblock In \emph{NIPS}, pp.\  5585--5595, 2017.
+
+\bibitem[Nguyen et~al.(2009)Nguyen, Wainwright, and
+  Jordan]{f_divergence_theory}
+XuanLong Nguyen, Martin~J. Wainwright, and Michael~I. Jordan.
+\newblock On surrogate loss functions and f-divergences.
+\newblock \emph{Ann. Stat.}, 37\penalty0 (2):\penalty0 876--904, 04 2009.
+
+\bibitem[Odena et~al.(2017)Odena, Olah, and Shlens]{acgan}
+Augustus Odena, Christopher Olah, and Jonathon Shlens.
+\newblock Conditional image synthesis with auxiliary classifier {GAN}s.
+\newblock In \emph{ICML}, pp.\  2642--2651, 2017.
+
+\bibitem[Radford et~al.(2016)Radford, Metz, and Chintala]{dcgan}
+Alec Radford, Luke Metz, and Soumith Chintala.
+\newblock Unsupervised representation learning with deep convolutional
+  generative adversarial networks.
+\newblock In \emph{ICLR}, 2016.
+
+\bibitem[Salimans et~al.(2016)Salimans, Goodfellow, Zaremba, Cheung, Radford,
+  and Chen]{label_smooth2}
+Tim Salimans, Ian Goodfellow, Wojciech Zaremba, Vicki Cheung, Alec Radford, and
+  Xi~Chen.
+\newblock Improved techniques for training {GAN}s.
+\newblock In \emph{NIPS}, pp.\  2234--2242, 2016.
+
+\bibitem[Sedghi et~al.(2019)Sedghi, Gupta, and Long]{fft_sv}
+Hanie Sedghi, Vineet Gupta, and Philip~M. Long.
+\newblock The singular values of convolutional layers.
+\newblock In \emph{ICLR}, 2019.
+
+\bibitem[S{\o}nderby et~al.(2017)S{\o}nderby, Caballero, Theis, Shi, and
+  Husz{\'{a}}r]{instance_noise}
+Casper~K. S{\o}nderby, Jose Caballero, Lucas Theis, Wenzhe Shi, and Ferenc
+  Husz{\'{a}}r.
+\newblock Amortised map inference for image super-resolution.
+\newblock In \emph{ICLR}, 2017.
+
+\bibitem[Szegedy et~al.(2016)Szegedy, Vanhoucke, Ioffe, Shlens, and
+  Wojna]{label_smooth1}
+Christian Szegedy, Vincent Vanhoucke, Sergey Ioffe, Jonathon Shlens, and
+  Zbigniew Wojna.
+\newblock Rethinking the inception architecture for computer vision.
+\newblock In \emph{CVPR}, pp.\  2818--2826, 2016.
+
+\bibitem[Tran et~al.(2017)Tran, Ranganath, and Blei]{implicit}
+Dustin Tran, Rajesh Ranganath, and David~M. Blei.
+\newblock Hierarchical implicit models and likelihood-free variational
+  inference, 2017.
+\newblock arXiv:1702.08896.
+
+\bibitem[Tsuzuku et~al.(2018)Tsuzuku, Sato, and Sugiyama]{pico_similar}
+Yusuke Tsuzuku, Issei Sato, and Masashi Sugiyama.
+\newblock Lipschitz-margin training: scalable certification of perturbation
+  invariance for deep neural networks.
+\newblock In \emph{NIPS}, 2018.
+
+\bibitem[Unterthiner et~al.(2018)Unterthiner, Nessler, Seward, Klambauer,
+  Heusel, Ramsauer, and Hochreiter]{coulomb}
+Thomas Unterthiner, Bernhard Nessler, Calvin Seward, G{\"{u}}nter Klambauer,
+  Martin Heusel, Hubert Ramsauer, and Sepp Hochreiter.
+\newblock Coulomb {GAN}s: Provably optimal {Nash} equilibria via potential
+  fields.
+\newblock In \emph{ICLR}, 2018.
+
+\bibitem[van~der Maaten(2014)]{tsne}
+Laurens van~der Maaten.
+\newblock Accelerating t-{SNE} using tree-based algorithms.
+\newblock \emph{J. Mach. Learn. Res.}, 15:\penalty0 3221--3245, 2014.
+
+\bibitem[Virmaux \& Scaman(2018)Virmaux and Scaman]{pico_similar2}
+Aladin Virmaux and Kevin Scaman.
+\newblock Lipschitz regularity of deep neural networks: analysis and efficient
+  estimation.
+\newblock In \emph{NIPS}, 2018.
+
+\bibitem[Wang et~al.(2003)Wang, Simoncelli, and Bovik]{ssim}
+Zhou Wang, Eero.~P. Simoncelli, and Alan.~C. Bovik.
+\newblock Multiscale structural similarity for image quality assessment.
+\newblock In \emph{Asilomar Conference on Signals, Systems \& Computers},
+  volume~2, pp.\  1398--1402, 2003.
+
+\bibitem[Yu et~al.(2015)Yu, Zhang, Song, Seff, and Xiao]{lsun}
+Fisher Yu, Yinda Zhang, Shuran Song, Ari Seff, and Jianxiong Xiao.
+\newblock {LSUN}: Construction of a large-scale image dataset using deep
+  learning with humans in the loop.
+\newblock 2015.
+\newblock arXiv:1506.03365.
+
+\bibitem[Zhang et~al.(2018)Zhang, Goodfellow, Metaxas, and Odena]{attention}
+Han Zhang, Ian Goodfellow, Dimitris Metaxas, and Augustus Odena.
+\newblock Self-attention generative adversarial networks, 2018.
+\newblock arXiv:1805.08318.
+
+\bibitem[Zhou et~al.(2018)Zhou, Cai, Rong, Song, Ren, Zhang, Wang, and
+  Yu]{class_aware}
+Zhiming Zhou, Han Cai, Shu Rong, Yuxuan Song, Kan Ren, Weinan Zhang, Jun Wang,
+  and Yong Yu.
+\newblock Activation maximization generative adversarial nets.
+\newblock In \emph{ICLR}, 2018.
+
+\bibitem[Zhu et~al.(2017)Zhu, Park, Isola, and Efros]{cyclegan}
+Jun-Yan. Zhu, Taesung Park, Phillip Isola, and Alexei~A. Efros.
+\newblock Unpaired image-to-image translation using cycle-consistent
+  adversarial networks.
+\newblock In \emph{ICCV}, pp.\  2242--2251, 2017.
+
+\end{thebibliography}

@@ -1,0 +1,64 @@
+
+\documentclass[10pt,journal,compsoc, hidelinks]{IEEEtran}
+
+
+
+
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+% \usepackage[hidelinks]{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{combelow}
+\usepackage{todonotes}
+\usepackage[symbol*]{footmisc}
+\usepackage{float}
+
+\setcounter{secnumdepth}{3}
+
+\newcommand{\paraV}{\vspace{1em}}
+
+
+\begin{document}
+
+%\markboth{Under consideration for publication in Pattern Recognition Letters}{}
+
+%Under consideration for publication in Pattern Recognition Letters
+
+\title{DeXpression: Deep Convolutional Neural Network for Expression Recognition}
+
+\input{authors.tex}
+
+\maketitle
+
+
+
+\input{abstract.tex}
+
+
+
+
+\input{introduction.tex}
+\input{relatedwork.tex}
+\input{cnn.tex}
+\input{data.tex}
+\input{architecture.tex}
+\input{experiments.tex}
+\input{discussion.tex}
+\input{conclusion.tex}
+
+
+\section*{Acknowledgments}
+
+We would like to thank the Affect Analysis Group of the University of Pittsburgh for providing the Extended Cohn–Kanade database, and Prof. Pantic and Dr. Valstar for the MMI data-base.
+
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{list}
+
+
+\end{document}
+

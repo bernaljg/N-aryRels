@@ -1,0 +1,147 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%% ICML 2015 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Use the following line _only_ if you're still using LaTeX 2.09.
+%\documentstyle[icml2015,epsf,natbib]{article}
+% If you rely on Latex2e packages, like most moden people use this:
+\documentclass{article}
+
+% use Times
+\usepackage{times}
+% For figures
+\usepackage{graphicx} % more modern
+%\usepackage{epsfig} % less modern
+\usepackage{subfigure}
+
+% For citations
+\usepackage{natbib}
+
+% For algorithms
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+% As of 2011, we use the hyperref package to produce hyperlinks in the
+% resulting PDF.  If this breaks your system, please commend out the
+% following usepackage line and replace \usepackage{icml2015} with
+% \usepackage[nohyperref]{icml2015} above.
+\usepackage{hyperref}
+
+% Packages hyperref and algorithmic misbehave sometimes.  We can fix
+% this with the following command.
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Employ the following version of the ``usepackage'' statement for
+% submitting the draft version of the paper for review.  This will set
+% the note in the first column to ``Under review.  Do not distribute.''
+\usepackage[accepted]{icml2015} 
+
+\usepackage[titletoc,title]{appendix}
+
+% Employ this version of the ``usepackage'' statement after the paper has
+% been accepted, when creating the final version.  This will set the
+% note in the first column to ``Proceedings of the...''
+%\usepackage[accepted]{icml2015}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{dsfont}
+\usepackage{xspace}
+%\usepackage{caption}
+\usepackage{xr}
+
+% For tables
+\usepackage{multirow}
+\usepackage{siunitx}
+% uncertainty is separated with a "plus-minus" symbol
+\sisetup{separate-uncertainty=true}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest} 
+\pgfplotsset{plot coordinates/math parser=false}
+
+% This is needed for plots.
+\newlength\figureheight
+\newlength\figurewidth
+
+\newcommand{\fig}[1]{Figure~\ref{fig:#1}}
+\newcommand{\sect}[1]{Section~\ref{sect:#1}}
+\newcommand{\tab}[1]{Table~\ref{tab:#1}}
+\newcommand{\eq}[1]{(\ref{eq:#1})}
+\newcommand{\subfig}[1]{{\em(#1)}}
+
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.85}
+\parskip 0pt
+
+\makeatletter
+\newcommand{\todo}[1][]{\@latex@warning{TODO #1}\fbox{TODO\dots}}
+\makeatother
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+\icmltitlerunning{Unsupervised Domain Adaptation by Backpropagation}
+
+\begin{document} 
+
+\twocolumn[
+\icmltitle{Unsupervised Domain Adaptation by Backpropagation}
+
+% It is OKAY to include author information, even for blind
+% submissions: the style file will automatically remove it for you
+% unless you've provided the [accepted] option to the icml2015
+% package.
+\icmlauthor{Yaroslav Ganin}{ganin@skoltech.ru}
+\icmladdress{\vskip -0.3cm}
+\icmlauthor{Victor Lempitsky}{lempitsky@skoltech.ru}
+\icmladdress{Skolkovo Institute of Science and Technology (Skoltech)}
+
+% You may provide any keywords that you 
+% find helpful for describing your paper; these are used to populate 
+% the "keywords" metadata in the PDF but will not be shown in the document
+\icmlkeywords{Gradient Reversal, Unsupervised Domain Adaptation, Deep Learning}
+
+\vskip 0.3in
+]
+
+\begin{abstract} 
+Top-performing deep architectures are trained on massive amounts of labeled data. In the absence of labeled data for a certain task, domain adaptation often provides an attractive option given that labeled data of similar nature but from a different domain (e.g.\ synthetic images) are available. Here, we propose a new approach to domain adaptation in deep architectures that can be trained on large amount of labeled data from the source domain and large amount of unlabeled data from the target domain (no labeled target-domain data is necessary). 
+
+As the training progresses, the approach promotes the emergence of ``deep'' features that are (i) discriminative for the main learning task on the source domain and (ii) invariant with respect to the shift between the domains. We show that this adaptation behaviour can be achieved in almost any feed-forward model by augmenting it with few standard layers and a simple new {\em gradient reversal} layer. The resulting augmented architecture can be trained using standard backpropagation.
+
+Overall, the approach can be implemented with little effort using any of the deep-learning packages. The method performs very well in a series of image classification experiments, achieving adaptation effect in the presence of big domain shifts and outperforming previous state-of-the-art on Office datasets.\vspace{-1.5mm}
+\end{abstract} 
+
+\input{intro.tex}
+\input{related.tex}
+\input{model.tex}
+\input{experiments.tex}
+\input{discussion.tex}
+
+\appendix
+\renewcommand\thesection{Appendix \Alph{section}}
+\input{supplementary.tex}
+
+\newpage
+\bibliography{paper}
+\bibliographystyle{icml2015}
+
+\end{document} 
+
+
+% This document was modified from the file originally made available by
+% Pat Langley and Andrea Danyluk for ICML-2K. This version was
+% created by Lise Getoor and Tobias Scheffer, it was slightly modified  
+% from the 2010 version by Thorsten Joachims & Johannes Fuernkranz, 
+% slightly modified from the 2009 version by Kiri Wagstaff and 
+% Sam Roweis's 2008 version, which is slightly modified from 
+% Prasad Tadepalli's 2007 version which is a lightly 
+% changed version of the previous year's version by Andrew Moore, 
+% which was in turn edited from those of Kristian Kersting and 
+% Codrina Lauth. Alex Smola contributed to the algorithmic style files.  

@@ -1,0 +1,72 @@
+%!TEX root = ../paper.tex
+
+\subsection{Sentence Compression}
+
+Our final structured prediction task is extractive sentence compression.
+
+\paragraph{Data \& Evaluation.}
+
+We follow \newcite{filippova-emnlp15}, where a large news collection is used to
+heuristically generate compression instances.
+Our final corpus contains about 2.3M compression instances: we use 2M examples
+for training, 130k for development and 160k for the final test.
+We report per-token F1 score and per-sentence accuracy (A), i.e.~percentage of
+instances that fully match the golden compressions.
+Following~\newcite{filippova-emnlp15} we also run a human evaluation on 200
+sentences where we ask the raters to score compressions for \textit{readability}
+(\texttt{read}) and \textit{informativeness} (\texttt{info}) on a scale from 0
+to 5.
+
+\paragraph{Model Configuration.}
+
+The transition system for sentence compression is similar to POS
+tagging: we scan sentences from left-to-right and label each token as
+\textit{keep} or \textit{drop}.
+We extract features from words, POS tags, and dependency labels from a window of
+tokens centered on the input, as well as features from the history of
+predictions.
+We use a single hidden layer of size 400.
+
+\begin{table}
+  \centering%
+  \scalebox{0.85}{%
+    \begin{tabular}{lcccc}
+      \toprule
+      & \multicolumn{2}{c}{Generated corpus} & \multicolumn{2}{c}{Human eval} \\
+      Method & A & F1 & read & info \\
+      \midrule
+      \newcite{filippova-emnlp15} & {\bf 35.36} & {\bf 82.83} & 4.66 & 4.03 \\
+      Automatic & - & - & 4.31 & 3.77  \\
+      \midrule
+      Our Local (B=1) & 30.51 & 78.72 & 4.58 & 4.03 \\
+      Our Local (B=8) & 31.19 & 75.69 & - & - \\
+      Our Global (B=8) & 35.16 & 81.41 & \textbf{4.67} & \textbf{4.07} \\
+      \bottomrule
+    \end{tabular}
+  }
+  \caption{\label{tab:compression-eval}
+    Sentence compression results on News data.
+    % on Test-5k
+    {\em Automatic} refers to application of the same automatic extraction rules used to generate
+    the News training corpus.
+  }
+\end{table}
+
+\paragraph{Results.}
+
+Table~\ref{tab:compression-eval} shows our sentence compression results.
+Our globally normalized model again significantly outperforms the local model.
+Beam search with a locally normalized model suffers from severe label bias issues
+that we discuss on a concrete example in Section~\ref{sec:discussion}.
+We also compare to the sentence compression system
+from \newcite{filippova-emnlp15}, a 3-layer stacked LSTM which uses dependency
+label information.
+The LSTM and our global model perform on par on both the automatic evaluation
+as well as the human ratings, but our model is roughly 100$\times$ faster.
+All compressions kept approximately 42\% of the tokens on average and
+all the models are significantly better than the automatic extractions ($p < 0.05$).
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% End:

@@ -1,0 +1,199 @@
+%%%%%%%%
+% Some shortcuts to simplify all the math.
+\def\argmax{\operatornamewithlimits{arg\,max}}
+\def\argmin{\operatornamewithlimits{arg\,min}}
+
+\DeclareMathOperator{\sigmoid}{sigm}
+
+\def\const{\mathsf{const}}
+\def\data{\mathsf{data}}
+\def\det{\mathsf{det}}
+\def\diag{\mathsf{diag}}
+\def\latest{\mathsf{latest}}
+\def\linear{\mathsf{lin}}
+\def\nnet{\mathrm{nnet}}
+\def\nonlin{\mathsf{f}}
+\def\nrelu{\mathsf{nrelu}}
+\def\old{\mathsf{old}}
+\def\relu{\mathsf{relu}}
+\def\sigmoid{\mathrm{sigm}}
+\def\slab{\mathsf{sslab}}
+\def\slice{\mathsf{slice}}
+\def\srelu{\mathsf{srelu}}
+\def\trace{\mathsf{tr}}
+\def\unif{\mathsf{unif}}
+\def\var{\mathsf{var}}
+\def\wo{\backslash}
+
+\def\a{\mathbf{a}}
+\def\b{\mathbf{b}}
+\def\c{\mathbf{c}}
+\def\e{\mathbf{e}}
+\def\f{\mathbf{f}}
+\def\g{\mathbf{g}}
+\def\h{\mathbf{h}}
+\def\i{\mathbf{i}}
+\def\m{\mathbf{m}}
+\def\o{\mathbf{o}}
+\def\r{\mathbf{r}}
+\def\s{\mathbf{s}}
+\def\u{\mathbf{u}}
+\def\v{\mathbf{v}}
+\def\w{\mathbf{w}}
+\def\x{\mathbf{x}}
+\def\y{\mathbf{y}}
+\def\z{\mathbf{z}}
+
+\def\0{\mathbf{0}}
+\def\1{\mathbf{1}}
+\def\2{\mathbf{2}}
+\def\A{\mathbf{A}}
+\def\B{\mathbf{B}}
+\def\C{\mathbf{C}}
+\def\D{\mathbf{D}}
+\def\E{\mathbf{E}}
+\def\H{\mathbf{H}}
+\def\I{\mathbf{I}}
+\def\L{\mathbf{L}}
+\def\P{\mathbf{P}}
+\def\Q{\mathbf{Q}}
+\def\R{\mathbf{R}}
+\def\S{\mathbf{S}}
+\def\U{\mathbf{U}}
+\def\V{\mathbf{V}}
+\def\W{\mathbf{W}}
+\def\X{\mathbf{X}}
+\def\Y{\mathbf{Y}}
+\def\Z{\mathbf{Z}}
+
+\def\balpha{\bm{\alpha}}
+\def\bbeta{\bm{\beta}}
+\def\etab{\bm{\eta}}
+\def\bepsilon{\bm{\epsilon}}
+\def\bgamma{\bm{\gamma}}
+\def\bGamma{\bm{\Gamma}}
+\def\blambda{\bm{\lambda}}
+\def\bLambda{\bm{\Lambda}}
+\def\bmu{\bm{\mu}}
+\def\bnu{\bm{\nu}}
+\def\bomega{\bm{\omega}}
+\def\bOmega{\bm{\Omega}}
+\def\bphi{\bm{\phi}}
+\def\bpi{\bm{\pi}}
+\def\bsigma{\bm{\sigma}}
+\def\bSigma{\bm{\Sigma}}
+\def\btheta{\bm{\theta}}
+
+\def\drm{\mathrm{d}}
+\def\erm{\mathrm{e}}
+\def\mrm{\mathrm{m}}
+
+\def\vfrak{\mathfrak{v}}
+
+\def\EP{\mathsf{EP}}
+\def\LSTM{\mathsf{LSTM}}
+\def\KL{\mathsf{D}_{\mathsf{KL}}}
+\def\VB{\mathsf{VB}}
+
+\def\Ebb{\mathbb{E}}
+\def\Ibb{\mathbb{I}}
+\def\Rbb{\mathbb{R}}
+\def\Vbb{\mathbb{V}}
+
+\def\Acal{\mathcal{A}}
+\def\Bcal{\mathcal{B}}
+\def\Dcal{\mathcal{D}}
+\def\Fcal{\mathcal{F}}
+\def\Hcal{\mathcal{H}}
+\def\Kcal{\mathcal{K}}
+\def\Lcal{\mathcal{L}}
+\def\Mcal{\mathcal{M}}
+\def\Ncal{\mathcal{N}}
+\def\Ocal{\mathcal{O}}
+\def\Qcal{\mathcal{Q}}
+\def\Rcal{\mathcal{R}}
+\def\Scal{\mathcal{S}}
+\def\Tcal{\mathcal{T}}
+\def\Ucal{\mathcal{U}}
+\def\Xcal{\mathcal{X}}
+\def\Ycal{\mathcal{Y}}
+\def\Zcal{\mathcal{Z}}
+
+\def\csf{\mathsf{c}}
+\def\fsf{\mathsf{f}}
+\def\hsf{\mathsf{h}}
+\def\isf{\mathsf{i}}
+\def\osf{\mathsf{o}}
+\def\usf{\mathsf{u}}
+\def\wsf{\mathsf{w}}
+\def\ysf{\mathsf{y}}
+
+\def\defined{\stackrel{\text{\tiny def}}{=}}
+\def\isitequal{\stackrel{\text{\tiny ?}}{=}}
+
+\newcommand{\comment}[1]{\textcolor{blue}{\it [{#1}]}}
+\newcommand{\cleancomment}[1]{\textcolor{blue}{\it {#1}}}
+\newcommand{\todo}[1]{\textcolor{blue}{\it {\bf To do:} {#1}}}
+
+\definecolor{Purple}{rgb}{0.63,0.1,0.76}
+\definecolor{DarkGreen}{rgb}{0.1,0.7,0.2}
+\definecolor{LightGray}{rgb}{0.73,0.7,0.65}
+
+\newcommand{\tblue}[1]{\textcolor{blue}{#1}}
+\newcommand{\tpurple}[1]{\textcolor{Purple}{#1}}
+\newcommand{\tred}[1]{\textcolor{red}{#1}}
+\newcommand{\tgreen}[1]{\textcolor{DarkGreen}{#1}}
+\newcommand{\tlightgray}[1]{\textcolor{LightGray}{#1}}
+%%%%%%%%
+
+\section{Recurrent Relational Networks}
+
+The reasoning involved in solving tasks like Sudoku has both a recurrent and a relational component: recurrent, as a solution is iteratively refined, and relational, as the different substructures in the problem are intimately related.
+In this section, we will use Sudoko as a running, but by no means exclusive, example.
+It can be formulated as a graph with $i \in \{1,2, .., I \}$ nodes ($I = 81$), one for each Sudoko cell, with a valid solution $\y \in \{ 1, .., C \}^{81}$, where each $y_i$ takes one of $C = 9$ values.
+Each node has an edge to and from all nodes in the same row, column and box in the Sudoku.
+Each node has a feature vector $\x_i$, and the feature vectors
+$\X \defined \{\x_1, .., \x_{I}\}$ serve as input for relational reasoning.
+\emph{I'm not clear what they are. Details. ``For our Sudoku example each $x_i$ encodes the initial cell content and the row and column position.'' means?}
+More generally, outside the Sudoko running example, features $\X$ could arise from a function or transformation of any other input,
+like an audio-visual stream.
+
+To perform recurrent relational reasoning, we associate a hidden state
+$\h_i^t$ with every node $i$ at time step $t$, such that
+$\H^t \defined \{ \h_i^t\}_{i=1}^{I}$ defines the collection of hidden states in the graph. We assume that relational reasoning will proceed for $T$ steps,
+and refine the predictions for a valid solution $\y$ from $\X$ and
+$\h_i^0 = \0$ over $T$ attempts on $T$ copies of $\y$:
+%%
+\begin{equation}
+\label{eq:objective}
+p( \{ \y \}_{t=1}^T | \X; \H^0) = \prod_{t=1}^T p(\y | \X; \H^t) \ .
+\end{equation}
+%%
+The individual predictive probabilities are Bernoulli, and are detailed in Eq.~(TO COME LATER).
+The representation leading to a solution is refined by propagating information through the graph, by letting
+the hidden states for all the nodes $i$ in the graph temporally depend on their preceding states through a composite function,
+%%
+\begin{equation}
+\label{eq:recurrent}
+\h_{i}^{t+1} =
+g \left( \h_i^{t}, \sum_{j \in N(i)} f( \h_i^{t}, \h_j^{t}), \, \x_i \right) \ .
+\end{equation}
+%%
+The function $g$ is, for instance, an \emph{LIST OF EXAMPLES HERE}, and takes as input node $i$'s feature $\x_i$ and state $\h_i^t$ at time $t$.
+It furthermore relies on learned relational information coming from node $i$'s neighbors $j \in N(i)$. The relational information takes the form of
+incoming messages
+\[
+\m_{ij}^t \defined f( \h_i^{t}, \h_j^{t}) \ ,
+\]
+which are summed together in \eqref{eq:recurrent}.
+The function $f$ that combines the information from neighboring states is a \emph{WHAT IS IT?}.
+In the case of Sudoku, these messages implement an
+elimination strategy at convergence, slowly incorporating relational information to downweight implausible predictions for $\y$.
+This is illustrated in Sec.~{REF} in the results.
+
+Now that the recurrent connections updates between states in the relational graph are defined, we turn again to the objective function in \eqref{eq:objective}, which, for the Sudoku example, we model as a product of Bernoulli observations,
+\[
+p( \{ \y \}_{t=1}^T | \X; \H^0) = \prod_{t=1}^T \prod_{i=1}^{I} \textrm{Ber} \left(y_i ; \frac{\erm^{r_{y_i}(\h_i^t)}}{\sum_{c=1}^C \erm^{r_c(\h_i^t)}} \right) \ .
+\]
+The logits $r(\h_i^t) \in \Rbb^C$ in the Bernoulli odds are parameterized
+by a function $r$ that \emph{DETAILS ABOUT WHAT IT DOES.}

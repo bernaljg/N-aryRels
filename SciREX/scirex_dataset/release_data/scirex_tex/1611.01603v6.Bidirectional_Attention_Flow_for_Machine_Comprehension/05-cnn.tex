@@ -1,0 +1,69 @@
+We also evaluate our model on the task of cloze-style reading comprehension using the CNN and Daily Mail datasets~\citep{Hermann2015TeachingMT}.
+
+
+\paragraph{Dataset.}
+In a cloze test, the reader is asked to fill in words that have been removed from a passage, for measuring one's ability to comprehend text. \citet{Hermann2015TeachingMT} have recently compiled a massive Cloze-style comprehension dataset, consisting of 300k/4k/3k and 879k/65k/53k (train/dev/test) examples from CNN and DailyMail news articles, respectively. Each example has a news article and an incomplete sentence extracted from the human-written summary of the article. To distinguish this task from language modeling and force one to refer to the article to predict the correct missing word, the missing word is always a named entity, anonymized with a random ID. 
+Also, the IDs must be shuffled constantly during test, which is also critical for full anonymization.
+
+\paragraph{Model Details.}\label{subsec:cnn-details}
+The model architecture used for this task is very similar to that for SQuAD (Section~\ref{sec:squad}) with only a few small changes to adapt it to the cloze test. 
+Since each answer in the CNN/DailyMail datasets is always a single word (entity), we only need to predict the start index (${\bf p}^1$); the prediction for the end index (${\bf p}^2$) is omitted from the loss function. 
+Also, we mask out all non-entity words in the final classification layer so that they are forced to be excluded from possible answers. Another important difference from SQuAD is that the answer entity might appear more than once in the context paragraph. %, i.e. we do not have strong supervision for the exact supporting fact leads to the answer of the Cloze question. 
+To address this, we follow a similar strategy from~\cite{kadlec2016text}. 
+During training, after we obtain ${\bf p}^1$, we sum all probability values of the entity instances in the context that correspond to the correct answer. 
+Then the loss function is computed from the summed probability.
+We use a minibatch size of 48 and train for 8 epochs, with early stop when the accuracy on validation data starts to drop. 
+Inspired by the window-based method~\citep{hill2015goldilocks}, 
+we split each article into short sentences where each sentence is a 19-word window around each entity (hence the same word might appear in multiple sentences).
+The RNNs in \sysshort\ are not feed-forwarded or back-propagated across sentences, which speed up the training process by parallelization.
+The entire training process takes roughly 60 hours on eight Titan X GPUs. The other hyper-parameters are identical to the model described in Section~\ref{subsec:squad-details}.
+
+
+\paragraph{Results.}
+% CNN validation: 75.7 = 2970/3924 
+% CNN test:76.9 = 2459/3198
+
+% DailyMail val: 79.6 = 51588/64835 (prev best: 77.6, ReasoNet)
+% DailyMail test: 78.3 = 41661/53182 (prev best: 76.6, ReasoNet)
+
+The results of our single-run models and competing approaches on the CNN/DailyMail datasets are summarized in Table~\ref{tab:cnn}. 
+$^*$ indicates ensemble methods. 
+\sysshort\ outperforms previous single-run models on both datasets for both val and test data. On the DailyMail test, our single-run model even outperforms the best ensemble method.
+
+% The next best approaches for the single model and ensemble runs, GAReader~\citep{ga} and ReasoNet~\citep{reasonet}, both compute attention dynamically over several hops of a recurrent layer. Our results provide strong evidence that our proposed attention flow is strongly competitive with dynamic attention. 
+
+\begin{table}[!htb]
+% \parbox{.45\linewidth}{
+    \centering
+    \scalebox{0.9}{
+    \begin{tabular}{lcccc}
+        \hline
+         & \multicolumn{2}{c}{CNN} & \multicolumn{2}{c}{DailyMail} \\
+         & val & test & val & test\\
+        \hline
+        \hline
+        % Deep LSTM Reader~\citep{Hermann2015TeachingMT} & 55.0 & 57.0 & 63.3 & 62.2 \\
+        Attentive Reader~\citep{Hermann2015TeachingMT} & 61.6 & 63.0 & 70.5 & 69.0 \\
+        MemNN~\citep{hill2015goldilocks} & 63.4 & 6.8 & - & - \\
+        AS Reader~\citep{kadlec2016text} & 68.6 & 69.5 & 75.0 & 73.9 \\
+        DER Network~\citep{DER} & 71.3 & 72.9 & - & -\\
+        Iterative Attention~\citep{iterative} & 72.6 & 73.3 & - & - \\
+        EpiReader~\citep{epireader} & 73.4 & 74.0 & - & - \\
+        Stanford AR~\citep{thorough} & 73.8 & 73.6 & 77.6 & 76.6 \\
+        GAReader~\citep{ga} & 73.0 & 73.8 & 76.7 & 75.7 \\
+        AoA Reader~\citep{aoa} & 73.1 & 74.4 & - & - \\
+        ReasoNet~\citep{reasonet} & 72.9 & 74.7 & 77.6 & 76.6 \\
+        \sysshort~(Ours) & \textbf{76.3} & \textbf{76.9} & \textbf{80.3} & \textbf{79.6} \\
+        \hline
+        MemNN$^*$~\citep{hill2015goldilocks} & 66.2 & 69.4 & - & - \\
+        ASReader$^*$~\citep{kadlec2016text} & 73.9 & 75.4 & 78.7 & 77.7 \\
+        Iterative Attention$^*$~\citep{iterative} & 74.5 & 75.7 & - & - \\
+        GA Reader$^*$~\citep{ga} & 76.4 & 77.4 & 79.1 & 78.1\\
+        Stanford AR$^*$~\citep{thorough} & 77.2 & 77.6 & 80.2 & 79.2 \\
+        \hline
+    \end{tabular}
+    }
+    \caption{\small Results on CNN/DailyMail datasets. We also include the results of previous ensemble methods (marked with $^*$) for completeness.}
+    \label{tab:cnn}
+%}
+\end{table}

@@ -1,0 +1,26 @@
+\paragraph{Machine comprehension.}
+A significant contributor to the advancement of MC models has been the availability of large datasets. Early datasets such as MCTest~\citep{richardson2013mctest} were too small to train end-to-end neural models. 
+Massive cloze test datasets (CNN/DailyMail by \citet{Hermann2015TeachingMT} and Childrens Book Test by \cite{hill2015goldilocks}), enabled the application of deep neural architectures to this task. 
+More recently, \citet{rajpurkar2016squad} released the Stanford Question Answering (SQuAD) dataset with over 100,000 questions. We evaluate the performance of our comprehension system on both SQuAD and CNN/DailyMail datasets. 
+
+Previous works in end-to-end machine comprehension use attention mechanisms in three distinct ways. 
+The first group (largely inspired by~\cite{Bahdanau2014NeuralMT}) uses a dynamic attention mechanism, in which the attention weights are updated dynamically given the query and the context as well as the previous attention. 
+\cite{Hermann2015TeachingMT} argue that the dynamic attention model performs better than using a single fixed query vector to attend on context words on CNN \& DailyMail datasets.
+\cite{thorough} show that simply using bilinear term for computing the attention weights in the same model drastically improves the accuracy.
+\cite{wang2016machine} reverse the direction of the attention (attending on query words as the context RNN progresses) for SQuAD. In contrast to these models, \sysshort\ uses a memory-less attention mechanism. 
+
+The second group computes the attention weights once, which are then fed into an output layer for final prediction (e.g.,~\cite{kadlec2016text}).
+%\cite{kadlec2016text} compute attention weights between the GRU outputs of the context and a query vector and directly predicts the exact location of the entity.
+Attention-over-attention model \citep{aoa} uses a 2D similarity matrix between the query and context words (similar to Equation~\ref{eqn:sim}) to compute the weighted average of query-to-context attention. In contrast to these models, \sysshort\ does not summarize the two modalities in the attention layer and instead lets the attention vectors flow into the modeling (RNN) layer. %The attentions then used for the final prediction, as in~\cite{kadlec2016text}.
+
+The third group (considered as variants of Memory Network~\citep{memnn}) repeats computing an attention vector between the query and the context through multiple layers, typically referred to as \emph{multi-hop} \citep{iterative,ga}. % use an initial query vector to attend on the context words, and uses the attended context word to attend on query words; this process is repeated iteratively for a fixed number of steps.
+%\cite{ga} summarizes the query into a single vector using GRU, and element-wise multiply the query vector with the GRU outputs of the context word, which is then passed to the next layer.
+%This is repeated for several layers.
+\cite{reasonet} combine Memory Networks with Reinforcement Learning in order to dynamically control the number of hops. One can also extend our \sysshort\ model to incorporate multiple hops.
+%Instead, \sysshort\ is designed to flow attention and the phrase embeddings to the modeling layer. What is more, \sysshort\ uses a bi-directional attention mechanism to compute the context-to-query in addition to usual  query-to-context attentions. 
+
+\paragraph{Visual question answering.}
+The task of question answering has also gained a lot of interest in the computer vision community. Early works on visual question answering (VQA) involved encoding the question using an RNN, encoding the image using a CNN and combining them to answer the question~\citep{antol2015vqa,Malinowski2015AskYN}. Attention mechanisms have also been successfully employed for the VQA task and can be broadly clustered based on the granularity of their attention and the approach to construct the attention matrix. At the coarse level of granularity, the question attends to different patches in the image~\citep{Zhu2015Visual7WGQ,xiong2016dynamic}. At a finer level, each question word attends to each image patch and the highest attention value for each spatial location~\citep{Xu2016AskAA} is adopted. A hybrid approach is to combine questions representations at multiple levels of granularity (unigrams, bigrams, trigrams)~\citep{yang2015stacked}. Several approaches to constructing the attention matrix have been used including element-wise product, element-wise sum, concatenation and Multimodal Compact Bilinear Pooling~\citep{fukui2016multimodal}.
+
+\citet{lu2016hierarchical} have recently shown that in addition to attending from the question to image patches, attending from the image back to the question words provides an improvement on the VQA task. This finding in the visual domain is consistent with our finding in the language domain, where our bi-directional attention between the query and context provides improved results. 
+Their model, however, uses the attention weights directly in the output layer and does not take advantage of the attention flow to the modeling layer. 

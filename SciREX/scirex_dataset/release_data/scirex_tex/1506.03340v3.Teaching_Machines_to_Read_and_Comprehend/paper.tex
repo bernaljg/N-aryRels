@@ -1,0 +1,91 @@
+\documentclass{article}
+\usepackage{nips15submit_e,times}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{caption}
+\usepackage{subcaption}
+
+
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bm}
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
+
+\usepackage{booktabs}
+\usepackage{paralist}
+\usepackage[leftcaption]{sidecap}
+\sidecaptionvpos{figure}{t}
+
+\usepackage{ifthen}
+\newcommand{\todo}[2][]{
+  \ifthenelse { \equal{#1}{} }
+  {{\color{red}(#2)}}
+  {{\color{red}\textbf{TODO(#1):} #2}}
+}
+
+\usepackage{textcomp}
+
+\newcommand{\igate}{i}
+\newcommand{\fgate}{f}
+\newcommand{\wtmat}[2]{W_{#1 #2}}
+\newcommand{\ogate}{o}
+\newcommand{\state}{c}
+
+
+\nipsfinalcopy
+
+\title{Teaching Machines to Read and Comprehend}
+
+
+\author{
+  Karl Moritz Hermann$^\dag$ \quad Tom\'a\v{s} Ko\v{c}isk\'y$^{\dag\ddag}$ \quad Edward Grefenstette$^\dag$ \\
+  {\bf Lasse Espeholt$^\dag$ \quad Will Kay$^\dag$ \quad Mustafa Suleyman$^\dag$
+  \quad Phil Blunsom$^{\dag\ddag}$} \\
+$^\dag$Google DeepMind \quad
+$^\ddag$University of Oxford \\
+\texttt{\{kmh,tkocisky,etg,lespeholt,wkay,mustafasul,pblunsom\}@google.com} \\
+}
+
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+  Teaching machines to read natural language documents remains an elusive
+  challenge. Machine reading systems can be tested on their ability to answer
+  questions posed on the contents of documents that they have seen, but
+  until now large scale training and test datasets have been missing for this
+  type of evaluation.
+  In this work we define a new methodology that resolves this bottleneck
+  and provides large scale supervised reading comprehension data.
+  This allows us to develop a class of attention based
+  deep neural networks that learn to read real documents
+  and answer complex questions with minimal prior knowledge of language
+  structure.
+\end{abstract}
+
+\input{sections/introduction}
+\input{sections/data}
+\input{sections/models}
+\input{sections/experiments}
+\input{sections/discussion}
+\input{sections/conclusions}
+
+\newpage
+\bibliographystyle{unsrt}
+\bibliography{gilaaBibliography}
+
+\newpage
+\input{sections/appendix}
+
+\end{document}

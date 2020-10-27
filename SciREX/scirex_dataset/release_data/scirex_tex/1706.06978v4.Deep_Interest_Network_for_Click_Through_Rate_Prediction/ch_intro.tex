@@ -1,0 +1,164 @@
+\section{Introduction}
+%Display advertising business brings billions dollars income yearly in Alibaba.
+%<<<<<<< HEAD
+%eCPM (expective cost per mille) which is the product of the bid price and CTR (click-through rate).
+%While CTR needs to be predicted by the system. Hence, the performance of CTR prediction model has a straight impact on the final revenue and plays a key role in the advertising system.
+%Inspire by the success of deep learning in computer vision~\cite{huang2016densely} and natural language processing~\cite{bengio:attention}, a number of deep learning based methods have been proposed for CTR prediction task \cite{deep_crossing,youtube:recommend,deep_intent,widedeep}.
+%These methods usually first employ embedding layer on the input, mapping original large scale sparse id features to the distributed representations, then add fully connected layers (in other words, multilayer perceptron, MLP) to automatically learn the nonlinear relations among features. Compared to traditional commonly used logistic regression model \cite{ftrl,FbCtr}, these deep learning methods can reduce a lot of feature engineering jobs, which is time and manpower consuming in industry applications.
+%What's more, deep model with strong fitting ability has potential to get better performance. So embedding\&MLP now has become a popular model structure on CTR prediction problem.\par
+%%However, traditional Embedding\&MLP models learns same user vector through embedding for different candidate ads, which is
+%%difficult to understand and exploit of the diverse characteristics of behavior data fully .
+%%One simple solution is to expand the embedding dimensionality largely to reflect more user interest in one vector. However, this method aggravates the risk of overfitting. At the same time, it improves the complexity of computation to a large extent, which is not feasible in online advertising and recommendation system of e-commence industry. Now, we want to find the characteristics of user behavior to better represent user interes.
+%However, those traditional Embedding\&MLP models neglect the capturing of interest.
+%Let's regard the embedding vector as a vertex in a high dimensionality. The intensity of interest for each vertex distributed in this space is various and arrives at peak near the embedding of goods that user has interest. The surface plot of the interest intensity over this space is not a single peak, because user's interest is \textbf{diverse}, so it's multi-peak. Actually, different peaks(that is different set of user interests) take effect when faced with different candidate goods, which reflects the \textbf{local activation} characteristic. For example, a swimmer will click a recommended goggle mostly due to the purchase of bathing suit but not the books in her last week's shopping list.
+%However, traditional Embedding\&MLP models learns same user vector for different candidate ads, which is
+%=======
+In cost-per-click (CPC) advertising system, advertisements are ranked by the eCPM (effective cost per mille), which is the product of the bid price and CTR (click-through rate), and CTR needs to be predicted by the system. Hence, the performance of CTR prediction model has a direct impact on the final revenue and plays a key role in the advertising system. Modeling CTR prediction has received much attention from both research and industry community.
+
+Recently, inspired by the success of deep learning in computer vision~\cite{huang2016densely} and natural language processing~\cite{bengio:attention}, deep learning based methods have been proposed for CTR prediction task \cite{deep_crossing,youtube:recommend,deep_intent,widedeep}.
+These methods follow a similar Embedding\&MLP paradigm: large scale sparse input features are first mapped into low dimensional embedding vectors, and then transformed into fixed-length vectors in a group-wise manner, finally concatenated together to fed into fully connected layers (also known as multilayer perceptron, MLP) to learn the nonlinear relations among features. 
+Compared with commonly used logistic regression model \cite{ftrl}, these deep learning methods can reduce a lot of feature engineering jobs and enhance the model capability greatly. For simplicity, we name these methods Embedding\&MLP in this paper, which now have become popular on CTR prediction task.
+
+However, the user representation vector with a limited dimension in Embedding\&MLP methods will be a bottleneck to express user's diverse interests. %, limiting the effectiveness of model.
+Take display advertising in e-commerce site as an example. Users might be interested in different kinds of goods simultaneously when visiting the e-commerce site. That is to say, user interests are \textsl{\textbf{diverse}}. When it comes to CTR prediction task, user interests are usually captured from user behavior data. 
+Embedding\&MLP methods learn the  representation of all interests for a certain user by transforming the embedding vectors of user behaviors into a fixed-length vector, which is in an euclidean space where all users' representation vectors are. 
+In other words, diverse interests of the user are compressed into a fixed-length vector, which limits the expressive ability of Embedding\&MLP methods. 
+%Embedding\&MLP methods learn the  representation of all interests for a certain user by transforming the embedding vectors of user behaviors into a fixed-length vector.
+%In other words, diverse interests of the user are compressed into this fixed-length vector, which limits the expressive ability of Embedding\&MLP methods. 
+%It is difficult to compress all the interests of a certain user into a fixed-length vector. 
+%It is challengeable to compress all the interests of a user into a fixed-length vector.  
+%The use of fixed-length vector to compress all the interests  
+%gives the rein to the expressing, and Embedding\&MLP methods may not rise to the challenge: capturing diverse interests of user from her behaviors. 
+%It is difficult to compress all the interests of user into a fixed-length vector. 
+To make the representation capable enough for expressing user's diverse interests,  the dimension of the fixed-length vector needs to be largely expanded. 
+Unfortunately, it will dramatically enlarge the size of learning parameters and aggravate the risk of overfitting under limited data. Besides, it adds the burden of computation and storage, which may not be tolerated for an industrial online system. 
+%Thus the use of a same fixed-length vector turns be a bottleneck to represent users' diverse interests. 
+
+%However, in applications with rich user behaviors these Embedding\&MLP models are lack of capturing the characteristic of data and leaves room for further improvement. Take display advertising in e-commerce site as an example. Users might be interested in different kinds of goods concurrently when visiting the e-commerce site. In other words, user interests are \textsl{\textbf{diverse}}, which are usually captured from rich historical behavior data. Traditional Embedding\&MLP models learn the same representation of all interests for a certain user by transforming the embedding vectors of user behaviors into a fixed-length vector. In this way, dimension of the fixed-length vector needs to be largely expanded to make it capable enough for containing information about all interests. However, it will increase the size of learning parameters heavily and aggravate the risk of overfitting under limited data. %, which gives challenge to the generalization ability of model. 
+%Besides, it adds the burden of computation and storage, which may not be tolerated for an industrial online system. Thus the use of a same fixed-length vector turns be a bottleneck to represent users' diverse interests. 
+ 
+%However, these Embedding\&MLP models ignore some important matters, that user's interests are \textbf{diverse} and \textbf{local activation}. Each user may come to Alibaba with several shopping intention. For example, a young mother's browsing history contains T-shirts, leather handbags, shoes, children's coats, etc. reflecting her diverse interests.	In the perspective of model structure,these traditional Embedding\&MLP models learn the same interest representation vector with fixed-length for different given candidate goods. In this way, the dimension of user's vector needs to be largely expanded to reflect diverse interests in one vector. However high dimensional user's vector will aggravate the risk of overfitting under limited data, which gives a challenge to the generalization ability of model. At the same time, it improves the complexity of computation to a large extent, which is not feasible in online advertising and recommendation system of e-commence industry.Thus the use of a fixed-length user vector will be a bottleneck to represent diverse interests of users when they meet different candidate goods.
+
+On the other hand, it is not necessary to compress all the diverse interests of a certain user into the same vector when predicting a candidate ad because only part of user's interests will influence his/her action (to click or not to click). For example, a female swimmer will click a recommended goggle mostly due to the bought of bathing suit rather than the shoes in her last week's shopping list. 
+Motivated by this, we propose a novel model: Deep Interest Network (DIN), which adaptively calculates the representation vector of user interests by taking into consideration the relevance of historical behaviors given a candidate ad. 
+By introducing a local activation unit, DIN pays attentions to the related user interests by soft-searching for relevant parts of historical behaviors and takes a weighted sum pooling to obtain the representation of user interests with respect to the candidate ad.  
+Behaviors with higher relevance to the candidate ad get higher activated weights and dominate the representation of user interests. 
+We visualize this phenomenon in the experiment section. 
+In this way, the representation vector of user interests varies over different ads, which improves the expressive ability of model under limited dimension and enables DIN to better capture user's diverse interests.
+%enables DIN to better capture the characteristic of user behavior data and improve the expressive ability of model under limited dimension.
+
+%When a concrete goods comes into user's view, only part of user's interests will be activated and influence his action (to click or not to click). Which means when users' behaviors are used to represent their interests, only a part of user's historical behaviors contributes to each click. For example, a young mother will click a recommended goggle mostly due to the bought of bathing suit rather than the shoes in her last week's shopping list. Motivated by this, we propose a novel model: Deep Interest Network (DIN), which tries to simulates a concrete goods activating user's interests by soft-searching for a part of user's behaviors when predicting CTR of each candidate goods. Instead of directly modeling user's whole diverse interests, DIN pays attention to the locally related interests given the candidate ad(Most of display ads in Alibaba are goods). That is, DIN is divided into two steps: i) DIN employ embedding layer to mapping users' behaviors, which contains users' interests, to the distributed representations. ii) DIN designs an attention-like network structure to locally activate the related behaviors given different candidate ads. Now user's locally related interests with respect to the candidate ads are computed as the average of the embedding vectors of behaviors weighted by activated intensity. Behaviors with higher relevance to the candidate ads get higher activated intensity and dominate user's interest vector. We demonstrate this phenomenon in the experiment section. In this way, a simulation of user's interests being activated by different ads is done in DIN. DIN gets the ability to represent users' different interests with a vector, which varies with candidate ads.
+
+Training industrial deep networks with large scale sparse features is of great challenge. 
+For example, SGD based optimization methods only update those parameters of sparse features appearing in each mini-batch. However, adding with traditional $\ell_2$ regularization, the computation turns to be unacceptable, which needs to calculate L2-norm over the whole parameters (with size scaling up to billions in our situation) for each mini-batch. In this paper, we develop a novel mini-batch aware regularization where only parameters of non-zero features appearing in each mini-batch participate in the calculation of L2-norm, making the computation acceptable. Besides, we design a data adaptive activation function, which generalizes commonly used PReLU\cite{ms:prelu} by adaptively adjusting the rectified point w.r.t. distribution of inputs and is shown to be helpful for training industrial networks with sparse features.
+
+%By exploiting the the characteristic of sparse 
+%In this paper, we carefully study the characteristic of training deep networks with sparse inputs and develop two practical techniques: mini-batch aware regularization and data adaptive activation function, which is useful to help improving the performance of trained model. 
+%For example, size of parameters of network trained on our productive dataset scales up to hundreds of millions. 
+%It is not an easy job to converge to a good and stable solution when training such deep networks.   
+%In this paper, we introduce two practical techniques: mini-batch aware regularization and data adaptive activation function, which is useful to help improving the performance of trained model.     
+
+%Experiments on two public datasets as well as a dataset collected from the online display advertising system in Alibaba demonstrate the effectiveness of proposed approaches, which achieve superior performance compared with state-of-the-art methods on CTR prediction task. DIN trained with the proposed regularization and activation function has been deployed in the display advertising system in Alibaba, contributing up to 10.0\% CTR promotion, which is a significant improvement to the business.
+
+
+The contributions of this paper are summarized as follows:
+%\begin{itemize}
+%\item We point out the diversity of user interests and the use of fixed-length vector will be a bottleneck to express user's diverse interests, as well as propose deep interest network (DIN) to better capture this characteristic. We design interest activation unit in DIN to adaptively learn the representation of user interests from historical behaviors w.r.t. given ads, which can improve the expressive ability of model greatly and better capture user's diverse interests.
+%\item We develop two novel techniques to improve the performance of industrial deep neural networks. We develop a mini-batch aware regularizer to save the heavy computation of regularization on large scale parameters, which is helpful for avoiding overfitting. We design a data adaptive activation function, which generalizes PReLU by considering the distribution of inputs and shows well performance.
+% \item We develop two novel techniques:  mini-batch aware regularization and data adaptive activation function, which is shown to be useful for training industrial deep networks with sparse inputs and hundreds of millions of parameters. 
+%\item We deploy DIN in the display advertising system in Alibaba, which holds the largest market share of online advertising in China. DIN shows superior performance and contributes a significant improvement to the business.
+%\end{itemize}
+
+\begin{itemize}
+\item We point out the limit of using fixed-length vector to express user's diverse interests and design a novel deep interest network (DIN) which introduces a local activation unit to adaptively learn the representation of user interests from historical behaviors w.r.t. given ads. DIN can improve the expressive ability of model greatly and better capture the diversity characteristic of user interests. 
+\item We develop two novel techniques to help training industrial deep networks: i) a mini-batch aware regularizer, which saves heavy computation of regularization on deep networks with huge number of parameters and is helpful for avoiding overfitting, ii) a data adaptive activation function, which generalizes PReLU by considering the distribution of inputs and shows well performance.
+\item We conduct extensive experiments on both public and Alibaba datasets. Results verify the effectiveness of proposed DIN and training techniques. Our code\footnote{Experiment code on two public datasets is available on GitHub: https://github.com/zhougr1993/DeepInterestNetwork\label{code}} is publicly available. The proposed approaches have been deployed in the commercial display advertising system in Alibaba, one of world's largest advertising platform, contributing significant improvement to the business. 
+%\item deploy DIN in the display advertising system in Alibaba, which holds the largest market share of online advertising in China. DIN shows superior performance and contributes a significant improvement to the business.
+\end{itemize}
+
+
+%\begin{itemize}
+%\item We propose a deep interest network (DIN) which designs an activation unit to adaptively learn the representation of user interests from historical behaviors w.r.t. given ads. It can better capture the characteristic of user behavior data and improve the expressive ability of model greatly.% under limited embedding dimension.
+%\item We develop two novel techniques:  mini-batch aware regularization and data adaptive activation function, which is shown to be useful for training industrial deep networks with sparse inputs and hundreds of millions of parameters. 
+%\end{itemize}
+
+
+
+In this paper we focus on the CTR prediction modeling in the scenario of display advertising in e-commerce industry. 
+Methods discussed here can be applied in similar scenarios with rich user behaviors, such as personalized recommendation in e-commerce sites, feeds ranking in social networks etc.
+
+The rest of the paper is organized as follows. We discuss related work in section 2 and introduce the background about characteristic of user behavior data in display advertising system of e-commerce site in section 3. Section 4 and 5 describe in detail the design of DIN model as well as two proposed training techniques. We present experiments in section 6 and conclude in section 7. 
+%The rest of the paper is organized as follows. We discuss related work in section 2 and  problem background in section 3. Section 4 and 5 describe in detail the design of DIN model as well as two proposed training techniques. We present experiments in section 6 and conclude in section 7. 
+
+
+
+%Section 4 exhibits  experiments and analytics.
+%Finally, we conclude the paper.
+
+
+%Furthermore, DIN tries to model users' interests in a richer manner. Obviously, fine-grained behavior features, such as the goods that users have visited, are helpful for enhancing the expressive power of user interest modeling. However simply applying these high dimensional sparse features in neural networks may aggravate the problem of overfitting. In this paper, we carefully study the training problem of such industrial deep network with large scale sparse inputs and introduce two novel techniques: mini-batch aware regularization and data adaptive activation function, which help the proposed DIN model to get better performance.
+
+%which helps our method to get better performance in experiment.
+%The surface plot of the interest intensity over this space is not a single peak, because user's interest is \textbf{diverse}, so it should be multi-peak.
+%Actually, different peaks(that is different set of user interests) take effect when faced with different candidate goods, which reflects the \textbf{local activation} characteristic. For example, a swimmer will click a recommended goggle mostly due to the purchase of bathing suit but not the books in her last week's shopping list. \par
+%However, traditional Embedding\&MLP models learns same user interest vector with fixed-length for different candidate ads. Actually, user has diverse interest and may have several shopping interest at the same time. In order to show these characteristic, we need to expand the embedding dimension largely to reflect more user interest in one vector. However, this method aggravates the risk of overfitting under limited data, which gives a challenge to the generalization ability of model. At the same time, it improves the complexity of computation to a large extent, which is not feasible in online advertising and recommendation system of e-commence industry.\par
+%which is difficult to understand and fully exploit the diverse characteristics of behavior data.
+%One simple solution is to expand the embedding dimensionality largely to reflect more user interest in one vector. However, this method aggravates the risk of overfitting. At the same time, it improves the complexity of computation to a large extent, which is not feasible in online advertising and recommendation system of e-commence industry.\par
+%Using 2-dimensional embedding as example, the embedding vector for each id feature is a vertex in the horizontal plane, the vertical axis represents the intensity of interest. The surface plot of the interest intensity over this plane is multi-peak, which reflects that user's interest is diverse.
+%To summarize the characteristics of user behavior data collected in the display advertising system, we report two key observations:
+%\begin{itemize}
+%\item \textbf{Diversity}. Users are interested in different kinds of goods when visiting e-commerce site. For example, a young mother may be interested in T-shirts, leather handbag, shoes, children's coat, etc at the same time.
+%\item \textbf{Local activation}.
+%%Due to the diversity of users' interests,
+%Only a part of users' historical behavior contribute to each click. For example, a swimmer will click a recommended goggle mostly due to the bought of bathing suit while not the books in her last week's shopping list.	
+%\end{itemize}
+
+%In this paper, we propose a novel model, named Deep Interest Network (DIN), which captures users' interest effectively. DIN designs an attention-like network structure to locally activate the related interests according to the candidate ad, which use the experience of the attention mechanism used in machine translation model\cite{bengio:attention} for reference.
+%which use attention mechanism to capture related users historial behavior data to help the study of the click through prediction model
+%which makes use of users historial behavior data to build the click through prediction model.
+%Inspired by the attention mechanism used in machine translation model\cite{bengio:attention}, DIN designs an attention-like network structure to locally activate the related interests according to the candidate ad.
+%We demonstrate this phenomenon in the experiment section \ref{visual_din}.
+
+\begin{comment}
+
+In our model, we use attention mechanism to generate the user interest vector with candidate ad. Behaviors with higher relevance to the candidate ad get higher attention scores and dominant the user interest vector, which helps different interest highlighting in suitable time. The attention mechanism brings the local activation of interest, further reveals user's diverse interests when faced with different candidate ads.\par
+
+Furthermore, we introduce fine-grained feature like goods\_id to describe the interests of users more specifically. However, simply applying these fine-grained sparse features in neural networks may aggravate the problem of overfitting. To tackle this problem, we design a mini-batch aware regularization technique to regularize the embedding weights effectively.
+
+%with respect to the frequency of the features.
+Experimental results show that this regularization approach contributes a significant improvement to the prediction performance. %Besides, we propose a new activation function which relates to the distribution of each layer's data to accelerate convergence of our model.
+%In experiment, we find that with addition of fine-grained user  behavior feature (e.g., $good\_id$), the deep network models easily fall into the overfitting trap and cause the model performance to drop rapidly.
+%We propose a useful adaptive regularization technique, which is proven to be effective for accelerating the network convergence in our application.
+
+%It is known that internet behavior data obeys to the long tail effect, that is, lots of features occur a few times in the training samples, while little of them occur many times. This causes the uneven converge degree during training process.
+%Here we propose a useful adaptive regularization technique, which is proved to be effective for improving the network convergence.
+
+%DIN is deployed on a multi-GPU distributed training platform named X-Deep Learning (XDL), which supports model-parallelism and data-parallelism. To utilize the structural property of internet behavior data,  we employ the common feature trick proposed in \cite{MLR} to reduce the storage and computation cost.
+%With the help XDL platform that has the well performance and high flexibility, we accelerate training process about 10 times and optimize hyparameters automatically with high tuning efficiency.
+%Experiments on real CTR prediction datasets of a major e-commerce sites prove that the proposed DIN model significantly outperforms Embedding\&MLPs under the GAUC (group weighted AUC) metric measurement.
+
+\end{comment}
+
+
+
+
+%\item We propose a deep interest network (DIN), which uses attention mechanism to better capture the local activated interests from users' behavior data for different candidate ad.
+%\item We introduce a mini-batch aware regularization technique to overcome the overfitting problem and enable us to make use of fine-grained feature like $goods\_id$ to describe detailed interests of users. the diverse interests of users more specific. This technique can be generalized to similar industry tasks easily.
+%\item We design a new activation function named Dice to accelerate convergence.
+%\item We develop XDL, a multi-GPU distributed training platform for deep networks, which is scalable and flexible to support our diverse experiments with high performance.
+
+
+%ÎÄÕÂµÄ½á¹¹
+%1£©related work£¬½éÉÜDSSM¡¢deepCross¡¢ÄÇÆªAttentionÄ£ÐÍµÈ
+%2£©½éÉÜµçÉÌÐÐÎªÊý¾Ý¡¢CTRÄ£ÐÍµÄÌØÕ÷¡¢Ñù±¾¡¢ÆÀ¹À·½·¨
+%3£©½éÉÜDINÍøÂç½á¹¹£¨baseÎªÏ¡Êè·Ö×éÈ«Á¬½ÓÍøÂç£©¡¢×ÔÊÊÓ¦ÕýÔò¼¼Êõ
+%4£©¼òÒª½éÉÜXDLÆ½Ì¨
+%4£©ÊµÑé²¿·Ö£º°üÀ¨ÊµÑé¶Ô±È£¬¿ÉÊÓ»¯(ÈÈÁ¦Í¼¡¢attentionÈ¨ÖØ·Ö²¼Í¼)
+%5£©½áÂÛºÍÖÂÐ»
+%The rest of the paper is organized as follows.
+%We discuss related work in Section 2.
+%Section 3 describes the design of DIN model as well as the adaptive regularization technique.
+%Section 4 exhibits  experiments and analytics.
+%Finally, we conclude the paper.
+
+%The remainder of this paper is divided into :In section 2, we describe some related work. In section 3, we introduce the display advertising system briefly. In section 4, we show our architecture. We present our experimental result in section 5. We conclude our work in section 6.

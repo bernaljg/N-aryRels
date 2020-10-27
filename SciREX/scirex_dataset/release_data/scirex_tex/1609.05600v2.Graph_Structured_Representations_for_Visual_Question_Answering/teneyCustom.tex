@@ -1,0 +1,255 @@
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+%\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref} % If you comment hyperref and then uncomment it, you should delete egpaper.aux before re-running latex
+%\usepackage{comment}
+\usepackage{epstopdf}
+\usepackage{tabularx}
+%\usepackage{bbold}
+\usepackage{eqnarray}
+%\usepackage{algorithm}
+\usepackage{array,booktabs}
+\usepackage{enumitem}
+%\usepackage[usenames]{color}
+\usepackage[space]{grffile} % To use spaces in graphicspath
+\usepackage{soul} % For strike-through lines
+\usepackage{float}
+%\usepackage{tabularx}
+\usepackage{tabularx,ragged2e} 
+\usepackage{bbm}
+\renewcommand\tabularxcolumn[1]{>{\RaggedRight}p{#1}}
+
+\definecolor{myGray}{rgb}{0.6,0.6,0.6}
+
+\newcommand{\symbQ}{\mathsf{Q}}
+\newcommand{\symbS}{\mathsf{S}}
+\newcommand{\symbC}{\mathsf{C}}
+
+%\newcommand{\symbQ}{\mathrm{Q}}
+%\newcommand{\symbS}{\mathrm{S}}
+%\newcommand{\symbC}{\mathrm{C}}
+
+%\newcommand{\sheq}{\hspace{-0.015ex}=\hspace{-0.015ex}}
+%\newcommand{\sheq}{\hspace{-0.05ex}=\hspace{-0.005ex}}
+\newcommand{\sheq}{=}
+\newcommand{\shg}{\hspace{-0.4ex}>\hspace{-0.4ex}}
+
+%\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+\DeclareMathOperator*{\gru}{GRU}
+\DeclareMathOperator*{\pool}{pool}
+\DeclareMathOperator*{\mathmax}{max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\stddev}{std}
+\newcommand{\me}{e}
+\newcommand{\ME}{M\hspace{-1.5pt}E}
+\newcommand{\nospace}{\hspace{-0.35em}}
+\newcommand{\px}{\,\textit{px}\;}
+%\newcommand{\px}{{px}}
+
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+
+\newcommand{\changes}[1]{\textcolor{red}{#1}}
+%\newcommand{\changes}[1]{#1}
+
+%\newcommand{\shortTitle}[1]{\noindent{\normalfont\normalsize\bfseries{#1}}\hspace{6pt}}
+\newcommand{\shortTitle}[1]{\noindent{\normalfont\normalsize\bfseries{#1}}\hspace{6pt}}
+
+\newcommand{\gt}[1]{\textcolor{myGray}{#1}}
+
+%\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}{3.25ex \@plus1ex \@minus.2ex}{-1em}{\normalsize\bfseries\itshape}} % Bold paragraph titles
+
+\def\onedot{\ifx\@let@token.\else.\null\fi\xspace}
+
+\def\eg{\emph{e.g}\onedot} \def\Eg{\emph{E.g}\onedot}
+\def\ie{\emph{i.e}\onedot} \def\Ie{\emph{I.e}\onedot}
+\def\cf{\emph{c.f}\onedot} \def\Cf{\emph{C.f}\onedot}
+\def\etc{\emph{etc}\onedot} \def\vs{\emph{vs}\onedot}
+\def\etal{\emph{et al}\onedot}
+
+%\def\ie{\emph{i.e.}~}
+%\def\eg{\emph{e.g.}~}
+%\def\Eg{\emph{E.g.}~}
+%\def\etal{\emph{et al.}}
+
+\newcommand{\fig}{Fig.~}
+\newcommand{\eq}{Eq.\,}
+\newcommand{\sect}{Section~}
+\newcommand{\tab}{Table~}
+\newcommand{\m}{\nobreak\hspace{-.2em}}
+\newcommand{\n}{\nobreak\hspace{-.22em}}
+\newcommand{\mm}{\nobreak\hspace{-.4em}}
+\newcommand{\nc}{{N.C.}}
+\newcommand{\degreeSymbol}{$^{\circ}$}
+
+%\renewcommand{\ll}{\mathscr{l}}
+\renewcommand{\ll}{{\ell\hspace{-.1em}+\hspace{-.1em}1}}
+\renewcommand{\lll}{{\ell}}
+%\newcommand{\conv}{\ast{}_{_{\hspace{-2.5pt}xy}}}
+%\newcommand{\convv}{\ast{}_{_{\hspace{-2.5pt}xyt}}}
+\newcommand{\conv}{\ast{}_{_{\hspace{-.15em}2D}}}
+%\newcommand{\convv}{\ast{}_{_{\hspace{-.15em}3D}}}
+\newcommand{\convv}{\ast}
+
+%\newcommand{\gaussKernels}{\mathrm{\textsc{Gauss}}}
+%\newcommand{\motionKernels}{\mathrm{\textsc{Motion}}}
+%\newcommand{\decodingKernels}{\mathrm{\textsc{Decoding}}}
+%\newcommand{\poolingKernels}{\mathrm{\textsc{Smooth}}}
+%\newcommand{\outputKernels}{\mathrm{\textsc{Output}}}
+\newcommand{\gaussKernels}{0}
+\newcommand{\motionKernels}{1}
+\newcommand{\poolingKernels}{2}
+\newcommand{\decodingKernels}{3}
+\newcommand{\outputKernels}{4}
+
+\newcommand{\thetaIn}{\theta^{\lll}}
+\newcommand{\thetaOut}{\theta^{\ll}}
+%\newcommand{\thetaIn}{\theta^\textrm{\textsc{in}}}
+%\newcommand{\thetaOut}{\theta^\textrm{\textsc{out}}}
+%%\newcommand{\thetaIn}{\theta^\mathrm{{In}}}
+%%\newcommand{\thetaOut}{\theta^\mathrm{{Out}}}
+
+\newcommand{\hangBox}[1]{%^
+  \begin{minipage}[t]{\textwidth}% Top-hanging minipage, will align on
+  \begin{tabbing} % tabbing so that minipage shrinks to fit
+  ~\\[-\baselineskip] % Make first line zero-height
+  #1 % Include user's text
+  \end{tabbing}%^
+  \end{minipage}}
+
+\newcommand{\hangBoxC}[1]{%
+  \begin{minipage}[c]{\textwidth}\begin{tabbing} % tabbing so that minipage shrinks to fit
+  ~\\[-\baselineskip] % Make first line zero-height
+  #1 % Include user's text
+  \end{tabbing}%^
+  \end{minipage}}
+
+\newcommand{\resultsAttentionAbstract}[2]{
+  \hangBox{
+    \includegraphics[width=42mm]{#1.jpg}\\
+    \includegraphics[width=42mm]{#1-2.jpg}\\
+  }&
+    \begin{minipage}{\linewidth}\footnotesize\input{"#1.txt"}\end{minipage}
+    \vspace{7mm}
+    \hangBox{\includegraphics[width=40mm]{#1-attention.pdf}}
+  &
+  \hangBox{
+    \includegraphics[width=42mm]{#2.jpg}\\
+    \includegraphics[width=42mm]{#2-2.jpg}\\
+  }&
+    \begin{minipage}{\linewidth}\footnotesize\input{"#2.txt"}\end{minipage}
+    \vspace{7mm}
+    \hangBox{\includegraphics[width=40mm]{#2-attention.pdf}}
+  \\
+}
+
+\newcommand{\resultsAttentionAbstractSmall}[2]{
+  \vspace{-12mm}
+  \hangBox{
+    \includegraphics[width=42mm]{#1.jpg}\\
+    \includegraphics[width=42mm]{#1-2.jpg}\\
+  }&
+    \begin{minipage}{\linewidth}\footnotesize\input{"#1.txt"}\end{minipage}
+    \vspace{7mm}
+    \hangBox{\includegraphics[width=40mm]{#1-attention.pdf}}\vspace{-7mm}
+  &
+  \vspace{-12mm}
+  \hangBox{
+    \includegraphics[width=42mm]{#2.jpg}\\
+    \includegraphics[width=42mm]{#2-2.jpg}\\
+  }&
+    \begin{minipage}{\linewidth}\footnotesize\input{"#2.txt"}\end{minipage}
+    \vspace{7mm}
+    \hangBox{\includegraphics[width=40mm]{#2-attention.pdf}}\vspace{-7mm}
+  \\
+}
+
+\newcommand{\resultsAttentionBalanced}[2]{
+  \hangBox{
+    \includegraphics[width=42mm]{#1.jpg}\\
+    \includegraphics[width=42mm]{#1-2.jpg}\\
+  }&
+    \begin{minipage}{\linewidth}\footnotesize\input{"#1.txt"}\end{minipage}
+    \vspace{7mm}
+    \hangBox{\includegraphics[width=40mm]{#1-attention.pdf}}
+  &
+  \hangBox{
+    \includegraphics[width=42mm]{#2.jpg}\\
+    \includegraphics[width=42mm]{#2-2.jpg}\\
+  }&
+    \begin{minipage}{\linewidth}\footnotesize\input{"#2.txt"}\end{minipage}
+    \vspace{7mm}
+    \hangBox{\includegraphics[width=40mm]{#2-attention.pdf}}
+}
+
+\newcommand{\resultsAttentionBalancedSmall}[2]{
+  \vspace{-12mm}
+  \hangBox{
+    \includegraphics[width=42mm]{#1.jpg}\\
+    \includegraphics[width=42mm]{#1-2.jpg}\\
+  }&
+    \begin{minipage}{\linewidth}\footnotesize\input{"#1.txt"}\end{minipage}
+    \vspace{7mm}
+    \hangBox{\includegraphics[width=40mm]{#1-attention.pdf}}\vspace{-7mm}
+  &
+  \vspace{-12mm}
+  \hangBox{
+    \includegraphics[width=42mm]{#2.jpg}\\
+    \includegraphics[width=42mm]{#2-2.jpg}\\
+  }&
+    \begin{minipage}{\linewidth}\footnotesize\input{"#2.txt"}\end{minipage}
+    \vspace{7mm}
+    \hangBox{\includegraphics[width=40mm]{#2-attention.pdf}}\vspace{-7mm}
+}
+
+\newcommand{\resultsAttentionAbstractPage}[8]{
+  \begin{figure}[t]
+  \renewcommand{\tabcolsep}{0.5mm}
+  \renewcommand{\arraystretch}{1.0}
+  \begin{tabularx}{\textwidth}{*{4}{>{\raggedright\arraybackslash}X}}
+  \resultsAttentionAbstract{#1}{#2}\\
+  \resultsAttentionAbstract{#3}{#4}\\
+  \resultsAttentionAbstract{#5}{#6}\\
+  \resultsAttentionAbstract{#7}{#8}
+  \end{tabularx}
+  \end{figure}
+}
+
+\newcommand{\resultsAttentionAbstractPageSix}[6]{
+  \begin{figure}[H]
+  \renewcommand{\tabcolsep}{0.5mm}
+  \renewcommand{\arraystretch}{1.0}
+  \begin{tabularx}{\textwidth}{*{4}{>{\raggedright\arraybackslash}X}}
+  \resultsAttentionAbstract{#1}{#2}\\
+  \resultsAttentionAbstract{#3}{#4}\\
+  \resultsAttentionAbstract{#5}{#6}
+  \end{tabularx}
+  \end{figure}
+}
+
+\newcommand{\resultsAttentionBalancedPage}[8]{
+  \begin{figure}[t]
+  \renewcommand{\tabcolsep}{0.5mm}
+  \renewcommand{\arraystretch}{1.0}
+  \begin{tabularx}{\textwidth}{*{4}{>{\raggedright\arraybackslash}X}}
+  \resultsAttentionBalanced{#1}{#2}\\
+  \resultsAttentionBalanced{#3}{#4}\\
+  \resultsAttentionBalanced{#5}{#6}\\
+  \resultsAttentionBalanced{#7}{#8}
+  \end{tabularx}
+  \end{figure}
+}
+
+\newcommand{\resultsAttentionBalancedPageSix}[6]{
+  \begin{figure}[H]
+  \renewcommand{\tabcolsep}{0.5mm}
+  \renewcommand{\arraystretch}{1.0}
+  \begin{tabularx}{\textwidth}{*{4}{>{\raggedright\arraybackslash}X}}
+  \resultsAttentionBalanced{#1}{#2}\\
+  \resultsAttentionBalanced{#3}{#4}\\
+  \resultsAttentionBalanced{#5}{#6}
+  \end{tabularx}
+  \end{figure}
+}
+
+\setlength{\fboxsep}{0pt}

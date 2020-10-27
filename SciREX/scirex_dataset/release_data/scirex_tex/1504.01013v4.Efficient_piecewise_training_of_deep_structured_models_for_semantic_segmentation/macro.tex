@@ -1,0 +1,237 @@
+
+
+\usepackage{forloop}
+\usepackage{etoolbox}
+
+
+\usepackage[table]{xcolor}
+\usepackage{titlesec}
+
+
+
+
+\usepackage{subcaption}
+\usepackage{forloop}
+\usepackage{etoolbox}
+
+%
+\usepackage{caption}
+\captionsetup{font=footnotesize,labelfont=bf}
+
+
+
+
+\newtheorem{proposition}{\bf Proposition}
+\def\relationindicator{\delta(y_{ij} \neq 0)}
+
+\newcommand{\bA}{\mathbf{A}}
+\newcommand{\bB}{\mathbf{B}}
+\newcommand{\bC}{\mathbf{C}}
+\newcommand{\bD}{\mathbf{D}}
+\newcommand{\bE}{\mathbf{E}}
+\newcommand{\bF}{\mathbf{F}}
+\newcommand{\bI}{\mathbf{I}}
+\newcommand{\bK}{\mathbf{K}}
+\newcommand{\bS}{\mathbf{S}}
+\newcommand{\bU}{\mathbf{U}}
+\newcommand{\bV}{\mathbf{V}}
+\newcommand{\bW}{\mathbf{W}}
+\newcommand{\bX}{\mathbf{X}}
+\newcommand{\bY}{\mathbf{Y}}
+\newcommand{\bZ}{\mathbf{Z}}
+
+\newcommand{\ba}{\mathbf{a}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\bc}{\mathbf{c}}
+\newcommand{\bd}{\mathbf{d}}
+\newcommand{\be}{\mathbf{e}}
+\newcommand{\bff}{\mathbf{f}}
+\newcommand{\bhh}{\mathbf{h}}
+\newcommand{\bl}{\mathbf{l}}
+\newcommand{\bmv}{\mathbf{m}}
+\newcommand{\bp}{\mathbf{p}}
+\newcommand{\bq}{\mathbf{q}}
+\newcommand{\br}{\mathbf{r}}
+\newcommand{\bu}{\mathbf{u}}
+\newcommand{\bv}{\mathbf{v}}
+\newcommand{\bw}{\mathbf{w}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bz}{\mathbf{z}}
+
+
+
+\newcommand{\cB}{\mathcal{B}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cG}{\mathcal{G}}
+\newcommand{\cI}{\mathcal{I}}
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\cS}{\mathcal{S}}
+\newcommand{\cW}{\mathcal{W}}
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cY}{\mathcal{Y}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cV}{\mathcal{V}}
+\newcommand{\cU}{\mathcal{U}}
+\newcommand{\cT}{\mathcal{T}}
+
+
+
+\def\argmaxsmall{\operatorname{argmax\,}}
+
+\def\argmin{\operatorname*{argmin\,}}
+\def\argmax{\operatorname*{argmax\,}}
+\def\diag{\operatorname*{diag\,}}
+\def\exp{\operatorname*{exp\,}}
+\def\log{\operatorname*{log\,}}
+\def\sign{\operatorname*{sign\,}}
+\def\inf{\operatorname*{inf\,}}
+\def\sup{\operatorname*{sup\,}}
+\def\trace{\operatorname*{trace\,}}
+
+
+
+
+\def\bmu{{\boldsymbol \mu}}
+\def\btheta{{\boldsymbol \theta}}
+\def\blambda{{\boldsymbol \lambda}}
+\def\balpha{{\boldsymbol \alpha}}
+\def\bbeta{{\boldsymbol \beta}}
+\def\bgamma{{\boldsymbol \gamma}}
+\def\brho{ {\boldsymbol{\rho} } }
+\def\bxi{ {\boldsymbol{\xi} } }
+
+
+
+\def\v{{\boldsymbol v}}
+\def\c{{\boldsymbol c}}
+\def\x{{\boldsymbol x}}
+\def\w{{\boldsymbol w}}
+\def\y{{\boldsymbol y}}
+\def\z{{\boldsymbol z}}
+\def\bxi{{\boldsymbol \xi}}
+\def\b{{\boldsymbol b}}
+
+
+\def\Z{{\mathbf  Z}}
+\def\Y{{\mathbf  Y}}
+\def\A{{\mathbf  A}}
+\def\U{\mathbf{U}}
+\def\V{\mathbf{V}}
+
+\def\bZ{{\mathbf  Z}}
+\def\bY{{\mathbf  Y}}
+\def\bA{{\mathbf  A}}
+\def\bH{{\mathbf H}}
+\def\bW{{\mathbf W}}
+\def\bT{{\mathbf T}}
+\def\bD{{\mathbf D}}
+\def\bL{{\mathbf L}}
+\def\bI{{\mathbf I}}
+
+\def\gradient{{\nabla}}
+\def\expect{{\mathbb E}}
+%
+
+\def\Prr{{\displaystyle P}}
+
+\newcommand{\comment}[1]{}
+\newcommand{\iancomment}[1]{{\color{red}IR: #1}}
+\newcommand{\guoshengcomment}[1]{{\color{blue}GS: #1}}
+\newcommand{\antoncomment}[1]{{\color{green}AH: #1}}
+
+\def\T{{\!\top}}
+\def\Real{\mathbb{R}}
+\newcommand{\st}{{{\rm s.t.}\;\;}\xspace}
+\newcommand{\one}{{\mathbf{1}}}
+\newcommand{\zero}{{\mathbf{0}}}
+
+\def\wnorm{\one^\T \w}
+\def\wnorminf{ {\| \w \|}_{\infty} }
+\def\normone{\one^\T}
+
+\newcommand{\fnorm}[2][2]{\ensuremath{ \left\| #2 \right\|^2_{ \mathrm{#1} } } }
+\newcommand\norm[1]{\left\lVert#1\right\rVert}
+
+
+\def\x{{\boldsymbol x}}
+\def\w{{\boldsymbol w}}
+
+
+
+
+
+\newcommand{\figcenter}[1]{\raisebox{-0.5\height}{#1}}
+\newcommand{\colseperator}{\hspace*{.1in}}
+\newcommand{\rowseperator}{\vspace*{.05in}}
+
+
+
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+\newcommand*\rot{\rotatebox{90}}
+
+
+\def\best{\bf \cellcolor[gray]{0.85}}
+
+
+
+
+
+
+
+
+
+
+
+
+%
+
+
+\titlespacing\paragraph{0pt}{5pt}{5pt}
+
+
+\addtolength{\abovecaptionskip}{-.3cm}
+\addtolength{\belowcaptionskip}{-.2cm}
+
+\addtolength{\parskip}{-0.04cm}
+\addtolength{\textfloatsep}{-0.4cm} %
+\addtolength{\floatsep}{-0.4cm}
+
+
+\addtolength{\dbltextfloatsep}{-0.4cm} %
+\addtolength{\dblfloatsep}{-0.1cm}
+%
+%
+\renewcommand\floatpagefraction{.9}
+\renewcommand\topfraction{.9}
+\renewcommand\bottomfraction{.9}
+\renewcommand\textfraction{.1}
+%
+\expandafter\def\expandafter\normalsize\expandafter{%
+\normalsize\setlength\abovedisplayskip{3pt}}
+
+\expandafter\def\expandafter\normalsize\expandafter{%
+\normalsize\setlength\belowdisplayskip{3pt}}
+
+
+%
+%
+%
+%
+
+
+
+
+
+
+

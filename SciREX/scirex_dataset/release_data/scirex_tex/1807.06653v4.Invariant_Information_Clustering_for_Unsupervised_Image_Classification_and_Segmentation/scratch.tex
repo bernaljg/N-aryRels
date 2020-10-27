@@ -1,0 +1,175 @@
+Modern deep learning methods have demonstrated remarkable success in image understanding tasks such as segmentation, classification and detection~(\cite{girshick2014rich,long2015fully,simonyan2014very}). However, the most successful methods are heavily dependent on fully supervised learning. The need for very large quantities of labeled training data severely limits their applicability to many cases of interest. Solving this requires developing learning principles that do not require expensive data annotation, which been the focus of recent research efforts supported by different interpretations of what it means to find structure in raw data~(\cite{pathak2016context,noroozi2016unsupervised,lee2017unsupervised,chang2017deep}).
+
+The need for unsupervised learning is particularly great for image segmentation, where the labelling effort required is especially expensive. Despite this, unsupervised semantic segmentation remains relatively unexplored (\cite{greff2016tagger} demonstrated some potential for instance segmentation). While one could argue that any unsupervised image clustering technique can be applied to segmentation by treating patches as images, this is not necessarily practical (a single $200 \times 200$ image has 40000 patches), inspiring the question of whether an unsupervised method can be designed to be dense and efficient from the outset. Additionally, there is potential to leverage the denseness of the segmentation problem - for example by using extra information in the spatial relations between patches - to outperform adapted image classification methods that act on patches in isolation.
+
+We present a simple new approach to unsupervised image understanding called \emph{\methodname} (\methodnameshort). Given only an unstructured collection of images as input, \methodnameshort learns to map images or pixels directly to classes representative of their abstract visual content. The key idea is to induce a representation by seeking what is in common between two different images known to share the same visual phenomenon whilst discarding image-specific details, which allows for deeper abstraction than if they were pairs of identical images. We show that this can be elegantly formulated as maximizing mutual information under a bottleneck restraint. Since the setting is unsupervised and associations between images are unknown, image pairs can be generated using image transformations, and in the case of segmentation, from known spatial proximity. The use of transformations and patch proximity has the effect of encouraging learned classes to be invariant to geometric and color nuisance transformations. Crucially, maximising mutual information between the predictions of spatially proximal patches for segmentation can be formulated as a convolution, allowing for efficient and straightforward implementation with any deep learning library.
+
+Our contributions can be summarized as follows. We formalize the concept of mutual information distillation and use it to define a differentiable loss layer that can be used in backpropagation (\cref{s:distillation}). We apply distillation to learning invariance to transformations, obtaining a method for unsupervised image clustering (\cref{s:image_clustering}), and invariance to local spatial shifting of image patches, used for unsupervised semantic segmentation (\cref{s:image_segmentation}). We formulate the latter as convolution and show that our method has several theoretical and practical benefits, including properties of invariance to noise, contextual informativeness, smoothing, and controllable cluster mass equalization, whilst maintaining a simple objective function without any separate terms or weighting factors. We also explicitly relate information distillation to other clustering principles (\cref{s:discuss}). For the main application of segmentation we achieve 71.1\% accuracy on COCO-Stuff-3 (\cite{caesar2016coco}) compared to top baseline 61.8\% and 72.5\% on Potsdam-3 (\cite{potsdam}) compared to top baseline 55.5\%. We also demonstrate competitive results for image classification, attaining 33.8\% on unlabelled STL-10 (\cite{coates2011analysis}) compared to top baseline 32.3\%. 
+
+
+
+
+
+
+Our goal is to learn to associate with each image $\bx$ a label $\Phi(\bx)$ that is representative of its visual content, without any ground truth for direction.
+To achieve this, consider the related problem of \textit{co-distillation}; assume we have two observations $\bx$ and $\by$ of the same underlying phenomenon, and seek a function $\Phi$ that captures what is in common between them. Formally, it is natural to cast the latter as the problem of learning to maximize the information between their representations:
+\begin{equation}\label{scratch:e:info_orig}
+\max_\Phi I(\Phi(\bx),\Phi(\by)).
+\end{equation}
+, we see that this is trivially solved by choosing $\Phi$ to be the identity function. To avoid this we need to encourage $\Phi$ to be selective. We achieve this by imposing a representational bottleneck, restricting $\Phi(\bx)\in\{1,\dots,C\}$ to a space of $C$ discrete classes, and consequently imposing a ceiling on the entropy of $\Phi(\bx)$ of $\ln{C}$. Using an explicit bottleneck is a simple approach that has the added benefit of letting us directly learn a classification function.
+
+independent conditioned on $\bx$ and $\by$; however, when $\bx=\by$ is the same random variable, independence can be eliminated 
+Since by assumption $\bx=\by$,
+the term $H(z|w)$ can be set to zero by 
+
+~\cref{e:info_orig} includes an inherent cluster mass equalisation bias which actively avoids the trivial solution of predicting the same cluster for all inputs. This can be easily seen by considering the degenerate case where $\bx = \by$ so that the common part between two observations, which information is used to distill, is trivially their entirety. Due to the fact that $\Phi(\bx)$ is a deterministic function of $\bx$, $I(\Phi(\bx),\Phi(\bx)) = H(\Phi(\bx)) - H(\Phi(\bx)|\Phi(\bx))= H(\Phi(\bx))$ so that~\cref{e:info_orig} reduces to $\max_{\Phi} H(\Phi(\bx))$, where $H$ denotes entropy. Thus the best $\Phi$ partitions the mass of the data equally among the $C$ clusters. The same result is found if soft clustering is used instead.%
+%
+\footnote{In this case $H(\bPhi|\bPhi)$ is not necessarily zero due to the non-determinism of $\bPhi$. However, this quantity must eventually become zero to maximize the information $H(\bPhi) - H(\bPhi|\bPhi)$. In other words, $\bPhi$ reduces to a deterministic function of the data; the softmax output automatically has a single high value.
+}
+%
+This further suggests that formulation~\eqref{e:info_orig} can produce meaningful clusters regardless of the amount of difference between images $\bx$ and $\by$ (which will become relevant when $\bx$ and $\by$ are neighbouring patches extracted from the same image, as we shall see). Note that while the formulation does not collapse if $\bx=\by$, as with the case if we had chosen $\max_{\Phi} I(\bx, \Phi(\bx)) = \max_{\Phi} H(\Phi(\bx))$, it is no longer possible to exploit \textit{differences} between  $\bx$ and $\by$ to identify a more abstract common representation.
+
+In practice, the effect of IID is to learn a clustering function that is invariant 
+
+would be geometric warps such as scaling and rotation or colour warps such as changes in contrast and saturation. We assume that none of these effects should change the content of the image, so that $\Phi(g\bx)=\Phi(\bx)$. This could be incorporated as a constraint in any clustering method; however in most implementations one would translate this into an additional term in the objective function, requiring a new weight parameter. Our intuition is that a similar effect can be obtained in a much simpler way by substituting $\by = g\bx$ in~\cref{e:info}, which results in the objective function:
+
+\begin{equation} \label{scratch:e:image_clustering_inv}
+\max_\Phi I_\lambda(\Phi(\bx),\Phi(g\bx)).
+\end{equation}
+
+Intuitively this means the class associated to an image and its deformed versions should be maximally informative. In practice, this is obtained when the classes are the same.~\cref{e:image_clustering_inv} can be directly minimized over batches of images $\bx$ and their deformed versions $g\bx$, to train a model $\Phi$ that performs image clustering.~\cref{s:clustering-experiments} describes STL experiments for this simple setting.
+
+
+
+\\[5em]
+
+Let $\Omega$ be an image domain (a finite set of pixels). Let $c=1,\dots,C$ be classes. Let $\sum n_c = |\Omega|$ the number of pixels in each domain. Let $u\in\Omega$ be an image pixel and let $c(u) \in\{ 1,\dots,C\}$ be its class.
+
+\section{Basic independent sampling}
+
+The probability sampling a particular pixel $u$ uniformly at random is:
+$$
+P(u) = \frac{1}{|\Omega|}.
+$$
+The probability of sampling a pixel of class $c$ is
+$$
+  P(c) = E_{P(u)}[P(c|u)]
+  = \sum_u P(c|u) P(u)
+  = \sum_u \delta_{c(u) = c} P(u)
+  = \frac{n_c}{|\Omega|}.
+$$
+The probability of sampling two pixels of class $c,c'$ at random (uniformly with replacement) is
+$$ 
+ P(c,c'|\text{iid}) = P(c)P(c') = \frac{n_c n_{c'}}{N}.
+$$
+
+\section{Sampling in neighbors}
+
+Now let us suppose $N \subset \{1,\dots,C\}^2$ is a neighborhood structure, i.e.\ a symmetric and reflexive relation. Let $N(u)\subset \Omega$ be the neighbors of pixel $u \in \Omega$. Now assume we sample pixel $u$ uniformly at random in $\Omega$, and pixel $v$ also uniformly at random, but in $N(u)$, as follows:
+$$
+P(u,v|\text{close})
+= P(u)P(v|u,\text{close})
+=
+\frac{1}{|\Omega|}
+\begin{cases}
+\frac{1}{|N(u)|}, & v \in N(u), \\
+0, &\text{otherwise}.
+\end{cases}
+$$
+The probability of observing class $c,c'$ when pixels are sampled like this is:
+$$
+P(c,c'|\text{close})
+=
+\sum_{u,v}
+P(c|u) P(c'|v) P(u)P(v|u,\text{close})
+=
+\frac{1}{|\Omega|}
+\sum_u
+\frac{\delta_{c(u)=c}}{|N(u)|}
+\sum_{v\in N(u)}
+\delta_{c(v)=c'}
+$$
+This quantity is more difficult to estimate than before, but we can make some reasonable estimates. First, let us assume that all neighbors are balls of radius $\rho$, so that $|N(u)|=M\approx \pi\rho^2$ Then:
+$$
+P(c,c'|\text{close})
+=
+\frac{1}{M|\Omega|}
+\sum_u
+\delta_{c(u)=c}
+\sum_{v\in N(u)}
+\delta_{c(v)=c'}
+$$
+The difficulty in estimating the quantity above is that several pixels $u$ will be close to the boundary between regions, so that neighbors are not pure. Denote the ``interior'' of region $c$ as follows:
+$$
+ \underbar{\Omega}(c) =
+ \{ 
+ u \in \Omega : \forall v \in N(u) : c(v) = c
+ \}.
+$$
+Denote the ``exterior'' as follows:
+$$
+ \bar{\Omega}(c) =
+ \{ 
+ u \in \Omega : \forall v \in N(u) : 
+ c(v) \not= c
+ \}.
+$$
+Note that the set
+$$
+	\bar \Omega(c) - \underbar \Omega(c)
+$$
+contains pixels that straddle region $c$.
+
+We can now break down the summation as follows:
+\begin{align*}
+P(c,c'|\text{close})
+&=
+\frac{1}{M|\Omega|}
+\sum_{u \in \underbar{\Omega}(c)}
+\delta_{c(u)=c}
+\sum_{v\in N(u)}
+\delta_{c(v)=c'}
+\\
+&+
+\frac{1}{M|\Omega|}
+\sum_{u \in \bar{\Omega}(c) - \underbar{\Omega}(c)}
+\delta_{c(u)=c}
+\sum_{v\in N(u)}
+\delta_{c(v)=c'}
+\\
+&+
+\frac{1}{M|\Omega|}
+\sum_{u \in \bar{\Omega}(c)}
+\delta_{c(u)=c}
+\sum_{v\in N(u)}
+\delta_{c(v)=c'}
+\end{align*}
+The first summation is easy as it only contains pixels in the interior of the region $\Omega(c)$. The third is also easy (it equates to zero) as it contains only pixels outside the region.
+\begin{align*}
+P(c,c'|\text{close})
+&=
+\frac{1}{|\Omega|}
+\sum_{u \in \underbar{\Omega}(c)}
+\delta_{c(u)=c}
+\\
+&+
+\frac{1}{M|\Omega|}
+\sum_{u \in \bar{\Omega}(c) - \underbar{\Omega}(c)}
+\delta_{c(u)=c}
+\sum_{v\in N(u)}
+\delta_{c(v)=c'}
+\end{align*}
+So far there are no approximation involved. Next, we introduce a few to estimate the remaining quantities. First, we assume that regions are compact, so that the volume of straddling pixels $\bar{\Omega}(c) - \underbar{\Omega}(c)$ is approximately $\sqrt{n_cM}/{2\pi}$. Thus:
+\begin{align*}
+P(c,c'|\text{close})
+&\approx
+\frac{n_c\left(1 - \frac{2\pi}{\sqrt{M}}\right)}{|\Omega|}
+\\
+&+
+\frac{n_c\left(\frac{2\pi}{\sqrt{M}}\right)}{|\Omega|}
+\frac{1}{M|\Omega|}
+\left\langle
+\delta_{c(u)=c}
+\delta_{c(v)=c'}
+\right\rangle_{v \in N(u)}.
+\end{align*}

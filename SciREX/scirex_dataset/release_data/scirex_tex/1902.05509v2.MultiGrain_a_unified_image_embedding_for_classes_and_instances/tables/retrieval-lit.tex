@@ -1,0 +1,55 @@
+%
+
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+\def \mysp {\hspace{3pt}}
+{\small
+%
+\begin{tabular}{@{\hspace{5pt}}l@{\hspace{5pt}}r ccc@{\hspace{5pt}}}
+\toprule
+Method & resol. $s^*$ & Holidays & UKB & CD10k \\ 
+%
+\midrule
+MultiGrain $\lambda=1$                     & 500  & {\bf 91.8} & 3.89       & {\bf 81.1} \\
+MultiGrain $\lambda=1$                     & 800  & 91.6       & {\bf 3.91} & {\bf 82.5} \\
+MultiGrain $\lambda=0.5$                   & 500  & 91.5       & {\bf 3.90} & 80.7 \\
+MultiGrain $\lambda=0.5$                   & 800  & {\bf 92.5} & {\bf 3.91} & 78.6 \\
+\hline 
+%
+Fisher vectors~\cite{jegou2012aggregating} & 800  & 63.4       & 3.35       & 42.7 \\
+Neural codes~\cite{babenko2014neural}      & 224  & 79.3       & 3.56 \\
+ResNet-50 RMAC~\cite{Gordo2016DeepIR}      & 724  & 90.9  \\
+ResNet-50 RMAC~\cite{Gordo2016DeepIR}      & 1024 & 93.3 \\
+ResNet-101 RMAC~\cite{Gordo2017EndtoEndLO} & 800  & 91.4 & 3.89\\
+GeM$^\dagger$~\cite{radenovic2018fine}     & {\bf 1024} &  {\bf 93.9} \\
+\bottomrule
+\end{tabular}
+}

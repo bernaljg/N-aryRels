@@ -1,0 +1,215 @@
+\ProvidesPackage{qiangstyle}
+
+
+%\usepackage{mdframed, xcolor}
+%\usepackage{framed, color}
+%\usepackage{color}
+%\usepackage[comma,authoryear]{natbib}
+%\usepackage{natbib}
+%\PassOptionsToPackage{square,numbers}{natbib}
+%\usepackage[round]{natbib}
+%\usepackage[square,numbers]{natbib}
+\usepackage{amsmath, amsthm,  amsfonts, amssymb, mathtools}
+%\usepackage{times}		%% native times roman fonts
+%\usepackage{parskip}		%% blank lines between paragraphs, no indent
+%\usepackage[pdftex]{graphicx}	%% include graphics, preferrably pdf
+%\usepackage[raggedright]{sidecap}
+%\usepackage{wrapfig} 
+%\usepackage{hyperref}	%% many PDF options can be set here
+
+\usepackage{setspace}
+
+%\usepackage[pdftex, citecolor=blue]{hyperref}	%% many PDF options can be set here
+%\usepackage[colorlinks,citecolor=blue,lin  kcolor=blue]{hyperref}  % hyperlink  \url \href{}{}  \hyperref[]{}
+% \usepackage[colorlinks]{hyperref}
+%\usepackage{subfigure}
+%\usepackage{graphicx, comment}
+%\usepackage{color}
+%\usepackage{url}
+%\pdfadjustspacing=1		%% force LaTeX-like character spacing
+
+%\usepackage{graphicx}
+
+\usepackage{comment}
+
+%\usepackage[inner, left]{showlabels}
+
+
+%\usepackage{MnSymbol}
+\newcommand{\eqcolon}{\mathrel{\rotatebox[units=360]{180}{\ensuremath{\coloneq}}}}
+
+%%%%%%%%%%%%%%% EXACT 1in MARGINS %%
+%\setlength{\textwidth}{6.5in}     %%
+%\setlength{\oddsidemargin}{0in}   %%
+%\setlength{\evensidemargin}{0in}  %%
+%\setlength{\textheight}{8.5in}    %%
+%\setlength{\topmargin}{0in}       %%
+%\setlength{\headheight}{0in}      %%
+%\setlength{\headsep}{0in}         %%
+%\setlength{\footskip}{.5in}       %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\usepackage{amsthm}   
+\newtheorem{thm}{Theorem}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{lem}[thm]{Lemma} 
+\newtheorem{mydef}[thm]{Definition} 
+\newtheorem{ass}[thm]{Assumption} 
+\newtheorem{problem}[thm]{Problem} 
+\newtheorem{exa}[thm]{Example} 
+\newtheorem{pro}[thm]{Proposition}    % Setting theorem environment 
+% fix the spacing problem of theorem
+\begingroup
+    \makeatletter
+    \@for\theoremstyle:=definition,remark,plain\do{%
+        \expandafter\g@addto@macro\csname th@\theoremstyle\endcsname{%
+            \addtolength\thm@preskip\parskip
+            }%
+        }
+\endgroup
+
+
+%%%%%%%%%%%%%  COMMON  %%%%%%%%%%%%
+\newcommand{\myf}[2]{\frac{\displaystyle #1}{\displaystyle #2}}
+ \newcommand{\myp}[2]{\frac{\displaystyle \partial #1}{\displaystyle \partial  #2}}
+ \newcommand{\myb}[1]{\mbox{\boldmath$#1$}}
+ \newcommand{\eqnref}[1]{Eqn.~\eqref{#1}}
+\newcommand{\figref}[1]{Fig.~\ref{#1}}
+\newcommand{\Qiang}[1]{\textcolor{red}{#1}\\}
+\newcommand{\qiang}[1]{\textcolor{red}{#1}}
+%\newcommand{\Todo}[1]{\textcolor{red}{TODO: #1}\\}
+%\newcommand{\todo}[1]{\textcolor{gray}{TODO: #1}}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\med}[1]{\textcolor{magenta}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\gray}[1]{\textcolor{gray}{#1}}
+\newcommand{\green}[1]{\textcolor{green}{#1}}
+\newcommand{\myempty}[1]{}
+
+\newcommand{\ant}[1]{~~~~~~~\text{\med{//#1}}}
+
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\V}{\mathbf}
+\newcommand{\M}{\mathbb{M}}
+\newcommand{\HH}{\mathcal{H}}
+\renewcommand{\H}{\mathcal{H}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\Z}{\mathcal{Z}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\R}{\mathbb{R}}
+
+\newcommand{\A}{\mathbb{A}}
+
+\renewcommand{\S}{\mathbb{D}}
+
+\newcommand{\vx}{\boldsymbol{x}}
+\newcommand{\vv}[1]{\boldsymbol{#1}}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\neib}[1]{\partial{#1}}
+\newcommand{\normal}{\mathcal{N}}
+\newcommand{\var}{\mathrm{var}}
+\newcommand{\cov}{\mathrm{cov}}
+\newcommand{\KL}{\mathrm{KL}}
+
+\newcommand{\Remark}{\paragraph{Remark}}
+\newcommand{\remark}{\paragraph{Remark}}
+
+
+\newcommand{\trace}{\mathrm{trace}}
+\newcommand{\diag}{\mathrm{diag}}
+
+
+\newcommand{\la}{\langle}
+\newcommand{\ra}{\rangle}
+
+%%%%%%%%%%%%%% Big O notation %%%%%%%%%%%%%%
+\newcommand{\op}{o_p}
+\newcommand{\Op}{O_p}
+
+\newcommand{\od}{o}
+\newcommand{\Od}{O}
+
+\newcommand{\stein}{{\mathcal A}}
+
+
+\newcommand{\ind}{\mathbb{I}}
+\newcommand{\sign}{\mathrm{sign}}
+
+\newcommand{\prob}{\mathrm{Pr}}
+
+\newcommand{\score}{{\vv s}}
+
+\newcommand{\cd}{\mid}
+
+\renewcommand{\k}{k}%{{\mathcal K}}
+
+\newcommand{\kp}{{\mathcal K_p}}
+\newcommand{\kpp}{{\mathcal K_{p+}}}
+
+\newcommand{\Kmatrix}{\vv{K}}
+
+\newcommand{\Q}{{\mathcal Q}}
+
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+\newcommand{\vw}{\vv{w}}
+
+\newcommand{\x}{x}
+\newcommand{\z}{z}
+
+\renewcommand{\X}{\mathcal X}
+\newcommand{\T}{{\vv{T}}}
+\newcommand{\F}{{\mathcal F}}
+\newcommand{\vf}{{\vv{f}}}
+\newcommand{\vg}{{\vv{g}}}
+
+\newcommand{\para}{\epsilon}
+
+\newcommand{\f}{\phi}
+\newcommand{\ff}{{\vv\phi}}
+\newcommand{\hatff}{{\vv{\hat\phi}}}
+
+
+\usepackage{xargs}                      % Use more than one optional parameter in a new commands
+%\usepackage[pdftex,dvipsnames]{xcolor}  % Coloured text etc.
+
+
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
+\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+\newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
+
+
+
+\newcommand{\bigO}[1]{\mathcal{O}{\left(#1\right)}}
+
+\newcommand{\fullversion}[1]{{}}
+
+\newcommand{\cutspace}[1]{}
+
+
+%\newcommandx{\todonew}[2][1=]{\todo[#1]{#2}}
+%\renewcommand{\todo}[1]{}
+
+\renewcommand{\blue}[1]{#1}
+
+\renewcommand{\div}{\mathrm{div}}
+
+\newcommand{\figcapsize}{\small}
+
+\newcommand{\sumstein}{{\mathcal{T}}}
+
+\newcommand{\y}{y}
+

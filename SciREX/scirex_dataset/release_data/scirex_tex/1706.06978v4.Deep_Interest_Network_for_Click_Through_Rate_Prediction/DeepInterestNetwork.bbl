@@ -1,0 +1,351 @@
+%%% -*-BibTeX-*-
+%%% Do NOT edit. File created by BibTeX with style
+%%% ACM-Reference-Format-Journals [18-Jan-2012].
+
+\begin{thebibliography}{00}
+
+%%% ====================================================================
+%%% NOTE TO THE USER: you can override these defaults by providing
+%%% customized versions of any of these macros before the \bibliography
+%%% command.  Each of them MUST provide its own final punctuation,
+%%% except for \shownote{}, \showDOI{}, and \showURL{}.  The latter two
+%%% do not use final punctuation, in order to avoid confusing it with
+%%% the Web address.
+%%%
+%%% To suppress output of a particular field, define its macro to expand
+%%% to an empty string, or better, \unskip, like this:
+%%%
+%%% \newcommand{\showDOI}[1]{\unskip}   % LaTeX syntax
+%%%
+%%% \def \showDOI #1{\unskip}           % plain TeX syntax
+%%%
+%%% ====================================================================
+
+\ifx \showCODEN    \undefined \def \showCODEN     #1{\unskip}     \fi
+\ifx \showDOI      \undefined \def \showDOI       #1{#1}\fi
+\ifx \showISBNx    \undefined \def \showISBNx     #1{\unskip}     \fi
+\ifx \showISBNxiii \undefined \def \showISBNxiii  #1{\unskip}     \fi
+\ifx \showISSN     \undefined \def \showISSN      #1{\unskip}     \fi
+\ifx \showLCCN     \undefined \def \showLCCN      #1{\unskip}     \fi
+\ifx \shownote     \undefined \def \shownote      #1{#1}          \fi
+\ifx \showarticletitle \undefined \def \showarticletitle #1{#1}   \fi
+\ifx \showURL      \undefined \def \showURL       {\relax}        \fi
+% The following commands are used for tagged output and should be
+% invisible to TeX
+\providecommand\bibfield[2]{#2}
+\providecommand\bibinfo[2]{#2}
+\providecommand\natexlab[1]{#1}
+\providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[\protect\citeauthoryear{Bahdanau, Cho, and Bengio}{Bahdanau
+  et~al\mbox{.}}{2015}]%
+        {bengio:attention}
+\bibfield{author}{\bibinfo{person}{Dzmitry Bahdanau},
+  \bibinfo{person}{Kyunghyun Cho}, {and} \bibinfo{person}{Yoshua Bengio}.}
+  \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Neural Machine Translation by Jointly Learning to
+  Align and Translate}. In \bibinfo{booktitle}{{\em Proceedings of the 3rd
+  International Conference on Learning Representations}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Bengio~Yoshua et~al\mbox{.}}{Bengio~Yoshua
+  et~al\mbox{.}}{2003}]%
+        {bengio:nnlm}
+\bibfield{author}{\bibinfo{person}{Ducharme~R{\'e}jean Bengio~Yoshua}
+  {et~al\mbox{.}}} \bibinfo{year}{2003}\natexlab{}.
+\newblock \showarticletitle{A neural probabilistic language model}.
+\newblock \bibinfo{journal}{{\em Journal of Machine Learning Research\/}}
+  (\bibinfo{year}{2003}), \bibinfo{pages}{1137--1155}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Covington, Adams, and Sargin}{Covington
+  et~al\mbox{.}}{2016}]%
+        {youtube:recommend}
+\bibfield{author}{\bibinfo{person}{Paul Covington}, \bibinfo{person}{Jay
+  Adams}, {and} \bibinfo{person}{Emre Sargin}.}
+  \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Deep neural networks for youtube recommendations}.
+  In \bibinfo{booktitle}{{\em Proceedings of the 10th ACM Conference on
+  Recommender Systems}}. ACM, \bibinfo{pages}{191--198}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{et~al.}{et~al.}{2016a}]%
+        {widedeep}
+\bibfield{author}{\bibinfo{person}{Cheng~H. et al.}}
+  \bibinfo{year}{2016}\natexlab{a}.
+\newblock \showarticletitle{Wide \& deep learning for recommender systems}. In
+  \bibinfo{booktitle}{{\em Proceedings of the 1st Workshop on Deep Learning for
+  Recommender Systems}}. ACM.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{et~al.}{et~al.}{2016b}]%
+        {PNN}
+\bibfield{author}{\bibinfo{person}{Qu~Y. et al.}}
+  \bibinfo{year}{2016}\natexlab{b}.
+\newblock \showarticletitle{Product-Based Neural Networks for User Response
+  Prediction}. In \bibinfo{booktitle}{{\em Proceedings of the 16th
+  International Conference on Data Mining}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{et~al.}{et~al.}{2018}]%
+        {DKN}
+\bibfield{author}{\bibinfo{person}{Wang~H. et al.}}
+  \bibinfo{year}{2018}\natexlab{}.
+\newblock \showarticletitle{DKN: Deep Knowledge-Aware Network for News
+  Recommendation}. In \bibinfo{booktitle}{{\em Proceedings of 26th
+  International World Wide Web Conference}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{et~al.}{et~al.}{2017}]%
+        {zhu2017optimized}
+\bibfield{author}{\bibinfo{person}{Zhu~H. et al.}}
+  \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{Optimized Cost per Click in Taobao Display
+  Advertising}. In \bibinfo{booktitle}{{\em Proceedings of the 23rd
+  International Conference on Knowledge Discovery and Data Mining}}. ACM,
+  \bibinfo{pages}{2191--2200}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Fawcett}{Fawcett}{2006}]%
+        {fawcett:roc}
+\bibfield{author}{\bibinfo{person}{Tom Fawcett}.}
+  \bibinfo{year}{2006}\natexlab{}.
+\newblock \showarticletitle{An introduction to ROC analysis}.
+\newblock \bibinfo{journal}{{\em Pattern recognition letters\/}}
+  \bibinfo{volume}{27}, \bibinfo{number}{8} (\bibinfo{year}{2006}),
+  \bibinfo{pages}{861--874}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Gai, Zhu, et~al\mbox{.}}{Gai
+  et~al\mbox{.}}{2017}]%
+        {MLR}
+\bibfield{author}{\bibinfo{person}{Kun Gai}, \bibinfo{person}{Xiaoqiang Zhu},
+  {et~al\mbox{.}}} \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{Learning Piece-wise Linear Models from Large Scale
+  Data for Ad Click Prediction}.
+\newblock \bibinfo{journal}{{\em arXiv preprint arXiv:1704.05194\/}}
+  (\bibinfo{year}{2017}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Guo, Tang, et~al\mbox{.}}{Guo
+  et~al\mbox{.}}{2017}]%
+        {DeepFM}
+\bibfield{author}{\bibinfo{person}{Huifeng Guo}, \bibinfo{person}{Ruiming
+  Tang}, {et~al\mbox{.}}} \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{DeepFM: A Factorization-Machine based Neural
+  Network for CTR Prediction}. In \bibinfo{booktitle}{{\em Proceedings of the
+  26th International Joint Conference on Artificial Intelligence}}.
+  \bibinfo{pages}{1725--1731}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Harper and Konstan}{Harper and
+  Konstan}{2015}]%
+        {MovieLens}
+\bibfield{author}{\bibinfo{person}{F.~Maxwell Harper} {and}
+  \bibinfo{person}{Joseph~A. Konstan}.} \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{The MovieLens Datasets: History and Context}.
+\newblock \bibinfo{journal}{{\em ACM Transactions on Interactive Intelligent
+  Systems\/}} \bibinfo{volume}{5}, \bibinfo{number}{4} (\bibinfo{year}{2015}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{He, Zhang, Ren, and Sun}{He
+  et~al\mbox{.}}{2015}]%
+        {ms:prelu}
+\bibfield{author}{\bibinfo{person}{Kaiming He}, \bibinfo{person}{Xiangyu
+  Zhang}, \bibinfo{person}{Shaoqing Ren}, {and} \bibinfo{person}{Jian Sun}.}
+  \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Delving deep into rectifiers: Surpassing
+  human-level performance on imagenet classification}. In
+  \bibinfo{booktitle}{{\em Proceedings of the IEEE International Conference on
+  Computer Vision}}. \bibinfo{pages}{1026--1034}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{He and McAuley}{He and McAuley}{2016}]%
+        {Amazon:AUC}
+\bibfield{author}{\bibinfo{person}{Ruining He} {and} \bibinfo{person}{Julian
+  McAuley}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Ups and Downs: Modeling the Visual Evolution of
+  Fashion Trends with One-Class Collaborative Filtering}. In
+  \bibinfo{booktitle}{{\em Proceedings of the 25th International Conference on
+  World Wide Web}}. \bibinfo{pages}{507--517}.
+\newblock
+\showURL{%
+\url{https://doi.org/10.1145/2872427.2883037}}
+
+
+\bibitem[\protect\citeauthoryear{Huang, Liu, Maaten, and Weinberger}{Huang
+  et~al\mbox{.}}{}]%
+        {huang2016densely}
+\bibfield{author}{\bibinfo{person}{Gao Huang}, \bibinfo{person}{Zhuang Liu},
+  \bibinfo{person}{Laurens van~der Maaten}, {and} \bibinfo{person}{Kilian~Q.
+  Weinberger}.}
+\newblock \showarticletitle{Densely connected convolutional networks}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Kingma and Ba}{Kingma and Ba}{2015}]%
+        {Adam}
+\bibfield{author}{\bibinfo{person}{Diederik Kingma} {and}
+  \bibinfo{person}{Jimmy Ba}.} \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Adam: A Method for Stochastic Optimization}. In
+  \bibinfo{booktitle}{{\em Proceedings of the 3rd International Conference on
+  Learning Representations}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Li, Liu, Smola, and Wang}{Li
+  et~al\mbox{.}}{2016}]%
+        {difacto}
+\bibfield{author}{\bibinfo{person}{Mu Li}, \bibinfo{person}{Ziqi Liu},
+  \bibinfo{person}{Alexander~J Smola}, {and} \bibinfo{person}{Yu-Xiang Wang}.}
+  \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{DiFacto: Distributed factorization machines}. In
+  \bibinfo{booktitle}{{\em Proceedings of the 9th ACM International Conference
+  on Web Search and Data Mining}}. \bibinfo{pages}{377--386}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Maaten and Hinton}{Maaten and Hinton}{2008}]%
+        {tsne}
+\bibfield{author}{\bibinfo{person}{Laurens van~der Maaten} {and}
+  \bibinfo{person}{Geoffrey Hinton}.} \bibinfo{year}{2008}\natexlab{}.
+\newblock \showarticletitle{Visualizing data using t-SNE}.
+\newblock \bibinfo{journal}{{\em Journal of Machine Learning Research\/}}
+  \bibinfo{volume}{9}, \bibinfo{number}{Nov} (\bibinfo{year}{2008}),
+  \bibinfo{pages}{2579--2605}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Mcauley, Targett, Shi, and Anton}{Mcauley
+  et~al\mbox{.}}{}]%
+        {AmazonData}
+\bibfield{author}{\bibinfo{person}{Julian Mcauley},
+  \bibinfo{person}{Christopher Targett}, \bibinfo{person}{Qinfeng Shi}, {and}
+  \bibinfo{person}{Van Den~Hengel Anton}.}
+\newblock \showarticletitle{Image-Based Recommendations on Styles and
+  Substitutes}. In \bibinfo{booktitle}{{\em Proceedings of the 38th
+  International ACM SIGIR Conference on Research and Development in Information
+  Retrieval}}. \bibinfo{pages}{43--52}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Mcmahan, Holt, et~al\mbox{.}}{Mcmahan
+  et~al\mbox{.}}{2014}]%
+        {ftrl}
+\bibfield{author}{\bibinfo{person}{H.~Brendan Mcmahan},
+  \bibinfo{person}{H.~Brendan Holt}, {et~al\mbox{.}}}
+  \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{Ad Click Prediction: a View from the Trenches}. In
+  \bibinfo{booktitle}{{\em Proceedings of the 19th ACM SIGKDD International
+  Conference on Knowledge Discovery and Data Mining}}.
+  \bibinfo{pages}{1222--1230}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Rendle}{Rendle}{2010}]%
+        {rendle:fm}
+\bibfield{author}{\bibinfo{person}{Steffen Rendle}.}
+  \bibinfo{year}{2010}\natexlab{}.
+\newblock \showarticletitle{Factorization machines}. In
+  \bibinfo{booktitle}{{\em Proceedings of the 10th International Conference on
+  Data Mining}}. IEEE, \bibinfo{pages}{995--1000}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Shan, Hoens, Jiao, Wang, Yu, and Mao}{Shan
+  et~al\mbox{.}}{}]%
+        {deep_crossing}
+\bibfield{author}{\bibinfo{person}{Ying Shan}, \bibinfo{person}{T~Ryan Hoens},
+  \bibinfo{person}{Jian Jiao}, \bibinfo{person}{Haijing Wang},
+  \bibinfo{person}{Dong Yu}, {and} \bibinfo{person}{JC Mao}.}
+\newblock \showarticletitle{Deep Crossing: Web-scale modeling without manually
+  crafted combinatorial features}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Srivastava, Hinton, Krizhevsky, Sutskever, and
+  Salakhutdinov}{Srivastava et~al\mbox{.}}{2014}]%
+        {dropout}
+\bibfield{author}{\bibinfo{person}{Nitish Srivastava},
+  \bibinfo{person}{Geoffrey~E Hinton}, \bibinfo{person}{Alex Krizhevsky},
+  \bibinfo{person}{Ilya Sutskever}, {and} \bibinfo{person}{Ruslan
+  Salakhutdinov}.} \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{Dropout: a simple way to prevent neural networks
+  from overfitting}.
+\newblock \bibinfo{journal}{{\em Journal of Machine Learning Research\/}}
+  \bibinfo{volume}{15}, \bibinfo{number}{1} (\bibinfo{year}{2014}),
+  \bibinfo{pages}{1929--1958}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Veit, Kovacs, et~al\mbox{.}}{Veit
+  et~al\mbox{.}}{2015}]%
+        {ICCV_Amazon}
+\bibfield{author}{\bibinfo{person}{Andreas Veit}, \bibinfo{person}{Balazs
+  Kovacs}, {et~al\mbox{.}}} \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Learning Visual Clothing Style With Heterogeneous
+  Dyadic Co-Occurrences}. In \bibinfo{booktitle}{{\em Proceedings of the IEEE
+  International Conference on Computer Vision}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Williams and Zipser}{Williams and
+  Zipser}{1989}]%
+        {rnn}
+\bibfield{author}{\bibinfo{person}{Ronald~J Williams} {and}
+  \bibinfo{person}{David Zipser}.} \bibinfo{year}{1989}\natexlab{}.
+\newblock \showarticletitle{A learning algorithm for continually running fully
+  recurrent neural networks}.
+\newblock \bibinfo{journal}{{\em Neural computation\/}} (\bibinfo{year}{1989}),
+  \bibinfo{pages}{270--280}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Yan, Li, Xue, and Han}{Yan
+  et~al\mbox{.}}{2014}]%
+        {yan2014coupled}
+\bibfield{author}{\bibinfo{person}{Ling Yan}, \bibinfo{person}{Wu-jun Li},
+  \bibinfo{person}{Gui-Rong Xue}, {and} \bibinfo{person}{Dingyi Han}.}
+  \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{Coupled group lasso for web-scale ctr prediction in
+  display advertising}. In \bibinfo{booktitle}{{\em Proceedings of the 31th
+  International Conference on Machine Learning}}. \bibinfo{pages}{802--810}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Zhai, Chang, Zhang, and Zhang}{Zhai
+  et~al\mbox{.}}{2016}]%
+        {deep_intent}
+\bibfield{author}{\bibinfo{person}{Shuangfei Zhai}, \bibinfo{person}{Keng-hao
+  Chang}, \bibinfo{person}{Ruofei Zhang}, {and} \bibinfo{person}{Zhongfei~Mark
+  Zhang}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Deepintent: Learning attentions for online
+  advertising with recurrent neural networks}. In \bibinfo{booktitle}{{\em
+  Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge
+  Discovery and Data Mining}}. ACM, \bibinfo{pages}{1295--1304}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Zhou~C}{Zhou~C}{2018}]%
+        {atrank}
+\bibfield{author}{\bibinfo{person}{Song J et~al. Zhou~C, Bai~J}.}
+  \bibinfo{year}{2018}\natexlab{}.
+\newblock \showarticletitle{ATRank: An Attention-Based User Behavior Modeling
+  Framework for Recommendation}. In \bibinfo{booktitle}{{\em Proceedings of
+  32th AAAI Conference on Artificial Intelligence}}.
+\newblock
+
+
+\end{thebibliography}

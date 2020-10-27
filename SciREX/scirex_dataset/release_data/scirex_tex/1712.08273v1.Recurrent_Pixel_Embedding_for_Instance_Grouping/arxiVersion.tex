@@ -1,0 +1,258 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{cvpr}
+\usepackage{rotating}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{empheq}
+\usepackage{framed, color}
+\usepackage{xcolor}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage[]{graphicx} % more modern
+\usepackage{epsfig} % less modern
+\usepackage{subfigure}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{stmaryrd}
+\usepackage[mathscr]{eucal}
+\usepackage{lineno}
+\usepackage{color}
+\usepackage{filecontents}
+\usepackage{subfigure}
+\usepackage{multirow}
+\usepackage{filecontents}
+\usepackage{verbatim} % begin{comment} end{comment}
+\usepackage{tabularx}
+\usepackage{lineno}
+\usepackage{setspace}
+\usepackage{multirow}
+\usepackage{textcomp,booktabs}
+\usepackage{caption}
+% Example definitions.
+% --------------------
+\newcommand\TODO[1]{\textcolor{red}{\bf [[#1]]}}
+
+\def\XBM{\boldsymbol{\mathscr{X}}}
+\def\YBM{\boldsymbol{\mathscr{Y}}}
+\def\GBM{\boldsymbol{\mathscr{G}}}
+\def\TBM{\boldsymbol{\mathscr{T}}}
+\def\BBM{\boldsymbol{\mathscr{B}}}
+\def\DBM{\boldsymbol{\mathscr{D}}}
+\def\SBM{\boldsymbol{\mathscr{S}}}
+\def\VBM{\boldsymbol{\mathscr{V}}}
+\def\MBM{\boldsymbol{\mathscr{M}}}
+\def\ZBM{\boldsymbol{\mathscr{Z}}}
+\def\NBM{\boldsymbol{\mathscr{N}}}
+
+\def\A{{\bf A}}
+\def\a{{\bf a}}
+\def\B{{\bf B}}
+\def\b{{\bf b}}
+\def\C{{\bf C}}
+\def\c{{\bf c}}
+\def\D{{\bf D}}
+\def\d{{\bf d}}
+\def\E{{\bf E}}
+\def\e{{\bf e}}
+\def\F{{\bf F}}
+\def\f{{\bf f}}
+\def\h{{\bf h}}
+\def\K{{\bf K}}
+\def\H{{\bf H}}
+\def\G{{\bf G}}
+\def\g{{\bf g}}
+\def\I{{\bf I}}
+\def\R{{\bf R}}
+\def\X{{\bf X}}
+\def\Y{{\bf Y}}
+\def\Q{{\bf Q}}
+\def\q{{\bf q}}
+\def\s{{\bf s}}
+\def\S{{\bf S}}
+\def\x{{\bf x}}
+\def\y{{\bf y}}
+\def\z{{\bf z}}
+\def\Z{{\bf Z}}
+\def\M{{\bf M}}
+\def\m{{\bf m}}
+\def\n{{\bf n}}
+\def\U{{\bf U}}
+\def\u{{\bf u}}
+\def\V{{\bf V}}
+\def\v{{\bf v}}
+\def\W{{\bf W}}
+\def\w{{\bf w}}
+\def\0{{\bf 0}}
+\def\1{{\bf 1}}
+
+\def\PhiBM{\boldsymbol{\Phi}}
+\def\DeltaBM{\boldsymbol{\Delta}}
+\def\PsiBM{\boldsymbol{\Psi}}
+\def\SigmaBM{\boldsymbol{\Sigma}}
+
+\def\AM{{\mathcal A}}
+\def\FM{{\mathcal F}}
+\def\TM{{\mathcal T}}
+\def\UM{{\mathcal U}}
+\def\XM{{\mathcal X}}
+\def\YM{{\mathcal Y}}
+\def\NM{{\mathcal N}}
+\def\OM{{\mathcal O}}
+\def\IM{{\mathcal I}}
+\def\GM{{\mathcal G}}
+\def\RB{{\mathbb R}}
+
+\def\tx{\tilde{\bf x}}
+\def\ty{\tilde{\bf y}}
+\def\tz{\tilde{\bf z}}
+\def\hd{\hat{d}}
+\def\HD{\hat{\bf D}}
+\def\hx{\hat{\bf x}}
+
+\def\alp{\mbox{\boldmath$\alpha$\unboldmath}}
+\def\bet{\mbox{\boldmath$\beta$\unboldmath}}
+\def\epsi{\mbox{\boldmath$\epsilon$\unboldmath}}
+\def\ph{\mbox{\boldmath$\phi$\unboldmath}}
+\def\pii{\mbox{\boldmath$\pi$\unboldmath}}
+\def\Ph{\mbox{\boldmath$\Phi$\unboldmath}}
+\def\Ps{\mbox{\boldmath$\Psi$\unboldmath}}
+\def\tha{\mbox{\boldmath$\theta$\unboldmath}}
+\def\Tha{\mbox{\boldmath$\Theta$\unboldmath}}
+\def\muu{\mbox{\boldmath$\mu$\unboldmath}}
+\def\Si{\mbox{\boldmath$\Sigma$\unboldmath}}
+\def\Gam{\mbox{\boldmath$\Gamma$\unboldmath}}
+\def\Lam{\mbox{\boldmath$\Lambda$\unboldmath}}
+\def\De{\mbox{\boldmath$\Delta$\unboldmath}}
+\def\vps{\mbox{\boldmath$\varepsilon$\unboldmath}}
+\newcommand{\ti}[1]{\tilde{#1}}
+
+
+
+\def\eg{\emph{e.g. }}
+\def\ie{\emph{i.e. }}
+\def\argmax{\mathop{\rm argmax}}
+\def\argmin{\mathop{\rm argmin}}
+\def\tr{\mathsf{tr}}
+\def\diag{\mathsf{diag}}
+\def\dg{\mathsf{dg}}
+\def\vec{\mathsf{vec}}
+\def\MCAR{\mathrm{MCAR}}
+\def\MSAR{\mathrm{MSAR}}
+\def\etal{{\em et al.\/}\,}
+
+\newcommand{\indep}{{\;\bot\!\!\!\!\!\!\bot\;}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemmas}{Lemma}
+\newtheorem{definitions}{Definition}
+\newtheorem{propositions}{Proposition}
+\newtheorem{corollaries}{Corollarie}
+\newtheorem{examples}{Example}
+\newtheorem{proof}{Proof}
+
+\graphicspath{{./figures/}}   %  image
+
+
+
+\newcommand*{\colorboxed}{}
+\def\colorboxed#1#{%
+  \colorboxedAux{#1}%
+}
+\newcommand*{\colorboxedAux}[3]{%
+  % #1: optional argument for color model
+  % #2: color specification
+  % #3: formula
+  \begingroup
+    \colorlet{cb@saved}{.}%
+    \color#1{#2}%
+    \boxed{%
+      \color{cb@saved}%
+      #3%
+    }%
+  \endgroup
+}
+
+
+% Include other packages here, before hyperref.
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+%\usepackage[breaklinks=true,bookmarks=false]{hyperref}
+%\cvprfinalcopy % *** Uncomment this line for the final submission
+
+
+
+
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+\cvprfinalcopy % *** Uncomment this line for the final submission
+\def\cvprPaperID{533} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+\ifcvprfinal\pagestyle{empty}\fi
+
+
+\begin{document}
+
+%%%%%%%%% TITLE
+\title{Recurrent Pixel Embedding for Instance Grouping}
+
+\author{
+Shu Kong, \ \   Charless Fowlkes\\
+  Department of Computer Science\\
+  University of California, Irvine\\
+  Irvine, CA 92697, USA \\
+  \texttt{\{skong2, fowlkes\}@ics.uci.edu } \\ \\
+  \ [\href{http://www.ics.uci.edu/~skong2/SMMMSG.html}{Project Page}],
+[\href{https://github.com/aimerykong/Recurrent-Pixel-Embedding-for-Instance-Grouping}{
+Github}],
+[\href{http://www.ics.uci.edu/~skong2/slides/pixel_embedding_for_grouping_public_version.pdf}{Slides}],
+[\href{http://www.ics.uci.edu/~skong2/slides/pixel_embedding_for_grouping_poster.pdf}{Poster}]
+}
+
+\maketitle
+%\thispagestyle{empty}
+
+\input{section01_abstract}
+\input{section02_intro4arxiv}
+\input{section03_learning_embedding_space4arxiv}
+\input{section04_meanshift_grouping4arxiv}
+\input{section05_experiment4arxiv}
+\input{section06_conclusion}
+\input{section07_acknowledgement}
+
+{\small
+\bibliographystyle{ieee}
+\bibliography{egbib}
+}
+
+%\newpage
+%\newpage
+\clearpage\mbox{}
+%Page \thepage\ of the manuscript.
+
+\begin{center}
+ {\large \textbf{Appendix}}
+\end{center}
+
+%\emph{
+In this appendix, we provide proofs of the propositions
+introduced in the main paper for understanding our objective function and
+grouping mechanism.  Then, we provide the details of the mean-shift algorithm,
+computation of gradients and how it is adapted for recurrent grouping.  We
+illustrate how the gradients are back-propagated to the input embedding using a
+toy example.
+Finally, we include more qualitative results on boundary detection and instance
+segmentation.
+%}
+
+
+\input{section07_appendix4arxiv}
+
+
+
+\end{document}

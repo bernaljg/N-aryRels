@@ -1,0 +1,33 @@
+%\renewcommand{\tabcolsep}{0.15cm}
+\tabcolsep 1.0pt
+\begin{table}[tbp]
+ \scriptsize
+  \centering
+  \begin{tabular}{@{} l c ccc ccc cc@{}}
+    \toprule
+    Setting& Head   & Sho  & Elb & Wri & Hip & Knee & Ank & Up & Full\\
+           &        &           &       &       &     &      &       & body  & body \\
+    \midrule
+    \input{experiments/pck-torso-expidx527-2.tex}
+    \midrule
+    \input{experiments/pck-torso-expidx534.tex}
+    \midrule    
+    \input{experiments/pck-torso-expidx0.tex}
+    \input{experiments/pck-torso-expidx1.tex}
+    \input{experiments/pck-torso-expidx26.tex}
+    \input{experiments/pck-torso-expidx34.tex}
+    \input{experiments/pck-torso-expidx98.tex}
+    \input{experiments/pck-torso-expidx148.tex}
+    \input{experiments/pck-torso-expidx118.tex}
+    \input{experiments/pck-torso-expidx166.tex}
+    \midrule
+    \input{experiments/pck-torso-expidx176.tex} 
+    %\input{experiments/pck-torso-expidx179.tex}
+    \input{experiments/pck-torso-expidx201.tex}
+    \input{experiments/pck-torso-expidx227.tex}
+    \bottomrule
+  \end{tabular}
+  \caption[]{Unary only performance (PCK) of adapted Fast R-CNN on the LSP (Person-Centric) dataset.}
+    \vspace{-0.5em}
+  \label{tab:rcnn}
+\end{table}

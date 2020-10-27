@@ -1,0 +1,95 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[t]
+\centering
+
+\def\queryone{11}
+\def\dbimageone{3885}
+% \def\queryone{16}
+% \def\dbimageone{1201}
+% \def\queryone{16}
+% \def\dbimageone{1911}
+% \def\queryone{21}
+% \def\dbimageone{3289}
+% \def\queryone{21}
+% \def\dbimageone{3303}
+\def\querytwo{42}
+\def\dbimagetwo{211}
+
+\setlength{\tabcolsep}{0pt}
+\hspace{-20pt}
+\begin{tabular}{ccc}
+\raisebox{8pt}{\includegraphics[height=65pt]{fig/correspondences/q\queryone_db\dbimageone_net0_1} }  &
+\includegraphics[height=72pt]{fig/correspondences/q\queryone_db\dbimageone_net0_2}  &
+\raisebox{30pt}{
+	\begin{tabular}{c}
+		\multicolumn{1}{c}{VGG off-the-shelf} \\	
+		\foreach \patch in {1,2,3,4,5,6,7,8,9,10}  {
+		\includegraphics[height=19pt]{fig/correspondences/q\queryone_db\dbimageone_net0_p\patch_1.png}
+		\hspace{-8pt} 
+		}\\
+		\foreach \patch in {1,2,3,4,5,6,7,8,9,10}  {
+		\includegraphics[height=19pt]{fig/correspondences/q\queryone_db\dbimageone_net0_p\patch_2.png} 
+		\hspace{-8pt} 
+		}\\
+	\end{tabular}
+}
+\\
+%
+\includegraphics[height=60pt]{fig/correspondences/q\queryone_db\dbimageone_net1_1} & %\hspace{3pt} 
+\includegraphics[height=58pt]{fig/correspondences/q\queryone_db\dbimageone_net1_2} ~~~&
+\raisebox{30pt}{
+	\begin{tabular}{c}
+		\multicolumn{1}{c}{VGG ours} \\	
+		\foreach \patch in {1,2,3,4,5,6,7,8,9,10}  {
+		\includegraphics[height=19pt]{fig/correspondences/q\queryone_db\dbimageone_net1_p\patch_1.png}
+		\hspace{-8pt} 
+		}\\
+		\foreach \patch in {1,2,3,4,5,6,7,8,9,10}  {
+		\includegraphics[height=19pt]{fig/correspondences/q\queryone_db\dbimageone_net1_p\patch_2.png} 
+		\hspace{-8pt} 
+		}\\
+	\end{tabular}
+}
+\\
+%
+%
+\includegraphics[height=70pt]{fig/correspondences/q\querytwo_db\dbimagetwo_net0_1} &
+\raisebox{8pt}{\includegraphics[height=70pt]{fig/correspondences/q\querytwo_db\dbimagetwo_net0_2}} &
+\raisebox{30pt}{
+	\begin{tabular}{c}
+		\multicolumn{1}{c}{VGG off-the-shelf} \\	
+		\foreach \patch in {1,2,3,4,5,6,7,8,9,10}  {
+		\includegraphics[height=19pt]{fig/correspondences/q\querytwo_db\dbimagetwo_net0_p\patch_1.png}
+		\hspace{-8pt} 
+		}\\
+		\foreach \patch in {1,2,3,4,5,6,7,8,9,10}  {
+		\includegraphics[height=19pt]{fig/correspondences/q\querytwo_db\dbimagetwo_net0_p\patch_2.png} 
+		\hspace{-8pt} 
+		}\\
+	\end{tabular}
+}
+\\
+\includegraphics[height=66pt]{fig/correspondences/q\querytwo_db\dbimagetwo_net1_1} &
+~\includegraphics[height=65pt]{fig/correspondences/q\querytwo_db\dbimagetwo_net1_2} &
+\raisebox{30pt}{
+	\begin{tabular}{c}
+		\multicolumn{1}{c}{VGG ours} \\	
+		\foreach \patch in {1,2,3,4,5,6,7,8,9,10}  {
+		\includegraphics[height=19pt]{fig/correspondences/q\querytwo_db\dbimagetwo_net1_p\patch_1.png}
+		\hspace{-8pt} 
+		}\\
+		\foreach \patch in {1,2,3,4,5,6,7,8,9,10}  {
+		\includegraphics[height=19pt]{fig/correspondences/q\querytwo_db\dbimagetwo_net1_p\patch_2.png} 
+		\hspace{-8pt} 
+		}\\
+	\end{tabular}
+}
+\\
+\end{tabular}
+%
+\vspace{-10pt}
+\caption{Visualization of patches corresponding to the MAC vector components that have the highest contribution to the pairwise image similarity. Examples shown use CNN before (top) and after (bottom) fine-tuning of VGG. The same color corresponds to the same vector component (feature map) per image pair. The patch size is equal to the receptive field of the last pooling layer.
+\label{fig:mac_matches}
+\vspace{-15pt}}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	

@@ -1,0 +1,69 @@
+
+Early QA systems were based on information retrieval and were designed
+to return snippets of text containing an answer
+\citep{voorhees2000building,banko2002askmsr}, with limitations in terms of question
+complexity and response coverage.
+%
+The creation of large-scale KBs
+\citep{auer2007dbpedia,bollacker2008freebase} have led to the
+development of a new class of QA methods based on semantic parsing
+\citep{berant2013semantic,kwiatkowski-EtAl:2013:EMNLP,fader2014open,yih2015semantic}
+that can return precise answers to complicated compositional questions.
+%
+Due to the sparsity of KB data, however, the main challenge
+shifts from finding answers to developing efficient information
+extraction methods to populate KBs automatically
+\citep{craven2000learning,carlson2010toward}---not an easy
+problem.
+
+For this reason, recent initiatives are returning to the original
+setting of directly answering from text using
+datasets like {\sc TrecQA} \citep{wang2007jeopardy},
+which is based on classical {\sc Trec} resources \citep{voorhees1999trec},
+and {\sc WikiQA} \citep{yang2015wikiqa}, which is extracted from Wikipedia.
+%
+Both benchmarks are organized around the task of answer sentence
+selection, where a system must identify the sentence containing
+the correct answer in a collection of documents, but need not return the
+actual answer as a KB-based system would do.
+%
+Unfortunately, these datasets are very small (hundreds of
+examples) and, because of their answer selection setting, do not
+offer the option to directly compare answering from a KB against answering from pure text.
+%
+Using similar resources as the dialog dataset
+of \cite{dodge2015evaluating}, our new benchmark {\sc WikiMovies}
+addresses both deficiencies by providing a substantial
+corpus of question-answer pairs that can be answered by either using a
+KB or a corresponding set of documents.
+
+
+
+
+Even though standard pipeline QA systems like AskMR
+\citep{banko2002askmsr} have been recently revisited
+\citep{tsai2015web},
+%
+the best published results on {\sc TrecQA} and {\sc WikiQA} have been
+obtained by either convolutional neural networks
+\citep{santos2016attentive,yin2015convolutional,wang2016sentence} or
+recurrent neural networks \citep{miao2015neural}---both usually with
+attention mechanisms inspired by \citep{bahdanau2014neural}.
+%
+In this work, we introduce KV-MemNNs, a Memory Network model that operates a symbolic memory structured as $(key, value)$ pairs.
+Such structured memory is not employed
+ in any existing attention-based neural network architecture for QA.
+As we will show, it gives the model greater
+flexibility for encoding knowledge sources
+% to retrieve the answers from
+and helps shrink the gap between
+directly reading documents and answering from a KB.
+%versus answering from a KB.
+
+
+%\citep{hill2015goldilocks}
+%\citep{nips15_hermann}
+
+
+%\citep{bordes2014question}
+%\citep{bordes2015large}

@@ -1,0 +1,31 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Learning vector-space representations of text, e.g., words and sentences, is fundamental to many natural language understanding (NLU) tasks. Two popular approaches are \emph{multi-task learning} and \emph{language model pre-training}. In this paper we combine the strengths of both approaches by proposing a new Multi-Task Deep Neural Network (MT-DNN).
+
+Multi-Task Learning (MTL) is inspired by human learning activities where people often apply the knowledge learned from previous tasks to help learn a new task \citep{caruana1997multitask,zhang2017survey}. For example, it is easier for a person who knows how to ski to learn skating than the one who does not. Similarly, it is useful for multiple (related) tasks to be learned jointly so that the knowledge learned in one task can benefit other tasks.  
+Recently, there is a growing interest in applying MTL to representation learning using deep neural networks (DNNs) \citep{collobert2011natural,liu2015mtl,luong2015multi,mt-mrc2018,guo2018soft, ruder122019latent} for two reasons. 
+First, supervised learning of DNNs requires large amounts of task-specific labeled data, which is not always available. MTL provides an effective way of leveraging supervised data from many related tasks. 
+Second, the use of multi-task learning profits from a regularization effect via alleviating overfitting to a specific task, thus making the learned representations universal across tasks. 
+%In addition, DNN-based MTL, such as \citet{liu2015mtl}, provides a flexible modeling framework to incorporate for each task the best possible task-specific model structure (i.e., neural network layers) which has been developed in the single-task setting, thus effectively leveraging the existing body of research.
+
+In contrast to MTL, language model pre-training has shown to be effective for learning universal language representations by leveraging large amounts of unlabeled data. A recent survey is included in \citet{gao2018neural}. Some of the most prominent examples are ELMo \citep{elmo2018}, GPT \citep{gpt2018} and BERT \citep{bert2018}. These are neural network language models trained on text data using unsupervised objectives. 
+For example, BERT is based on a multi-layer bidirectional Transformer, and is trained on plain text for masked word prediction and next sentence prediction tasks. 
+To apply a pre-trained model to specific NLU tasks, we often need to fine-tune, for each task, the model with additional task-specific layers using task-specific training data. 
+For example, \citet{bert2018} shows that BERT can be fine-tuned this way to create state-of-the-art models for a range of NLU tasks, such as question answering and natural language inference.
+
+We argue that MTL and language model pre-training are complementary technologies, and can be combined to improve the learning of text representations to boost the performance of various NLU tasks.
+To this end, we extend the MT-DNN model originally proposed in \citet{liu2015mtl} by incorporating BERT as its shared text encoding layers. 
+As shown in Figure 1, the lower layers (i.e., text encoding layers) are shared across all tasks, while the top layers are task-specific, combining different types of NLU tasks such as single-sentence classification, pairwise text classification, text similarity, and relevance ranking. 
+%It is easy for MT-DNN to incorporate new tasks by adding task-specific layers.
+% Similar to the BERT model, MT-DNN is trained in two stages: pre-training and fine-tuning. 
+% Unlike BERT, MT-DNN uses MTL in the fine-tuning stage with multiple task-specific layers in its model architecture.
+Similar to the BERT model, MT-DNN can be adapted to a specific task via fine-tuning. Unlike BERT, MT-DNN uses MTL, in addition to language model pre-training, for learning text representations.
+
+MT-DNN obtains new state-of-the-art results on eight out of nine NLU tasks
+\footnote{The only GLUE task where MT-DNN does not create a new state of the art result is WNLI. But as noted in the GLUE webpage (https://gluebenchmark.com/faq), there are issues in the dataset, and none of the submitted systems has ever outperformed the majority voting baseline whose accuracy is 65.1.}
+used in the General Language Understanding Evaluation (GLUE) benchmark \citep{wang2018glue}, pushing the GLUE benchmark score to 82.7\%, amounting to 2.2\% absolute improvement over BERT. We further extend the superiority of MT-DNN to the SNLI \cite{bowman2015large} and SciTail \cite{scitail} tasks. The representations learned by MT-DNN allow domain adaptation with substantially fewer in-domain labels than the pre-trained BERT representations. For example, our adapted models achieve the accuracy of 91.6\% on SNLI and 95.0\% on SciTail, outperforming the previous state-of-the-art performance by 1.5\% and 6.7\%, respectively. Even with only 0.1\% or 1.0\% of the original training data, the performance of MT-DNN on both SNLI and SciTail datasets is better than many existing models. All of these clearly demonstrate MT-DNN's exceptional generalization capability via multi-task learning.
+
+%used in the General Language Understanding Evaluation (GLUE) benchmark \citep{wang2018glue}, pushing the GLUE benchmark score to 82.2\%, amounting to 1.8\% absolute improvement over BERT. We further extend the superiority of MT-DNN to the SNLI \cite{bowman2015large} and SciTail \cite{scitail} tasks. The representations learned by MT-DNN allow domain adaptation with substantially fewer in-domain labels than the pre-trained BERT representations. For example, our adapted models achieve the accuracy of 91.1\% on SNLI and 94.1\% on SciTail, outperforming the previous state-of-the-art performance by 1.0\% and 5.8\%, respectively. Even with only 0.1\% or 1.0\% of the original training data, the performance of MT-DNN on both SNLI and SciTail datasets is fairly good and much better than many existing models. All of these clearly demonstrate MT-DNN's exceptional generalization capability via multi-task learning. 
+% \xiaodl{The current best result on SNLI leaderboard is 90.1, our is 91.1. Thus we may claim there is 1 improvement.}
+% Our code and pre-trained models will be made publicly available.

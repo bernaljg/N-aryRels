@@ -1,0 +1,49 @@
+We also evaluate the performance of \sysshort\ in a zero-shot scenario.
+That is, can we use \sysshort\ trained on SQuAD to answer questions in another domain without seeing any training example from the domain?
+In this section, we show that pretrained \sysshort\ tested on WikiQA~\citep{wikiqa} outperforms all previous approaches.
+
+
+\paragraph{Dataset.}
+In WikiQA~\citep{wikiqa}, each example consists of a query (obtained from Microsoft Bing users) and a list of sentences each of which may or may not provide a clue to the query.
+The task is to classify each sentence as either useful or not useful for answering the query.
+As done in previous work, we only consider queries each of which has at least one supporting sentence in its list.
+Such subset of the dataset has 2118/296/633 train/dev/test examples, or 3047 questions in total.
+
+\paragraph{Method.} For the evaluations on WikiQA Dataset, a model needs to rank the list of sentences according to their relevance to the query. 
+The ranking can be easily obtained by using \sysshort\ model pre-trained on SQuAD.
+We consider the list of sentences as context and put the user query and the context into the pre-trained model.
+We obtain the probability distribution of the start and the end indices over the sentences.
+Then we find the most probable span (phrase) in \emph{each sentence} instead of over the entire list.
+We can finally rank the sentences by the confidence scores of their most probable answer spans.
+
+
+\paragraph{Results.} 
+See Table~\ref{tab:wikiqa} for the results. A single model of \sysshort\ is comparable to the current state of the art, and the
+ensemble of \sysshort\ outperforms it by $>2\%$ on all three metrics.
+This further demonstrates the generalizability of \sysshort.
+
+\begin{table}[!htb]
+% \parbox{.45\linewidth}{
+    \centering
+    \scalebox{0.9}{
+    \begin{tabular}{lccc}
+        \hline
+         & MAP & MRR & P@1 \\
+        \hline
+        \hline
+        Dataset Baseline~\citep{wikiqa} & 65.20 & 66.52 & - \\
+        ABCNN~\citep{yin2015} & 69.21 & 71.08 & - \\
+        Attentive Pooling Networks~\citep{santos2016} & 68.86 & 69.57 & - \\
+        Key-Value Memory Networks~\citep{kvmn} & 70.69 & 72.65 & - \\
+        Inner Attention~\citep{inner} & 73.41 & 74.18 & -\\
+        CNN+CTK~\citep{ctk} & 75.88 & 74.17 & 64.61 \\
+        BiDAF (zero-shot from SQuAD) & 75.19 & 76.31 & 62.55 \\
+        BiDAF (zero-shot from SQuAD, ensemble) & \textbf{78.53} & \textbf{80.09} & \textbf{67.90} \\
+        \hline
+    \end{tabular}
+    }
+    \vspace{-.3cm}
+    \caption{\small Results on WikiQA Dataset}
+    \label{tab:wikiqa}
+%}
+\end{table}

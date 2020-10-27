@@ -1,0 +1,359 @@
+%
+% File acl2018.tex
+%
+%% Based on the style files for ACL-2017, with some changes, which were, in turn,
+%% Based on the style files for ACL-2015, with some improvements
+%%  taken from the NAACL-2016 style
+%% Based on the style files for ACL-2014, which were, in turn,
+%% based on ACL-2013, ACL-2012, ACL-2011, ACL-2010, ACL-IJCNLP-2009,
+%% EACL-2009, IJCNLP-2008...
+%% Based on the style files for EACL 2006 by
+%%e.agirre@ehu.es or Sergi.Balari@uab.es
+%% and that of ACL 08 by Joakim Nivre and Noah Smith
+
+\documentclass[11pt,a4paper]{article}
+\usepackage[hyperref]{acl2018}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage{graphicx}
+
+\usepackage{url}
+\usepackage{booktabs} % For formal tables
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+
+\aclfinalcopy % Uncomment this line for the final submission
+\def\aclpaperid{1182} %  Enter the acl Paper ID here
+
+%\setlength\titlebox{5cm}
+% You can expand the titlebox if you need extra space
+% to show all the authors. Please do not make the titlebox
+% smaller than 5cm (the original size); we will check this
+% in the camera-ready version and ask you to change it back.
+
+\newcommand\BibTeX{B{\sc ib}\TeX}
+
+\title{A Multi-sentiment-resource Enhanced Attention Network for Sentiment Classification}
+
+\author{Zeyang Lei$^{1,2}$, Yujiu Yang$^1$, Min Yang$^3$, and Yi Liu$^2$\\
+  Graduate School at Shenzhen, Tsinghua University$^1$ \\
+  Peking University Shenzhen Institute$^2$ \\
+  Shenzhen Institutes of Advanced Technology, Chinese Academy of Sciences$^3$ \\
+  {\tt leizy16@mails.tsinghua.edu.cn, yang.yujiu@sz.tsinghua.edu.cn},\\
+  {\tt min.yang1129@gmail.com, eeyliu@gmail.com}
+  }
+
+\date{}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Deep learning approaches for sentiment classification do not fully exploit sentiment linguistic knowledge.
+In this paper, we propose a Multi-sentiment-resource Enhanced Attention Network (MEAN) to alleviate the problem by integrating three kinds of sentiment linguistic knowledge (e.g., sentiment lexicon, negation words, intensity words) into the deep neural network via attention mechanisms. By using various types of sentiment resources, MEAN utilizes sentiment-relevant information from different representation sub-spaces, which makes it more effective to capture the overall semantics of the sentiment, negation and intensity words for sentiment prediction.
+The experimental results demonstrate that MEAN has robust superiority over strong competitors.
+\end{abstract}
+
+\section{Introduction}
+Sentiment classification is an important task of natural language processing (NLP), aiming to classify the sentiment polarity of a given text as positive, negative, or more fine-grained classes.  It has obtained considerable attention due to its broad applications in natural language processing~\cite{Reviewer1_linguistic,{Reviewer2_CNN}}. Most existing studies set up sentiment classifiers using supervised machine learning approaches, such as support vector machine (SVM)~\cite{SVM}, convolutional neural network (CNN)~\cite{CNN,{CNN+attention}}, long short-term memory (LSTM)~\cite{{LSTM},LR_LSTM}, Tree-LSTM~\cite{05tai2015improved15}, and attention-based methods~\cite{{wanxiaojun_attention},{hierarchical},self-attention,{Reviewer2_attention}}.
+
+Despite the remarkable progress made by the previous work, we argue that sentiment analysis still remains a challenge. Sentiment resources including sentiment lexicon, negation words, intensity words play a crucial role in traditional sentiment classification approaches \cite{lexicon, {Lexicon_tang}}. Despite its usefulness, to date, the sentiment linguistic knowledge has been underutilized in most recent deep neural network models (e.g., CNNs and LSTMs).
+% (ii) Understanding the implicit sentiment of words  is important in interpreting subtle sentiment of text \cite{implicit}. This is because that seemingly objective statements often allude nuanced sentiments. For example, the words such as ``family'' and ``friendship'' usually carry positive sentiment, but they are generally treated as neutral words in conventional methods.
+%In our study, all the aforementioned limitations are considered and alleviated to some extent. We propose a Hierarchical Linguistic-aware Attention Network (HLAN), which integrates the sentiment linguistic knowledge into deep neural networks via attention mechanisms. Specifically, we use three kinds of sentiment resource words as attention sources to attend to context words to form different sentiment-resource-specific sentence representations. To fully mine the implicit sentiment, we adopt the context words as attention source to attend itself (self-attention), which helps fully utilize the contextual global information to form a implicit-sentiment-specific sentence representation. Finally, we combine the four kinds of sentiment-source-specific/sentiment-linguistic-specific sentence representations to form the complete sentiment-specific sentence representation. Meanwhile, to model better the above sentiment-specific sentence representation complying with  the principle of semantic compositionality of sentence~\cite{composition}, we design two-stage attention modules (or write three-step, adding coupled word embedding): word mutual attention module and multi-sentiment-resource attention module. The word mutual attention module can establish the correlation between the context words and different sentiment source words, which is helpful to highlight sentiment-resource-relevant context words. And multi-sentiment-resource attention module can select those crucial sentiment-resource-relevant words from the context to model the final sentiment-specific sentence representation.
+
+
+%In this work, we propose a Multi-sentiment-resource Enhanced Attention Network (MEAN) for sentence-level sentiment classification to integrate the sentiment linguistic knowledge into deep neural networks via a two-stage attention mechanism which complies with the principle of semantic compositionality of sentences by exploring different levels of the semantics of sentences~\cite{composition}.
+%Specifically, we first design a word mutual attention module to capture the word-level correlations between context words and three kinds of sentiment resource words (i.e., sentiment words, negation words, and intensity words), respectively. These word-level correlation features are the building blocks for capturing the higher-level semantic correlations between the context words and the three kinds of sentiment resource words.
+%Second, we propose a multi-sentiment-resource attention module to learn more comprehensive and meaningful sentiment-specific sentence representation by using the three types of sentiment resource words as attention sources to attend to the context words respectively. In this way, we can attend to different sentiment-relevant information from different representation subspaces implied by different types of sentiment sources and capture the overall semantics of the sentiment, negation and intensity words for sentiment prediction.
+%In addition, we also employ a coupled word embedding module to model the morphological information such as prefixes and suffixes of words.
+
+In this work, we propose a Multi-sentiment-resource Enhanced Attention Network (MEAN) for sentence-level sentiment classification to integrate many kinds of sentiment linguistic knowledge into deep neural networks via multi-path attention mechanism. Specifically, we first design a coupled word embedding module to model the word representation from character-level and word-level semantics. This can help to capture the morphological information such as prefixes and suffixes of words.
+Then, we propose a multi-sentiment-resource attention module to learn more comprehensive and meaningful sentiment-specific sentence representation by using the three types of sentiment resource words as attention sources attending to the context words respectively. In this way, we can attend to different sentiment-relevant information from different representation subspaces implied by different types of sentiment sources and capture the overall semantics of the sentiment, negation and intensity words for sentiment prediction.
+
+
+%However, in dierent representation sub- spaces, the important information may appear at dier-ent positions [Vaswani et al., 2017]. All the information forms the comprehensive semantics of the whole input sequence, especially for long documents.
+
+%HLAN consists of four key components: coupled word embedding, word-level hidden encoder, phrase-level multi-sentiment-resource attention mechanism, sentence-level semantic composition.  Specifically, we first design a coupled word embedding layer to learn linguistic information implied by both characters (e.g., the prefixes  ``Non-", ``In-", ``Im-") and words with CNNs. Second, four independent GRU networks are adopted to learn the distributed representations of  context words and the three types of sentiment resource words respectively. Then,  a phrase-level multi-sentiment-resource attention mechanism is designed to integrate the sentiment linguistic knowledge into neural networks to boost the performance of sentiment classification.
+
+% The main contribution of this study can be summarized as follows. First, we leverage three types of sentiment linguistic knowledge in deep neural networks to enhance the sentiment-aware sentence representation learning via a multi-source attention mechanism.
+% Second, we design a hierarchical neural network (consists of three stages) to  exploit  the semantic compositionality of the sentence and capturing more comprehensive sentiment-specific information.
+% Finally, experiments on two benchmarks show that HLAN consistently outperforms competitive methods.
+
+The main contributions of this paper are summarized as follows. First, we design a coupled word embedding obtained from character-level embedding and word-level embedding to capture both the character-level morphological information and word-level semantics.
+Second, we propose a multi-sentiment-resource attention module to learn more comprehensive sentiment-specific sentence representation from multiply subspaces implied by three kinds of sentiment resources including sentiment lexicon, intensity words, negation words. Finally, the experimental results show that MEAN consistently outperforms competitive methods.
+
+\section{Model}
+Our proposed MEAN model consists of three key components: coupled word embedding module, multi-sentiment-resource attention module, sentence classifier module.
+In the rest of this section, we will elaborate these three parts in details. The overall framework is shown in Figure 1.
+ \begin{figure*}[!ht]
+    \centering{\includegraphics[width=\textwidth] {ACL-short-2.pdf}}
+    \caption{The Overall Framework of Our Model}
+    \label{fig_1}
+    \vspace{-15pt}
+ \end{figure*}
+\subsection{Coupled Word Embedding}
+To exploit the sentiment-related morphological information implied by some prefixes and suffixes of words (such as ``Non-", ``In-", ``Im-"), we design a coupled word embedding learned from character-level embedding and word-level embedding. We first design a character-level convolution neural network (Char-CNN) to obtain character-level embedding ~\cite{Charac-CNN}. Different from ~\cite{Charac-CNN}, the designed Char-CNN is a fully convolutional network without max-pooling layer to capture better semantic information in character chunk. Specifically, we first input one-hot-encoding character sequences to a $1\times 1$ convolution layer to enhance the semantic nonlinear representation ability of our model~\cite{FCN}, and the output is then fed into a multi-gram (i.e. different window sizes) convolution layer to capture different local character chunk information.  For word-level embedding, we use pre-trained word vectors, GloVe~\cite{glove}, to map each word to a low-dimensional vector space. Finally, each word is represented as a concatenation of the character-level embedding and word-level embedding. This is performed on the context words and the three types of sentiment resource words \footnote{To be precise, sentiment resource words include sentiment words, negation words and intensity words.}, resulting in four final coupled word embedding matrices: the $W^c=[w_1^c,...,w_t^c] \in \mathbb{R}^{d \times t}$ for context words, the $W^s=[w_1^s,...,w_m^s] \in \mathbb{R}^{d \times m}$ for sentiment words, the $W^i=[w_1^i,...,w_k^i] \in \mathbb{R}^{d \times k}$ for intensity words, the $W^n=[w_1^n,...,w_p^n] \in \mathbb{R}^{d \times p}$ for negation words. Here, $t, m, k, p$ are the length of the corresponding items respectively, and $d$ is the embedding dimension.
+Each $W$ is normalized to better calculate the following word correlation.
+
+%\subsection{Word Mutual Attention Module}
+%After obtaining the coupled word embedding, we design a word mutual attention mechanism to model the mutual information between context words and sentiment resource words in the sentence. The mutual attention mechanism can help establish the word-level correlations between the context words and the three types of sentiment resource words. According to the difference of the sentiment resources, we have three types of independent mutual attentions: Sentiment\&Context mutual attention (i.e., the mutual attention between sentiment words and context words), Intensity\&Context mutual attention, Negation\&Context mutual attention.
+%We take Sentiment\&Context mutual attention as an example. It can be formulated as follows:
+%
+%{\small
+%\begin{align}
+%\small
+%&R= {(W^c)}^T \cdot{W^s} \in \mathbb{R}^{t \times m} \\
+%&{\alpha}=softmax(\frac{\sum_{h=1}^m R[:,h]}{m}) \\
+%&{\beta}=softmax(\frac{\sum_{k=1}^t R[k,:]}{t}) \\
+%&{v^{{\alpha}}}=\sum_{i=1}^t \alpha_i {w}_i^c, {v}^{{\beta}}=\sum_{i=1}^m \beta_i {w}_i^s \\
+%&{E^c_s}=tanh(\{UW^c + {V}({e_t} \otimes {v^{{\alpha}}})\}) \\
+%&{E^s}=tanh(\{UW^s + {V}({e_m} \otimes {v^{{\beta}}})\})
+%\end{align}}
+%where $R$ is the correlation matrix to represent the mutual information between the context and the sentiment words, and each element ${R}_{i,j}$ in $R$ denotes the relevance degree between $i$-th word $w_i^c$ of the context words and $j$-th word $w_j^s$ of the sentiment words, $\alpha,\beta$ are the corresponding attention weight vectors respectively, $v^{\alpha}$ denotes the overall relevancy metric of the sentiment words towards the context words and $v^{\beta}$ denotes the overall relevancy metric of the context words towards the sentiment words, $E^c_s$ refers to the sentimental enhanced context word representation matrix and $E^s$ refers to the contextual enhanced sentiment word representation matrix, $e_t=[1,1,...,1]^T$ denotes a $t$-dimensional all-ones vector, ${e_t} \otimes {v^{{\alpha}}}=[{v^{{\alpha}}};...;{v^{{\alpha}}}]$ denotes the Kronecker product between ${e_t}$ and ${v^{{\alpha}}}$, $U,V$ are projection parameters. Similarly, we can obtain $E^c_i$ and $E^i$ for Intensity\&Context mutual attention, $E^c_n$ and $E^n$ for Negation\&Context mutual attention. The final multi-sentiment-resource enhanced context word representation matrix is computed as: $E^c=E^c_s+E^c_i+E^c_n$.
+%\begin{equation}
+%R= {(E^c)}^T \cdot{E^s} \in \mathbb{R}^{n\times m}
+%\end{equation}
+% where each element $R_{i,j}$ in the correlation matrix denotes the relevant degree between the $i$-th word $w_i^c$ in the context and $j$-th word $w_j^s$ in the sentiment resource words.
+%
+% Then, we average the values of  each row of $R$, resulting in a column vector of size $n$.  This column vector is input into a \emph{softmax} layer to produce an attention vector for the context:
+% \begin{equation}
+%\pmb{\alpha}=softmax(\frac{\sum_{h=1}^m R[:,h]}{m})
+% \end{equation}
+%
+% Similarly, we can get a row vector by averaging the values of each column of $R$ and apply it as the input of a \emph{softmax} layer to produce an attention vector for the sentiment resource words:
+% \begin{equation}
+%\pmb{\beta}=softmax(\frac{\sum_{k=1}^n R[k,:]}{n})
+% \end{equation}
+%
+%Next, with the attention weight vector $\pmb{\alpha}$ and the context representation matrix $E^c$ as inputs, we can obtain the overall correlation vector $\mathbf{v^{\pmb{\alpha}}}$ for the context: $\mathbf{v^{\pmb{\alpha}}}=\sum_{i=1}^n \alpha_i \mathbf{e}_i^c$. $\mathbf{v^{\pmb{\alpha}}}$, denoting the overall relevancy metric of the sentiment resource words towards the context words, which is beneficial to highlight the relevant words related to the sentiment in the context. Similarly, we can also obtain the overall correlation vector $\mathbf{v}^{\pmb{\beta}}$ for the sentiment resource words: $\mathbf{v}^{\pmb{\beta}}=\sum_{i=1}^m \beta_i \mathbf{e}_i^s$. Here, $\mathbf{v}^{\pmb{\beta}}$ denotes the overall relevancy metric of the context words towards the sentiment resource words, which helps integrate contextual global information into the representation of sentiment resource words.
+%
+%Finally, given the context embedding matrix $E^c$ and the correlation vector $\mathbf{v}^{\pmb{\alpha}}$, the sentiment-enhanced context representation matrix ${W^c} \in \mathbb{R}^{d\times n}$ can be computed as follows:
+%\begin{equation}
+%{W^c}=\tilde{f}_{semantics}(\{U^cE^c + {U^{\pmb{\alpha}}}(\mathbf{e_n} \otimes \mathbf{v^{\pmb{\alpha}}})\})
+%\end{equation}
+%\begin{equation}
+%\tilde{f}_{semantics}(x)=\left\{\begin{aligned}
+%&x \ &x>0 \\
+%&\xi(exp(x)-1) \ &x\le0,\xi>0
+%\end{aligned}\right.
+%\end{equation}
+%where ${U^c},{U^{\pmb{\alpha}}}$ are projection parameters, $\mathbf{e_n}=[1,1,..,1]^T$ denotes an $n$-dimensional  all-ones vector, $\mathbf{e_n} \otimes \mathbf{v^{\pmb{\alpha}}}=[\mathbf{v^{\pmb{\alpha}}};\mathbf{v^{\pmb{\alpha}}};...;\mathbf{v^{\pmb{\alpha}}}]$ denotes the Kronecker product between $\mathbf{e_n}$ and $\mathbf{v^{\pmb{\alpha}}}$, and $\tilde{f}_{semantics}$ is the semantic mapping function . Here, we choose exponential linear unit (ELU) ~\cite{elu} as $\tilde{f}_{semantics}$ since it can reduce semantic bias shift effect.
+%In the same way, we can obtain the contextual enhanced sentiment resources representation matrix ${W^s} \in \mathbb{R}^{d\times m}$ as follow:
+%$${W^s}=\tilde{f}_{semantics}(\{U^sE^s + {U}^{\pmb{\beta}}(\mathbf{e_m} \otimes \mathbf{v^{\pmb{\beta}}})\})$$
+%where ${U^s},{U^{\pmb{\beta}}}$ are projection parameters.
+%With the above transformation process, we can model the correlation between the context and the sentiment resources, which is helpful for the following phrase-level structure modeling.
+
+%Next, we employ four independent GRU networks~\cite{GRU} to encode hidden states of the context words and the three types of sentiment resource words, respectively. Formally, given the linguistically enhanced word embedding $E^c, E^s, E^i, E^n$, the hidden state matrices $H^c, H^s, H^i, H^n$ can be obtained as follows:
+%
+%{\small
+%\begin{align}
+%&H^c=GRU(E^c), H^s=GRU(E^s) \\
+%&H^i=GRU(E^i), H^n=GRU(E^n)
+%\end{align}}
+
+\subsection{Multi-sentiment-resource Attention Module}
+After obtaining the coupled word embedding, we propose a multi-sentiment-resource attention mechanism to help select the crucial sentiment-resource-relevant context words to build the sentiment-specific sentence representation. Concretely, we use the three kinds of sentiment resource words as attention sources to attend to the context words respectively, which is beneficial to capture different sentiment-relevant context words corresponding to different types of sentiment sources. For example, using sentiment words as attention source  attending to the context words helps form the sentiment-word-enhanced sentence representation. Then, we combine the three kinds of sentiment-resource-enhanced sentence representations to learn the final  sentiment-specific sentence representation.
+We design three types of attention mechanisms: sentiment attention, intensity attention, negation attention to model the three kinds of sentiment resources, respectively.
+In the following, we will elaborate the three types of attention mechanisms in details.
+
+First, inspired by \cite{co-attention}, we expect to establish the word-level relationship between the context words and different kinds of sentiment resource words. To be specific, we define the dot products among the context words and the three kinds of sentiment resource words as correlation matrices. Mathematically, the detailed formulation is described as follows.
+\begin{align}
+&M^s= {(W^c)}^T \cdot{W^s} \in \mathbb{R}^{t \times m} \\
+&M^i= {(W^c)}^T \cdot{W^i} \in \mathbb{R}^{t \times k} \\
+&M^n= {(W^c)}^T \cdot{W^n} \in \mathbb{R}^{t \times p}
+\end{align}
+where $M^s, M^i, M^n$ are the correlation matrices to measure the relationship among the context words and the three kinds of sentiment resource words, representing the relevance between the  context words and the sentiment resource word.
+
+%After obtaining the correlation matrices, we can compute the sentiment-resource-relevant context word representations $X^c_s, X^c_i, X^c_n$ by the dot products among the context words and different types of corresponding correlation matrices. Meanwhile,  we can also obtain the context-word-relevant sentiment word representation matrix $X^s$  by the dot product between the correlation matrix $M^s$ and the sentiment words $W^s$, the context-word-relevant intensity word representation matrix $X^i$ by the dot product between the intensity words $W^i$ and the correlation matrix $M^i$, the context-word-relevant negation word representation matrix $X^n$ by the dot product between the negation words $W^n$ and the correlation matrix $M^n$. The detailed formulas are presented as follows:
+After obtaining the correlation matrices, we can compute the context-word-relevant sentiment word representation matrix $X^s$, the context-word-relevant intensity word representation matrix $X^i$, the context-word-relevant negation word representation matrix $X^n$ by the dot products among the context words and different types of corresponding correlation matrices. Meanwhile,  we can also obtain the sentiment-word-relevant context word representation matrix $X^c_s$  by the dot product between the correlation matrix $M^s$ and the sentiment words $W^s$, the intensity-word-relevant context word representation matrix $X^c_i$ by the dot product between the intensity words $W^i$ and the correlation matrix $M^i$, the negation-word-relevant context word representation matrix $X^c_n$ by the dot product between the negation words $W^n$ and the correlation matrix $M^n$. The detailed formulas are presented as follows:
+\begin{align}
+&X^s=W^cM^s, X^c_s=W^s(M^s)^T \\
+&X^i=W^cM^i, X^c_i=W^i(M^i)^T \\
+&X^n=W^cM^n, X^c_n=W^n(M^n)^T
+\end{align}
+
+The final enhanced context word representation matrix is computed as:
+\begin{equation}
+X^c=X^c_s+X^c_i+X^c_n.
+\end{equation}
+
+Next, we employ four independent GRU networks~\cite{GRU} to encode hidden states of the context words and the three types of sentiment resource words, respectively.
+Formally, given the word embedding $X^c, X^s, X^i, X^n$, the hidden state matrices $H^c, H^s, H^i, H^n$ can be obtained as follows:
+\begin{align}
+&H^c=GRU(X^c) \\
+&H^s=GRU(X^s) \\
+&H^i=GRU(X^i) \\
+&H^n=GRU(X^n)
+\end{align}
+
+After obtaining the hidden state matrices, the sentiment-word-enhanced sentence representation  $o_1$  can be computed as:
+\begin{align}
+&o_1=\sum_{i=1}^t \alpha_i h^c_i, q^s=\sum_{i=1}^m h_i^s/m \\
+&\beta([h_i^c;q_s])=u_{s}^T tanh(W_{s}[h_i^c;q_s]) \\
+&\alpha_i = \frac{exp(\beta([h_i^c;q_s]))}{\sum_{i=1}^{t}exp(\beta([h_i^c;q_s]))}
+\end{align}
+where  $q^s$ denotes the mean-pooling operation towards $H^s$, $\beta$ is the attention function that calculates the importance of the $i$-th word $h_i^c$ in the context and $\alpha_i$ indicates the importance of the $i$-th word in the context, $u_{s}$ and $W_{s}$ are learnable parameters.
+
+Similarly, with the hidden states $H^i$ and $H^n$ for  the intensity words and the negation words as attention sources, we can obtain the intensity-word-enhanced sentence representation $o_2$ and the negation-word-enhanced sentence representation $o_3$.
+%\begin{align}
+%\small
+%&z^n=\sum_{i=1}^p h_i^n/p, z^i=\sum_{i=1}^k h_i^k/k, z^c=\sum_{i=1}^c h_i^c/t \\
+%&\beta_i=\frac{exp(\sigma([h_i^c;z_n]))}{\sum_{i=1}^{t}exp(\sigma([h_i^c;z_n]))} \\
+%&\gamma_i=\frac{exp(\sigma([h_i^c;z_i]))}{\sum_{i=1}^{t}exp(\sigma([h_i^c;z_i]))} \\
+%&\delta_i=\frac{exp(\sigma([h_i^c;z_c]))}{\sum_{i=1}^{t}exp(\sigma([h_i^c;z_c]))} \\
+%&o_2=\sum_{i=1}^t \beta_i h_c^i, o_3=\sum_{i=1}^t \gamma_i h_c^i, o_4=\sum_{i=1}^t \delta_i h_c^i
+%\end{align}
+The final comprehensive sentiment-specific sentence representation $\mathbf{\tilde{o}}$ is the composition of the above three sentiment-resource-specific sentence representations $o_1, o_2, o_3$:
+\begin{equation}
+\mathbf{\tilde{o}}=[o_1, o_2, o_3]
+\end{equation}
+\subsection{Sentence Classifier}
+After obtaining the final sentence representation $\mathbf{\tilde{o}}$, we feed it to a softmax layer to predict the sentiment label distribution of a sentence:
+\begin{equation}
+\hat{y}=\frac{exp(\tilde{W_o}^T{{\mathbf{\tilde{o}}}}+\tilde{b_o})}{\sum_{i=1}^Cexp(\tilde{W_o}^T{{\mathbf{\tilde{o}}}}+\tilde{b_o})}
+\end{equation}
+where $\hat{y}$ is the predicted sentiment distribution of the sentence, C is the number of sentiment labels, $\tilde{W_o}$ and $\tilde{b_o}$ are parameters to be learned.
+
+For model training, our goal is to minimize the cross entropy  between the ground truth and predicted results for all sentences. Meanwhile, in order to
+avoid overfitting, we use dropout strategy to randomly omit parts of the parameters on each training case. Inspired by \cite{self-attention}, we also design a penalization term to ensure the diversity of semantics from different sentiment-resource-specific sentence representations, which reduces information redundancy from different sentiment resources attention. Specifically, the final loss function is presented as follows:
+\begin{align}
+L(\hat{y},y)=&-\sum_{i=1}^N\sum_{j=1}^Cy_i^jlog(\hat{y}_i^j)+\lambda (\sum_{\theta \in \Theta}\theta^2) \\
+              &+\mu ||\tilde{O}\tilde{O}^T-\psi I||_F^2 \nonumber \\
+\tilde{O}=&[o_1; o_2; o_3]
+\end{align}
+where $y_i^j$ is the target sentiment distribution of the sentence, $\hat{y}_i^j$ is the prediction probabilities, $\theta $ denotes each parameter to be regularized, $\Theta $ is parameter set, $\lambda $ is the coefficient for $L_2 $ regularization, $\mu$ is a hyper-parameter to balance the three terms, $\psi$ is the weight parameter, $I$ denotes the the identity matrix and $||.||_F$ denotes the Frobenius norm of a matrix. Here, the first two terms of the loss function are cross-entropy function of the predicted and true distributions and $L_2 $ regularization respectively, and the final term is a penalization term to encourage the diversity of sentiment sources.
+%\vspace{-5pt}
+\section{Experiments}
+\subsection{Datasets and Sentiment Resources} Movie Review (MR){\color{blue}\footnote{\url{http://www.cs.cornell.edu/people/pabo/movie-review-data/}}} and Stanford Sentiment Treebank (SST){\color{blue}\footnote{\url{https://nlp.stanford.edu/sentiment/}we train the model on both phrases and sentences but only test on sentences}} are used to evaluate our model. MR dataset has 5,331 positive samples  and 5,331 negative samples. We adopt the same data split as in \cite{LR_LSTM}.  SST consists of  8,545 training samples, 1,101 validation samples, 2210 test samples.  Each sample is marked as very negative, negative, neutral, positive, or very positive. Sentiment lexicon combines the sentiment words from both \cite{LR_LSTM} and \cite{Liubing}, resulting in 10,899 sentiment words in total. We collect negation and intensity words  manually as the number of these words is limited.
+
+\subsection{Baselines}
+In order to comprehensively evaluate the performance of our model, we list several baselines for sentence-level sentiment classification.
+
+\textbf{RNTN}: Recursive Tensor Neural Network \cite{04socher2013recursive13} is used to model correlations between different dimensions of child nodes¡¯ vectors.
+
+\textbf{LSTM/Bi-LSTM}: \newcite{DBLP:journals/corr/ChoMGBSB14} employs Long Short-Term Memory and the bidirectional variant to capture sequential information.
+
+\textbf{Tree-LSTM}: Memory cells was introduced by Tree-Structured Long Short-Term Memory \cite{05tai2015improved15} and gates into tree-structured neural network, which is beneficial to capture semantic relatedness by parsing syntax trees.
+
+\textbf{CNN}: Convolutional Neural Networks \cite{CNN} is applied to generate task-specific sentence representation.
+
+\textbf{NCSL}: \newcite{08teng2016context16} designs a Neural Context-Sensitive Lexicon (NSCL) to obtain prior sentiment scores of words in the sentence.
+
+\textbf{LR-Bi-LSTM}: \newcite{LR_LSTM} imposes linguistic roles into neural networks by applying linguistic regularization on intermediate outputs with KL divergence.
+
+\textbf{Self-attention}: \newcite{self-attention} proposes a self-attention mechanism to learn structured sentence embedding.
+
+\textbf{ID-LSTM}: \cite{AAAI} uses reinforcement learning to learn structured sentence representation for sentiment classification.
+
+
+\subsection{Implementation Details} In our experiments, the dimensions of character-level embedding and word embedding (GloVe) are both set to 300. Kernel sizes of multi-gram convolution for Char-CNN are set to 2, 3, respectively.  All the weight matrices are initialized as random orthogonal matrices, and  we set all the bias vectors as zero vectors.  We optimize the proposed model with  RMSprop  algorithm, using mini-batch training. The size of mini-batch is 60.  The dropout rate is 0.5, and the coefficient $\lambda$ of $L_2$ normalization is set to $10^{-5}$. $\mu$ is set to $10^{-4}$. $\psi$ is set to $0.9$. When there are not sentiment resource words in the sentences,  all the context words are treated as sentiment resource words to implement the multi-path self-attention strategy.
+
+\subsection{Experiment Results} In our experiments, to be consistent with the recent baseline methods, we adopt classification accuracy as evaluation metric. We summarize the experimental results in Table {\color{red}\ref{table1}}. Our model has robust superiority over competitors and sets state-of-the-art on MR and SST datasets.  First, our model brings a substantial improvement over the methods that do not leverage sentiment linguistic knowledge (e.g., RNTN, LSTM, BiLSTM, CNN and ID-LSTM) on both datasets. This verifies the effectiveness of leveraging sentiment linguistic resource with the deep learning algorithms.
+Second, our model also  consistently outperforms LR-Bi-LSTM which integrates linguistic roles of sentiment, negation and intensity words into neural networks via the linguistic regularization.  For example, our model achieves $2.4\%$ improvements over the MR dataset and $0.8\%$ improvements over the SST dataset compared to LR-Bi-LSTM. This is because that MEAN designs attention mechanisms to leverage sentiment resources efficiently, which utilizes the interactive information between context words and sentiment resource words.
+
+In order to analyze the effectiveness of each component of MEAN, we also report the ablation test in terms of discarding character-level embedding (denoted as MEAN w/o CharCNN) and sentiment words/negation words/intensity words (denoted as MEAN w/o sentiment words/negation words/intensity words). All the tested factors contribute greatly to the improvement of the MEAN. In particular, the accuracy decreases sharply when discarding the sentiment words. This is within our expectation since sentiment words are vital when classifying the polarity of the sentences.
+
+
+%As we know, it is difficult to boost 1 percent of accuracy on sentiment classification. This also demonstrates the considerable superiority of our model.
+\begin{table}[!ht]
+		\footnotesize
+			\centering
+			\begin{tabular}{ccl}
+			\toprule
+			  Methods &  MR &  SST \\
+            \midrule
+              RNTN  & 75.9\%\# & 45.7\%  \\
+              LSTM  & 77.4\%\# & 46.4\%  \\
+              BiLSTM & 79.3\%\# & 49.1\%  \\
+             Tree-LSTM  & 80.7\%\# & 51.0\%  \\
+              CNN  & 81.5\% & 48.0\%  \\
+             NSCL  & 82.9\% & 51.1\%  \\
+             LR-Bi-LSTM  & 82.1\% & 50.6\%  \\
+             Self-attention & 81.7\%* & 48.9\%* \\
+             ID-LSTM &81.6\% & 50.0\% \\
+             \textbf{MEAN(our model)}   & {\bf{84.5}}\% & {\bf{51.4}}\% \\
+             \hline
+             MEAN w/o CharCNN &83.2\% & 50.0\%   \\
+             \hline
+             MEAN w/o sentiment words & 82.1\% & 48.4\% \\
+             MEAN w/o negation words & 82.9\% & 49.5\% \\
+             MEAN w/o intensity words & 83.5\% & 49.3\% \\
+             \bottomrule
+			 %Biogrid & 3470 & 3158 & 3160  & 3267  \\ \hline
+			\end{tabular}
+            \caption{Evaluation results. The best result for each dataset is in bold. The result marked with \# are retrieved from \cite{LR_LSTM}, and the results marked with * denote the results are obtained by our implementation.}
+            \label{table1}
+\end{table}
+%\section{Model Analysis}
+%\paragraph{\textbf{Effect of Sentiment Resources Attention}}
+%In order to further reveal the effect of sentiment resources attention, we compare LAAN model and other CNN models without sentiment resources attention. The experimental results are shown as Table \ref{}.
+%From Table xxx, we can observe that our proposed LAAN model significantly outperforms other CNN models without sentiment resources attention. This verifies the effectiveness of the sentiment resources attention.
+%\paragraph{\textbf{Effect of Each Component of LAAN}}
+%To investigate the effect of each component of the LAAN model, we also perform the ablation test of LAAN in terms of discarding word-level mutual attention module (denoted as LAAN-I), phrase-level dynamic semantic attention module (denoted as LAAN-II), sentence-level multi-source attention module (denoted as LAAN-III). The results are reported in Table \ref{table2}. Generally, all three factors contribute, and xxx module contributes most.
+%This is within our expectation since xxx component refers to the final sentence semantics comprehension that play most important role in target-specific text understanding. The pre-reading component also makes great contribution to aspect-level sentiment classification. We believe this is because that the pre-reading module, establishing the correlation relation between the target and the content, is the basis of the latter comprehension stages.
+%\begin{table}[!ht]
+%\footnotesize
+%\centering
+%\begin{tabular}{c|c|c|c|c}
+%\hline
+%\multirow{2}{*}{Methods} & \multicolumn{2}{|c|}{MR} & \multicolumn{2}{|c}{SST}  \tabularnewline
+%\cline{2-5} & Acc & F1 & Acc & F1  \tabularnewline
+%\hline
+%LAAN-I & 81.9\% & 80.7\% & x & x  \\
+%\hline
+%LAAN-II & 82.5\% & 81.3\% & x &x \tabularnewline
+%\hline
+%LAAN-III & x & x & x & x\\
+%\hline
+%LAAN & \bf{84.3\%} & \bf{83.2\%} &\bf{49.7\%} &\bf{42.5\%}  \tabularnewline
+%\hline
+%%Biogrid & 3470 & 3158 & 3160  & 3267  \\ \hline
+%\end{tabular}
+%\caption{Ablation test results.}
+%\label{table2}
+%\vspace{-10pt}
+%\end{table}
+%
+%\begin{table}[!ht]
+%\footnotesize
+%\centering
+%\begin{tabular}{c|c|c|c|c}
+%\hline
+%\multirow{2}{*}{Methods} & \multicolumn{2}{|c|}{MR} & \multicolumn{2}{|c}{SST}  \tabularnewline
+%\cline{2-5} & Acc & F1 & Acc & F1  \tabularnewline
+%\hline
+%CNN & xxx & x & x & x  \\
+%\hline
+%LAAN-II & x & x & x &x \tabularnewline
+%\hline
+%LAAN-III & x & x & x & x\\
+%\hline
+%LAAN & \bf{84.3} & \bf{x} &\bf{49.7} &\bf{x}  \tabularnewline
+%\hline
+%%Biogrid & 3470 & 3158 & 3160  & 3267  \\ \hline
+%\end{tabular}
+%\caption{Ablation test results.}
+%\label{table3}
+%\vspace{-10pt}
+%\end{table}
+
+\section{Conclusion}
+In this paper, we propose a novel Multi-sentiment-resource Enhanced Attention Network (MEAN) to enhance the performance of sentence-level sentiment analysis, which integrates the sentiment linguistic knowledge into the deep neural network.
+% Experiments on the MR and SST datasets show the effectiveness of MEAN.
+% As for future work, instead of using the sentiment resource words as a whole attention source to model the sentiment-specific sentence semantics, we will consider using sentiment words, negation words and intensity words separately as attention source to model the sentiment-specific sentence representation.
+\section*{Acknowledgements}%Acknowledgements
+We thank all anonymous reviewers for their valuable comments. The corresponding author is Yujiu Yang. This work was supported in part by the Research Fund for the development of strategic emerging industries by ShenZhen city (No.JCYJ20160301151844537 and No. JCYJ20160331104524983).
+
+
+\bibliographystyle{acl_natbib}
+\bibliography{acl2018}
+
+% \appendix
+% \section{Appendix}
+% \begin{figure*}[t]
+%    \centering{\includegraphics[width=\textwidth] {ACL-short-2.pdf}}
+%    \caption{The Overall Framework of MEAN Model}
+%    \label{fig_1}
+%    \vspace{-15pt}
+% \end{figure*}
+\end{document}

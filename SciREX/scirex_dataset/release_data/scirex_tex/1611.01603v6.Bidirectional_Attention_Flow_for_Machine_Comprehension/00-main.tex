@@ -1,0 +1,100 @@
+\documentclass{article} % For LaTeX2e
+\usepackage{iclr2017_conference,times}
+\usepackage{hyperref}
+\usepackage{url}
+
+%my packages
+\usepackage{bm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{subcaption}
+\usepackage[pdftex]{graphicx}
+% \usepackage{epsfig, subfigure}
+% \usepackage[dvips]{graphicx}
+\usepackage{xcolor,colortbl}
+\newcommand{\sys}{\mbox{Bi-Directional Attention Flow}} 
+\newcommand{\sysshort}{\mbox{\sc BiDAF}}
+\newcommand{\note}[1]{\textcolor{red}{#1}}
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\title{Bi-Directional Attention Flow \\
+for Machine Comprehension}
+
+
+\author{Minjoon Seo$^1$\thanks{The majority of the work was done while the author was interning at the Allen Institute for AI.}\qquad Aniruddha Kembhavi$^2$\qquad Ali Farhadi$^{1,2}$\qquad Hananneh Hajishirzi$^1$ \\
+University of Washington$^1$, Allen Institute for Artificial Intelligence$^2$\\
+\texttt{\{minjoon,ali,hannaneh\}@cs.washington.edu}, \texttt{\{anik\}@allenai.org}\\
+}
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to \LaTeX{} to determine where to break
+% the lines. Using \AND forces a linebreak at that point. So, if \LaTeX{}
+% puts 3 of 4 authors names on the first line, and the last on the second
+% line, try using \AND instead of \And before the third author name.
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+
+\iclrfinalcopy % Uncomment for camera-ready version
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Machine comprehension (MC), answering a query about a given context paragraph, requires modeling complex interactions between the context and the query. Recently, attention mechanisms have been successfully extended to MC. Typically these methods use attention to focus on a small portion of the context and summarize it with a fixed-size vector, couple attentions temporally, and/or often form a uni-directional attention. 
+In this paper we introduce the \sys\ (\sysshort) network, a multi-stage hierarchical process that represents the context at different levels of granularity and uses bi-directional attention flow mechanism to obtain a query-aware context representation without early summarization. 
+Our experimental evaluations show that our  model achieves the state-of-the-art results in Stanford Question Answering Dataset (SQuAD) and CNN/DailyMail cloze test. 
+
+%In the task of machine comprehension (MC), one is given an informative paragraph and is asked a question about the paragraph.
+%MC is particularly challenging because answering MC questions involves jointly modeling the two word sequences, the context paragraph and the query.
+%Therefore, one is required to carefully design the system to capture the interaction between the two word sequences.
+%In this paper, we propose a multi-stage hierarchical process that represents the context at different levels of granularity and uses a bi-directional attention flow mechanism to achieve a query-aware context representation.  
+%Our model achieves the state-of-the-art results in Stanford QA (SQuAD) and CNN/DailyMail Cloze Test datasets.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+\input{01-intro}
+
+
+\section{Model}\label{sec:model}
+\input{02-model}
+
+\section{Related Work}\label{sec:related}
+\input{03-related}
+
+\section{Question Answering Experiments}\label{sec:squad}
+\input{04-squad}
+
+\section{Cloze Test Experiments}\label{sec:cnn}
+\input{05-cnn}
+
+
+\section{Conclusion}
+\input{06-conclusion}
+
+%\subsubsection*{Acknowledgments}
+%We thank reviewers.
+\subsubsection*{Acknowledgments}
+This research was supported by the NSF (IIS 1616112), NSF (III 1703166), Allen Institute for AI (66-9175), Allen Distinguished Investigator Award, Google Research Faculty Award, and Samsung GRO Award. We thank the anonymous reviewers for their helpful comments.
+
+\newpage
+\bibliography{00-main}
+\bibliographystyle{iclr2017_conference}
+
+\newpage
+\appendix
+\section{Error Analysis}\label{sec:error}
+\input{08-error}
+
+\section{Variations of Similarity and Fusion Functions}\label{app:var}
+\input{09-func}
+
+% \section{Zero-shot Experiments}\label{sec:wikiqa}
+% \input{10-wikiqa}
+
+\end{document}

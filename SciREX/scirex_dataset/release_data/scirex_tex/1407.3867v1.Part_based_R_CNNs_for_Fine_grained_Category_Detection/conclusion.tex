@@ -1,0 +1,10 @@
+\section{Conclusion}
+We have proposed a system for joint object detection and part localization capable of state-of-the-art fine-grained object recognition. Our method learns detectors and part models and enforces learned geometric constraints between parts and with the object frame. 
+Our experimental results demonstrate that even with a very strong feature representation and object detection system, it is highly beneficial to additionally model an object's pose by means of parts for the difficult task of fine-grained discrimination between categories with high semantic similarity.
+In future extensions of this work, we will consider methods which jointly model at training time the object category and each of its parts and deformation costs.
+We also plan to explore the weakly supervised setting in which we automatically discover and model parts as latent variables from only the object bounding box annotations.
+Finally, we will consider relaxing the use of selective search for smaller parts and employing dense window sampling.
+
+\subsubsection{Acknowledgments} This work was supported in part by DARPA Mind's Eye and MSEE
+programs, by NSF awards IIS-0905647, IIS-1134072, and IIS-1212798, and
+by support from Toyota.

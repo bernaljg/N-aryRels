@@ -1,0 +1,75 @@
+%Similar issues have been raised and addressed by many authors in
+%numerous contexts~\cite{}, however the use of seq2seq poses 
+%new training challenges that require specific attention. Recently
+%there has been some work (scheduled sampling, ballesteros, ranzato,
+%google losers)...
+The issues of exposure bias and label bias have received much
+attention from authors in the structured prediction community, and we
+briefly review some of this work here. One prominent approach to
+combating exposure bias is that of SEARN~\cite{daume09search}, a
+meta-training algorithm that learns a search policy in the form of a
+cost-sensitive classifier trained on examples generated from an
+interpolation of an oracle policy and the model's current (learned)
+policy. Thus, SEARN explicitly targets the mismatch between oracular
+training and non-oracular (often greedy) test-time inference by
+training on the output of the model's own
+policy. DAgger~\cite{ross11a} is a similar approach, which differs in
+terms of how training examples are generated and aggregated, and there
+have additionally been important refinements to this style of training
+over the past several years~\cite{chang15efficient}. When it comes to
+training RNNs, SEARN/DAgger has been applied under the name
+``scheduled sampling''~\cite{bengio15scheduled}, which involves
+training an RNN to generate the $t\,{+}\,1$'st token in a target
+sequence after consuming either the true $t$'th token, or, with
+probability that increases throughout training, the predicted $t$'th
+token.
+
+Though technically possible, it is uncommon to use beam search when
+training with SEARN/DAgger. The
+early-update~\cite{collins04incremental} and
+LaSO~\cite{daume05learning} training strategies, however, explicitly
+account for beam search, and describe strategies for updating
+parameters when the gold structure becomes unreachable during
+search. Early update and LaSO differ primarily in that the former
+discards a training example after the first search error, whereas LaSO
+resumes searching after an error from a state that includes the gold
+partial structure. In the context of feed-forward neural network
+training, early update training has been recently explored in a
+feed-forward setting by \newcite{zhou15a} and
+\newcite{andor16globally}. Our work differs in that we adopt a
+LaSO-like paradigm (with some minor modifications), and apply it to
+the training of seq2seq RNNs (rather than feed-forward networks). We
+also note that \newcite{watanabe15transition} apply
+maximum-violation training~\cite{huang12structured}, which is similar
+to early-update, to a parsing model with 
+recurrent components, and that \newcite{yazdani15incremental} use
+beam-search in training a discriminative, locally normalized
+dependency parser with recurrent components.
+
+Recently authors have also proposed alleviating exposure bias using
+techniques from reinforcement learning. 
+\newcite{ranzato16sequence} follow this approach to train RNN decoders
+in a seq2seq model, and they obtain consistent improvements in performance, even over models trained with scheduled sampling. As \newcite{daume05learning} note, LaSO is similar to reinforcement learning, except
+it does not require ``exploration'' in the same
+way. Such exploration may be unnecessary in supervised text-generation, since we typically know the
+gold partial sequences at each time-step. \newcite{shen16mrt} use minimum risk training (approximated by sampling) to address the issues of exposure bias and loss-evaluation mismatch for seq2seq MT, and show impressive performance gains.
+
+Whereas exposure bias results from training in a certain way, label
+bias results from properties of the model itself. In particular, label
+bias is likely to affect structured models that make sub-structure
+predictions using locally-normalized scores. Because the neural and
+non-neural literature on this point has recently been reviewed by
+\newcite{andor16globally}, we simply note here that RNN
+models are typically locally normalized, and we are unaware of any
+specifically seq2seq work with RNNs that does \textit{not} use
+locally-normalized scores. The model we introduce here, however, is
+not locally normalized, and so should not suffer from label bias. We
+also note that there are some (non-seq2seq) exceptions to the trend of
+locally normalized RNNs, such as the work of \newcite{sak14sequence}
+and \newcite{voigtlaender15sequence}, who train LSTMs in the context
+of HMMs for speech recognition using sequence-level objectives; their
+work does not consider search, however.
+
+%and label bias [what about sequence level losses? maybe just forget...]
+%
+%Split into linear and non-linear.

@@ -1,0 +1,120 @@
+
+\documentclass[10pt,journal,compsoc]{IEEEtran}
+%
+
+\usepackage{graphicx}
+
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+
+\usepackage{subfigure}
+\usepackage[subfigure]{graphfig}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{multirow}
+\graphicspath{ {./figs/} }
+
+
+\begin{document}
+
+\title
+{
+%
+    Image Restoration Using  Convolutional Auto-encoders with Symmetric Skip Connections
+}
+
+
+\author
+{
+	Xiao-Jiao Mao, Chunhua Shen, Yu-Bin Yang
+	\IEEEcompsocitemizethanks
+	{
+		\IEEEcompsocthanksitem
+        X.-J. Mao and Y.-B. Yang are with the State Key Laboratory
+		for Novel Software Technology, Nanjing University, China.
+        E-mail: {\tt xjmgl.nju@gmail.com, yangyubin@nju.edu.cn}.
+		\IEEEcompsocthanksitem
+        C. Shen is with the School of Computer Science,
+		University of Adelaide, Australia.
+        E-mail: {\tt chunhua.shen@adelaide.edu.au}.
+        \IEEEcompsocthanksitem
+        X.-J. Mao's contribution was made when visiting University of Adelaide.
+        Correspondence should be addressed to C. Shen.
+	}
+}
+
+
+
+%
+\markboth{Manuscript}%
+{Mao \MakeLowercase{\textit{et al.}}: Image Restoration Using  Convolutional Auto-encoders}
+
+
+\IEEEtitleabstractindextext{
+\begin{abstract}
+
+
+    Image restoration, including image denoising, super resolution,  inpainting,
+    and so on, is a well-studied problem in computer vision and image processing,
+as well as a test bed for low-level image modeling algorithms. In this work, we propose
+a very deep fully convolutional  auto-encoder  network  for image
+restoration, which is a
+ encoding-decoding framework with symmetric con\-vo\-lu\-tion\-al-de\-con\-vo\-lutional layers.
+ In other words, the network is composed of multiple layers of convolution and de-convolution
+operators, learning end-to-end mappings from corrupted images to the original ones. The
+convolutional layers  capture the abstraction of image
+contents while eliminating corruptions. Deconvolutional layers have the capability to upsample the
+feature maps and  recover
+the image details. To deal with the problem that deeper networks tend to be more difficult
+to train, we propose to symmetrically link convolutional and deconvolutional layers with
+skip-layer connections, with which the training converges much faster and attains better results.
+The skip connections from convolutional layers to their mirrored corresponding
+deconvolutional layers exhibit two main advantages. First, they allow the signal to be back-propagated
+to bottom layers directly, and thus tackles the problem of gradient vanishing, making training deep
+networks easier and achieving restoration performance gains consequently. Second, these skip
+connections pass image details from convolutional layers to deconvolutional layers, which is
+beneficial in recovering the clean image. Significantly, with the large capacity, we show it is
+possible to cope with
+different levels of corruptions using a single model.
+Using the same framework, we train models on tasks of image denoising,  super resolution
+removing JPEG compression artifacts, non-blind image deblurring and image inpainting.
+Our experiment results on  benchmark
+datasets show that our network can achieve best reported performance on all of the four tasks, and
+set new state-of-the-art.
+
+\end{abstract}
+
+
+
+
+\begin{IEEEkeywords}
+    Image restoration, auto-encoder, convolutional/de-convolutional  networks, skip connection, image
+    denoising,  super resolution, image inpainting.
+\end{IEEEkeywords}}
+
+
+
+\maketitle
+\IEEEdisplaynontitleabstractindextext
+\IEEEpeerreviewmaketitle
+
+
+
+\tableofcontents
+\clearpage
+
+
+\input introduction.tex
+\input relatedwork.tex
+\input method.tex
+\input discussion.tex
+\input experiments.tex
+\input conclusions.tex
+
+{
+    \medskip
+    \bibliographystyle{IEEEtran}
+    \bibliography{CSRef}
+}
+
+
+\end{document}

@@ -1,0 +1,46 @@
+\section{Introduction}
+\label{introduction}
+
+Progress on the path from shallow bag-of-words information retrieval
+algorithms to machines capable of reading and understanding documents has been
+slow. Traditional approaches to machine reading and comprehension have been
+based on either hand engineered grammars \cite{Riloff:2000:RQA}, or information
+extraction methods of detecting predicate argument triples that can later be
+queried as a relational database \cite{Poon:2010:MRU}.
+Supervised machine learning approaches have largely been absent from this space
+due to both the lack of large scale training datasets, and the difficulty in
+structuring statistical models flexible enough to learn to exploit document
+structure.
+
+While obtaining supervised natural language reading comprehension data has
+proved difficult, some researchers have explored generating synthetic narratives
+and queries \cite{Weston:2014:MN,Sukhbaatar:2015}. Such approaches allow
+the generation of almost unlimited amounts of supervised data and enable
+researchers to isolate the performance of their algorithms on individual
+simulated phenomena. Work on such data has shown that neural network based
+models hold promise for modelling reading comprehension, something that we
+will build upon here.  Historically, however, many similar approaches in
+Computational Linguistics have failed to manage the transition from synthetic
+data to real environments, as such closed worlds inevitably fail to
+capture the complexity, richness, and noise of natural language
+\cite{Winograd:1972:UNL}.
+
+In this work we seek to directly address the lack of real natural language
+training data by introducing a novel approach to building a supervised reading
+comprehension data set. We observe that summary and paraphrase sentences, with
+their associated documents, can be readily converted to context--query--answer
+triples using simple entity detection and anonymisation algorithms.
+Using this approach we have collected two new corpora of roughly a million news
+stories with associated queries from the CNN and Daily Mail websites.
+
+We demonstrate the efficacy of our new corpora by building novel deep learning
+models for reading comprehension. These models draw on recent developments
+for incorporating attention mechanisms into recurrent neural network architectures
+\cite{Bahdanau:2014:NMT,Mnih:2014:RMVA,Gregor:2015:DRAW,Sukhbaatar:2015}. This allows a model to
+focus on the aspects of a document that it believes will help it answer a
+question, and also allows us to visualises its inference process.
+We compare these neural models to a range of baselines and heuristic benchmarks
+based upon a traditional frame semantic analysis provided by a state-of-the-art
+natural language processing (NLP) pipeline. Our results indicate that the neural
+models achieve a higher accuracy, and do so without any specific encoding of the
+document or query structure.

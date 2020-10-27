@@ -1,0 +1,67 @@
+\section{Introduction}\label{sec:intro}
+Despite many promising empirical results at using stochastic optimization methods to train highly non-convex modern deep neural networks, we still lack theoretically robust practical methods which are able to escape saddle points and/or sub-optimal local minima and converge to parameters that retain high testing performance.  
+This lack of understanding leads to practical training challenges.
+
+Stochastic Gradient Descent (SGD) is currently the de-facto optimization method for training
+deep neural networks (DNNs). 
+Through 
+extensive hyper-parameter tuning, SGD 
+can avoid poor local optima and achieve good generalization ability.
+One important hyper-parameter that can
+significantly affect SGD performance is the weight initialization. For instance, initializing the 
+weights to all zeros or all ones leads to extremely poor performance~\cite{xu2017second}.
+Different approaches have been proposed for weight initialization such
+as Xavier, MSRA, Ortho, LSUV~\cite{glorot2010understanding,he2015delving,saxe2013exact,mishkin2015all}.
+These are mostly agnostic to the model architecture and the specific learning task.
+
+Our work explores the idea of adapting the weight initialization to the optimization dynamics of the specific learning task at hand.
+From the Bayesian perspective, improved weight initialization can be viewed
+as starting with a better prior, which leads to a more accurate
+posterior and thus better generalization ability. 
+This problem has been explored extensively in Bayesian optimization. For example, in the seminal works~\cite{hu2017adaptive,roberts2009examples}, an adaptive
+prior is implemented via Markov Chain Monte Carlo (MCMC) methods. 
+Motivated by these ideas, we incorporate an ``adaptive initialization'' for neural network training (see section~\ref{sec:methods} for details), where we use cyclical batch size schedules to control the noise (or temperature) of SGD.
+As argued in~\cite{smith2018bayesian}, both learning rate and batch size can be used to control the noise of SGD but the latter
+has an advantage in that it allows more parallelization opportunity~\cite{gholami2017integrated}.
+The idea of using batch size to control the noise in a simple cyclical schedule was recently proposed in~\cite{jastrzkebski2017three}.
+Here, we build upon this work by studying different cyclical annealing strategies for a wide
+range of problems. Additionally, we discuss how this can be combined with a new adversarial regularization scheme recently proposed in~\cite{yao2018large}, as well as prior work~\citep{huang2017snapshot} in order to obtain ensembles of models at no
+additional cost.
+In summary, our contributions are as follows:
+
+\begin{itemize}
+    \item We explore different cyclical batch size (CBS) schedules for training neural networks
+    inspired by Bayesian statistics, particularly adaptive MCMC methods. The CBS schedule leads to multiple perplexity improvement (up to 7.91) in language modeling and minor improvements in natural language inference and image classification. 
+    Furthermore, we show that CBS schedule can alleviate problems with overfitting and sub-optimal parameter initialization.
+     
+     \item Additionally, CBS schedules require up to $3\times$ fewer SGD iterations due to larger batch sizes, which allows for
+     more parallelization opportunity. This reflects the benefit of cycling the batch size instead
+     of the learning rate as in prior work~\citep{smith2017don, huang2017snapshot}
+     
+     \item We showcase the flexibility of CBS schedules for use with additional techniques. We propose a simple but effective ensembling method that combines models saved during different
+     cycles at no additional training cost. 
+     In addition, we show that CBS schedule can be combined with other approaches such as the recently proposed adversarial regularization~\cite{yao2018large} to yield further classification accuracy improvement of $0.26\%$.
+
+\end{itemize}
+
+\paragraph{Related Work} 
+\cite{glorot2010understanding} introduced Xavier initialization, which keeps the variance of
+input and output of all layers within a similar range in order to prevent vanishing or 
+exploding values in both the forward and backward passes. Building off this 
+idea,~\cite{he2015delving} explored a new strategy known as MSRA to keep the 
+variance constant for all convolutional layers. \cite{saxe2013exact} proposed an 
+orthogonal initialization (Ortho) to achieve faster convergence, 
+and more recently,~\cite{mishkin2015all} combined ideas from previous work and showed 
+that a unit variance orthogonal initialization is beneficial for deep models.
+
+\citep{jastrzkebski2017three,smith2018bayesian,devarakonda2017adabatch} show that the noise of SGD is controlled by the ratio of learning rate to batch size. The authors argued that
+the SGD algorithm can be derived through Euler-Maruyama discretization of a Stochastic Differential Equation (SDE).
+The SDE dynamics are  governed by a "noise scale" $g \approx \epsilon N/B$ for $\epsilon$ the learning rate, $N$ 
+the training dataset size, and $B$ the batch size. They conclude that a higher noise scale 
+prevents SGD from settling into sharper minima. This result supports a prior empirical 
+observation~\citep{krizhevsky2014one} that under certain mild assumptions such as $N \gg B$,
+the effect of dividing the learning rate by a constant factor is equivalent to that of 
+multiplying the batch size by the same constant factor.
+In related work, \citep{smith2017don} applied this understanding and used batch size
+as a knob to control the noise, and empirically showed that the baseline performance could be matched. \cite{yao2018large} further explored how to use second-order information and adversarial training to control the noise for training large batch size.
+\cite{martin2017rethinking,martin2018implicit} showed using a statistical mechanics argument that many other hyper-parameters in neural network training, e.g. data quality, can also act as temperature knobs.

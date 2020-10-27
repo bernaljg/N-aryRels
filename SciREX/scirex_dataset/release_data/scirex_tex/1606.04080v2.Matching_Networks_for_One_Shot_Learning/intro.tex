@@ -1,0 +1,14 @@
+\section{Introduction}
+\label{sec:intro}
+
+Humans learn new concepts with very little supervision -- e.g. a child can generalize the concept of ``giraffe'' from a single picture in a book -- yet our best deep learning systems need hundreds or thousands of examples. This motivates the setting we are interested in: ``one-shot’’ learning, which consists of learning a class from a single labelled example.
+
+Deep learning has made major advances in areas such as speech \cite{hinton2012deep}, vision \cite{krizhevsky2012imagenet} and language \cite{mikolov2010recurrent}, but is notorious for requiring large datasets. Data augmentation and regularization techniques alleviate overfitting in low data regimes, but do not solve it. Furthermore, learning is still slow and based on large datasets, requiring many weight updates using stochastic gradient descent. This, in our view, is mostly due to the parametric aspect of the model, in which training examples need to be slowly learnt by the model into its parameters.
+
+In contrast, many non-parametric models allow novel examples to be rapidly assimilated, whilst not suffering from catastrophic forgetting. Some models in this family (e.g., nearest neighbors) do not require any training but performance depends on the chosen metric \cite{lwl}. Previous work on metric learning in non-parametric setups \cite{nca} has been influential on our model, and we aim to incorporate the best characteristics from both parametric and non-parametric models -- namely, rapid acquisition of new examples while providing excellent generalisation from common examples.
+
+The novelty of our work is twofold: at the modeling level, and at the training procedure. We propose Matching Nets (MN), a neural network which uses recent advances in attention and memory that enable rapid learning. Secondly, our training procedure is based on a simple machine learning principle: test and train conditions must match. Thus to train our network to do rapid learning, we train it by showing only a few examples per class, switching the task from minibatch to minibatch, much like how it will be tested when presented with a few examples of a new task. 
+
+Besides our contributions in defining a model and training criterion amenable for one-shot learning, we contribute by the definition of tasks that can be used to benchmark other approaches on both ImageNet and small scale language modeling. We hope that our results will encourage others to work on this challenging problem.
+
+We organized the paper by first defining and explaining our model whilst linking its several components to related work. Then in the following section we briefly elaborate on some of the related work to the task and our model. In Section~\ref{sec:results} we describe both our general setup and the experiments we performed, demonstrating strong results on one-shot learning on a variety of tasks and setups. 

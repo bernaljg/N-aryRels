@@ -1,0 +1,44 @@
+\section{Additional Results on MPII Multi-Person}
+Qualitative comparison of our joint formulation
+$\deepcut~\multb~\dense$ to the traditional two-stage approach
+$\dense~\detroi$ on MPII Multi-Person dataset is shown in
+Fig.~\ref{fig:qualitative_mpii} and~\ref{fig:qualitative_mpii2}.
+$\dense~\detroi$ works well when multiple fully visible individuals
+are sufficiently separated and thus their body parts can be
+partitioned based on the person detection bounding box. In this case
+the strong $\dense$ body part detection model can correctly estimate
+most of the visible body parts (image 16, 17, 19). However,
+$\dense~\detroi$ cannot tell apart the body parts of multiple
+individuals located next to each other and possibly occluding each
+other, and often links the body parts across the individuals (images 1-16,
+19-20). In addition, $\dense~\detroi$ cannot reason about occlusions
+and truncations always providing a prediction for each body part
+(image 4, 6, 10). In contrast, $\deepcut~\multb~\dense$ is able to
+correctly partition and label an initial pool of body part candidates
+(each image, top row) into subsets that correspond to sets of mutually
+consistent body part candidates and abide to mutual consistency and
+exclusion constraints (each image, row 2), thereby outputting
+consistent body pose predictions (each image, row 3). $c \neq c'$
+pairwise terms allow to partition the initial set of part detection
+candidates into valid pose configurations (each image, row 2:
+person-clusters highlighted by dense colored connections). $c = c'$
+pairwise terms facilitate clustering of multiple body part candidates
+of the same body part of the same person (each image, row 2: markers
+of the same type and color). In addition, $c = c'$ pairwise terms
+facilitate a repulsive property that prevents nearby part candidates
+of the same type to be associated to different people (image 1:
+detections of the left shoulder are assigned to the front person
+only). Furthermore, $\deepcut~\multb~\dense$ allows to either merge
+or deactivate part hypotheses thus effectively performing non-maximum
+suppression and reasoning about body part occlusions and truncations
+(image 3, row 2: body part hypotheses on the background are
+deactivated (black crosses); image 6, row 2: body part hypotheses for
+the truncated body parts are deactivated (black crosses); image 1-6,
+8-9, 13-14, row 3: only visible body parts of the partially occluded
+people are estimated, while non-visible body parts are correctly
+predicted to be occluded). These qualitative examples show that
+$\deepcuts~\multb$ can successfully deal with the unknown number of
+people per image and the unknown number of visible body parts per
+person.
+
+\input{figure_qualitative_mpii_supplemental}

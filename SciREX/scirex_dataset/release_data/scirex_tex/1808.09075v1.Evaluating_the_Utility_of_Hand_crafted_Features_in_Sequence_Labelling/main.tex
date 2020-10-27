@@ -1,0 +1,116 @@
+%
+% File emnlp2018.tex
+%
+%% Based on the style files for EMNLP 2018, which were
+%% Based on the style files for ACL 2018, which were
+%% Based on the style files for ACL-2015, with some improvements
+%%  taken from the NAACL-2016 style
+%% Based on the style files for ACL-2014, which were, in turn,
+%% based on ACL-2013, ACL-2012, ACL-2011, ACL-2010, ACL-IJCNLP-2009,
+%% EACL-2009, IJCNLP-2008...
+%% Based on the style files for EACL 2006 by 
+%%e.agirre@ehu.es or Sergi.Balari@uab.es
+%% and that of ACL 08 by Joakim Nivre and Noah Smith
+
+\documentclass[11pt,a4paper]{article}
+\usepackage[hyperref]{emnlp2018}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage{url}
+
+% self added
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{xspace}
+\usepackage{bm}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{pgfplots}
+
+
+\newcommand{\etal}{et al.\xspace}
+\newcommand{\eg}{e.g.\ }
+\newcommand{\ie}{i.e.\ }
+\newcommand{\etc}{etc.\ }
+
+\newcommand{\system}[2][]{\texttt{#2#1}\xspace}
+\newcommand{\class}[2][]{\texttt{#2}#1\xspace}
+
+\newcommand{\secref}[1]{Section~\ref{#1}\xspace}
+\newcommand{\tabref}[2][]{Table#1~\ref{#2}\xspace}
+\newcommand{\figref}[2][]{Figure#1~\ref{#2}\xspace}
+\newcommand{\exref}[2][]{Example#1~(\ref{#2})\xspace}
+\newcommand{\equref}[2][]{Equation#1~\ref{#2}}
+\newcommand{\bracketref}[1]{(\ref{#1})\xspace}
+
+\newcommand{\myparagraph}[1]{\noindent{\textbf{#1}}~}
+%\newcommand{\myparagraph}[1]{\paragraph{#1}}
+
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\R}{\bb{R}}
+\newcommand{\mat}[2][]{\boldsymbol{#2}_{#1}}
+\newcommand{\matfwd}[2][]{\overrightarrow{\bm{#2}}_{#1}}
+\newcommand{\matbwd}[2][]{\overleftarrow{\bm{#2}}_{#1}}
+\newcommand{\mattilde}[2][]{\tilde{\bm{#2}}^{#1}}
+\renewcommand{\vec}[2][]{\boldsymbol{#2}_{#1}}
+\newcommand{\vecfwd}[2][]{\overrightarrow{\bm{#2}}_{#1}}
+\newcommand{\vecbwd}[2][]{\overleftarrow{\bm{#2}}_{#1}}
+\newcommand{\lstm}{\textrm{LSTM}}
+\newcommand{\lstmfwd}{\overrightarrow{\textrm{LSTM}}}
+\newcommand{\lstmbwd}{\overleftarrow{\textrm{LSTM}}}
+\newcommand{\softmax}{\textrm{softmax}}
+\newcommand{\xentropy}{\ensuremath{\operatorname{XEntropy}}\xspace}
+\newcommand{\reg}[1]{|| #1 || ^{2}_{2}}
+\newcommand{\T}{\mathstrut\scriptscriptstyle\top}
+\newcommand{\tran}{^{\T}}
+
+% If your conference documentclass or package defines these macros,
+% change these macros to different names.
+\newcommand*{\affaddr}[1]{#1} % No op here. Customize it for different styles.
+\newcommand*{\affmark}[1][*]{\textsuperscript{#1}}
+
+\aclfinalcopy % Uncomment this line for the final submission
+\def\aclpaperid{1518} %  Enter the acl Paper ID here
+
+
+%\setlength\titlebox{5cm}
+% You can expand the titlebox if you need extra space
+% to show all the authors. Please do not make the titlebox1
+% smaller than 5cm (the original size); we will check this
+% in the camera-ready version and ask you to change it back.
+
+\title{Evaluating the Utility of Hand-crafted Features in Sequence Labelling\thanks{{} {} \url{https://github.com/minghao-wu/CRF-AE}}}
+\author{Minghao Wu\affmark[$\spadesuit\heartsuit$]\thanks{{} {} Work carried out at The University of Melbourne} \qquad Fei Liu\affmark[$\spadesuit$] \qquad Trevor Cohn\affmark[$\spadesuit$]\\
+         \affmark[$\spadesuit$]The University of Melbourne, Victoria, Australia\\
+         \affmark[$\heartsuit$]JD AI Research, Beijing, China \\
+         {\tt {wuminghao@jd.com}} \\ % TODO: please verify this
+         {\tt {fliu3@student.unimelb.edu.au}}\\
+         {\tt {t.cohn@unimelb.edu.au}}}
+
+\date{}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Conventional wisdom is that hand-crafted features are redundant for deep learning models, as they already learn adequate representations of text automatically from corpora. 
+In this work, we test this claim by proposing a new method for exploiting handcrafted features as part of a novel hybrid learning approach, incorporating a feature auto-encoder loss component. 
+We evaluate  on the task of named entity recognition (NER), where we show that including manual features for part-of-speech, word shapes and gazetteers can improve the performance of a neural CRF model.
+We obtain a $F_1$ of 91.89 for the CoNLL-2003 English shared task, which significantly outperforms a collection of highly competitive baseline models. 
+We also present an ablation study showing the importance of auto-encoding, over using features as either inputs or outputs alone, and moreover, show including the autoencoder components reduces training requirements to 60\%, while retaining the same predictive accuracy.
+
+\end{abstract}
+
+\input{introduction}
+\input{method}
+\input{experiments}
+\input{ablationstudy}
+\input{datausage}
+\input{lambda}
+\input{conclusion}
+
+\bibliographystyle{acl_natbib_nourl}
+\bibliography{refer}
+
+
+\end{document}

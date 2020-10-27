@@ -1,0 +1,137 @@
+In the simplest seq2seq scenario, we are given a collection of source-target
+sequence pairs and tasked with learning to generate
+target sequences from source sequences. For instance, we might view machine translation in this way, where in particular we attempt to generate English sentences from (corresponding) French sentences. Seq2seq models are part of the broader class of ``encoder-decoder'' models~\cite{cho14on}, which first use an encoding model to transform a source object into an encoded representation $\boldx$. Many different sequential
+(and non-sequential) encoders have proven to be effective for
+different source domains. In this work we are agnostic to the
+form of the encoding model, and simply assume an abstract source
+representation $\boldx$. %In experiments we utilize an attention-based LSTM encoder \cite{} which has shown to be effective for many tasks \cite{}.
+
+Once the input sequence is encoded, seq2seq models generate a target
+sequence using a \textit{decoder}. The decoder is tasked with
+generating a target sequence of words from a target vocabulary $\mcV$. In particular, words are generated sequentially by conditioning on the input representation $\boldx$ and on the previously generated words or \textit{history}. We use the notation $\pfx{T}$ to refer to an arbitrary word sequence of length $T$, and the notation $\goldpfx{T}$ to refer to the \textit{gold} (i.e., correct) target word sequence for an input $\boldx$. 
+
+Most seq2seq systems utilize a recurrent neural network (RNN) for the decoder model. Formally, a recurrent neural network is a parameterized non-linear
+function $\RNN$ that recursively maps a sequence of vectors to a
+sequence of hidden states. Let $\boldm_1, \ldots, \boldm_T$ be a
+sequence of $T$ vectors, and let $\boldh_0$ be some initial state
+vector. Applying an RNN to any such sequence yields hidden states
+$\boldh_t$ at each time-step $t$, as follows:
+\begin{align*}
+\boldh_t \gets \RNN(\boldm_t, \boldh_{t-1}; \btheta),
+\end{align*}
+where $\btheta$ is the set of model parameters, which are shared over time. In this work, the vectors $\boldm_t$ will always correspond to the embeddings of a target word sequence $\pfx{T}$, and so we will also write $\boldh_t \gets \RNN(w_t, \boldh_{t-1}; \btheta)$, with $w_t$ standing in for its embedding.
+ 
+%To back-propagate errors through a recurrent neural network, we accumulate the 
+%gradients of each state with respect to subsequent states by running a backward procedure we will refer to as $\BRNN$ at each time-step (starting at the penultimate step): 
+%\begin{align*}
+%\nabla_{\boldh_t} \mcL \gets \BRNN(y_{t+1}, \boldh_{t},\nabla_{\boldh_{t+1}} \mcL),
+%\end{align*}
+%$\BRNN$ takes into account $\boldh_t$'s contribution to any loss incurred from its next-step prediction, as well as to any loss incurred through $\boldh_{t+1}$. In what follows, we will often abbreviate $\nabla_{\boldh_t} \mcL$ as $\nabla_{\boldh_t}$.  
+%%\begin{align*}
+%%\nabla_{\boldh_t} \mcL \gets \nabla_{\boldh_t} \mcL + \BRNN(\nabla_{\boldh_{t+1}} \mcL, \boldm_t, \boldh_{t}).
+%%\end{align*}
+%%Note that $\boldm_t$ is the embedding corresponding to output word $w_t$. 
+%Running this $\BRNN$ procedure from $t \niceq T$ to $t \niceq 1$ is known as back-propagation through time (BPTT).
+
+%\textbf{something about BPTT}
+
+%  which takes the form of a recurrent
+% neural network (RNN). 
+
+% where a
+% decoder RNN generates a target sequence of T
+% words w1 · · · wT (such as a translation or summary),
+% from an
+
+% As RNN decoding is the main focus of this work,
+% we now describe this process in greater detail.  
+
+RNN decoders are typically trained to act as conditional language
+models. That is, one attempts to model the probability of the $t$'th target
+word conditioned on $\boldx$ and the target history by stipulating that $p(w_{t} | \pfx{t-1}, \boldx) \niceq g(w_{t},
+\boldh_{t-1}, \boldx)$, for some parameterized function $g$ typically computed with an affine layer followed by a softmax. In computing these probabilities, the state $\boldh_{t-1}$ represents the target history, and $\boldh_0$ is typically set to be some function of $\boldx$. The complete model (including encoder) is trained,
+analogously to a neural language model, to minimize the cross-entropy
+loss at each time-step while conditioning on the gold history in the
+training data. That is, the model is trained to minimize $-\ln \prod_{t=1}^{T} p(y_{t} |\goldpfx{t-1}, \boldx)$.
+
+Once the decoder is trained, discrete sequence generation can be
+performed by approximately maximizing the probability of the target
+sequence under the conditional distribution,
+$\hat{y}_{1:T} \niceq \mathrm{argbeam}_{w_{1:T}} \prod_{t=1}^{T} p(w_t |\pfx{t-1}, \boldx)$, where we use the notation $\mathrm{argbeam}$ to emphasize that the decoding process requires heuristic search, since the RNN model is non-Markovian. In practice, a simple beam search
+procedure that explores $K$ prospective histories at each time-step
+has proven to be an effective decoding approach. However, as noted above,
+decoding in this manner after conditional language-model style training \textit{potentially} suffers from the issues of exposure bias and label bias, which motivates the work of this paper.
+
+% However we note that this procedure potentially
+% suffers from the issues 
+
+
+% and we will often omit the
+% $\boldx$ argument to $f$ when there is only a single $\boldx$ in
+% question.
+
+
+  
+
+% , which often takes the form of a recurrent
+% neural network. 
+
+
+
+% For the sake of this work the sequential form of the input sequence is
+% actually 
+
+
+% Seq2seq is highly related to the corresponding 
+% \textit{encoder-decoder} approached  
+
+
+
+%  $w_{1:s}$ 
+% $w_{1:t}$
+
+
+% It has become popular in recent years to use RNNs within an
+% ``encoder-decoder'' framework, where a decoder RNN generates a target
+% sequence of $T$ words $\longpfx{T}$ (such as a translation or
+% summary), from an 
+
+
+%  The methods we describe below are designed
+% specifically for encoder-decoder scenarios where the decoder is an
+% RNN; we make no assumption about the encoder.
+
+
+
+% \noindent \textbf{RNNs:} A recurrent neural network is a parameterized
+% non-linear function $\RNN$ that recursively maps a sequence of vectors
+% to a sequence of hidden states. Let $\boldm_1, \ldots, \boldm_t$ be a
+% sequence of $t$ vectors, and let $\boldh_0$ be some initial state
+% vector. Applying an RNN to any such sequence yields hidden states
+% $\boldh_t$ at each time-step, as follows:
+% %{\small
+% \begin{align*}
+% \boldh_t \gets \RNN(\boldm_t, \boldh_{t-1}; \btheta),
+% \end{align*}
+% %}
+% \noindent where $\btheta$ is the set of model parameters, which are shared over time. 
+
+
+%Accordingly, we consider the generation of target word sequences $\longpfx{T}$ of length $T$, where we have used $\cdot$ as the concatenation operator, and where each word token $w_j$ comes from our target vocabulary $\mcV$. We denote by $\boldx$ the input representation on which the target generation conditions. We refer to the \textit{gold} (i.e., correct) output word sequence for an input $\boldx$ as $\longgoldpfx{T}$. We will often abbreviate sequences  $\longpfx{T}$ as $\pfx{T}$. % (and similarly for $\longgoldpfx{T}$ and $\goldpfx{T}$).\\ %, and we refer to set of all possible $\boldx$'s as $\mcX$.  \\
+
+% When using an RNN decoder, it is typical to model the probability of
+% the $t\,{+}\,1$'st target word's type being $w$ given the preceding
+% words and the input as a function of $\boldh_t$. That is, one
+% stipulates that $p(w_{t+1} \niceq w|\pfx{t}, \boldx) \propto g(w,
+% \boldh_t, \boldx)$, for some function $g$ that examines the hidden
+% state at time $t$ and $\boldx$. It is then natural to train such a
+% model with a cross-entropy loss at each time-step. In this paper we
+% will instead be interested in modeling non-probabilistic scores of
+% arbitrary \textit{sequences} formed from the target vocabulary
+% $\mcV$. We will accordingly define the score of an entire
+% \textit{prefix} $\pfx{t}$ followed by a single word $w$ as
+% \begin{align} \label{eq:score}
+% \score(\pfx{t} \cdot w) \triangleq f(w, \boldh_t, \boldx),
+% \end{align} 
+% where, analogously, $f$ is some function examining the current hidden-state of the relevant RNN at time $t$ as well as the input representation $\boldx$. Note that we use $\cdot$ as the concatenation operator.  
+

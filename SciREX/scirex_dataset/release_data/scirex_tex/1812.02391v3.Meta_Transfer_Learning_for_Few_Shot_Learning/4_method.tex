@@ -1,0 +1,22 @@
+
+\section{Methodology}
+
+As shown in Figure~\ref{main_framework_meta_transf_hard_task},  our method consists of three phases.
+%
+First, we train a DNN on large-scale data, e.g. on miniImageNet ($64$-class, $600$-shot)~\cite{VinyalsBLKW16}, and then fix the low-level layers as Feature Extractor (Section~\ref{sec_large_scale_pretrain}). 
+%
+Second, in the meta-transfer learning phase, MTL learns the \emph{Scaling} and \emph{Shifting} (\emph{SS}) parameters for the Feature Extractor neurons, enabling fast adaptation to few-shot tasks (Section~\ref{sec_meta_transfer}).
+%
+For improved overall learning, we use our HT meta-batch strategy  (Section~\ref{sec_HT}).
+The training steps are detailed in Algorithm~\ref{alg_overall} in Section~\ref{sec_alg}.
+%
+Finally, the typical meta-test phase is performed, as introduced in Section~\ref{sec_preli}.
+
+%%%
+\input{4_1_pre_training.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{4_2_meta_transfer.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{4_4_algorithm.tex}
+

@@ -1,0 +1,47 @@
+\begin{table*}[h]
+\begin{center}
+\begin{tabular}{@{\hspace{.05cm}}c@{\hspace{.05cm}}c@{\hspace{.05cm}}c@{\hspace{.05cm}}c@{\hspace{.05cm}}c@{\hspace{.3cm}}c@{\hspace{.05cm}}c@{\hspace{.05cm}}c} \\ 
+% Input & Bicubic & \regression & $\tau=1.0$ & $\tau=0.9$ & $\tau=0.8$ & Truth & \NN{} & GAN~\cite{srez} & GAN~\cite{srez} \\ 
+ %\endhead 
+ Input & \multicolumn{3}{c}{Gen} & Truth & Input & Gen & Truth \\
+  {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labelwhited_0.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labeloutputs_cifar10_completed_1_0_rs8_3243.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labeloutputs_cifar10_completed_1_0_rs8_3244.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labeloutputs_cifar10_completed_1_0_rs8_3245.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labeltargets_cifar10_completed_1_0_rs8_3240.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/258input.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/258output.png}}
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/258target.png}} 
+ \\ [-0.75mm]
+  {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labelwhited_9.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labeloutputs_cifar10_completed_1_0_rs8_1036.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labeloutputs_cifar10_completed_1_0_rs8_1038.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labeloutputs_cifar10_completed_1_0_rs8_1037.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labeltargets_cifar10_completed_1_0_rs8_1036.png}} 
+  & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/352input.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/352output.png}}
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/352target.png}} 
+ \\ [-0.75mm]
+   {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labelwhited_5.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labeloutputs_cifar10_completed_1_0_rs8_736.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labeloutputs_cifar10_completed_1_0_rs8_737.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labeloutputs_cifar10_completed_1_0_rs8_739.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labeltargets_cifar10_completed_1_0_rs8_736.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/30input.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/30output.png}}
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/30target.png}} 
+ \\ [-0.75mm]
+   {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labelwhited_8.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labeloutputs_cifar10_completed_1_0_rs8_205.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labeloutputs_cifar10_completed_1_0_rs8_200.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labeloutputs_cifar10_completed_1_0_rs8_203.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/labeltargets_cifar10_completed_1_0_rs8_203.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/140input.png}} 
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/140output.png}}
+ & {\includegraphics[width=.1\linewidth]{cifar_img_superres_completion/140target.png}} 
+ \\
+ \label{tab:completion_and_superres}
+\end{tabular} 
+\caption{On the left are image completions from our best conditional generation model, where we sample the second half. On the right are samples from our four-fold super-resolution model trained on CIFAR-10. Our images look realistic and plausible, show good diversity among the completion samples and observe the outputs carry surprising details for coarse inputs in super-resolution.}
+\end{center}
+\end{table*}
